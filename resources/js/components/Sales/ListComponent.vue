@@ -91,6 +91,7 @@
           @current-change="handleCurrentChange"
         ></el-pagination>
       </div>
+      
       <confirm-sales></confirm-sales>
       <el-row type="flex" justify="end" style="opacity: 0;overflow: hidden;height: 50px;">
         <el-col :span="12">
@@ -110,7 +111,7 @@ import { Printd } from "printd";
 export default {
   mounted: function() {
     this.loadTable("/api/sales");
-    
+
     this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
