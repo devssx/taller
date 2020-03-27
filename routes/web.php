@@ -54,4 +54,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', 'CarServicesController@create')->name('carservices.create');
         Route::get('/edit/{id}', 'CarServicesController@edit')->name('carservices.edit');
     });
+
+    
+    Route::prefix('bitacora')->group(function () {
+        Route::view('/cars', 'bitacora.index')->name('bitacora.cars');
+    });
 });

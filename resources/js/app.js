@@ -107,6 +107,9 @@ Vue.component('dashboard-table', require('./components/Dashboard/TableComponent'
 Vue.component('dashboard-users', require('./components/Dashboard/UsersComponent').default);
 Vue.component('quick-receipt', require('./components/Dashboard/QuickReceipt').default);
 
+// 2020
+Vue.component('bitacora-cars', require('./components/Bitacora/CarListComponent').default);
+
 new Vue({
   el: '#app',
   store,
