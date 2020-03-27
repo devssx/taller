@@ -17,5 +17,12 @@
             <list-sales></list-sales>
         </el-col>
     </el-row>
+
+    @if (session('error'))
+    <el-row type="flex">
+        <el-alert title="{{ session('error') }}" type="error" show-icon>
+        </el-alert>
+    </el-row>
+    @endif
 </el-main>
 @endsection

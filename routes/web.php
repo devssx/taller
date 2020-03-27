@@ -16,7 +16,7 @@ Auth::routes();
 Route::middleware(['auth'])->group(function () {
     Route::get('/', 'DashboardController@index')->name('dashboard');
 
-    Route::prefix('cars')->group(function () {
+    Route::middleware(['checkrole'])->prefix('cars')->group(function () {
         Route::get('/', 'CarsController@index')->name('cars.list');
         Route::get('/create', 'CarsController@create')->name('cars.create');
     });
