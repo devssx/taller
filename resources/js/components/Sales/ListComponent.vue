@@ -91,7 +91,7 @@
           @current-change="handleCurrentChange"
         ></el-pagination>
       </div>
-      
+
       <confirm-sales></confirm-sales>
       <el-row type="flex" justify="end" style="opacity: 0;overflow: hidden;height: 50px;">
         <el-col :span="12">
@@ -300,16 +300,16 @@ export default {
             445 + 32 * concept.length + x * 32
           );
         }
+      }
 
-        // Lineas
-        for (var x = 0; x < 19; x++) {
-          $this.context.strokeStyle = "black";
-          $this.context.beginPath();
-          $this.context.moveTo(40, 455 + x * 31);
-          $this.context.lineTo(1100, 455 + x * 31);
-          $this.context.lineWidth = 1;
-          $this.context.stroke();
-        }
+      // Lineas
+      for (var x = 0; x < 19; x++) {
+        $this.context.strokeStyle = "black";
+        $this.context.beginPath();
+        $this.context.moveTo(40, 455 + x * 31);
+        $this.context.lineTo(1100, 455 + x * 31);
+        $this.context.lineWidth = 1;
+        $this.context.stroke();
       }
 
       var y = 1070;
