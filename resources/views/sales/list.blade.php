@@ -20,7 +20,7 @@
 
     @if (session('error'))
     <el-row type="flex">
-        <el-alert title="{{ session('error') }}" type="error" show-icon>
+        <el-alert  title="{{ session('error') }}" type="error" show-icon>
         </el-alert>
     </el-row>
     @endif
