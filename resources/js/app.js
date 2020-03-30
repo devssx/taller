@@ -110,6 +110,7 @@ Vue.component('quick-receipt', require('./components/Dashboard/QuickReceipt').de
 // 2020
 Vue.component('bitacora-cars', require('./components/Bitacora/CarListComponent').default);
 Vue.component('view-carservices', require('./components/CarServices/ServiceViewComponent').default);
+Vue.component('row-item', require('./components/CarServices/RowItemComponent').default);
 
 new Vue({
   el: '#app',

@@ -72,6 +72,11 @@ class CarsController extends Controller
         return Car::select('brand')->groupBy('brand')->orderBy('brand')->get();
     }
 
+    public function listMakers()
+    {
+        return Car::select('maker')->groupBy('maker')->orderBy('maker')->get();
+    }
+
     public function delete($id)
     {
         return response()->json([

@@ -18,6 +18,7 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 Route::get('/car/brands', 'CarsController@listBrands');
+Route::get('/car/makers', 'CarsController@listMakers');
 Route::get('/servicesByCar', 'ServicesController@getByCar');
 
 Route::get('/clients', 'ClientsController@get');

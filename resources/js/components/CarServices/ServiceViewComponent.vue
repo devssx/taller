@@ -2,57 +2,53 @@
   <el-container>
     <el-main class="content">
       <el-row>
-        <!-- <el-col :span="7">
+        <el-divider></el-divider>
+        <el-col :span="24">
           <el-form inline label-position="right" label-width="80px" class="query-form">
-            <el-form-item label="Vehiculo" prop="car">
-              <el-select
-                filterable
-                placeholder="Selecciona un Vehiculo"
-                v-model="car"
-                :disabled="services.length == 0"
-              >
+            <el-form-item label="Año">
+              <el-select v-model="year" filterable class="year" :disabled="years.length == 0">
+                <el-option v-for="year in years" :key="year" :label="year" :value="year"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Marca">
+              <el-select v-model="maker" filterable class="year" :disabled="makers.length == 0">
                 <el-option
-                  v-for="car in cars"
-                  :key="car.id"
-                  :label="car.brand + ' (' + car.start_year + '-' + car.end_year + ')'"
-                  :value="car.id"
+                  v-for="maker in makers"
+                  :key="maker.maker"
+                  :label="maker.maker"
+                  :value="maker.maker"
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Servicio">
-              <el-select
-                filterable
-                placeholder="Selecciona un Servicio"
-                v-model="service"
-                :disabled="services.length == 0"
-              >
+            <el-form-item label="Modelo">
+              <el-select v-model="brand" filterable class="year" :disabled="brands.length == 0">
                 <el-option
-                  v-for="service in services"
-                  :key="service.id"
-                  :label="service.name"
-                  :value="service.id"
+                  v-for="brand in brands"
+                  :key="brand.brand"
+                  :label="brand.brand"
+                  :value="brand.brand"
                 ></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Articulo">
-              <el-select
-                @change="handleChange"
-                filterable
-                placeholder="Agregar un Articulo"
-                v-model="item"
-                :disabled="listItems.length == 0"
-              >
-                <el-option
-                  v-for="(item, index) in listItems"
-                  :key="index"
-                  :label="item.name"
-                  :value="index"
-                ></el-option>
+            <el-form-item label="Motor">
+              <el-select filterable v-model="motor">
+                <el-option v-for="m in motors" :key="m" :label="m" :value="m"></el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                type="primary"
+                icon="el-icon-search"
+                @click="search"
+                :disabled="year == ''"
+              >Buscar</el-button>
             </el-form-item>
           </el-form>
-        </el-col>-->
-        <el-divider></el-divider>
+          <br />
+        </el-col>
+      </el-row>
+
+      <el-row>
         <el-col :span="6">
           <h3>
             Servicios
@@ -103,7 +99,7 @@
                 :disabled="listItems.length == 0"
               >
                 <el-option
-                  v-for="(item, index) in listItemse"
+                  v-for="(item, index) in listItems"
                   :key="index"
                   :label="item.name"
                   :value="index"
@@ -120,41 +116,95 @@
               <el-checkbox v-model="updatePrices">Aplicar el porcentaje a todo la fila</el-checkbox>
             </div>
           </h3>
+
           <br />
           <el-card class="box-card">
-            <el-row style="margin-bottom:5px;">
-              <el-col :span="4">Nombre</el-col>
-              <el-col :span="3">Base</el-col>
-              <el-col :span="2">%</el-col>
-              <el-col :span="3">Bajo</el-col>
-              <el-col :span="2">%</el-col>
-              <el-col :span="3">Medio</el-col>
-              <el-col :span="2">%</el-col>
-              <el-col :span="3">Alto</el-col>
+            <!-- Creando -->
+            <el-row class="row-header" style="margin-bottom:5px;">
+              <el-col :span="12">SERVICIO</el-col>
+              <el-col :span="12">FOTO DEL CARRO</el-col>
             </el-row>
-            <select-item ref="selectItem" :items="items" :updatePrices="updatePrices"></select-item>
+            <el-row class="center">
+              <el-col :span="12">{{currentServiceName}}</el-col>
+              <el-col :span="12" class="bl">
+                <img
+                  width="100%"
+                  src="https://s.aolcdn.com/dims-global/dims3/GLOB/legacy_thumbnail/788x525/quality/85/https://s.aolcdn.com/commerce/autodata/images/USC60HOC022A121001.jpg"
+                />
+              </el-col>
+            </el-row>
+            <el-row class="row-header">
+              <el-col :span="4" style="color:#f2f2f2">.</el-col>
+              <el-col :span="4">DOLAR</el-col>
+              <el-col :span="4">MARCA</el-col>
+              <el-col :span="4">MODELO</el-col>
+              <el-col :span="4">DEL AÑO</el-col>
+              <el-col :span="4">AL AÑO</el-col>
+            </el-row>
+            <el-row class="center">
+              <el-col :span="4" class="row-header">TIPO DE CAMBIO:</el-col>
+              <el-col :span="4">
+                <el-input-number
+                  v-model="tdc"
+                  controls-position="right"
+                  size="mini"
+                  :precision="2"
+                  :step="0.1"
+                  :min="0"
+                  style="width:100%"
+                ></el-input-number>
+              </el-col>
+              <el-col :span="4">HONDA</el-col>
+              <el-col :span="4">CIVIC</el-col>
+              <el-col :span="4">2015</el-col>
+              <el-col :span="4">2020</el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="12" class="row-header">PORCENTAJE DE GANANCIA EN LAS PIEZAS:</el-col>
+              <el-col :span="4" class="price-min">20%</el-col>
+              <el-col :span="4" class="price-med">25%</el-col>
+              <el-col :span="4" class="price-max">30%</el-col>
+            </el-row>
+            <el-row class="row-header">
+              <el-col :span="4">Refacción</el-col>
+              <el-col :span="4">Precio DLLS</el-col>
+              <el-col :span="4">Precio Real</el-col>
+              <el-col :span="4">Precio Mínimo</el-col>
+              <el-col :span="4">Precio Medio</el-col>
+              <el-col :span="4">Precio Máximo</el-col>
+            </el-row>
+            <!-- Items del servicio -->
+            <row-item ref="selectItem" :items="items" :updatePrices="updatePrices"></row-item>
+            <!-- Totales -->
+            <el-row class="cellborder">
+              <el-col :span="8">TOTAL</el-col>
+              <el-col :span="4" class="bl price">
+                <b>${{ formatPrice(sumItemPrice("price")) }}</b>
+              </el-col>
+              <el-col :span="4" class="bl price">
+                <b>${{ formatPrice(sumItemPrice("low_price")) }}</b>
+              </el-col>
+              <el-col :span="4" class="bl price">
+                <b>${{ formatPrice(sumItemPrice("mid_price")) }}</b>
+              </el-col>
+              <el-col :span="4" class="bl price">
+                <b>${{ formatPrice(sumItemPrice("high_price")) }}</b>
+              </el-col>
+            </el-row>
+            <!-- descripcion del servicio -->
+            <el-row>
+              <el-col :span="4" class="cellborder">Descripción del servicio</el-col>
+              <el-col
+                class="cellborder"
+                :span="20"
+              >Este servicio consiste en desmontar el compresor dar servicio y revisar los componentes, después se instala el compresor nuevo y se hace el servicio y reemplazo de válvulas de servicio y filtro de cabina.</el-col>
+            </el-row>
+            <!-- descripcion del servicio -->
+            <el-row>
+              <el-col :span="4" class="cellborder">Garantía</el-col>
+              <el-col :span="20" class="cellborder">2 meses de garantía en piezas y mano de obra.</el-col>
+            </el-row>
           </el-card>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="17" :offset="7" style="padding-left: 20px;">
-          <el-row style="padding: 10px 20px;">
-            <el-col :span="4">
-              <b>Total</b>
-            </el-col>
-            <el-col :span="3" style="text-align:right;">
-              <b>${{ formatPrice(sumItemPrice("price")) }}</b>
-            </el-col>
-            <el-col :span="3" :offset="2" style="text-align:right;">
-              <b>${{ formatPrice(sumItemPrice("low_price")) }}</b>
-            </el-col>
-            <el-col :span="3" :offset="2" style="text-align:right;">
-              <b>${{ formatPrice(sumItemPrice("mid_price")) }}</b>
-            </el-col>
-            <el-col :span="3" :offset="2" style="text-align:right;">
-              <b>${{ formatPrice(sumItemPrice("high_price")) }}</b>
-            </el-col>
-          </el-row>
         </el-col>
       </el-row>
       <el-row>
@@ -197,6 +247,19 @@ export default {
       //activeNames: ["1"], (No accordion)
       activeName: "1",
       currentServiceName: "Servicio",
+      tdc: 20,
+
+      maker: "",
+      makers: [],
+      brand: "",
+      brands: [],
+      year: "",
+      years: [],
+
+      motor: "",
+      motors: [],
+
+      articulos: [],
 
       filterText: "",
       selectedServices: [],
@@ -217,6 +280,19 @@ export default {
   mounted: function() {
     const $this = this;
 
+    $this.year = new Date().getFullYear();
+    $this.motors = [];
+    $this.motors.push("1.8");
+    $this.motors.push("2.4");
+    $this.motor = "1.8";
+
+    $this.articulos = [];
+
+    $this.years = [];
+    for (var year = 1999; year <= new Date().getFullYear(); year++) {
+      $this.years.push(year);
+    }
+
     axios.get("/api/cars?all=1").then(function(response) {
       $this.cars = response.data;
       if ($this.carService) {
@@ -234,6 +310,14 @@ export default {
     axios.get("/api/items?all=1").then(function(response) {
       $this.listItems = response.data;
     });
+
+    axios.get("/api/car/makers").then(function(response) {
+      $this.makers = response.data;
+    });
+
+    axios.get("/api/car/brands").then(function(response) {
+      $this.brands = response.data;
+    });
   },
   methods: {
     serviceChanged(value) {
@@ -243,6 +327,57 @@ export default {
           break;
         }
       }
+
+      //TEST
+      if (this.currentServiceName == "Cambio de Aceite") this.items = [];
+
+      this.item = "";
+      var item = this.listItems[0];
+      item.price = 100;
+      item.low = 0;
+      item.low_price = 100;
+      item.mid = 0;
+      item.mid_price = 120;
+      item.high = 0;
+      item.high_price = 150;
+      this.items.push(item);
+      this.$refs.selectItem.$forceUpdate();
+    },
+    search() {
+      var $this = this;
+      $this.selectedPrice = "low";
+      $this.selectedServices = [];
+      $this.services = [];
+      axios
+        .get("/api/servicesByCar", {
+          params: {
+            brand: $this.brand,
+            year: $this.year
+          }
+        })
+        .then(function(response) {
+          for (var i = 0; i < response.data.length; i++) {
+            $this.services.push({
+              id: response.data[i].id,
+              label: response.data[i].name,
+              items: response.data[i].items
+            });
+          }
+          if (localStorage.getItem("order") && $this.getParameter("back")) {
+            var order = JSON.parse(localStorage.getItem("order"));
+            setTimeout(function() {
+              if ($this.services.length > 0) {
+                $this.$refs.services.setCheckedNodes(order.services);
+              } else {
+                $this.services = order.services;
+                setTimeout(function() {
+                  $this.$refs.services.setCheckedNodes(order.services);
+                }, 0);
+              }
+              $this.selectedPrice = order.price;
+            }, 0);
+          }
+        });
     },
     handleChange(value) {
       this.item = "";
@@ -272,6 +407,8 @@ export default {
       }
       return total;
     },
+
+    // Guardar
     next() {
       var $this = this;
       axios
@@ -309,22 +446,55 @@ export default {
 table,
 th,
 td {
-  border: 1px solid black;
+  border: 1px solid #ebeef5;
   border-collapse: collapse;
   text-align: center;
 }
 
+.row-header {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  text-align: center;
+  border: 1px solid #ebeef5;
+  padding: 4px;
+}
+
+.center {
+  text-align: center;
+  border: 1px solid #ebeef5;
+}
+
+.cellborder {
+  border: 1px solid #ebeef5;
+}
+
+.bl {
+  border-left: 1px solid #ebeef5;
+}
+
+.price {
+  text-align: right;
+}
 .price-min {
+  height: 28px;
   color: white;
+  text-align: center;
   background-color: #67c23a;
+  padding: 4px;
 }
 .price-med {
+  height: 28px;
   color: white;
+  text-align: center;
   background-color: #409eff;
+  padding: 4px;
 }
 .price-max {
+  height: 28px;
   color: white;
+  text-align: center;
   background-color: #f56c6c;
+  padding: 4px;
 }
 
 .edit-buttons {
