@@ -1,6 +1,6 @@
 <template>
-  <el-row>
-    <el-row v-for="(item, index) in items" v-bind:key="index">
+  <el-row syle="margin-top:2px;">
+    <el-row v-for="(item, index) in items" v-bind:key="index" type="flex" align="middle">
       <el-col :span="4">
         <label class="el-form-item__label">{{ itemName(item) }}</label>
       </el-col>
@@ -12,23 +12,25 @@
           class="price"
           size="mini"
           maxlength="2"
-          v-model="item.low"
-          @change="changePercentage('low', item, index)"
+          v-model="item.price"
+          @change="changePercentage('price', item, index)"
         ></el-input>
       </el-col>
-      <el-col :span="4">
-        <el-input size="mini" class="price" v-model="item.low_price" @change="onChangePrice()"></el-input>
+      <el-col :span="4" class="item-price">
+        <!-- <el-input size="mini" class="price" v-model="item.low_price" @change="onChangePrice()"></el-input> -->
+        <label>{{ item.low_price }}</label>
       </el-col>
-      <el-col :span="4">
-        <el-input
+      <el-col :span="4" class="item-price">
+        <!-- <el-input
           size="mini"
           class="price"
           maxlength="2"
-          v-model="item.mid"
+          v-model="item.mid_price"
           @change="changePercentage('mid', item, index)"
-        ></el-input>
+        ></el-input>-->
+        <label>{{ item.mid_price }}</label>
       </el-col>
-      <el-col :span="4">
+      <el-col :span="4" class="item-price">
         <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteItem(index)"></el-button>
       </el-col>
     </el-row>
@@ -93,6 +95,11 @@ export default {
 }
 .el-form-item__label {
   text-align: left;
+  line-height: 18px;
+}
+
+.item-price {
+  text-align: right;
   line-height: 18px;
 }
 </style>

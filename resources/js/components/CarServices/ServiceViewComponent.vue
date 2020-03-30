@@ -1,8 +1,8 @@
 <template>
   <el-container>
     <el-main class="content">
+      <!-- Top bar -->
       <el-row>
-        <el-divider></el-divider>
         <el-col :span="24">
           <el-form inline label-position="right" label-width="80px" class="query-form">
             <el-form-item label="Año">
@@ -110,12 +110,20 @@
         </el-col>
 
         <el-col :span="18" style="padding-left: 20px;">
-          <h3>
-            {{currentServiceName}}
-            <div v-if="Object.keys(carService).length === 0" style="float:right;">
-              <el-checkbox v-model="updatePrices">Aplicar el porcentaje a todo la fila</el-checkbox>
-            </div>
-          </h3>
+          <el-row type="flex" align="middle" style="background-color:#f2f2f2;padding:4px">
+            <el-col :span="8">
+              <h3>{{currentServiceName}}</h3>
+            </el-col>
+            <el-col :span="8">
+              <el-button type="primary" icon="el-icon-tickets">Cotización</el-button>
+              <el-button type="primary" icon="el-icon-tickets">Recibo</el-button>
+            </el-col>
+            <el-col :span="8">
+              <div v-if="Object.keys(carService).length === 0" style="float:right;">
+                <el-checkbox v-model="updatePrices">Aplicar el porcentaje a todo la fila</el-checkbox>
+              </div>
+            </el-col>
+          </el-row>
 
           <br />
           <el-card class="box-card">
@@ -128,20 +136,20 @@
               <el-col :span="12">{{currentServiceName}}</el-col>
               <el-col :span="12" class="bl">
                 <img
-                  width="100%"
+                  width="200"
                   src="https://s.aolcdn.com/dims-global/dims3/GLOB/legacy_thumbnail/788x525/quality/85/https://s.aolcdn.com/commerce/autodata/images/USC60HOC022A121001.jpg"
                 />
               </el-col>
             </el-row>
             <el-row class="row-header">
-              <el-col :span="4" style="color:#f2f2f2">.</el-col>
-              <el-col :span="4">DOLAR</el-col>
+              <el-col :span="4"></el-col>
+              <el-col :span="4" :offset="4">DOLAR</el-col>
               <el-col :span="4">MARCA</el-col>
               <el-col :span="4">MODELO</el-col>
               <el-col :span="4">DEL AÑO</el-col>
               <el-col :span="4">AL AÑO</el-col>
             </el-row>
-            <el-row class="center">
+            <el-row class="center" type="flex" align="middle">
               <el-col :span="4" class="row-header">TIPO DE CAMBIO:</el-col>
               <el-col :span="4">
                 <el-input-number
@@ -151,7 +159,7 @@
                   :precision="2"
                   :step="0.1"
                   :min="0"
-                  style="width:100%"
+                  style="width:100%;border-radius:0"
                 ></el-input-number>
               </el-col>
               <el-col :span="4">HONDA</el-col>
@@ -159,7 +167,7 @@
               <el-col :span="4">2015</el-col>
               <el-col :span="4">2020</el-col>
             </el-row>
-            <el-row>
+            <el-row type="flex" align="middle">
               <el-col :span="12" class="row-header">PORCENTAJE DE GANANCIA EN LAS PIEZAS:</el-col>
               <el-col :span="4" class="price-min">20%</el-col>
               <el-col :span="4" class="price-med">25%</el-col>
@@ -451,6 +459,10 @@ td {
   text-align: center;
 }
 
+.excell {
+  border-radius: 0;
+}
+
 .row-header {
   background-color: #f2f2f2;
   font-weight: bold;
@@ -480,21 +492,18 @@ td {
   color: white;
   text-align: center;
   background-color: #67c23a;
-  padding: 4px;
 }
 .price-med {
   height: 28px;
   color: white;
   text-align: center;
   background-color: #409eff;
-  padding: 4px;
 }
 .price-max {
   height: 28px;
   color: white;
   text-align: center;
   background-color: #f56c6c;
-  padding: 4px;
 }
 
 .edit-buttons {
