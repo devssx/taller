@@ -5,22 +5,33 @@
         <label class="el-form-item__label">{{ itemName(item) }}</label>
       </el-col>
       <el-col :span="4">
-        <el-input size="mini" class="price" v-model="item.price" @change="changeBase(item, index)"></el-input>
+        <!-- <el-input class="price" v-model="item.price" @change="changeBase(item, index)"></el-input> -->
+        <el-input-number
+          v-model="item.priceUSD"
+          @change="refreshItem(index)"
+          controls-position="right"
+          :precision="2"
+          :step="0.5"
+          :min="0"
+          style="width:100%"
+        ></el-input-number>
       </el-col>
       <el-col :span="4">
-        <el-input
-          class="price"
-          size="mini"
-          maxlength="2"
+        <el-input-number
           v-model="item.price"
-          @change="changePercentage('price', item, index)"
-        ></el-input>
+          controls-position="right"
+          :precision="2"
+          :step="0.5"
+          :min="0"
+          :disabled="true"
+          style="width:100%"
+        ></el-input-number>
       </el-col>
-      <el-col :span="4" class="item-price">
+      <el-col :span="3" class="item-price">
         <!-- <el-input size="mini" class="price" v-model="item.low_price" @change="onChangePrice()"></el-input> -->
-        <label>{{ item.low_price }}</label>
+        <label>${{ formatPrice(item.low_price) }}</label>
       </el-col>
-      <el-col :span="4" class="item-price">
+      <el-col :span="3" class="item-price">
         <!-- <el-input
           size="mini"
           class="price"
@@ -28,9 +39,19 @@
           v-model="item.mid_price"
           @change="changePercentage('mid', item, index)"
         ></el-input>-->
-        <label>{{ item.mid_price }}</label>
+        <label>${{ formatPrice(item.mid_price) }}</label>
       </el-col>
-      <el-col :span="4" class="item-price">
+      <el-col :span="3" class="item-price">
+        <!-- <el-input
+          size="mini"
+          class="price"
+          maxlength="2"
+          v-model="item.mid_price"
+          @change="changePercentage('mid', item, index)"
+        ></el-input>-->
+        <label>${{ formatPrice(item.high_price) }}</label>
+      </el-col>
+      <el-col :span="3" class="item-price">
         <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteItem(index)"></el-button>
       </el-col>
     </el-row>
@@ -39,7 +60,7 @@
 
 <script>
 export default {
-  props: ["items", "updatePrices"],
+  props: ["items", "updatePrices", "onPriceChange"],
   mounted: function() {},
   methods: {
     formatPrice(value) {
@@ -48,6 +69,11 @@ export default {
     },
     deleteItem(value) {
       this.items.splice(value, 1);
+      this.onChangePrice();
+    },
+    refreshItem(value) {
+      console.log(value);
+      this.onPriceChange();
       this.onChangePrice();
     },
     changeBase(item, index) {

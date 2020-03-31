@@ -115,12 +115,14 @@
               <h3>{{currentServiceName}}</h3>
             </el-col>
             <el-col :span="8">
-              <el-button type="primary" icon="el-icon-tickets">Cotización</el-button>
-              <el-button type="primary" icon="el-icon-tickets">Recibo</el-button>
+              <div v-if="Object.keys(carService).length === 0" style="float:right;">
+                <!-- <el-checkbox v-model="updatePrices">Aplicar el porcentaje a todo la fila</el-checkbox> -->
+              </div>
             </el-col>
             <el-col :span="8">
-              <div v-if="Object.keys(carService).length === 0" style="float:right;">
-                <el-checkbox v-model="updatePrices">Aplicar el porcentaje a todo la fila</el-checkbox>
+              <div style="float:right;">
+                <el-button type="primary" icon="el-icon-tickets">Cotización</el-button>
+                <el-button type="primary" icon="el-icon-tickets">Recibo</el-button>
               </div>
             </el-col>
           </el-row>
@@ -128,15 +130,15 @@
           <br />
           <el-card class="box-card">
             <!-- Creando -->
-            <el-row class="row-header" style="margin-bottom:5px;">
+            <el-row class="row-header" style="margin-bottom:5px;" type="flex" align="middle">
               <el-col :span="12">SERVICIO</el-col>
               <el-col :span="12">FOTO DEL CARRO</el-col>
             </el-row>
-            <el-row class="center">
+            <el-row class="center" type="flex" align="middle">
               <el-col :span="12">{{currentServiceName}}</el-col>
               <el-col :span="12" class="bl">
                 <img
-                  width="200"
+                  width="50%"
                   src="https://s.aolcdn.com/dims-global/dims3/GLOB/legacy_thumbnail/788x525/quality/85/https://s.aolcdn.com/commerce/autodata/images/USC60HOC022A121001.jpg"
                 />
               </el-col>
@@ -154,6 +156,7 @@
               <el-col :span="4">
                 <el-input-number
                   v-model="tdc"
+                  @change="changeAllPrices"
                   controls-position="right"
                   size="mini"
                   :precision="2"
@@ -169,35 +172,38 @@
             </el-row>
             <el-row type="flex" align="middle">
               <el-col :span="12" class="row-header">PORCENTAJE DE GANANCIA EN LAS PIEZAS:</el-col>
-              <el-col :span="4" class="price-min">20%</el-col>
-              <el-col :span="4" class="price-med">25%</el-col>
-              <el-col :span="4" class="price-max">30%</el-col>
+              <el-col :span="3" class="price-min">20%</el-col>
+              <el-col :span="3" class="price-med">25%</el-col>
+              <el-col :span="3" class="price-max">30%</el-col>
+              <el-col :span="3" class="cellborder" style="height:28px"></el-col>
             </el-row>
             <el-row class="row-header">
               <el-col :span="4">Refacción</el-col>
               <el-col :span="4">Precio DLLS</el-col>
               <el-col :span="4">Precio Real</el-col>
-              <el-col :span="4">Precio Mínimo</el-col>
-              <el-col :span="4">Precio Medio</el-col>
-              <el-col :span="4">Precio Máximo</el-col>
+              <el-col :span="3">Precio Mínimo</el-col>
+              <el-col :span="3">Precio Medio</el-col>
+              <el-col :span="3">Precio Máximo</el-col>
+              <el-col :span="3"></el-col>
             </el-row>
             <!-- Items del servicio -->
-            <row-item ref="selectItem" :items="items" :updatePrices="updatePrices"></row-item>
+            <row-item ref="selectItem" :onPriceChange="changeAllPrices" :items="items" :updatePrices="updatePrices"></row-item>
             <!-- Totales -->
             <el-row class="cellborder">
               <el-col :span="8">TOTAL</el-col>
               <el-col :span="4" class="bl price">
                 <b>${{ formatPrice(sumItemPrice("price")) }}</b>
               </el-col>
-              <el-col :span="4" class="bl price">
+              <el-col :span="3" class="bl price">
                 <b>${{ formatPrice(sumItemPrice("low_price")) }}</b>
               </el-col>
-              <el-col :span="4" class="bl price">
+              <el-col :span="3" class="bl price">
                 <b>${{ formatPrice(sumItemPrice("mid_price")) }}</b>
               </el-col>
-              <el-col :span="4" class="bl price">
+              <el-col :span="3" class="bl price">
                 <b>${{ formatPrice(sumItemPrice("high_price")) }}</b>
               </el-col>
+              <el-col :span="3" class="bl price"></el-col>
             </el-row>
             <!-- descripcion del servicio -->
             <el-row>
@@ -317,6 +323,11 @@ export default {
 
     axios.get("/api/items?all=1").then(function(response) {
       $this.listItems = response.data;
+
+      for (var i = 0; i < 5; i++) {
+        $this.handleChange(i + 1);
+      }
+      $this.changeAllPrices();
     });
 
     axios.get("/api/car/makers").then(function(response) {
@@ -328,6 +339,22 @@ export default {
     });
   },
   methods: {
+    changeAllPrices() {
+      this.item = "";
+      for (var i = 0; i < this.listItems.length; i++) {
+        var item = this.listItems[i];
+        var base = item.priceUSD * this.tdc;
+        item.price = base;
+        item.low = 20;
+        item.low_price = base + base * (item.low / 100);
+        item.mid = 25;
+        item.mid_price = base + base * (item.mid / 100);
+        item.high = 30;
+        item.high_price = base + base * (item.high / 100);
+      }
+
+      this.$refs.selectItem.$forceUpdate();
+    },
     serviceChanged(value) {
       for (var i = 0; i < this.services.length; i++) {
         if (this.services[i].id == value) {
@@ -335,21 +362,6 @@ export default {
           break;
         }
       }
-
-      //TEST
-      if (this.currentServiceName == "Cambio de Aceite") this.items = [];
-
-      this.item = "";
-      var item = this.listItems[0];
-      item.price = 100;
-      item.low = 0;
-      item.low_price = 100;
-      item.mid = 0;
-      item.mid_price = 120;
-      item.high = 0;
-      item.high_price = 150;
-      this.items.push(item);
-      this.$refs.selectItem.$forceUpdate();
     },
     search() {
       var $this = this;
@@ -390,7 +402,8 @@ export default {
     handleChange(value) {
       this.item = "";
       var item = this.listItems[value];
-      item.price = 0;
+      item.price = 20;
+      item.priceUSD = 1;
       item.low = 0;
       item.low_price = 0;
       item.mid = 0;
