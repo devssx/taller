@@ -1,58 +1,108 @@
 <template>
   <el-row syle="margin-top:2px;">
+    <!--<el-row v-for="(item, index) in items" v-bind:key="index">
+      <el-col :span="1">
+        <button
+          class="el-icon-close"
+          @click="deleteItem(index)"
+          style="cursor:pointer;border:none;background-color:white;"
+        ></button>
+      </el-col>
+      <el-col :span="5">
+        <label class="el-form-item__label">{{ item.name }}</label>
+      </el-col>
+      <el-col :span="3">
+        <el-input class="price" v-model="item.price" @change="changeBase(item, index)"></el-input>
+      </el-col>
+      <el-col :span="2" style="text-align:center;" v-bind:class="{ priceSelected: price == 'low'}">
+        <el-input
+          class="percentage"
+          maxlength="2"
+          v-model="item.low"
+          @change="changePercentage('low', item, index)"
+        ></el-input>
+      </el-col>
+      <el-col :span="3" style="text-align:center;" v-bind:class="{ priceSelected: price == 'low'}">
+        <el-input class="price" v-model="item.low_price" @change="onChangePrice()"></el-input>
+      </el-col>
+      <el-col :span="2" style="text-align:center;" v-bind:class="{ priceSelected: price == 'mid'}">
+        <el-input
+          class="percentage"
+          maxlength="2"
+          v-model="item.mid"
+          @change="changePercentage('mid', item, index)"
+        ></el-input>
+      </el-col>
+      <el-col :span="3" style="text-align:center;" v-bind:class="{ priceSelected: price == 'mid'}">
+        <el-input class="price" v-model="item.mid_price" @change="onChangePrice()"></el-input>
+      </el-col>
+      <el-col :span="2" style="text-align:center;" v-bind:class="{ priceSelected: price == 'high'}">
+        <el-input
+          class="percentage"
+          maxlength="2"
+          v-model="item.high"
+          @change="changePercentage('high', item, index)"
+        ></el-input>
+      </el-col>
+      <el-col :span="3" style="text-align:center;" v-bind:class="{ priceSelected: price == 'high'}">
+        <el-input class="price" v-model="item.high_price" @change="onChangePrice()"></el-input>
+      </el-col>
+    </el-row>
+    -->
     <el-row v-for="(item, index) in items" v-bind:key="index" type="flex" align="middle">
-      <el-col :span="4">
-        <label class="el-form-item__label">{{ itemName(item) }}</label>
+      <el-col :span="1">
+        <button
+          class="el-icon-close"
+          @click="deleteItem(index)"
+          style="cursor:pointer;border:none;background-color:white;margin:4px;"
+        ></button>
       </el-col>
-      <el-col :span="4">
-        <!-- <el-input class="price" v-model="item.price" @change="changeBase(item, index)"></el-input> -->
-        <el-input-number
+      <el-col :span="6">
+        <label class="el-form-item__label">{{ item.name }}</label>
+      </el-col>
+      <el-col :span="3">
+        <el-input
+          size="mini"
+          class="price"
           v-model="item.priceUSD"
-          @change="refreshItem(index)"
-          controls-position="right"
-          :precision="2"
-          :step="0.5"
-          :min="0"
-          style="width:100%"
-        ></el-input-number>
+          @change="changeUSDPrice(item, index)"
+        ></el-input>
       </el-col>
-      <el-col :span="4">
-        <el-input-number
-          v-model="item.price"
-          controls-position="right"
-          :precision="2"
-          :step="0.5"
-          :min="0"
-          :disabled="true"
-          style="width:100%"
-        ></el-input-number>
+      <el-col :span="2">
+        <el-input size="mini" class="price" v-model="item.price" @change="changeBase(item, index)"></el-input>
       </el-col>
-      <el-col :span="3" class="item-price">
-        <!-- <el-input size="mini" class="price" v-model="item.low_price" @change="onChangePrice()"></el-input> -->
-        <label>${{ formatPrice(item.low_price) }}</label>
-      </el-col>
-      <el-col :span="3" class="item-price">
-        <!-- <el-input
+      <el-col :span="2">
+        <el-input
           size="mini"
-          class="price"
-          maxlength="2"
-          v-model="item.mid_price"
-          @change="changePercentage('mid', item, index)"
-        ></el-input>-->
-        <label>${{ formatPrice(item.mid_price) }}</label>
+          class="percentage"
+          v-model="item.low"
+          @change="changePercentage('low', item, index)"
+        ></el-input>
       </el-col>
-      <el-col :span="3" class="item-price">
-        <!-- <el-input
+      <el-col :span="2">
+        <el-input size="mini" class="price" v-model="item.low_price"></el-input>
+      </el-col>
+      <el-col :span="2">
+        <el-input
           size="mini"
-          class="price"
-          maxlength="2"
-          v-model="item.mid_price"
+          class="percentage"
+          v-model="item.mid"
           @change="changePercentage('mid', item, index)"
-        ></el-input>-->
-        <label>${{ formatPrice(item.high_price) }}</label>
+        ></el-input>
       </el-col>
-      <el-col :span="3" class="item-price">
-        <el-button size="mini" type="danger" icon="el-icon-delete" @click="deleteItem(index)"></el-button>
+      <el-col :span="2">
+        <el-input size="mini" class="price" v-model="item.mid_price"></el-input>
+      </el-col>
+      <el-col :span="2">
+        <el-input
+          size="mini"
+          class="percentage"
+          v-model="item.high"
+          @change="changePercentage('high', item, index)"
+        ></el-input>
+      </el-col>
+      <el-col :span="2">
+        <el-input size="mini" class="price" v-model="item.high_price"></el-input>
       </el-col>
     </el-row>
   </el-row>
@@ -60,9 +110,13 @@
 
 <script>
 export default {
-  props: ["items", "updatePrices", "onPriceChange"],
+  props: ["items", "updatePrices", "onPriceChange", "tdc"],
   mounted: function() {},
   methods: {
+    changeUSDPrice(item, index) {
+      item.price = item.priceUSD * this.tdc;
+      this.changeBase(item, index);
+    },
     formatPrice(value) {
       let val = (value / 1).toFixed(2);
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -72,7 +126,7 @@ export default {
       this.onChangePrice();
     },
     refreshItem(value) {
-      console.log(value);
+      //console.log(value);
       this.onPriceChange();
       this.onChangePrice();
     },
@@ -101,12 +155,6 @@ export default {
     onChangePrice() {
       this.$forceUpdate();
       this.$root.$refs.create.$forceUpdate();
-    },
-    itemName(item) {
-      if (item.name) {
-        return item.name;
-      }
-      return item.item.name;
     }
   }
 };
@@ -121,11 +169,6 @@ export default {
 }
 .el-form-item__label {
   text-align: left;
-  line-height: 18px;
-}
-
-.item-price {
-  text-align: right;
   line-height: 18px;
 }
 </style>

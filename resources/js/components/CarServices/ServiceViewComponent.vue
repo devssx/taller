@@ -175,7 +175,7 @@
               <el-col :span="3" class="price-min">20%</el-col>
               <el-col :span="3" class="price-med">25%</el-col>
               <el-col :span="3" class="price-max">30%</el-col>
-              <el-col :span="3" class="cellborder" style="height:28px"></el-col>
+              <el-col :span="3" class="cellborder" style="height:28px"><el-checkbox v-model="updatePrices">Aplicar</el-checkbox></el-col>
             </el-row>
             <el-row class="row-header">
               <el-col :span="4">Refacción</el-col>
@@ -187,7 +187,7 @@
               <el-col :span="3"></el-col>
             </el-row>
             <!-- Items del servicio -->
-            <row-item ref="selectItem" :onPriceChange="changeAllPrices" :items="items" :updatePrices="updatePrices"></row-item>
+            <row-item ref="selectItem" :onPriceChange="changeAllPrices" :items="items" :updatePrices="updatePrices" :tdc="tdc"></row-item>
             <!-- Totales -->
             <el-row class="cellborder">
               <el-col :span="8">TOTAL</el-col>
@@ -400,15 +400,18 @@ export default {
         });
     },
     handleChange(value) {
-      this.item = "";
-      var item = this.listItems[value];
+      // BUG: debes crear un nuevo item si no no actualiza
+      var item = new Object();
+      item.id = this.listItems[value].id;
+      item.name = this.listItems[value].name;
+      item.description = this.listItems[value].description;
       item.price = 20;
       item.priceUSD = 1;
-      item.low = 0;
+      item.low = 10;
       item.low_price = 0;
-      item.mid = 0;
+      item.mid = 20;
       item.mid_price = 0;
-      item.high = 0;
+      item.high = 30;
       item.high_price = 0;
       this.items.push(item);
       this.$refs.selectItem.$forceUpdate();
