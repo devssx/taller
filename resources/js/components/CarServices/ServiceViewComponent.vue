@@ -178,13 +178,15 @@
               <el-col :span="3" class="cellborder" style="height:28px"><el-checkbox v-model="updatePrices">Aplicar</el-checkbox></el-col>
             </el-row>
             <el-row class="row-header">
-              <el-col :span="4">Refacción</el-col>
-              <el-col :span="4">Precio DLLS</el-col>
-              <el-col :span="4">Precio Real</el-col>
-              <el-col :span="3">Precio Mínimo</el-col>
-              <el-col :span="3">Precio Medio</el-col>
-              <el-col :span="3">Precio Máximo</el-col>
-              <el-col :span="3"></el-col>
+              <el-col :span="7">Refacción</el-col>
+              <el-col :span="3">Precio DLLS</el-col>
+              <el-col :span="2">Base</el-col>
+              <el-col :span="2">%</el-col>
+              <el-col :span="2">Mínimo</el-col>
+              <el-col :span="2">%</el-col>
+              <el-col :span="2">Medio</el-col>
+              <el-col :span="2">%</el-col>
+              <el-col :span="2">Máximo</el-col>
             </el-row>
             <!-- Items del servicio -->
             <row-item ref="selectItem" :onPriceChange="changeAllPrices" :items="items" :updatePrices="updatePrices" :tdc="tdc"></row-item>
