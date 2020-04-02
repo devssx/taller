@@ -110,12 +110,22 @@
 
 <script>
 export default {
-  props: ["items", "updatePrices", "onPriceChange", "tdc"],
+  props: ["items", "updatePrices", "tdc"],
   mounted: function() {},
   methods: {
     changeUSDPrice(item, index) {
       item.price = item.priceUSD * this.tdc;
       this.changeBase(item, index);
+    },
+    refreshPrices(currentValue) {
+      if (isNaN(currentValue)) return;
+      
+      // change all prices (USD*TDC)
+      for (var i = 0; i < this.items.length; i++) {
+        var item = this.items[i];
+        item.price = item.priceUSD * currentValue;
+        this.changeBase(item, i);
+      }
     },
     formatPrice(value) {
       let val = (value / 1).toFixed(2);
@@ -123,11 +133,6 @@ export default {
     },
     deleteItem(value) {
       this.items.splice(value, 1);
-      this.onChangePrice();
-    },
-    refreshItem(value) {
-      //console.log(value);
-      this.onPriceChange();
       this.onChangePrice();
     },
     changeBase(item, index) {

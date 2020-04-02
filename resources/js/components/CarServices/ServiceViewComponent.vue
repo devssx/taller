@@ -11,7 +11,13 @@
               </el-select>
             </el-form-item>
             <el-form-item label="Marca">
-              <el-select v-model="maker" filterable class="year" :disabled="makers.length == 0">
+              <el-select
+                v-model="maker"
+                filterable
+                class="year"
+                :disabled="makers.length == 0"
+                @change="onMakerChange"
+              >
                 <el-option
                   v-for="maker in makers"
                   :key="maker.maker"
@@ -156,7 +162,7 @@
               <el-col :span="4">
                 <el-input-number
                   v-model="tdc"
-                  @change="changeAllPrices"
+                  @change="onTDCChange"
                   controls-position="right"
                   size="mini"
                   :precision="2"
@@ -172,10 +178,14 @@
             </el-row>
             <el-row type="flex" align="middle">
               <el-col :span="12" class="row-header">PORCENTAJE DE GANANCIA EN LAS PIEZAS:</el-col>
-              <el-col :span="3" class="price-min">20%</el-col>
-              <el-col :span="3" class="price-med">25%</el-col>
-              <el-col :span="3" class="price-max">30%</el-col>
-              <el-col :span="3" class="cellborder" style="height:28px"><el-checkbox v-model="updatePrices">Aplicar</el-checkbox></el-col>
+              <el-col :span="2" class="price-min">20%</el-col>
+              <el-col :span="2"></el-col>
+              <el-col :span="2" class="price-med">25%</el-col>
+              <el-col :span="2"></el-col>
+              <el-col :span="2" class="price-max">30%</el-col>
+              <el-col :span="2" class="cellborder" style="height:28px">
+                <el-checkbox v-model="updatePrices">Aplicar</el-checkbox>
+              </el-col>
             </el-row>
             <el-row class="row-header">
               <el-col :span="7">Refacción</el-col>
@@ -189,27 +199,26 @@
               <el-col :span="2">Máximo</el-col>
             </el-row>
             <!-- Items del servicio -->
-            <row-item ref="selectItem" :onPriceChange="changeAllPrices" :items="items" :updatePrices="updatePrices" :tdc="tdc"></row-item>
+            <row-item ref="selectItem" :items="items" :updatePrices="updatePrices" :tdc="tdc"></row-item>
             <!-- Totales -->
-            <el-row class="cellborder">
-              <el-col :span="8">TOTAL</el-col>
-              <el-col :span="4" class="bl price">
+            <el-row class="cellborder" style="height:28px" type="flex" align="middle">
+              <el-col :span="7">TOTAL</el-col>
+              <el-col :span="5" class="bl price">
                 <b>${{ formatPrice(sumItemPrice("price")) }}</b>
               </el-col>
-              <el-col :span="3" class="bl price">
+              <el-col :span="4" class="bl price">
                 <b>${{ formatPrice(sumItemPrice("low_price")) }}</b>
               </el-col>
-              <el-col :span="3" class="bl price">
+              <el-col :span="4" class="bl price">
                 <b>${{ formatPrice(sumItemPrice("mid_price")) }}</b>
               </el-col>
-              <el-col :span="3" class="bl price">
+              <el-col :span="4" class="bl price">
                 <b>${{ formatPrice(sumItemPrice("high_price")) }}</b>
               </el-col>
-              <el-col :span="3" class="bl price"></el-col>
             </el-row>
             <!-- descripcion del servicio -->
             <el-row>
-              <el-col :span="4" class="cellborder">Descripción del servicio</el-col>
+              <el-col class="cellborder">Descripción del servicio</el-col>
               <el-col
                 class="cellborder"
                 :span="20"
@@ -326,6 +335,7 @@ export default {
     axios.get("/api/items?all=1").then(function(response) {
       $this.listItems = response.data;
 
+      // TEMPORAL
       for (var i = 0; i < 5; i++) {
         $this.handleChange(i + 1);
       }
@@ -341,6 +351,34 @@ export default {
     });
   },
   methods: {
+    onMakerChange(selectedValue) {
+      var $this = this;
+      $this.brands.splice(0, this.brands.length);
+      axios
+        .get("/api/car/brandsByMaker", {
+          params: {
+            maker: selectedValue
+          }
+        })
+        .then(function(response) {
+          $this.brands = response.data;
+        });
+
+      // for (var i = 0; i < 5; i++) {
+      //   this.brands.push({ brand: i });
+      // }
+
+      // for (var i = 0; i < this.makers.length; i++) {
+      //   var makerObj = this.makers[i];
+      //   if (makerObj.maker == selectedValue) {
+      //     this.brands.push(makerObj.brand);
+      //   }
+      // }
+    },
+    onTDCChange(currentValue, oldValue) {
+      this.$refs.selectItem.refreshPrices(currentValue);
+    },
+    // TEMPORAL
     changeAllPrices() {
       this.item = "";
       for (var i = 0; i < this.listItems.length; i++) {

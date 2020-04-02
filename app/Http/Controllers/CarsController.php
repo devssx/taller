@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SaveCarRequest;
+use App\Http\Requests\GetBrandsRequest;
 use App\Models\Car;
 use Illuminate\Http\Request;
 
@@ -75,6 +76,12 @@ class CarsController extends Controller
     public function listMakers()
     {
         return Car::select('maker')->groupBy('maker')->orderBy('maker')->get();
+    }
+
+    public function getBrandsOf(GetBrandsRequest $request)
+    {
+        return Car::select('brand')->where('maker', '=', $request->maker)->groupBy('brand')->orderBy('brand')->get();
+        //return Car::select('brand')->groupBy('brand')->orderBy('brand')->get();
     }
 
     public function delete($id)
