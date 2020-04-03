@@ -305,6 +305,9 @@ export default {
   mounted: function() {
     const $this = this;
 
+    // EVento boton add service
+    $this.$root.$on("addService", $this.addService);
+
     $this.year = new Date().getFullYear();
     $this.motors = [];
     $this.motors.push("1.8");
@@ -351,8 +354,34 @@ export default {
     });
   },
   methods: {
+    addService: function(service, total) {
+      var $this = this;
+      var service = {
+        id: service.id,
+        name: service.name,
+        items: [
+          {
+            id: 1,
+            name: "Mano de Obra",
+            description: "",
+            price: total,
+            low: 0,
+            low_price: total,
+            mid: 0,
+            mid_price: total,
+            high: 0,
+            high_price: total
+          }
+        ]
+      };
+      $this.services.push(service);
+      // setTimeout(function() {
+      //   $this.$refs.services.setCheckedNodes([service]);
+      // }, 0);
+    },
     onMakerChange(selectedValue) {
       var $this = this;
+      $this.brand = "";
       $this.brands.splice(0, this.brands.length);
       axios
         .get("/api/car/brandsByMaker", {
@@ -363,17 +392,6 @@ export default {
         .then(function(response) {
           $this.brands = response.data;
         });
-
-      // for (var i = 0; i < 5; i++) {
-      //   this.brands.push({ brand: i });
-      // }
-
-      // for (var i = 0; i < this.makers.length; i++) {
-      //   var makerObj = this.makers[i];
-      //   if (makerObj.maker == selectedValue) {
-      //     this.brands.push(makerObj.brand);
-      //   }
-      // }
     },
     onTDCChange(currentValue, oldValue) {
       this.$refs.selectItem.refreshPrices(currentValue);
@@ -398,7 +416,16 @@ export default {
     serviceChanged(value) {
       for (var i = 0; i < this.services.length; i++) {
         if (this.services[i].id == value) {
-          this.currentServiceName = this.services[i].name;
+          var currentService = this.services[i];
+          this.currentServiceName = currentService.name;
+
+          if (currentService.items) {
+            this.items.splice(0, this.items.length);
+            for (var j = 0; j < currentService.items.length; j++)
+              this.items.push(currentService.items[j]);
+            this.$refs.selectItem.$forceUpdate();
+          }
+
           break;
         }
       }
@@ -409,20 +436,27 @@ export default {
       $this.selectedServices = [];
       $this.services = [];
       axios
-        .get("/api/servicesByCar", {
+        .get("/api/servicesOfCar", {
           params: {
+            maker: $this.maker,
             brand: $this.brand,
-            year: $this.year
+            motor: $this.motor,
+            year: $this.year,
+            end_year: $this.year // TODO END Year
           }
         })
         .then(function(response) {
           for (var i = 0; i < response.data.length; i++) {
             $this.services.push({
               id: response.data[i].id,
-              label: response.data[i].name,
+              name: response.data[i].name,
               items: response.data[i].items
             });
+
+            console.log(response.data[i]);
           }
+
+          /* TODO TEMPORALMENTE COMENTADO
           if (localStorage.getItem("order") && $this.getParameter("back")) {
             var order = JSON.parse(localStorage.getItem("order"));
             setTimeout(function() {
@@ -436,7 +470,7 @@ export default {
               }
               $this.selectedPrice = order.price;
             }, 0);
-          }
+          } */
         });
     },
     handleChange(value) {

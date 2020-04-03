@@ -81,7 +81,6 @@ class CarsController extends Controller
     public function getBrandsOf(GetBrandsRequest $request)
     {
         return Car::select('brand')->where('maker', '=', $request->maker)->groupBy('brand')->orderBy('brand')->get();
-        //return Car::select('brand')->groupBy('brand')->orderBy('brand')->get();
     }
 
     public function delete($id)

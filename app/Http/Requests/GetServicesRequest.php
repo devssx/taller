@@ -25,8 +25,11 @@ class GetServicesRequest extends FormRequest
     {
         return [
             //
+            'maker' => 'string',
             'brand' => 'string',
+            'motor' => 'string',
             'year' => 'integer',
+            'end_year' => 'integer',
         ];
     }
 }

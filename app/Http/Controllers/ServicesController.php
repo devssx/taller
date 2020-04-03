@@ -100,6 +100,55 @@ class ServicesController extends Controller
         return $services->values()->toArray();
     }
 
+    public function getServicesOfCar(GetServicesRequest $request)
+    {
+        $car = Car::has('carServices')
+            ->where('maker', '=', $request->get('maker'))
+            ->where('brand', '=', $request->get('brand'))
+            ->where('motor', '=', $request->get('motor'))
+            ->where('start_year', '>=', $request->get('year'))
+            //->where('end_year', '<=', $request->get('year'))
+            ->first();
+
+        if (!$car) {
+            return [];
+        }
+
+        $carServiceItems = CarServiceItem::where('car_id', '=', $car->id)
+            ->with('service')->with('item')->get();
+
+        $services = collect();
+
+        $carServiceItems->map(function ($carServiceItem) use ($services) {
+            $service = collect($carServiceItem->service);
+            if ($services->get($carServiceItem->service_id)) {
+                $service = $services->get($carServiceItem->service_id);
+            }
+
+            $items = collect();
+            if ($service->has('items')) {
+                $items = $service->get('items');
+            }
+            $item = $carServiceItem->item->toArray();
+
+            $item['price'] = floatval($carServiceItem->price);
+            $item['low'] = $carServiceItem->low;
+            $item['low_price'] = floatval($carServiceItem->low_price);
+            $item['mid'] = $carServiceItem->mid;
+            $item['mid_price'] = floatval($carServiceItem->mid_price);
+            $item['high'] = $carServiceItem->high;
+            $item['high_price'] = floatval($carServiceItem->high_price);
+
+            $items->put($carServiceItem->item_id, $item);
+
+            $service->put('items', $items);
+
+            $services->put($carServiceItem->service_id, $service);
+        });
+
+        return $services->values()->toArray();
+    }
+
     public function delete($id)
     {
         return response()->json([
