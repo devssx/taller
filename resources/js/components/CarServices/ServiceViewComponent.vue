@@ -76,11 +76,11 @@
                   <th class="price-med">Precio Med</th>
                   <th class="price-max">Precio Max</th>
                 </tr>
-                <tr>
-                  <td>20%</td>
-                  <td>25%</td>
-                  <td>30%</td>
-                </tr>
+                <!-- <tr>
+                  <td><el-radio v-model="radio" label="1">Option A</el-radio></td>
+                  <td><el-radio v-model="radio" label="2">Option B</el-radio></td>
+                  <td><el-radio v-model="radio" label="3">Option C</el-radio></td>
+                </tr>-->
                 <tr>
                   <td>$5,730.00</td>
                   <td>$6,015.00</td>
@@ -237,7 +237,7 @@
           <br />
           <el-button
             type="primary"
-            :disabled="car == '' || service == '' || items.length == 0 || save"
+            :disabled="car == undefined || car == '' || service == '' || items.length == 0 || save"
             @click="next()"
           >Guardar</el-button>
         </el-col>
@@ -269,6 +269,7 @@ export default {
   },
   data() {
     return {
+      radio: "1",
       //activeNames: ["1"], (No accordion)
       activeName: "1",
       currentServiceName: "Servicio",
@@ -354,8 +355,32 @@ export default {
     });
   },
   methods: {
+    loadCarServices() {
+      var $this = this;
+      alert($this.car);
+      axios.get("/api/carservices?id=" + $this.car).then(function(response) {
+        for (var i = 0; i < response.data.length; i++) {
+          alert(response.data[i].service.name);
+          $this.services.push({
+            id: response.data[i].id,
+            name: response.data[i].service.name,
+            items: response.data[i].items
+          });
+        }
+        console.log(response.data);
+      });
+    },
     addService: function(service, total) {
       var $this = this;
+      if ($this.car == "") {
+        $this.$notify({
+          title: "Selecciona Un carro válido",
+          message: "El carro seleccionado no es válido",
+          type: "error"
+        });
+        return;
+      }
+
       var service = {
         id: service.id,
         name: service.name,
@@ -416,13 +441,13 @@ export default {
     serviceChanged(value) {
       for (var i = 0; i < this.services.length; i++) {
         if (this.services[i].id == value) {
-          var currentService = this.services[i];
-          this.currentServiceName = currentService.name;
+          this.service = this.services[i];
+          this.currentServiceName = this.service.name;
 
-          if (currentService.items) {
+          if (this.service.items) {
             this.items.splice(0, this.items.length);
-            for (var j = 0; j < currentService.items.length; j++)
-              this.items.push(currentService.items[j]);
+            for (var j = 0; j < this.service.items.length; j++)
+              this.items.push(this.service.items[j]);
             this.$refs.selectItem.$forceUpdate();
           }
 
@@ -435,8 +460,9 @@ export default {
       $this.selectedPrice = "low";
       $this.selectedServices = [];
       $this.services = [];
+
       axios
-        .get("/api/servicesOfCar", {
+        .get("/api/car/search", {
           params: {
             maker: $this.maker,
             brand: $this.brand,
@@ -446,15 +472,25 @@ export default {
           }
         })
         .then(function(response) {
-          for (var i = 0; i < response.data.length; i++) {
-            $this.services.push({
-              id: response.data[i].id,
-              name: response.data[i].name,
-              items: response.data[i].items
+          if (response.data.length > 0) {
+            $this.car = response.data[0].id;
+            $this.loadCarServices();
+          } else {
+            $this.car = undefined;
+            $this.$notify({
+              title: "No existe el carro",
+              message: "No se encontró el carro seleccinado",
+              type: "warning"
             });
-
-            console.log(response.data[i]);
           }
+
+          // for (var i = 0; i < response.data.length; i++) {
+          //   $this.services.push({
+          //     id: response.data[i].id,
+          //     name: response.data[i].name,
+          //     items: response.data[i].items
+          //   });
+          // }
 
           /* TODO TEMPORALMENTE COMENTADO
           if (localStorage.getItem("order") && $this.getParameter("back")) {
@@ -509,11 +545,16 @@ export default {
     // Guardar
     next() {
       var $this = this;
+      alert($this.car);
+      alert($this.service.id);
+      alert($this.items);
+
+      console.log($this.items);
       axios
         .post("/api/carservices", {
-          car: this.car,
-          service: this.service,
-          items: this.items
+          car: $this.car,
+          service: $this.service.id,
+          items: $this.items
         })
         .then(function(response) {
           $this.save = true;

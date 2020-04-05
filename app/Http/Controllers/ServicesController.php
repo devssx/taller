@@ -100,14 +100,10 @@ class ServicesController extends Controller
         return $services->values()->toArray();
     }
 
-    public function getServicesOfCar(GetServicesRequest $request)
+    public function getServicesByCarID(Request $request)
     {
         $car = Car::has('carServices')
-            ->where('maker', '=', $request->get('maker'))
-            ->where('brand', '=', $request->get('brand'))
-            ->where('motor', '=', $request->get('motor'))
-            ->where('start_year', '>=', $request->get('year'))
-            //->where('end_year', '<=', $request->get('year'))
+            ->where('id', '=', $request->get('id'))
             ->first();
 
         if (!$car) {

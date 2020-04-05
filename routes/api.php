@@ -17,11 +17,12 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
 
+Route::get('/car/search', 'CarsController@searchCar');
 Route::get('/car/brands', 'CarsController@listBrands');
 Route::get('/car/brandsByMaker', 'CarsController@getBrandsOf');
 Route::get('/car/makers', 'CarsController@listMakers');
 Route::get('/servicesByCar', 'ServicesController@getByCar');
-Route::get('/servicesOfCar', 'ServicesController@getServicesOfCar');
+Route::get('/servicesOfCar', 'ServicesController@getServicesByCarID');
 
 Route::get('/clients', 'ClientsController@get');
 Route::post('/clients', 'ClientsController@save');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SaveCarServiceRequest;
+use App\Models\Service;
 use App\Models\CarService;
 use App\Models\CarServiceItem;
 use Illuminate\Http\Request;
@@ -34,6 +35,24 @@ class CarServicesController extends Controller
 
     public function get(Request $request)
     {
+        if($request->has('id')){
+            $id = $request->get('id');
+            $carServices = CarService::where(['car_id' => $id])->get();
+
+            foreach ($carServices as $service){
+                // Nombre del servicio
+                $service->service = Service::select('id', 'name','description')->where('id', $service->service_id)->first();
+
+                // le busca los items al servicio
+                $service->items = CarServiceItem::where([
+                    'car_id' => $service->car_id,
+                    'service_id' => $service->service_id,
+                ])->with('item')->get();
+            }
+    
+            return $carServices;
+        }
+
         if ($request->has('all')) {
             if ($request->has('sort')) {
                 if ($request->get('order') == "ascending") {

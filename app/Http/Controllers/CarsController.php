@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\GetServicesRequest;
 use App\Http\Requests\SaveCarRequest;
 use App\Http\Requests\GetBrandsRequest;
 use App\Models\Car;
@@ -66,6 +67,17 @@ class CarsController extends Controller
             'start_year' => $request->get('year')[0],
             'end_year' => $request->get('year')[1],
         ]);
+    }
+
+    public function searchCar(GetServicesRequest $request)
+    {
+        return Car::select('*')
+        ->where('maker', '=', $request->get('maker'))
+        ->where('brand', '=', $request->get('brand'))
+        ->where('motor', '=', $request->get('motor'))
+        ->where('start_year', '>=', $request->get('year'))
+        //->where('end_year', '<=', $request->get('year'))
+        ->get();
     }
 
     public function listBrands()
