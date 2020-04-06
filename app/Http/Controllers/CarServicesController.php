@@ -7,6 +7,8 @@ use App\Models\Service;
 use App\Models\CarService;
 use App\Models\CarServiceItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class CarServicesController extends Controller
 {
@@ -36,12 +38,18 @@ class CarServicesController extends Controller
     public function get(Request $request)
     {
         if($request->has('id')){
-            $id = $request->get('id');
-            $carServices = CarService::where(['car_id' => $id])->get();
+            $CarID = $request->get('id');
+            //$carServices = CarService::where(['car_id' => $CarID])->get();
+
+            $carServices = DB::table('car_services')
+            ->join('services', 'services.id', 'car_services.service_id')
+            ->select('car_services.*', 'services.name')
+            ->where(['car_services.car_id' => $CarID])
+            ->get();
 
             foreach ($carServices as $service){
                 // Nombre del servicio
-                $service->service = Service::select('id', 'name','description')->where('id', $service->service_id)->first();
+                // $service->service = Service::select('id', 'name','description')->where('id', $service->service_id)->first();
 
                 // le busca los items al servicio
                 $service->items = CarServiceItem::where([
@@ -113,6 +121,7 @@ class CarServicesController extends Controller
                 unset($item['item']);
             }
 
+            unset($item['priceUSD']);
             unset($item['deleted_at']);
 
             if (isset($item['id'])) {

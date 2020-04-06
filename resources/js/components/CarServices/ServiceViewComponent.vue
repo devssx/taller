@@ -59,7 +59,8 @@
           <h3>
             Servicios
             <div style="float:right;">
-              <create-pop-sales></create-pop-sales>
+              <!-- desactiabable-->
+              <create-pop-sales :disabled="!selectedCar.id"></create-pop-sales>
             </div>
           </h3>
           <br />
@@ -93,32 +94,12 @@
               </div>
             </el-collapse-item>
           </el-collapse>
-
-          <br />
-          <el-form inline label-position="right" label-width="80px" class="query-form">
-            <el-form-item label="Articulo">
-              <el-select
-                @change="handleChange"
-                filterable
-                placeholder="Agregar un Articulo"
-                v-model="item"
-                :disabled="listItems.length == 0"
-              >
-                <el-option
-                  v-for="(item, index) in listItems"
-                  :key="index"
-                  :label="item.name"
-                  :value="index"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
         </el-col>
 
         <el-col :span="18" style="padding-left: 20px;">
           <el-row type="flex" align="middle" style="background-color:#f2f2f2;padding:4px">
             <el-col :span="8">
-              <h3>{{currentServiceName}}</h3>
+              <h3>{{selectedService.name}}</h3>
             </el-col>
             <el-col :span="8">
               <div v-if="Object.keys(carService).length === 0" style="float:right;">
@@ -141,12 +122,9 @@
               <el-col :span="12">FOTO DEL CARRO</el-col>
             </el-row>
             <el-row class="center" type="flex" align="middle">
-              <el-col :span="12">{{currentServiceName}}</el-col>
+              <el-col :span="12">{{selectedService.name}}</el-col>
               <el-col :span="12" class="bl">
-                <img
-                  width="50%"
-                  src="https://s.aolcdn.com/dims-global/dims3/GLOB/legacy_thumbnail/788x525/quality/85/https://s.aolcdn.com/commerce/autodata/images/USC60HOC022A121001.jpg"
-                />
+                <el-image style="width: 230px;" :src="selectedCar.image"></el-image>
               </el-col>
             </el-row>
             <el-row class="row-header">
@@ -171,20 +149,46 @@
                   style="width:100%;border-radius:0"
                 ></el-input-number>
               </el-col>
-              <el-col :span="4">HONDA</el-col>
-              <el-col :span="4">CIVIC</el-col>
-              <el-col :span="4">2015</el-col>
-              <el-col :span="4">2020</el-col>
+              <el-col :span="4">{{selectedCar.maker}}</el-col>
+              <el-col :span="4">{{selectedCar.brand}}</el-col>
+              <el-col :span="4">{{selectedCar.year}}</el-col>
+              <el-col :span="4">{{selectedCar.endYear}}</el-col>
             </el-row>
             <el-row type="flex" align="middle">
               <el-col :span="12" class="row-header">PORCENTAJE DE GANANCIA EN LAS PIEZAS:</el-col>
-              <el-col :span="2" class="price-min">20%</el-col>
+              <el-col :span="2" class="price-min">
+                <el-input size="mini" class="percentage"></el-input>
+              </el-col>
               <el-col :span="2"></el-col>
-              <el-col :span="2" class="price-med">25%</el-col>
+              <el-col :span="2" class="price-med">
+                <el-input size="mini" class="percentage"></el-input>
+              </el-col>
               <el-col :span="2"></el-col>
-              <el-col :span="2" class="price-max">30%</el-col>
+              <el-col :span="2" class="price-max">
+                <el-input size="mini" class="percentage"></el-input>
+                <!-- <input class="percentage" style="text-align:center;border:0;height:100%width:100%; background-color:transparent"> -->
+              </el-col>
               <el-col :span="2" class="cellborder" style="height:28px">
-                <el-checkbox v-model="updatePrices">Aplicar</el-checkbox>
+                <!-- <el-checkbox v-model="updatePrices">Aplicar</el-checkbox> -->
+              </el-col>
+            </el-row>
+            <el-row class="row-header">
+              <el-col class="price">
+                <el-select
+                  size="mini"
+                  @change="handleChange"
+                  filterable
+                  placeholder="Agregar un Artículo"
+                  v-model="item"
+                  :disabled="listItems.length == 0 || selectedCar.id == undefined || selectedCar.id == '' || selectedService.id == undefined || selectedService.id == ''"
+                >
+                  <el-option
+                    v-for="(item, index) in listItems"
+                    :key="index"
+                    :label="item.name"
+                    :value="index"
+                  ></el-option>
+                </el-select>
               </el-col>
             </el-row>
             <el-row class="row-header">
@@ -198,6 +202,7 @@
               <el-col :span="2">%</el-col>
               <el-col :span="2">Máximo</el-col>
             </el-row>
+
             <!-- Items del servicio -->
             <row-item ref="selectItem" :items="items" :updatePrices="updatePrices" :tdc="tdc"></row-item>
             <!-- Totales -->
@@ -218,28 +223,26 @@
             </el-row>
             <!-- descripcion del servicio -->
             <el-row>
-              <el-col class="cellborder">Descripción del servicio</el-col>
-              <el-col
-                class="cellborder"
-                :span="20"
-              >Este servicio consiste en desmontar el compresor dar servicio y revisar los componentes, después se instala el compresor nuevo y se hace el servicio y reemplazo de válvulas de servicio y filtro de cabina.</el-col>
+              <el-col :span="4" class="cellborder" style="padding:10px">Descripción del servicio</el-col>
+              <el-col class="cellborder" :span="20">{{selectedService.comment}}</el-col>
             </el-row>
             <!-- descripcion del servicio -->
             <el-row>
               <el-col :span="4" class="cellborder">Garantía</el-col>
-              <el-col :span="20" class="cellborder">2 meses de garantía en piezas y mano de obra.</el-col>
+              <el-col :span="20" class="cellborder">{{selectedService.warranty}}</el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="4" :offset="20" style="text-align:right;">
+                <br />
+                <el-button
+                  type="primary"
+                  :disabled="selectedCar.id == undefined || selectedCar.id == '' || service == '' || items.length == 0 || save"
+                  @click="next()"
+                >Guardar</el-button>
+              </el-col>
             </el-row>
           </el-card>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="4" :offset="20" style="text-align:right;">
-          <br />
-          <el-button
-            type="primary"
-            :disabled="car == undefined || car == '' || service == '' || items.length == 0 || save"
-            @click="next()"
-          >Guardar</el-button>
         </el-col>
       </el-row>
     </el-main>
@@ -271,9 +274,24 @@ export default {
     return {
       radio: "1",
       //activeNames: ["1"], (No accordion)
-      activeName: "1",
-      currentServiceName: "Servicio",
+      activeName: "0",
       tdc: 20,
+
+      selectedService: {
+        name: "Selecciona un Servicio",
+        comment: "-",
+        warranty: "-"
+      },
+
+      selectedCar: {
+        maker: "",
+        brand: "",
+        year: "",
+        endYear: "",
+        image:
+          "https://st.motortrend.ca/uploads/sites/10/2017/05/2017-ford-focus-titanium-sedan-angular-front.png"
+        // "https://s.aolcdn.com/dims-global/dims3/GLOB/legacy_thumbnail/788x525/quality/85/https://s.aolcdn.com/commerce/autodata/images/USC60HOC022A121001.jpg"
+      },
 
       maker: "",
       makers: [],
@@ -322,28 +340,22 @@ export default {
       $this.years.push(year);
     }
 
-    axios.get("/api/cars?all=1").then(function(response) {
-      $this.cars = response.data;
-      if ($this.carService) {
-        $this.car = $this.carService.car_id;
-      }
-    });
+    // axios.get("/api/cars?all=1").then(function(response) {
+    //   $this.cars = response.data;
+    //   // if ($this.carService) {
+    //   //   $this.car = $this.carService.car_id;
+    //   // }
+    // });
 
-    axios.get("/api/services?all=1").then(function(response) {
-      $this.services = response.data;
-      if ($this.carService) {
-        $this.service = $this.carService.service_id;
-      }
-    });
+    // axios.get("/api/services?all=1").then(function(response) {
+    //   $this.services = response.data;
+    //   if ($this.carService) {
+    //     $this.service = $this.carService.service_id;
+    //   }
+    // });
 
     axios.get("/api/items?all=1").then(function(response) {
       $this.listItems = response.data;
-
-      // TEMPORAL
-      for (var i = 0; i < 5; i++) {
-        $this.handleChange(i + 1);
-      }
-      $this.changeAllPrices();
     });
 
     axios.get("/api/car/makers").then(function(response) {
@@ -357,22 +369,27 @@ export default {
   methods: {
     loadCarServices() {
       var $this = this;
-      alert($this.car);
-      axios.get("/api/carservices?id=" + $this.car).then(function(response) {
-        for (var i = 0; i < response.data.length; i++) {
-          alert(response.data[i].service.name);
-          $this.services.push({
-            id: response.data[i].id,
-            name: response.data[i].service.name,
-            items: response.data[i].items
-          });
-        }
-        console.log(response.data);
-      });
+      axios
+        .get("/api/carservices?id=" + $this.selectedCar.id)
+        .then(function(response) {
+          console.log(response.data);
+          for (var i = 0; i < response.data.length; i++) {
+            $this.services.push({
+              id: response.data[i].id,
+              service_id: response.data[i].service_id,
+              name: response.data[i].name,
+              items: response.data[i].items
+            });
+          }
+
+          // if (response.data.length > 0) {
+          //   $this.activeName = response.data[0].id;
+          // }
+        });
     },
     addService: function(service, total) {
       var $this = this;
-      if ($this.car == "") {
+      if ($this.selectedCar.id == undefined) {
         $this.$notify({
           title: "Selecciona Un carro válido",
           message: "El carro seleccionado no es válido",
@@ -421,28 +438,31 @@ export default {
     onTDCChange(currentValue, oldValue) {
       this.$refs.selectItem.refreshPrices(currentValue);
     },
-    // TEMPORAL
-    changeAllPrices() {
-      this.item = "";
-      for (var i = 0; i < this.listItems.length; i++) {
-        var item = this.listItems[i];
-        var base = item.priceUSD * this.tdc;
-        item.price = base;
-        item.low = 20;
-        item.low_price = base + base * (item.low / 100);
-        item.mid = 25;
-        item.mid_price = base + base * (item.mid / 100);
-        item.high = 30;
-        item.high_price = base + base * (item.high / 100);
-      }
 
-      this.$refs.selectItem.$forceUpdate();
-    },
+    // // TEMPORAL
+    // changeAllPrices() {
+    //   this.item = "";
+    //   for (var i = 0; i < this.listItems.length; i++) {
+    //     var item = this.listItems[i];
+    //     var base = item.priceUSD * this.tdc;
+    //     item.price = base;
+    //     item.low = 20;
+    //     item.low_price = base + base * (item.low / 100);
+    //     item.mid = 25;
+    //     item.mid_price = base + base * (item.mid / 100);
+    //     item.high = 30;
+    //     item.high_price = base + base * (item.high / 100);
+    //   }
+
+    //   this.$refs.selectItem.$forceUpdate();
+    // },
     serviceChanged(value) {
       for (var i = 0; i < this.services.length; i++) {
         if (this.services[i].id == value) {
           this.service = this.services[i];
-          this.currentServiceName = this.service.name;
+          this.selectedService = this.services[i];
+          // TODO
+          this.selectedService.warranty = "Garantia";
 
           if (this.service.items) {
             this.items.splice(0, this.items.length);
@@ -473,10 +493,17 @@ export default {
         })
         .then(function(response) {
           if (response.data.length > 0) {
-            $this.car = response.data[0].id;
+            $this.selectedCar.id = response.data[0].id;
+            $this.selectedCar.maker = response.data[0].maker;
+            $this.selectedCar.brand = response.data[0].brand;
+            $this.selectedCar.year = response.data[0].start_year;
+            $this.selectedCar.endYear = response.data[0].end_year;
+            $this.selectedCar.image =
+              "https://movehostel.com/storage/app/Hostels/009007d0-9a37-11e9-82a0-c97aecdb9fe0/20190629062743no%20image.jpg";
+
             $this.loadCarServices();
           } else {
-            $this.car = undefined;
+            $this.selectedCar.id = undefined;
             $this.$notify({
               title: "No existe el carro",
               message: "No se encontró el carro seleccinado",
@@ -545,16 +572,15 @@ export default {
     // Guardar
     next() {
       var $this = this;
-      alert($this.car);
-      alert($this.service.id);
-      alert($this.items);
-
+      alert($this.selectedCar.id);
+      alert($this.service.service_id);
       console.log($this.items);
+
       axios
         .post("/api/carservices", {
-          car: $this.car,
-          service: $this.service.id,
-          items: $this.items
+          car: $this.selectedCar.id, // Grabar car.id
+          service: $this.service.service_id, // service id
+          items: $this.items // itemlist
         })
         .then(function(response) {
           $this.save = true;
@@ -563,9 +589,10 @@ export default {
             message: "Servicio fue agregado correctamente",
             type: "success"
           });
-          setTimeout(function() {
-            window.location.href = "/carservices";
-          }, 1000);
+
+          // setTimeout(function() {
+          //   window.location.href = "/carservices";
+          // }, 1000);
         })
         .catch(error => {
           if (error.response.data.errors) {
