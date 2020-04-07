@@ -59,17 +59,16 @@
           <h3>
             Servicios
             <div style="float:right;">
-              <!-- desactiabable-->
               <create-pop-sales :disabled="!selectedCar.id"></create-pop-sales>
             </div>
           </h3>
           <br />
           <el-collapse v-model="activeName" @change="serviceChanged" accordion>
             <el-collapse-item
-              v-for="service in services"
-              :key="service.id"
+              v-for="(service, index) in services"
+              :key="index"
               :title="service.name"
-              :name="service.id"
+              :name="index"
             >
               <table style="width:100%">
                 <tr>
@@ -78,9 +77,9 @@
                   <th class="price-max">Precio Max</th>
                 </tr>
                 <tr>
-                  <td>${{service.low_total}}</td>
-                  <td>${{service.mid_total}}</td>
-                  <td>${{service.high_total}}</td>
+                  <td>${{formatPrice(service.low_total)}}</td>
+                  <td>${{formatPrice(service.mid_total)}}</td>
+                  <td>${{formatPrice(service.high_total)}}</td>
                 </tr>
                 <tr>
                   <td>
@@ -95,6 +94,7 @@
                 </tr>
               </table>
               <div class="edit-buttons">
+                ID: {{service.id}}
                 <el-button icon="el-icon-edit" size="mini"></el-button>
                 <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
               </div>
@@ -200,7 +200,7 @@
                     filterable
                     placeholder="Agregar un Artículo"
                     v-model="item"
-                    :disabled="listItems.length == 0 || selectedCar.id == undefined || selectedCar.id == '' || selectedService.id == undefined || selectedService.id == ''"
+                    :disabled="listItems.length == 0 || selectedCar.id == undefined || selectedCar.id == '' || service.service_id == undefined || service.service_id == ''"
                   >
                     <el-option
                       v-for="(item, index) in listItems"
@@ -295,7 +295,6 @@ export default {
   data() {
     return {
       radio: "1",
-      //activeNames: ["1"], (No accordion)
       activeName: "0",
       tdc: 20,
 
@@ -399,8 +398,11 @@ export default {
       axios
         .get("/api/carservices?id=" + $this.selectedCar.id)
         .then(function(response) {
+          $this.services.splice(0, $this.services.length);
+
           for (var i = 0; i < response.data.length; i++) {
             $this.services.push({
+              id: response.data[i].id, // clave (csid)
               low_total: 0,
               mid_total: 0,
               high_total: 0,
@@ -408,7 +410,6 @@ export default {
               mid: response.data[i].mid,
               high: response.data[i].high,
               comment: response.data[i].comment,
-              id: response.data[i].id,
               service_id: response.data[i].service_id,
               name: response.data[i].name,
               items: response.data[i].items
@@ -431,12 +432,10 @@ export default {
         return;
       }
 
-      alert(service.id);
-
-      console.log(service);
-      var service = {
-        id: service.id,
+      var newService = {
+        //id: null, // it has no id because it's neww
         service_id: service.id,
+        isNew: true,
         name: service.name,
         low_total: total,
         mid_total: total,
@@ -459,9 +458,10 @@ export default {
           }
         ]
       };
-      $this.services.push(service);
+
+      $this.services.push(newService);
       // setTimeout(function() {
-      //   $this.$refs.services.setCheckedNodes([service]);
+      //   $this.$refs.services.setCheckedNodes([newService]);
       // }, 0);
     },
     onMakerChange(selectedValue) {
@@ -493,22 +493,20 @@ export default {
       this.$refs.selectItem.changeGlobalPrecentage(currentValue, "high");
     },
 
-    serviceChanged(value) {
-      for (var i = 0; i < this.services.length; i++) {
-        if (this.services[i].id == value) {
-          this.service = this.services[i];
-          this.selectedService = this.services[i];
-          // TODO
-          this.selectedService.warranty = "Garantia";
+    serviceChanged(index) {
+      if (isNaN(index) || index === "") return;
 
-          if (this.service.items) {
-            this.items.splice(0, this.items.length);
-            for (var j = 0; j < this.service.items.length; j++)
-              this.items.push(this.service.items[j]);
-            this.$refs.selectItem.$forceUpdate();
-          }
+      if (index >= 0 && index < this.services.length) {
+        this.service = this.services[index];
+        this.selectedService = this.services[index];
+        // TODO
+        this.selectedService.warranty = "Garantia";
 
-          break;
+        if (this.service.items) {
+          this.items.splice(0, this.items.length);
+          for (var j = 0; j < this.service.items.length; j++)
+            this.items.push(this.service.items[j]);
+          this.$refs.selectItem.$forceUpdate();
         }
       }
     },
@@ -612,28 +610,51 @@ export default {
     // Guardar
     next() {
       var $this = this;
-      alert($this.selectedCar.id);
-      alert($this.service.service_id);
+      alert("car_id: " + $this.selectedCar.id);
+      alert("service_id: " + $this.service.service_id);
+      alert("csid: " + $this.service.id);
+
       console.log($this.items);
 
-      axios
-        .post("/api/carservices", {
+      var saveParams = {
+        car: $this.selectedCar.id, // Grabar car.id
+        service: $this.service.service_id, // 
+        items: $this.items, // itemlist
+
+        comment: "UPDATED",
+        low: $this.service.low,
+        mid: $this.service.mid,
+        high: $this.service.high,
+        csid: $this.service.id
+      };
+
+      if ($this.service.isNew) {
+        // create a new CarService
+        alert("Es nuevo");
+        saveParams = {
           car: $this.selectedCar.id, // Grabar car.id
           service: $this.service.service_id, // service id
           items: $this.items, // itemlist
 
-          comment: "HOLA-HOLAS19",
+          comment: "INSERTED",
           low: $this.service.low,
           mid: $this.service.mid,
-          high: $this.service.high
-        })
+          high: $this.service.high,
+        };
+      }
+
+      axios
+        .post("/api/carservices", saveParams)
         .then(function(response) {
-          $this.save = true;
+          // TODO save al editar cualquier campo $this.save = true;
           $this.$notify({
             title: "¡Exito!",
             message: "Servicio fue agregado correctamente",
             type: "success"
           });
+
+          // Reload services
+          $this.loadCarServices();
 
           // setTimeout(function() {
           //   window.location.href = "/carservices";

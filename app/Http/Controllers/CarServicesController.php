@@ -37,17 +37,17 @@ class CarServicesController extends Controller
 
     public function get(Request $request)
     {
-        if($request->has('id')){
+        if ($request->has('id')) {
             $CarID = $request->get('id');
             //$carServices = CarService::where(['car_id' => $CarID])->get();
 
             $carServices = DB::table('car_services')
-            ->join('services', 'services.id', 'car_services.service_id')
-            ->select('car_services.*', 'services.name')
-            ->where(['car_services.car_id' => $CarID])
-            ->get();
+                ->join('services', 'services.id', 'car_services.service_id')
+                ->select('car_services.*', 'services.name')
+                ->where(['car_services.car_id' => $CarID])
+                ->get();
 
-            foreach ($carServices as $service){
+            foreach ($carServices as $service) {
                 // Nombre del servicio
                 // $service->service = Service::select('id', 'name','description')->where('id', $service->service_id)->first();
 
@@ -57,7 +57,7 @@ class CarServicesController extends Controller
                     'service_id' => $service->service_id,
                 ])->with('item')->get();
             }
-    
+
             return $carServices;
         }
 
@@ -87,21 +87,37 @@ class CarServicesController extends Controller
         $mid = $request->has('mid') ? $request->get('mid') : 0;
         $high = $request->has('high') ? $request->get('high') : 0;
 
-        // TODO no duplicar
-        CarService::where([
-            'car_id' => $car,
-            'service_id' => $service,
-        ])->delete();
 
-        CarService::firstOrCreate([
-            'car_id' => $car,
-            'service_id' => $service,
-            'comment' => $comment,
-            'price' => $price,
-            'low' => $low,
-            'mid' => $mid,
-            'high' => $high,
-        ]);
+        if ($request->has('csid')) {
+            $carService = CarService::find($request->get('csid'));
+            if ($carService) {
+                $carService->comment = 'UPDATED++';
+                $carService->low = $low;
+                $carService->mid = $mid;
+                $carService->high = $high;
+                $carService->save();
+            } else {
+                CarService::firstOrCreate([
+                    'car_id' => $car,
+                    'service_id' => $service,
+                    'comment' => 'No-existe-ID',
+                    'price' => $price,
+                    'low' => $low,
+                    'mid' => $mid,
+                    'high' => $high,
+                ]);
+            }
+        } else {
+            CarService::firstOrCreate([
+                'car_id' => $car,
+                'service_id' => $service,
+                'comment' => '++CREATEDNEW',
+                'price' => $price,
+                'low' => $low,
+                'mid' => $mid,
+                'high' => $high,
+            ]);
+        }
 
         $items = collect($request->get('items'));
 
