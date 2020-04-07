@@ -65,9 +65,9 @@
           <br />
           <el-collapse v-model="activeName" @change="serviceChanged" accordion>
             <el-collapse-item
-              v-for="(service, index) in services"
+              v-for="(s, index) in services"
               :key="index"
-              :title="service.name"
+              :title="s.name"
               :name="index"
             >
               <table style="width:100%">
@@ -77,24 +77,24 @@
                   <th class="price-max">Precio Max</th>
                 </tr>
                 <tr>
-                  <td>${{formatPrice(service.low_total)}}</td>
-                  <td>${{formatPrice(service.mid_total)}}</td>
-                  <td>${{formatPrice(service.high_total)}}</td>
+                  <td>${{formatPrice(s.low_total)}}</td>
+                  <td>${{formatPrice(s.mid_total)}}</td>
+                  <td>${{formatPrice(s.high_total)}}</td>
                 </tr>
                 <tr>
                   <td>
-                    <el-radio v-model="radio" label="1"></el-radio>
+                    <el-radio v-model="radio" label="min"></el-radio>
                   </td>
                   <td>
-                    <el-radio v-model="radio" label="2"></el-radio>
+                    <el-radio v-model="radio" label="mid"></el-radio>
                   </td>
                   <td>
-                    <el-radio v-model="radio" label="3"></el-radio>
+                    <el-radio v-model="radio" label="high"></el-radio>
                   </td>
                 </tr>
               </table>
               <div class="edit-buttons">
-                ID: {{service.id}}
+                ID: {{s.id}}
                 <el-button icon="el-icon-edit" size="mini"></el-button>
                 <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
               </div>
@@ -105,7 +105,7 @@
         <el-col :span="18" style="padding-left: 20px;">
           <el-row type="flex" align="middle" style="background-color:#f2f2f2;padding:4px">
             <el-col :span="8">
-              <h3>{{selectedService.name}}</h3>
+              <h3>{{service.name}}</h3>
             </el-col>
             <el-col :span="8">
               <div v-if="Object.keys(carService).length === 0" style="float:right;"></div>
@@ -127,7 +127,7 @@
                 <el-col :span="12">FOTO DEL CARRO</el-col>
               </el-row>
               <el-row class="center" type="flex" align="middle">
-                <el-col :span="12">{{selectedService.name}}</el-col>
+                <el-col :span="12">{{service.name}}</el-col>
                 <el-col :span="12" class="bl">
                   <el-image style="width: 230px;" :src="selectedCar.image"></el-image>
                 </el-col>
@@ -166,7 +166,7 @@
                     size="mini"
                     @change="onGlobalLowPercentageChange"
                     maxlength="2"
-                    v-model="selectedService.low"
+                    v-model="service.low"
                     class="global"
                   ></el-input>
                 </el-col>
@@ -176,7 +176,7 @@
                     size="mini"
                     @change="onGlobalMidPercentageChange"
                     maxlength="2"
-                    v-model="selectedService.mid"
+                    v-model="service.mid"
                     class="global"
                   ></el-input>
                 </el-col>
@@ -186,7 +186,7 @@
                     size="mini"
                     @change="onGlobalHighPercentageChange"
                     maxlength="2"
-                    v-model="selectedService.high"
+                    v-model="service.high"
                     class="global"
                   ></el-input>
                 </el-col>
@@ -245,12 +245,12 @@
               <!-- descripcion del servicio -->
               <el-row>
                 <el-col :span="4" class="cellborder" style="padding:10px">Descripción del servicio</el-col>
-                <el-col class="cellborder" :span="20">{{selectedService.comment}}</el-col>
+                <el-col class="cellborder" :span="20">{{service.comment}}</el-col>
               </el-row>
               <!-- descripcion del servicio -->
               <el-row>
                 <el-col :span="4" class="cellborder">Garantía</el-col>
-                <el-col :span="20" class="cellborder">{{selectedService.warranty}}</el-col>
+                <el-col :span="20" class="cellborder">{{service.warranty}}</el-col>
               </el-row>
 
               <el-row>
@@ -298,7 +298,8 @@ export default {
       activeName: "0",
       tdc: 20,
 
-      selectedService: {
+      // selectedService
+      service: {
         low_total: 0,
         mid_total: 0,
         high_total: 0,
@@ -337,7 +338,6 @@ export default {
       selectedPrice: "low",
       car: "",
       cars: [],
-      service: "",
       services: [],
       item: "",
       listItems: [],
@@ -436,6 +436,7 @@ export default {
         //id: null, // it has no id because it's neww
         service_id: service.id,
         isNew: true,
+        comment: "",
         name: service.name,
         low_total: total,
         mid_total: total,
@@ -498,9 +499,8 @@ export default {
 
       if (index >= 0 && index < this.services.length) {
         this.service = this.services[index];
-        this.selectedService = this.services[index];
         // TODO
-        this.selectedService.warranty = "Garantia";
+        this.service.warranty = "Garantia";
 
         if (this.service.items) {
           this.items.splice(0, this.items.length);
@@ -595,13 +595,13 @@ export default {
       }
 
       if (value == "low_price") {
-        this.selectedService.low_total = total;
+        this.service.low_total = total;
       }
       if (value == "mid_price") {
-        this.selectedService.mid_total = total;
+        this.service.mid_total = total;
       }
       if (value == "high_price") {
-        this.selectedService.high_total = total;
+        this.service.high_total = total;
       }
 
       return total;
@@ -618,10 +618,10 @@ export default {
 
       var saveParams = {
         car: $this.selectedCar.id, // Grabar car.id
-        service: $this.service.service_id, // 
+        service: $this.service.service_id, //
         items: $this.items, // itemlist
 
-        comment: "UPDATED",
+        comment: $this.service.comment,
         low: $this.service.low,
         mid: $this.service.mid,
         high: $this.service.high,
@@ -636,10 +636,10 @@ export default {
           service: $this.service.service_id, // service id
           items: $this.items, // itemlist
 
-          comment: "INSERTED",
+          comment: $this.service.comment,
           low: $this.service.low,
           mid: $this.service.mid,
-          high: $this.service.high,
+          high: $this.service.high
         };
       }
 
