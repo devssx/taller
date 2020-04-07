@@ -77,15 +77,21 @@
                   <th class="price-med">Precio Med</th>
                   <th class="price-max">Precio Max</th>
                 </tr>
-                <!-- <tr>
-                  <td><el-radio v-model="radio" label="1">Option A</el-radio></td>
-                  <td><el-radio v-model="radio" label="2">Option B</el-radio></td>
-                  <td><el-radio v-model="radio" label="3">Option C</el-radio></td>
-                </tr>-->
                 <tr>
-                  <td>${{service.AA}}</td>
-                  <td>${{service.BB}}</td>
-                  <td>${{service.CC}}</td>
+                  <td>${{service.low_total}}</td>
+                  <td>${{service.mid_total}}</td>
+                  <td>${{service.high_total}}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <el-radio v-model="radio" label="1"></el-radio>
+                  </td>
+                  <td>
+                    <el-radio v-model="radio" label="2"></el-radio>
+                  </td>
+                  <td>
+                    <el-radio v-model="radio" label="3"></el-radio>
+                  </td>
                 </tr>
               </table>
               <div class="edit-buttons">
@@ -102,9 +108,7 @@
               <h3>{{selectedService.name}}</h3>
             </el-col>
             <el-col :span="8">
-              <div v-if="Object.keys(carService).length === 0" style="float:right;">
-                <!-- <el-checkbox v-model="updatePrices">Aplicar el porcentaje a todo la fila</el-checkbox> -->
-              </div>
+              <div v-if="Object.keys(carService).length === 0" style="float:right;"></div>
             </el-col>
             <el-col :span="8">
               <div style="float:right;">
@@ -157,19 +161,35 @@
             <el-row type="flex" align="middle">
               <el-col :span="12" class="row-header">PORCENTAJE DE GANANCIA EN LAS PIEZAS:</el-col>
               <el-col :span="2" class="price-min">
-                <el-input size="mini" maxlength="2" v-model="valor"  class="percentage"></el-input>
+                <el-input
+                  size="mini"
+                  @change="onGlobalLowPercentageChange"
+                  maxlength="2"
+                  v-model="selectedService.low"
+                  class="global"
+                ></el-input>
               </el-col>
               <el-col :span="2"></el-col>
               <el-col :span="2" class="price-med">
-                <el-input size="mini" maxlength="2" v-model="valor" class="percentage"></el-input>
+                <el-input
+                  size="mini"
+                  @change="onGlobalMidPercentageChange"
+                  maxlength="2"
+                  v-model="selectedService.mid"
+                  class="global"
+                ></el-input>
               </el-col>
               <el-col :span="2"></el-col>
               <el-col :span="2" class="price-max">
-                <el-input size="mini" maxlength="2" v-model="valor" class="percentage"></el-input>
+                <el-input
+                  size="mini"
+                  @change="onGlobalHighPercentageChange"
+                  maxlength="2"
+                  v-model="selectedService.high"
+                  class="global"
+                ></el-input>
               </el-col>
-              <el-col :span="2" class="cellborder" style="height:28px">
-                <!-- <el-checkbox v-model="updatePrices">Aplicar</el-checkbox> -->
-              </el-col>
+              <el-col :span="2" class="cellborder" style="height:28px"></el-col>
             </el-row>
             <el-row class="row-header">
               <el-col class="price">
@@ -203,7 +223,8 @@
             </el-row>
 
             <!-- Items del servicio -->
-            <row-item ref="selectItem" :items="items" :updatePrices="updatePrices" :tdc="tdc"></row-item>
+            <row-item ref="selectItem" :items="items" :tdc="tdc"></row-item>
+
             <!-- Totales -->
             <el-row class="cellborder" style="height:28px" type="flex" align="middle">
               <el-col :span="7">TOTAL</el-col>
@@ -277,6 +298,12 @@ export default {
       tdc: 20,
 
       selectedService: {
+        low_total: 0,
+        mid_total: 0,
+        high_total: 0,
+        low: 0,
+        mid: 0,
+        high: 0,
         name: "Selecciona un Servicio",
         comment: "-",
         warranty: "-"
@@ -291,8 +318,6 @@ export default {
           "https://st.motortrend.ca/uploads/sites/10/2017/05/2017-ford-focus-titanium-sedan-angular-front.png"
         // "https://s.aolcdn.com/dims-global/dims3/GLOB/legacy_thumbnail/788x525/quality/85/https://s.aolcdn.com/commerce/autodata/images/USC60HOC022A121001.jpg"
       },
-
-      valor: 0,
 
       maker: "",
       makers: [],
@@ -316,7 +341,6 @@ export default {
       item: "",
       listItems: [],
       save: false,
-      updatePrices: true,
       defaultProps: {
         label: "label"
       }
@@ -373,12 +397,14 @@ export default {
       axios
         .get("/api/carservices?id=" + $this.selectedCar.id)
         .then(function(response) {
-          console.log(response.data);
           for (var i = 0; i < response.data.length; i++) {
             $this.services.push({
-              AA: 160,
-              BB: 161,
-              CC: 163,
+              low_total: 160,
+              mid_total: 161,
+              high_total: 163,
+              low: response.data[i].low,
+              mid: response.data[i].mid,
+              high: response.data[i].high,
               id: response.data[i].id,
               service_id: response.data[i].service_id,
               name: response.data[i].name,
@@ -409,9 +435,12 @@ export default {
         id: service.id,
         service_id: service.id,
         name: service.name,
-        AA: total,
-        BB: total,
-        CC: total,
+        low_total: total,
+        mid_total: total,
+        high_total: total,
+        low: 0,
+        mid: 0,
+        high: 0,
         items: [
           {
             id: 1,
@@ -450,23 +479,17 @@ export default {
       this.$refs.selectItem.refreshPrices(currentValue);
     },
 
-    // // TEMPORAL
-    // changeAllPrices() {
-    //   this.item = "";
-    //   for (var i = 0; i < this.listItems.length; i++) {
-    //     var item = this.listItems[i];
-    //     var base = item.priceUSD * this.tdc;
-    //     item.price = base;
-    //     item.low = 20;
-    //     item.low_price = base + base * (item.low / 100);
-    //     item.mid = 25;
-    //     item.mid_price = base + base * (item.mid / 100);
-    //     item.high = 30;
-    //     item.high_price = base + base * (item.high / 100);
-    //   }
+    // Global percentage
+    onGlobalLowPercentageChange(currentValue, oldValue) {
+      this.$refs.selectItem.changeGlobalPrecentage(currentValue, "low");
+    },
+    onGlobalMidPercentageChange(currentValue, oldValue) {
+      this.$refs.selectItem.changeGlobalPrecentage(currentValue, "mid");
+    },
+    onGlobalHighPercentageChange(currentValue, oldValue) {
+      this.$refs.selectItem.changeGlobalPrecentage(currentValue, "high");
+    },
 
-    //   this.$refs.selectItem.$forceUpdate();
-    // },
     serviceChanged(value) {
       for (var i = 0; i < this.services.length; i++) {
         if (this.services[i].id == value) {
@@ -522,14 +545,6 @@ export default {
             });
           }
 
-          // for (var i = 0; i < response.data.length; i++) {
-          //   $this.services.push({
-          //     id: response.data[i].id,
-          //     name: response.data[i].name,
-          //     items: response.data[i].items
-          //   });
-          // }
-
           /* TODO TEMPORALMENTE COMENTADO
           if (localStorage.getItem("order") && $this.getParameter("back")) {
             var order = JSON.parse(localStorage.getItem("order"));
@@ -577,6 +592,17 @@ export default {
           }
         }
       }
+
+      if (value == "low_price") {
+        this.selectedService.low_total = total;
+      }
+      if (value == "mid_price") {
+        this.selectedService.mid_total = total;
+      }
+      if (value == "high_price") {
+        this.selectedService.high_total = total;
+      }
+
       return total;
     },
 
@@ -692,6 +718,11 @@ td {
   }
 }
 .el-input.percentage {
+  width: 50px;
+  margin: 0 auto;
+  display: block;
+}
+.el-input.global {
   width: 60px;
   margin: 0 auto;
   display: block;
@@ -708,11 +739,11 @@ td {
 .price-selected {
   background: rgb(242, 242, 242);
 }
-.percentage > input {
+.global > input {
   background: transparent;
   border-radius: 0;
-  border:0;
-  color:white;
+  border: 0;
+  color: white;
   font-size: small;
   text-align: center;
 }

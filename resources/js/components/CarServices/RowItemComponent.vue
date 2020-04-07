@@ -58,7 +58,7 @@
         ></button>
       </el-col>
       <el-col :span="6">
-        <label class="el-form-item__label">{{ item.name }}</label>
+        <label class="el-form-item__label">{{ itemName(item) }}</label>
       </el-col>
       <el-col :span="3">
         <el-input
@@ -119,12 +119,22 @@ export default {
     },
     refreshPrices(currentValue) {
       if (isNaN(currentValue)) return;
-      
+
       // change all prices (USD*TDC)
       for (var i = 0; i < this.items.length; i++) {
         var item = this.items[i];
         item.price = item.priceUSD * currentValue;
         this.changeBase(item, i);
+      }
+    },
+    changeGlobalPrecentage(currentValue, percentage) {
+      if (isNaN(currentValue)) return;
+      
+      // change all percentages
+      for (var i = 0; i < this.items.length; i++) {
+        var item = this.items[i];
+        item[percentage] = currentValue; // change the property [low,mid,high]
+        this.changePercentage(percentage, item, i, true);
       }
     },
     formatPrice(value) {
@@ -141,8 +151,8 @@ export default {
       this.items[index].high_price = item.price;
       this.onChangePrice();
     },
-    changePercentage(price, item, index) {
-      if (this.updatePrices) {
+    changePercentage(price, item, index, isGlobal) {
+      if (this.updatePrices || isGlobal) {
         for (var x = 0; x < this.items.length; x++) {
           if (this.items[x][price] != 0) {
             this.items[x][price + "_price"] =
@@ -160,6 +170,12 @@ export default {
     onChangePrice() {
       this.$forceUpdate();
       this.$root.$refs.create.$forceUpdate();
+    },
+    itemName(item) {
+      if (item.name) {
+        return item.name;
+      }
+      return item.item.name;
     }
   }
 };
