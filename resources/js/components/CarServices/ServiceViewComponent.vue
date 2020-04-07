@@ -157,16 +157,15 @@
             <el-row type="flex" align="middle">
               <el-col :span="12" class="row-header">PORCENTAJE DE GANANCIA EN LAS PIEZAS:</el-col>
               <el-col :span="2" class="price-min">
-                <el-input size="mini" class="percentage"></el-input>
+                <el-input size="mini" maxlength="2" v-model="valor"  class="percentage"></el-input>
               </el-col>
               <el-col :span="2"></el-col>
               <el-col :span="2" class="price-med">
-                <el-input size="mini" class="percentage"></el-input>
+                <el-input size="mini" maxlength="2" v-model="valor" class="percentage"></el-input>
               </el-col>
               <el-col :span="2"></el-col>
               <el-col :span="2" class="price-max">
-                <el-input size="mini" class="percentage"></el-input>
-                <!-- <input class="percentage" style="text-align:center;border:0;height:100%width:100%; background-color:transparent"> -->
+                <el-input size="mini" maxlength="2" v-model="valor" class="percentage"></el-input>
               </el-col>
               <el-col :span="2" class="cellborder" style="height:28px">
                 <!-- <el-checkbox v-model="updatePrices">Aplicar</el-checkbox> -->
@@ -293,6 +292,8 @@ export default {
         // "https://s.aolcdn.com/dims-global/dims3/GLOB/legacy_thumbnail/788x525/quality/85/https://s.aolcdn.com/commerce/autodata/images/USC60HOC022A121001.jpg"
       },
 
+      valor: 0,
+
       maker: "",
       makers: [],
       brand: "",
@@ -375,9 +376,9 @@ export default {
           console.log(response.data);
           for (var i = 0; i < response.data.length; i++) {
             $this.services.push({
-              AA:160,
-              BB:161,
-              CC:163,
+              AA: 160,
+              BB: 161,
+              CC: 163,
               id: response.data[i].id,
               service_id: response.data[i].service_id,
               name: response.data[i].name,
@@ -403,10 +404,14 @@ export default {
 
       alert(service.id);
 
+      console.log(service);
       var service = {
         id: service.id,
         service_id: service.id,
         name: service.name,
+        AA: total,
+        BB: total,
+        CC: total,
         items: [
           {
             id: 1,
@@ -687,7 +692,7 @@ td {
   }
 }
 .el-input.percentage {
-  width: 50px;
+  width: 60px;
   margin: 0 auto;
   display: block;
 }
@@ -702,5 +707,13 @@ td {
 }
 .price-selected {
   background: rgb(242, 242, 242);
+}
+.percentage > input {
+  background: transparent;
+  border-radius: 0;
+  border:0;
+  color:white;
+  font-size: small;
+  text-align: center;
 }
 </style>
