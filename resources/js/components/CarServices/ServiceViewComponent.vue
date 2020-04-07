@@ -83,9 +83,9 @@
                   <td><el-radio v-model="radio" label="3">Option C</el-radio></td>
                 </tr>-->
                 <tr>
-                  <td>$5,730.00</td>
-                  <td>$6,015.00</td>
-                  <td>$6,346.50</td>
+                  <td>${{service.AA}}</td>
+                  <td>${{service.BB}}</td>
+                  <td>${{service.CC}}</td>
                 </tr>
               </table>
               <div class="edit-buttons">
@@ -375,6 +375,9 @@ export default {
           console.log(response.data);
           for (var i = 0; i < response.data.length; i++) {
             $this.services.push({
+              AA:160,
+              BB:161,
+              CC:163,
               id: response.data[i].id,
               service_id: response.data[i].service_id,
               name: response.data[i].name,
@@ -398,8 +401,11 @@ export default {
         return;
       }
 
+      alert(service.id);
+
       var service = {
         id: service.id,
+        service_id: service.id,
         name: service.name,
         items: [
           {

@@ -75,6 +75,7 @@ class CarsController extends Controller
         ->where('maker', '=', $request->get('maker'))
         ->where('brand', '=', $request->get('brand'))
         ->where('motor', '=', $request->get('motor'))
+        //->whereBetween('start_year', '=', $request->get('year'))
         ->where('start_year', '>=', $request->get('year'))
         //->where('end_year', '<=', $request->get('year'))
         ->get();
