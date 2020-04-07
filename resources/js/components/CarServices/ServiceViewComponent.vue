@@ -120,148 +120,150 @@
 
           <br />
           <el-card class="box-card">
-            <!-- Creando -->
-            <el-row class="row-header" style="margin-bottom:5px;" type="flex" align="middle">
-              <el-col :span="12">SERVICIO</el-col>
-              <el-col :span="12">FOTO DEL CARRO</el-col>
-            </el-row>
-            <el-row class="center" type="flex" align="middle">
-              <el-col :span="12">{{selectedService.name}}</el-col>
-              <el-col :span="12" class="bl">
-                <el-image style="width: 230px;" :src="selectedCar.image"></el-image>
-              </el-col>
-            </el-row>
-            <el-row class="row-header">
-              <el-col :span="4"></el-col>
-              <el-col :span="4" :offset="4">DOLAR</el-col>
-              <el-col :span="4">MARCA</el-col>
-              <el-col :span="4">MODELO</el-col>
-              <el-col :span="4">DEL AÑO</el-col>
-              <el-col :span="4">AL AÑO</el-col>
-            </el-row>
-            <el-row class="center" type="flex" align="middle">
-              <el-col :span="4" class="row-header">TIPO DE CAMBIO:</el-col>
-              <el-col :span="4">
-                <el-input-number
-                  v-model="tdc"
-                  @change="onTDCChange"
-                  controls-position="right"
-                  size="mini"
-                  :precision="2"
-                  :step="0.1"
-                  :min="0"
-                  style="width:100%;border-radius:0"
-                ></el-input-number>
-              </el-col>
-              <el-col :span="4">{{selectedCar.maker}}</el-col>
-              <el-col :span="4">{{selectedCar.brand}}</el-col>
-              <el-col :span="4">{{selectedCar.year}}</el-col>
-              <el-col :span="4">{{selectedCar.endYear}}</el-col>
-            </el-row>
-            <el-row type="flex" align="middle">
-              <el-col :span="12" class="row-header">PORCENTAJE DE GANANCIA EN LAS PIEZAS:</el-col>
-              <el-col :span="2" class="price-min">
-                <el-input
-                  size="mini"
-                  @change="onGlobalLowPercentageChange"
-                  maxlength="2"
-                  v-model="selectedService.low"
-                  class="global"
-                ></el-input>
-              </el-col>
-              <el-col :span="2"></el-col>
-              <el-col :span="2" class="price-med">
-                <el-input
-                  size="mini"
-                  @change="onGlobalMidPercentageChange"
-                  maxlength="2"
-                  v-model="selectedService.mid"
-                  class="global"
-                ></el-input>
-              </el-col>
-              <el-col :span="2"></el-col>
-              <el-col :span="2" class="price-max">
-                <el-input
-                  size="mini"
-                  @change="onGlobalHighPercentageChange"
-                  maxlength="2"
-                  v-model="selectedService.high"
-                  class="global"
-                ></el-input>
-              </el-col>
-              <el-col :span="2" class="cellborder" style="height:28px"></el-col>
-            </el-row>
-            <el-row class="row-header">
-              <el-col class="price">
-                <el-select
-                  size="mini"
-                  @change="handleChange"
-                  filterable
-                  placeholder="Agregar un Artículo"
-                  v-model="item"
-                  :disabled="listItems.length == 0 || selectedCar.id == undefined || selectedCar.id == '' || selectedService.id == undefined || selectedService.id == ''"
-                >
-                  <el-option
-                    v-for="(item, index) in listItems"
-                    :key="index"
-                    :label="item.name"
-                    :value="index"
-                  ></el-option>
-                </el-select>
-              </el-col>
-            </el-row>
-            <el-row class="row-header">
-              <el-col :span="7">Refacción</el-col>
-              <el-col :span="3">Precio DLLS</el-col>
-              <el-col :span="2">Base</el-col>
-              <el-col :span="2">%</el-col>
-              <el-col :span="2">Mínimo</el-col>
-              <el-col :span="2">%</el-col>
-              <el-col :span="2">Medio</el-col>
-              <el-col :span="2">%</el-col>
-              <el-col :span="2">Máximo</el-col>
-            </el-row>
+            <div v-if="selectedCar.id != undefined">
+              <!-- Creando -->
+              <el-row class="row-header" style="margin-bottom:5px;" type="flex" align="middle">
+                <el-col :span="12">SERVICIO</el-col>
+                <el-col :span="12">FOTO DEL CARRO</el-col>
+              </el-row>
+              <el-row class="center" type="flex" align="middle">
+                <el-col :span="12">{{selectedService.name}}</el-col>
+                <el-col :span="12" class="bl">
+                  <el-image style="width: 230px;" :src="selectedCar.image"></el-image>
+                </el-col>
+              </el-row>
+              <el-row class="row-header">
+                <el-col :span="4"></el-col>
+                <el-col :span="4" :offset="4">DOLAR</el-col>
+                <el-col :span="4">MARCA</el-col>
+                <el-col :span="4">MODELO</el-col>
+                <el-col :span="4">DEL AÑO</el-col>
+                <el-col :span="4">AL AÑO</el-col>
+              </el-row>
+              <el-row class="center" type="flex" align="middle">
+                <el-col :span="4" class="row-header">TIPO DE CAMBIO:</el-col>
+                <el-col :span="4">
+                  <el-input-number
+                    v-model="tdc"
+                    @change="onTDCChange"
+                    controls-position="right"
+                    size="mini"
+                    :precision="2"
+                    :step="0.1"
+                    :min="0"
+                    style="width:100%;border-radius:0"
+                  ></el-input-number>
+                </el-col>
+                <el-col :span="4">{{selectedCar.maker}}</el-col>
+                <el-col :span="4">{{selectedCar.brand}}</el-col>
+                <el-col :span="4">{{selectedCar.year}}</el-col>
+                <el-col :span="4">{{selectedCar.endYear}}</el-col>
+              </el-row>
+              <el-row type="flex" align="middle">
+                <el-col :span="12" class="row-header">PORCENTAJE DE GANANCIA EN LAS PIEZAS:</el-col>
+                <el-col :span="2" class="price-min">
+                  <el-input
+                    size="mini"
+                    @change="onGlobalLowPercentageChange"
+                    maxlength="2"
+                    v-model="selectedService.low"
+                    class="global"
+                  ></el-input>
+                </el-col>
+                <el-col :span="2"></el-col>
+                <el-col :span="2" class="price-med">
+                  <el-input
+                    size="mini"
+                    @change="onGlobalMidPercentageChange"
+                    maxlength="2"
+                    v-model="selectedService.mid"
+                    class="global"
+                  ></el-input>
+                </el-col>
+                <el-col :span="2"></el-col>
+                <el-col :span="2" class="price-max">
+                  <el-input
+                    size="mini"
+                    @change="onGlobalHighPercentageChange"
+                    maxlength="2"
+                    v-model="selectedService.high"
+                    class="global"
+                  ></el-input>
+                </el-col>
+                <el-col :span="2" class="cellborder" style="height:28px"></el-col>
+              </el-row>
+              <el-row class="row-header">
+                <el-col class="price">
+                  <el-select
+                    size="mini"
+                    @change="handleChange"
+                    filterable
+                    placeholder="Agregar un Artículo"
+                    v-model="item"
+                    :disabled="listItems.length == 0 || selectedCar.id == undefined || selectedCar.id == '' || selectedService.id == undefined || selectedService.id == ''"
+                  >
+                    <el-option
+                      v-for="(item, index) in listItems"
+                      :key="index"
+                      :label="item.name"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
+              <el-row class="row-header">
+                <el-col :span="7">Refacción</el-col>
+                <el-col :span="3">Precio DLLS</el-col>
+                <el-col :span="2">Base</el-col>
+                <el-col :span="2">%</el-col>
+                <el-col :span="2">Mínimo</el-col>
+                <el-col :span="2">%</el-col>
+                <el-col :span="2">Medio</el-col>
+                <el-col :span="2">%</el-col>
+                <el-col :span="2">Máximo</el-col>
+              </el-row>
 
-            <!-- Items del servicio -->
-            <row-item ref="selectItem" :items="items" :tdc="tdc"></row-item>
+              <!-- Items del servicio -->
+              <row-item ref="selectItem" :items="items" :tdc="tdc"></row-item>
 
-            <!-- Totales -->
-            <el-row class="cellborder" style="height:28px" type="flex" align="middle">
-              <el-col :span="7">TOTAL</el-col>
-              <el-col :span="5" class="bl price">
-                <b>${{ formatPrice(sumItemPrice("price")) }}</b>
-              </el-col>
-              <el-col :span="4" class="bl price">
-                <b>${{ formatPrice(sumItemPrice("low_price")) }}</b>
-              </el-col>
-              <el-col :span="4" class="bl price">
-                <b>${{ formatPrice(sumItemPrice("mid_price")) }}</b>
-              </el-col>
-              <el-col :span="4" class="bl price">
-                <b>${{ formatPrice(sumItemPrice("high_price")) }}</b>
-              </el-col>
-            </el-row>
-            <!-- descripcion del servicio -->
-            <el-row>
-              <el-col :span="4" class="cellborder" style="padding:10px">Descripción del servicio</el-col>
-              <el-col class="cellborder" :span="20">{{selectedService.comment}}</el-col>
-            </el-row>
-            <!-- descripcion del servicio -->
-            <el-row>
-              <el-col :span="4" class="cellborder">Garantía</el-col>
-              <el-col :span="20" class="cellborder">{{selectedService.warranty}}</el-col>
-            </el-row>
+              <!-- Totales -->
+              <el-row class="cellborder" style="height:28px" type="flex" align="middle">
+                <el-col :span="7">TOTAL</el-col>
+                <el-col :span="5" class="bl price">
+                  <b>${{ formatPrice(sumItemPrice("price")) }}</b>
+                </el-col>
+                <el-col :span="4" class="bl price">
+                  <b>${{ formatPrice(sumItemPrice("low_price")) }}</b>
+                </el-col>
+                <el-col :span="4" class="bl price">
+                  <b>${{ formatPrice(sumItemPrice("mid_price")) }}</b>
+                </el-col>
+                <el-col :span="4" class="bl price">
+                  <b>${{ formatPrice(sumItemPrice("high_price")) }}</b>
+                </el-col>
+              </el-row>
+              <!-- descripcion del servicio -->
+              <el-row>
+                <el-col :span="4" class="cellborder" style="padding:10px">Descripción del servicio</el-col>
+                <el-col class="cellborder" :span="20">{{selectedService.comment}}</el-col>
+              </el-row>
+              <!-- descripcion del servicio -->
+              <el-row>
+                <el-col :span="4" class="cellborder">Garantía</el-col>
+                <el-col :span="20" class="cellborder">{{selectedService.warranty}}</el-col>
+              </el-row>
 
-            <el-row>
-              <el-col :span="4" :offset="20" style="text-align:right;">
-                <br />
-                <el-button
-                  type="primary"
-                  :disabled="selectedCar.id == undefined || selectedCar.id == '' || service == '' || items.length == 0 || save"
-                  @click="next()"
-                >Guardar</el-button>
-              </el-col>
-            </el-row>
+              <el-row>
+                <el-col :span="4" :offset="20" style="text-align:right;">
+                  <br />
+                  <el-button
+                    type="primary"
+                    :disabled="selectedCar.id == undefined || selectedCar.id == '' || service == '' || items.length == 0 || save"
+                    @click="next()"
+                  >Guardar</el-button>
+                </el-col>
+              </el-row>
+            </div>
           </el-card>
         </el-col>
       </el-row>
@@ -399,12 +401,13 @@ export default {
         .then(function(response) {
           for (var i = 0; i < response.data.length; i++) {
             $this.services.push({
-              low_total: 160,
-              mid_total: 161,
-              high_total: 163,
+              low_total: 0,
+              mid_total: 0,
+              high_total: 0,
               low: response.data[i].low,
               mid: response.data[i].mid,
               high: response.data[i].high,
+              comment: response.data[i].comment,
               id: response.data[i].id,
               service_id: response.data[i].service_id,
               name: response.data[i].name,
@@ -617,7 +620,12 @@ export default {
         .post("/api/carservices", {
           car: $this.selectedCar.id, // Grabar car.id
           service: $this.service.service_id, // service id
-          items: $this.items // itemlist
+          items: $this.items, // itemlist
+
+          comment: "HOLA-HOLAS19",
+          low: $this.service.low,
+          mid: $this.service.mid,
+          high: $this.service.high
         })
         .then(function(response) {
           $this.save = true;

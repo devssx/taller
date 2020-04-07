@@ -81,14 +81,26 @@ class CarServicesController extends Controller
         $car = $request->get('car');
         $service = $request->get('service');
 
+        $comment = $request->has('comment') ? $request->get('comment') : '';
+        $price = $request->has('price') ? $request->get('price') : 0;
+        $low = $request->has('low') ? $request->get('low') : 0;
+        $mid = $request->has('mid') ? $request->get('mid') : 0;
+        $high = $request->has('high') ? $request->get('high') : 0;
+
+        // TODO no duplicar
+        CarService::where([
+            'car_id' => $car,
+            'service_id' => $service,
+        ])->delete();
+
         CarService::firstOrCreate([
             'car_id' => $car,
             'service_id' => $service,
-            'comment' => '',
-            'price' => 0,
-            'low' => 0,
-            'mid' => 0,
-            'high' => 0,
+            'comment' => $comment,
+            'price' => $price,
+            'low' => $low,
+            'mid' => $mid,
+            'high' => $high,
         ]);
 
         $items = collect($request->get('items'));
