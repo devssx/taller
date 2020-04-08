@@ -83,20 +83,26 @@
                 </tr>
                 <tr>
                   <td>
-                    <el-radio v-model="radio" label="min"></el-radio>
+                    <el-radio v-model="s.selectedPrice" label="min"></el-radio>
                   </td>
                   <td>
-                    <el-radio v-model="radio" label="mid"></el-radio>
+                    <el-radio v-model="s.selectedPrice" label="mid"></el-radio>
                   </td>
                   <td>
-                    <el-radio v-model="radio" label="high"></el-radio>
+                    <el-radio v-model="s.selectedPrice" label="high"></el-radio>
                   </td>
                 </tr>
               </table>
+              <el-checkbox v-model="s.selected">Seleccionar</el-checkbox>
               <div class="edit-buttons">
                 ID: {{s.id}}
                 <el-button icon="el-icon-edit" size="mini"></el-button>
-                <el-button @click="deleteService(s)" type="danger" icon="el-icon-delete" size="mini"></el-button>
+                <el-button
+                  @click="deleteService(s)"
+                  type="danger"
+                  icon="el-icon-delete"
+                  size="mini"
+                ></el-button>
               </div>
             </el-collapse-item>
           </el-collapse>
@@ -248,7 +254,7 @@
                 <el-col class="cellborder" :span="20">
                   <el-input
                     type="textarea"
-                    :autosize="{ minRows: 3, maxRows: 5}"
+                    :autosize="{ minRows: 2, maxRows: 4}"
                     placeholder="Descripción"
                     v-model="service.comment"
                   ></el-input>
@@ -260,7 +266,7 @@
                 <el-col :span="20" class="cellborder">
                   <el-input
                     type="textarea"
-                    :autosize="{ minRows: 3, maxRows: 5}"
+                    :autosize="{ minRows: 2, maxRows: 4}"
                     placeholder="Garantía"
                     v-model="service.warranty"
                   ></el-input>
@@ -407,12 +413,11 @@ export default {
     });
   },
   methods: {
-    delete() {
-      alert($this.service.id);
+    deleteService(serviceItem) {
       var $this = this;
       $this
         .$confirm(
-          "Esto eliminara permanentemente el registro. ¿Desea continuar?",
+          "Esto eliminará permanentemente el registro. ¿Desea continuar?",
           "Advertencia",
           {
             confirmButtonText: "OK",
@@ -421,9 +426,14 @@ export default {
           }
         )
         .then(() => {
+          if (serviceItem.isNew) {
+            $this.loadCarServices();
+            return;
+          }
+
           //$this.loading = true;
           axios
-            .delete("/api/carservices/" + $this.service.id)
+            .delete("/api/carservices/" + serviceItem.id)
             .then(function(response) {
               $this.$message({
                 type: "success",
@@ -432,6 +442,7 @@ export default {
               //$this.$root.$emit("refreshTable");
               //$this.dialogVisible = false;
               //$this.loading = false;
+              $this.loadCarServices();
             })
             .catch(error => {
               $this.loading = false;
@@ -456,6 +467,8 @@ export default {
           for (var i = 0; i < response.data.length; i++) {
             $this.services.push({
               id: response.data[i].id, // clave (csid)
+              selected: false,
+              selectedPrice: "min",
               low_total: 0,
               mid_total: 0,
               high_total: 0,
@@ -468,10 +481,10 @@ export default {
               items: response.data[i].items
             });
           }
-
-          // if (response.data.length > 0) {
-          //   $this.activeName = response.data[0].id;
-          // }
+          if ($this.services.length > 0) {
+            $this.activeName = 0;
+            $this.serviceChanged(0);
+          }
         });
     },
     addService: function(service, total) {
@@ -489,6 +502,8 @@ export default {
         //id: null, // it has no id because it's neww
         service_id: service.id,
         isNew: true,
+        selected: false,
+        selectedPrice: "min",
         comment: "",
         name: service.name,
         low_total: total,
@@ -514,9 +529,10 @@ export default {
       };
 
       $this.services.push(newService);
-      // setTimeout(function() {
-      //   $this.$refs.services.setCheckedNodes([newService]);
-      // }, 0);
+
+      // set selected lastItem
+      $this.activeName = $this.services.length - 1;
+      $this.serviceChanged($this.activeName);
     },
     onMakerChange(selectedValue) {
       var $this = this;
@@ -559,7 +575,8 @@ export default {
           this.items.splice(0, this.items.length);
           for (var j = 0; j < this.service.items.length; j++)
             this.items.push(this.service.items[j]);
-          this.$refs.selectItem.$forceUpdate();
+
+          //this.$refs.selectItem.$forceUpdate();
         }
       }
     },
