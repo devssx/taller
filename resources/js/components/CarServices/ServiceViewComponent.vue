@@ -96,7 +96,7 @@
               <div class="edit-buttons">
                 ID: {{s.id}}
                 <el-button icon="el-icon-edit" size="mini"></el-button>
-                <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+                <el-button @click="deleteService(s)" type="danger" icon="el-icon-delete" size="mini"></el-button>
               </div>
             </el-collapse-item>
           </el-collapse>
@@ -245,12 +245,26 @@
               <!-- descripcion del servicio -->
               <el-row>
                 <el-col :span="4" class="cellborder" style="padding:10px">Descripción del servicio</el-col>
-                <el-col class="cellborder" :span="20">{{service.comment}}</el-col>
+                <el-col class="cellborder" :span="20">
+                  <el-input
+                    type="textarea"
+                    :autosize="{ minRows: 3, maxRows: 5}"
+                    placeholder="Descripción"
+                    v-model="service.comment"
+                  ></el-input>
+                </el-col>
               </el-row>
               <!-- descripcion del servicio -->
               <el-row>
                 <el-col :span="4" class="cellborder">Garantía</el-col>
-                <el-col :span="20" class="cellborder">{{service.warranty}}</el-col>
+                <el-col :span="20" class="cellborder">
+                  <el-input
+                    type="textarea"
+                    :autosize="{ minRows: 3, maxRows: 5}"
+                    placeholder="Garantía"
+                    v-model="service.warranty"
+                  ></el-input>
+                </el-col>
               </el-row>
 
               <el-row>
@@ -393,6 +407,45 @@ export default {
     });
   },
   methods: {
+    delete() {
+      alert($this.service.id);
+      var $this = this;
+      $this
+        .$confirm(
+          "Esto eliminara permanentemente el registro. ¿Desea continuar?",
+          "Advertencia",
+          {
+            confirmButtonText: "OK",
+            cancelButtonText: "Cancel",
+            type: "warning"
+          }
+        )
+        .then(() => {
+          //$this.loading = true;
+          axios
+            .delete("/api/carservices/" + $this.service.id)
+            .then(function(response) {
+              $this.$message({
+                type: "success",
+                message: "Servicio elminado"
+              });
+              //$this.$root.$emit("refreshTable");
+              //$this.dialogVisible = false;
+              //$this.loading = false;
+            })
+            .catch(error => {
+              $this.loading = false;
+              if (error.response.data.errors) {
+                var errors = error.response.data.errors;
+                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
+                  confirmButtonText: "OK",
+                  type: "error"
+                });
+              }
+            });
+        })
+        .catch(() => {});
+    },
     loadCarServices() {
       var $this = this;
       axios
