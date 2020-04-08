@@ -49,7 +49,7 @@
       </el-col>
     </el-row>
     -->
-    <el-row v-for="(item, index) in items" v-bind:key="index" type="flex" align="middle">
+    <el-row v-for="(item, index) in items" v-bind:key="index" type="flex" align="middle" class="br bl bt">
       <el-col :span="1">
         <button
           class="el-icon-close"

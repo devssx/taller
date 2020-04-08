@@ -91,7 +91,7 @@ class CarServicesController extends Controller
         if ($request->has('csid')) {
             $carService = CarService::find($request->get('csid'));
             if ($carService) {
-                $carService->comment = 'UPDATED++';
+                $carService->comment = $comment;
                 $carService->low = $low;
                 $carService->mid = $mid;
                 $carService->high = $high;
@@ -100,7 +100,7 @@ class CarServicesController extends Controller
                 CarService::firstOrCreate([
                     'car_id' => $car,
                     'service_id' => $service,
-                    'comment' => 'No-existe-ID',
+                    'comment' => $comment,
                     'price' => $price,
                     'low' => $low,
                     'mid' => $mid,
@@ -111,7 +111,7 @@ class CarServicesController extends Controller
             CarService::firstOrCreate([
                 'car_id' => $car,
                 'service_id' => $service,
-                'comment' => '++CREATEDNEW',
+                'comment' => $comment,
                 'price' => $price,
                 'low' => $low,
                 'mid' => $mid,

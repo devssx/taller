@@ -56,12 +56,16 @@
 
       <el-row>
         <el-col :span="6">
-          <h3>
-            Servicios
-            <div style="float:right;">
-              <create-pop-sales :disabled="!selectedCar.id"></create-pop-sales>
-            </div>
-          </h3>
+          <el-row type="flex" align="middle" style="background-color:#f2f2f2;padding:4px">
+            <el-col :span="8">
+              <h3>Servicios</h3>
+            </el-col>
+            <el-col :span="16">
+              <div style="float:right;">
+                <create-pop-sales :disabled="!selectedCar.id"></create-pop-sales>
+              </div>
+            </el-col>
+          </el-row>
           <br />
           <el-collapse v-model="activeName" @change="serviceChanged" accordion>
             <el-collapse-item
@@ -106,6 +110,7 @@
               </div>
             </el-collapse-item>
           </el-collapse>
+          <el-row v-if="!selectedCar.id" style="padding: 10px;">Sin Servicios</el-row>
         </el-col>
 
         <el-col :span="18" style="padding-left: 20px;">
@@ -126,6 +131,7 @@
 
           <br />
           <el-card class="box-card">
+            <div v-if="selectedCar.id == undefined || selectedCar.id == ''">No Servicio Seleccionado</div>
             <div v-if="selectedCar.id != undefined">
               <!-- Creando -->
               <el-row class="row-header" style="margin-bottom:5px;" type="flex" align="middle">
@@ -135,7 +141,7 @@
               <el-row class="center" type="flex" align="middle">
                 <el-col :span="12">{{service.name}}</el-col>
                 <el-col :span="12" class="bl">
-                  <el-image style="width: 230px;" :src="selectedCar.image"></el-image>
+                  <el-image style="width:230px;" :src="selectedCar.image"></el-image>
                 </el-col>
               </el-row>
               <el-row class="row-header">
@@ -165,7 +171,7 @@
                 <el-col :span="4">{{selectedCar.year}}</el-col>
                 <el-col :span="4">{{selectedCar.endYear}}</el-col>
               </el-row>
-              <el-row type="flex" align="middle">
+              <el-row type="flex" align="middle" class="br">
                 <el-col :span="12" class="row-header">PORCENTAJE DE GANANCIA EN LAS PIEZAS:</el-col>
                 <el-col :span="2" class="price-min">
                   <el-input
@@ -196,7 +202,7 @@
                     class="global"
                   ></el-input>
                 </el-col>
-                <el-col :span="2" class="cellborder" style="height:28px"></el-col>
+                <el-col :span="2" style="height:28px"></el-col>
               </el-row>
               <el-row class="row-header">
                 <el-col class="price">
@@ -233,25 +239,25 @@
               <row-item ref="selectItem" :items="items" :tdc="tdc"></row-item>
 
               <!-- Totales -->
-              <el-row class="cellborder" style="height:28px" type="flex" align="middle">
-                <el-col :span="7">TOTAL</el-col>
-                <el-col :span="5" class="bl price">
+              <el-row class="bt bl br" style="height:28px" type="flex" align="middle">
+                <el-col style="padding:10px" :span="7">TOTAL</el-col>
+                <el-col :span="5" class="price">
                   <b>${{ formatPrice(sumItemPrice("price")) }}</b>
                 </el-col>
-                <el-col :span="4" class="bl price">
+                <el-col :span="4" class="price">
                   <b>${{ formatPrice(sumItemPrice("low_price")) }}</b>
                 </el-col>
-                <el-col :span="4" class="bl price">
+                <el-col :span="4" class="price">
                   <b>${{ formatPrice(sumItemPrice("mid_price")) }}</b>
                 </el-col>
-                <el-col :span="4" class="bl price">
+                <el-col :span="4" class="price">
                   <b>${{ formatPrice(sumItemPrice("high_price")) }}</b>
                 </el-col>
               </el-row>
               <!-- descripcion del servicio -->
-              <el-row>
-                <el-col :span="4" class="cellborder" style="padding:10px">Descripción del servicio</el-col>
-                <el-col class="cellborder" :span="20">
+              <el-row class="bt bl br">
+                <el-col :span="4" style="padding:10px">Descripción del servicio</el-col>
+                <el-col :span="20">
                   <el-input
                     type="textarea"
                     :autosize="{ minRows: 2, maxRows: 4}"
@@ -261,9 +267,9 @@
                 </el-col>
               </el-row>
               <!-- descripcion del servicio -->
-              <el-row>
-                <el-col :span="4" class="cellborder">Garantía</el-col>
-                <el-col :span="20" class="cellborder">
+              <el-row class="bt bl br">
+                <el-col :span="4" style="padding:10px">Garantía</el-col>
+                <el-col :span="20">
                   <el-input
                     type="textarea"
                     :autosize="{ minRows: 2, maxRows: 4}"
@@ -273,7 +279,7 @@
                 </el-col>
               </el-row>
 
-              <el-row>
+              <el-row class="bt">
                 <el-col :span="4" :offset="20" style="text-align:right;">
                   <br />
                   <el-button
@@ -414,19 +420,13 @@ export default {
   },
   methods: {
     editService(serviceItem) {
-      this
-        .$confirm(
-          "Editar servicio ¿Desea continuar?",
-          "Advertencia",
-          {
-            confirmButtonText: "OK",
-            cancelButtonText: "Cancel",
-            type: "warning"
-          }
-        )
-        .then(() => {
-          //
-        });
+      this.$confirm("Editar servicio ¿Desea continuar?", "Advertencia", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        type: "warning"
+      }).then(() => {
+        //
+      });
     },
     deleteService(serviceItem) {
       var $this = this;
@@ -520,6 +520,7 @@ export default {
         selected: false,
         selectedPrice: "min",
         comment: "",
+        warranty: "",
         name: service.name,
         low_total: total,
         mid_total: total,
@@ -583,8 +584,6 @@ export default {
 
       if (index >= 0 && index < this.services.length) {
         this.service = this.services[index];
-        // TODO
-        this.service.warranty = "Garantia";
 
         if (this.service.items) {
           this.items.splice(0, this.items.length);
@@ -776,7 +775,6 @@ td {
   background-color: #f2f2f2;
   font-weight: bold;
   text-align: center;
-  border: 1px solid #ebeef5;
   padding: 4px;
 }
 
@@ -785,14 +783,18 @@ td {
   border: 1px solid #ebeef5;
 }
 
-.cellborder {
-  border: 1px solid #ebeef5;
-}
-
 .bl {
   border-left: 1px solid #ebeef5;
 }
-
+.br {
+  border-right: 1px solid #ebeef5;
+}
+.bt {
+  border-top: 1px solid #ebeef5;
+}
+.bb {
+  border-bottom: 1px solid #ebeef5;
+}
 .price {
   text-align: right;
 }
