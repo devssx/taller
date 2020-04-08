@@ -96,7 +96,7 @@
               <el-checkbox v-model="s.selected">Seleccionar</el-checkbox>
               <div class="edit-buttons">
                 ID: {{s.id}}
-                <el-button icon="el-icon-edit" size="mini"></el-button>
+                <el-button @click="editService(s)" icon="el-icon-edit" size="mini"></el-button>
                 <el-button
                   @click="deleteService(s)"
                   type="danger"
@@ -413,6 +413,21 @@ export default {
     });
   },
   methods: {
+    editService(serviceItem) {
+      this
+        .$confirm(
+          "Editar servicio ¿Desea continuar?",
+          "Advertencia",
+          {
+            confirmButtonText: "OK",
+            cancelButtonText: "Cancel",
+            type: "warning"
+          }
+        )
+        .then(() => {
+          //
+        });
+    },
     deleteService(serviceItem) {
       var $this = this;
       $this
