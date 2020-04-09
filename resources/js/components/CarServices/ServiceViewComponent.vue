@@ -586,6 +586,19 @@ export default {
         });
     },
     onTDCChange(currentValue, oldValue) {
+      var count = this.items.filter(x => isNaN(x.priceUSD) || x.priceUSD <= 0).length;
+      if (count > 0) {
+        this.$alert(
+          "No estan asignados todos los precios en dolares.",
+          "Error",
+          {
+            confirmButtonText: "OK",
+            type: "error"
+          }
+        );
+        return;
+      }
+
       this.$refs.selectItem.refreshPrices(currentValue);
     },
 
