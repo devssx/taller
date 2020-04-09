@@ -43,6 +43,7 @@
             </el-form-item>
             <el-form-item>
               <el-button
+                :loading="isLoadingServices"
                 type="primary"
                 icon="el-icon-search"
                 @click="search"
@@ -58,7 +59,10 @@
         <el-col :span="6">
           <el-row type="flex" align="middle" style="background-color:#f2f2f2;padding:4px">
             <el-col :span="8">
-              <h3>Servicios</h3>
+              <h4>
+                Servicios
+                <span v-if="services.length > 0">({{getSelectedServices()}})</span>
+              </h4>
             </el-col>
             <el-col :span="16">
               <div style="float:right;">
@@ -67,7 +71,12 @@
             </el-col>
           </el-row>
           <br />
-          <el-collapse v-model="activeName" @change="serviceChanged" accordion>
+          <el-collapse
+            v-loading="isLoadingServices"
+            v-model="activeName"
+            @change="serviceChanged"
+            accordion
+          >
             <el-collapse-item
               v-for="(s, index) in services"
               :key="index"
@@ -118,9 +127,7 @@
             <el-col :span="8">
               <h3>{{service.name}}</h3>
             </el-col>
-            <el-col :span="8">
-              <div v-if="Object.keys(carService).length === 0" style="float:right;"></div>
-            </el-col>
+            <el-col :span="8"></el-col>
             <el-col :span="8">
               <div style="float:right;">
                 <el-button type="primary" icon="el-icon-tickets">Cotización</el-button>
@@ -163,6 +170,7 @@
                     :precision="2"
                     :step="0.1"
                     :min="0"
+                    :disabled="isLoadingServices"
                     style="width:100%;border-radius:0"
                   ></el-input-number>
                 </el-col>
@@ -236,7 +244,7 @@
               </el-row>
 
               <!-- Items del servicio -->
-              <row-item ref="selectItem" :items="items" :tdc="tdc"></row-item>
+              <row-item v-loading="isLoadingServices" ref="selectItem" :items="items" :tdc="tdc"></row-item>
 
               <!-- Totales -->
               <el-row class="bt bl br" style="height:28px" type="flex" align="middle">
@@ -263,6 +271,7 @@
                     :autosize="{ minRows: 2, maxRows: 4}"
                     placeholder="Descripción"
                     v-model="service.comment"
+                    :disabled="isLoadingServices"
                   ></el-input>
                 </el-col>
               </el-row>
@@ -275,6 +284,7 @@
                     :autosize="{ minRows: 2, maxRows: 4}"
                     placeholder="Garantía"
                     v-model="service.warranty"
+                    :disabled="isLoadingServices"
                   ></el-input>
                 </el-col>
               </el-row>
@@ -284,6 +294,7 @@
                   <br />
                   <el-button
                     type="primary"
+                    :loading="isSaving"
                     :disabled="selectedCar.id == undefined || selectedCar.id == '' || service == '' || items.length == 0 || save"
                     @click="next()"
                   >Guardar</el-button>
@@ -320,6 +331,8 @@ export default {
   },
   data() {
     return {
+      isLoadingServices: false,
+      isSaving: false,
       radio: "1",
       activeName: "0",
       tdc: 20,
@@ -332,9 +345,9 @@ export default {
         low: 0,
         mid: 0,
         high: 0,
-        name: "Selecciona un Servicio",
-        comment: "-",
-        warranty: "-"
+        name: "",
+        comment: "",
+        warranty: ""
       },
 
       selectedCar: {
@@ -381,9 +394,10 @@ export default {
 
     $this.year = new Date().getFullYear();
     $this.motors = [];
+    $this.motors.push("");
     $this.motors.push("1.8");
     $this.motors.push("2.4");
-    $this.motor = "1.8";
+    $this.motor = "";
 
     $this.articulos = [];
 
@@ -419,6 +433,10 @@ export default {
     });
   },
   methods: {
+    getSelectedServices() {
+      if (this.services.length == 0) return 0;
+      return this.services.filter(x => x.selected).length;
+    },
     editService(serviceItem) {
       this.$confirm("Editar servicio ¿Desea continuar?", "Advertencia", {
         confirmButtonText: "OK",
@@ -460,7 +478,7 @@ export default {
               $this.loadCarServices();
             })
             .catch(error => {
-              $this.loading = false;
+              //$this.loading = false;
               if (error.response.data.errors) {
                 var errors = error.response.data.errors;
                 $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
@@ -474,6 +492,7 @@ export default {
     },
     loadCarServices() {
       var $this = this;
+      $this.isLoadingServices = true;
       axios
         .get("/api/carservices?id=" + $this.selectedCar.id)
         .then(function(response) {
@@ -501,6 +520,7 @@ export default {
             $this.activeName = 0;
             $this.serviceChanged(0);
           }
+          $this.isLoadingServices = false;
         });
     },
     addService: function(service, total) {
@@ -695,13 +715,13 @@ export default {
     // Guardar
     next() {
       var $this = this;
-      alert("car_id: " + $this.selectedCar.id);
-      alert("service_id: " + $this.service.service_id);
-      alert("csid: " + $this.service.id);
-      alert("warranty: " + $this.service.warranty);
+      // alert("car_id: " + $this.selectedCar.id);
+      // alert("service_id: " + $this.service.service_id);
+      // alert("csid: " + $this.service.id);
+      // alert("warranty: " + $this.service.warranty);
+      // console.log($this.items);
 
-      console.log($this.items);
-
+      $this.isSaving = true;
       var saveParams = {
         car: $this.selectedCar.id, // Grabar car.id
         service: $this.service.service_id, //
@@ -715,9 +735,11 @@ export default {
         csid: $this.service.id
       };
 
+      var reload = $this.service.isNew;
+
       if ($this.service.isNew) {
         // create a new CarService
-        alert("Es nuevo");
+        // alert("Es nuevo");
         saveParams = {
           car: $this.selectedCar.id, // Grabar car.id
           service: $this.service.service_id, // service id
@@ -742,8 +764,8 @@ export default {
           });
 
           // Reload services
-          $this.loadCarServices();
-
+          if (reload) $this.loadCarServices();
+          $this.isSaving = false;
           // setTimeout(function() {
           //   window.location.href = "/carservices";
           // }, 1000);
@@ -756,6 +778,8 @@ export default {
               type: "error"
             });
           }
+
+          $this.isSaving = false;
         });
     }
   }
