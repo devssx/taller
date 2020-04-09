@@ -491,6 +491,7 @@ export default {
               mid: response.data[i].mid,
               high: response.data[i].high,
               comment: response.data[i].comment,
+              warranty: response.data[i].warranty,
               service_id: response.data[i].service_id,
               name: response.data[i].name,
               items: response.data[i].items
@@ -697,6 +698,7 @@ export default {
       alert("car_id: " + $this.selectedCar.id);
       alert("service_id: " + $this.service.service_id);
       alert("csid: " + $this.service.id);
+      alert("warranty: " + $this.service.warranty);
 
       console.log($this.items);
 
@@ -706,6 +708,7 @@ export default {
         items: $this.items, // itemlist
 
         comment: $this.service.comment,
+        warranty: $this.service.warranty,
         low: $this.service.low,
         mid: $this.service.mid,
         high: $this.service.high,
@@ -721,6 +724,7 @@ export default {
           items: $this.items, // itemlist
 
           comment: $this.service.comment,
+          warranty: $this.service.warranty,
           low: $this.service.low,
           mid: $this.service.mid,
           high: $this.service.high

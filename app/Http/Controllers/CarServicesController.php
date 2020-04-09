@@ -82,6 +82,7 @@ class CarServicesController extends Controller
         $service = $request->get('service');
 
         $comment = $request->has('comment') ? $request->get('comment') : '';
+        $warranty = $request->has('warranty') ? $request->get('warranty') : '';
         $price = $request->has('price') ? $request->get('price') : 0;
         $low = $request->has('low') ? $request->get('low') : 0;
         $mid = $request->has('mid') ? $request->get('mid') : 0;
@@ -92,6 +93,7 @@ class CarServicesController extends Controller
             $carService = CarService::find($request->get('csid'));
             if ($carService) {
                 $carService->comment = $comment;
+                $carService->warranty = $warranty;
                 $carService->low = $low;
                 $carService->mid = $mid;
                 $carService->high = $high;
@@ -101,6 +103,7 @@ class CarServicesController extends Controller
                     'car_id' => $car,
                     'service_id' => $service,
                     'comment' => $comment,
+                    'warranty' => $warranty,
                     'price' => $price,
                     'low' => $low,
                     'mid' => $mid,
@@ -112,6 +115,7 @@ class CarServicesController extends Controller
                 'car_id' => $car,
                 'service_id' => $service,
                 'comment' => $comment,
+                'warranty' => $warranty,
                 'price' => $price,
                 'low' => $low,
                 'mid' => $mid,
