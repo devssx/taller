@@ -11,6 +11,8 @@ class CarService extends Model
         'car_id',
         'service_id',
         'comment',
+        'exchange_rate',
+        'warranty',
         'price',
         'low',
         'mid',

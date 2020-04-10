@@ -108,8 +108,7 @@
               </table>
               <el-checkbox v-model="s.selected">Seleccionar</el-checkbox>
               <div class="edit-buttons">
-                ID: {{s.id}}
-                <el-button @click="editService(s)" icon="el-icon-edit" size="mini"></el-button>
+                <el-button v-if="s.id" @click="editService(s)" icon="el-icon-edit" size="mini"></el-button>
                 <el-button
                   @click="deleteService(s)"
                   type="danger"
@@ -440,10 +439,27 @@ export default {
   },
   methods: {
     next() {
-      this.$alert("Cear Orden de Servicio", "Info", {
-        confirmButtonText: "OK",
-        type: "error"
-      });
+      var count = this.getSelectedServices();
+      if (count > 0) {
+        var unSaved = this.services.filter(s => !s.id).length > 0;
+        var services = this.services.filter(s => s.selected);
+        if (unSaved) {
+          this.$message({
+            message:
+              "Hay servicios sin guardar, guardalos o eliminalos para poder continuar.",
+            type: "warning"
+          });
+          return;
+        }
+        console.log(services);
+      } else {
+        this.$message({
+          message: "Selecciona Al menos un servicio.",
+          type: "error"
+        });
+        return;
+      }
+
       // const order = {
       //   services: this.selectedServices,
       //   price: this.selectedPrice,
@@ -649,7 +665,7 @@ export default {
       if (index >= 0 && index < this.services.length) {
         this.service = this.services[index];
         this.isValidService = true;
-        
+
         this.items.splice(0, this.items.length);
         if (this.service.items) {
           for (var j = 0; j < this.service.items.length; j++)

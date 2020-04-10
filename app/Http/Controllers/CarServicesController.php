@@ -83,7 +83,7 @@ class CarServicesController extends Controller
 
         $comment = $request->has('comment') ? $request->get('comment') : '';
         $warranty = $request->has('warranty') ? $request->get('warranty') : '';
-        $exchange_rate = $request->has('exchange_rate') ? $request->get('exchange_rate') : '';
+        $exchange_rate = $request->has('exchange_rate') ? $request->get('exchange_rate') : 0;
         $price = $request->has('price') ? $request->get('price') : 0;
         $low = $request->has('low') ? $request->get('low') : 0;
         $mid = $request->has('mid') ? $request->get('mid') : 0;
