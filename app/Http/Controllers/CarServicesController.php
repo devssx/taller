@@ -144,8 +144,6 @@ class CarServicesController extends Controller
             $item['car_id'] = $car;
             $item['service_id'] = $service;
             $item['item_id'] = $item['id'];
-            $item['comment'] = 'xxx';
-            $item['usd_price'] = 666.00;
 
             if (isset($item['name'])) {
                 unset($item['id']);
@@ -159,8 +157,6 @@ class CarServicesController extends Controller
             }
 
             unset($item['deleted_at']);
-
-            $item['usd_price'] = 666.00;
 
             if (isset($item['id'])) {
                 CarServiceItem::find($item['id'])->update($item);

@@ -14,6 +14,7 @@ class CarServiceItem extends Model
         'car_id',
         'service_id',
         'comment',
+        'usd_price',
         'price',
         'low',
         'low_price',
