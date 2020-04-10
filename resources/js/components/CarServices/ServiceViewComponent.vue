@@ -163,7 +163,7 @@
                 <el-col :span="4" class="row-header">TIPO DE CAMBIO:</el-col>
                 <el-col :span="4">
                   <el-input-number
-                    v-model="tdc"
+                    v-model="service.exchange_rate"
                     @change="onTDCChange"
                     controls-position="right"
                     size="mini"
@@ -244,7 +244,12 @@
               </el-row>
 
               <!-- Items del servicio -->
-              <row-item v-loading="isLoadingServices" ref="selectItem" :items="items" :tdc="tdc"></row-item>
+              <row-item
+                v-loading="isLoadingServices"
+                ref="selectItem"
+                :items="items"
+                :tdc="service.exchange_rate"
+              ></row-item>
 
               <!-- Totales -->
               <el-row class="bt bl br" style="height:28px" type="flex" align="middle">
@@ -335,13 +340,13 @@ export default {
       isSaving: false,
       radio: "1",
       activeName: "0",
-      tdc: 20,
 
       // selectedService
       service: {
         low_total: 0,
         mid_total: 0,
         high_total: 0,
+        exchange_rate: 0,
         low: 0,
         mid: 0,
         high: 0,
@@ -357,7 +362,6 @@ export default {
         endYear: "",
         image:
           "https://st.motortrend.ca/uploads/sites/10/2017/05/2017-ford-focus-titanium-sedan-angular-front.png"
-        // "https://s.aolcdn.com/dims-global/dims3/GLOB/legacy_thumbnail/788x525/quality/85/https://s.aolcdn.com/commerce/autodata/images/USC60HOC022A121001.jpg"
       },
 
       maker: "",
@@ -511,13 +515,11 @@ export default {
               high: response.data[i].high,
               comment: response.data[i].comment,
               warranty: response.data[i].warranty,
+              exchange_rate: response.data[i].exchange_rate,
               service_id: response.data[i].service_id,
               name: response.data[i].name,
               items: response.data[i].items
             });
-
-            console.log("ser");
-            console.log(response.data[i].items);
           }
 
           if ($this.services.length > 0) {
@@ -546,6 +548,7 @@ export default {
         selectedPrice: "min",
         comment: "",
         warranty: "",
+        exchange_rate: 0,
         name: service.name,
         low_total: total,
         mid_total: total,
@@ -655,8 +658,7 @@ export default {
             $this.selectedCar.brand = response.data[0].brand;
             $this.selectedCar.year = response.data[0].start_year;
             $this.selectedCar.endYear = response.data[0].end_year;
-            $this.selectedCar.image =
-              "https://movehostel.com/storage/app/Hostels/009007d0-9a37-11e9-82a0-c97aecdb9fe0/20190629062743no%20image.jpg";
+            $this.selectedCar.image = response.data[0].image;
 
             $this.loadCarServices();
           } else {
@@ -736,7 +738,8 @@ export default {
       // alert("service_id: " + $this.service.service_id);
       // alert("csid: " + $this.service.id);
       // alert("warranty: " + $this.service.warranty);
-      console.log($this.items);
+      // alert("exchange_rate: " + $this.service.exchange_rate);
+      // console.log($this.items);
 
       $this.isSaving = true;
       var saveParams = {
@@ -746,6 +749,7 @@ export default {
 
         comment: $this.service.comment,
         warranty: $this.service.warranty,
+        exchange_rate: $this.service.exchange_rate,
         low: $this.service.low,
         mid: $this.service.mid,
         high: $this.service.high,
@@ -764,8 +768,10 @@ export default {
 
           comment: $this.service.comment,
           warranty: $this.service.warranty,
+          exchange_rate: $this.service.exchange_rate,
           low: $this.service.low,
           mid: $this.service.mid,
+          high: $this.service.high,
           high: $this.service.high
         };
       }
