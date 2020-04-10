@@ -66,7 +66,7 @@
             </el-col>
             <el-col :span="16">
               <div style="float:right;">
-                <create-pop-sales :disabled="!selectedCar.id"></create-pop-sales>
+                <create-pop-sales :disabled="!isValidCarId"></create-pop-sales>
               </div>
             </el-col>
           </el-row>
@@ -119,7 +119,7 @@
               </div>
             </el-collapse-item>
           </el-collapse>
-          <el-row v-if="!selectedCar.id" style="padding: 10px;">Sin Servicios</el-row>
+          <el-row v-if="!isValidCarId || !isValidService" style="padding: 10px;">Sin Servicios</el-row>
         </el-col>
 
         <el-col :span="18" style="padding-left: 20px;">
@@ -138,8 +138,9 @@
 
           <br />
           <el-card class="box-card">
-            <div v-if="selectedCar.id == undefined || selectedCar.id == ''">No Servicio Seleccionado</div>
-            <div v-if="selectedCar.id != undefined">
+            <div v-if="!isValidCarId">Selecciona un carro válido</div>
+            <div v-if="isValidCarId && !isValidService">Agrega un Servicio</div>
+            <div v-if="isValidService">
               <!-- Creando -->
               <el-row class="row-header" style="margin-bottom:5px;" type="flex" align="middle">
                 <el-col :span="12">SERVICIO</el-col>
@@ -220,7 +221,7 @@
                     filterable
                     placeholder="Agregar un Artículo"
                     v-model="item"
-                    :disabled="listItems.length == 0 || selectedCar.id == undefined || selectedCar.id == '' || service.service_id == undefined || service.service_id == ''"
+                    :disabled="listItems.length == 0 || !isValidCarId || service.service_id == undefined || service.service_id == ''"
                   >
                     <el-option
                       v-for="(item, index) in listItems"
@@ -276,7 +277,7 @@
                     :autosize="{ minRows: 2, maxRows: 4}"
                     placeholder="Descripción"
                     v-model="service.comment"
-                    :disabled="isLoadingServices"
+                    :disabled="isLoadingServices || items.length == 0"
                   ></el-input>
                 </el-col>
               </el-row>
@@ -289,7 +290,7 @@
                     :autosize="{ minRows: 2, maxRows: 4}"
                     placeholder="Garantía"
                     v-model="service.warranty"
-                    :disabled="isLoadingServices"
+                    :disabled="isLoadingServices || items.length == 0"
                   ></el-input>
                 </el-col>
               </el-row>
@@ -338,7 +339,8 @@ export default {
     return {
       isLoadingServices: false,
       isSaving: false,
-      radio: "1",
+      isValidCarId: false,
+      isValidService: false,
       activeName: "0",
 
       // selectedService
@@ -540,7 +542,10 @@ export default {
 
           if ($this.services.length > 0) {
             $this.activeName = 0;
+            $this.isValidService = true;
             $this.serviceChanged(0);
+          } else {
+            $this.isValidService = false;
           }
           $this.isLoadingServices = false;
         });
@@ -643,7 +648,8 @@ export default {
 
       if (index >= 0 && index < this.services.length) {
         this.service = this.services[index];
-
+        this.isValidService = true;
+        
         this.items.splice(0, this.items.length);
         if (this.service.items) {
           for (var j = 0; j < this.service.items.length; j++)
@@ -656,6 +662,7 @@ export default {
       $this.selectedPrice = "low";
       $this.selectedServices = [];
       $this.services = [];
+      $this.items.splice(0, $this.items.length);
 
       axios
         .get("/api/car/search", {
@@ -676,9 +683,13 @@ export default {
             $this.selectedCar.endYear = response.data[0].end_year;
             $this.selectedCar.image = response.data[0].image;
 
+            $this.isValidCarId = true;
             $this.loadCarServices();
           } else {
-            $this.selectedCar.id = undefined;
+            $this.selectedCar.id = "";
+            $this.isValidCarId = false;
+            $this.isValidService = false;
+
             $this.$notify({
               title: "No existe el carro",
               message: "No se encontró el carro seleccinado",
