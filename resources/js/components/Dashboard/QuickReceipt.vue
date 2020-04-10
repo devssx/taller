@@ -88,7 +88,7 @@
     </el-dialog>
     <el-row type="flex" justify="end" style="opacity: 0;overflow: hidden;height: 50px;">
       <el-col :span="12">
-        <img ref="quick-receipt" src="/img/receipt.jpg" width="1200px" />
+        <img ref="quick-receipt" src="/img/old_receipt.jpg" width="1200px" />
       </el-col>
       <el-col :span="12">
         <canvas ref="quick-canvas"></canvas>

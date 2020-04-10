@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use App\Models\Client;
 use App\Models\CarServiceItem;
 use App\Models\Sale;
 use App\Models\SaleService;
@@ -166,10 +167,18 @@ class SalesController extends Controller
         if ($request->get('client')) {
             $sale->client_id = $request->get('client');
         }
-
         if ($request->has('phonenumber')) {
             $sale->phonenumber = $request->get('phonenumber');
         }
+
+        // Create a new client if id is not valid
+        if($sale->client_id == -1){
+            $clientName =  $request->has('clientname')? $request->get('clientname') : "Cliente S/N";   
+            $phoneNumber = $request->has('phonenumber')? $request->get('phonenumber') : "";
+            $newClient = Client::firstOrCreate(['name' => $clientName, 'phonenumber' => $phoneNumber]);
+            $sale->client_id = $newClient->id;
+        }
+
         if ($request->has('concept')) {
             $sale->concept = $request->get('concept');
         }

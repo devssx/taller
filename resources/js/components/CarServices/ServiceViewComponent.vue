@@ -131,7 +131,7 @@
             <el-col :span="8">
               <div style="float:right;">
                 <el-button type="primary" icon="el-icon-tickets">Cotización</el-button>
-                <el-button type="primary" icon="el-icon-tickets">Recibo</el-button>
+                <el-button type="primary" icon="el-icon-tickets" @click="next()">Recibo</el-button>
               </div>
             </el-col>
           </el-row>
@@ -301,7 +301,7 @@
                     type="primary"
                     :loading="isSaving"
                     :disabled="selectedCar.id == undefined || selectedCar.id == '' || service == '' || items.length == 0 || save"
-                    @click="next()"
+                    @click="saveService()"
                   >Guardar</el-button>
                 </el-col>
               </el-row>
@@ -437,6 +437,22 @@ export default {
     });
   },
   methods: {
+    next() {
+      this.$alert("Cear Orden de Servicio", "Info", {
+        confirmButtonText: "OK",
+        type: "error"
+      });
+      // const order = {
+      //   services: this.selectedServices,
+      //   price: this.selectedPrice,
+      //   brand: this.brand,
+      //   year: this.year
+      // };
+
+      // const parsed = JSON.stringify(order);
+      // localStorage.setItem("order", parsed);
+      window.location.href = "/sales/receipt";
+    },
     getSelectedServices() {
       if (this.services.length == 0) return 0;
       return this.services.filter(x => x.selected).length;
@@ -732,7 +748,7 @@ export default {
     },
 
     // Guardar
-    next() {
+    saveService() {
       var $this = this;
       // alert("car_id: " + $this.selectedCar.id);
       // alert("service_id: " + $this.service.service_id);
