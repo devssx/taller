@@ -64,7 +64,7 @@
         <el-input
           size="mini"
           class="price"
-          v-model="item.priceUSD"
+          v-model="item.usd_price"
           @change="changeUSDPrice(item, index)"
         ></el-input>
       </el-col>
@@ -114,7 +114,8 @@ export default {
   mounted: function() {},
   methods: {
     changeUSDPrice(item, index) {
-      item.price = item.priceUSD * this.tdc;
+      item.usd_price = parseFloat(item.usd_price);
+      item.price = item.usd_price * this.tdc;
       this.changeBase(item, index);
     },
     refreshPrices(currentValue) {
@@ -123,7 +124,7 @@ export default {
       // change all prices (USD*TDC)
       for (var i = 0; i < this.items.length; i++) {
         var item = this.items[i];
-        item.price = item.priceUSD * currentValue;
+        item.price = item.usd_price * currentValue;
         this.changeBase(item, i);
       }
     },

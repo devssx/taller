@@ -515,7 +515,11 @@ export default {
               name: response.data[i].name,
               items: response.data[i].items
             });
+
+            console.log("ser");
+            console.log(response.data[i].items);
           }
+
           if ($this.services.length > 0) {
             $this.activeName = 0;
             $this.serviceChanged(0);
@@ -554,6 +558,7 @@ export default {
             id: 1,
             name: "Mano de Obra",
             description: "",
+            usd_price: 0,
             price: total,
             low: 0,
             low_price: total,
@@ -586,7 +591,8 @@ export default {
         });
     },
     onTDCChange(currentValue, oldValue) {
-      var count = this.items.filter(x => isNaN(x.priceUSD) || x.priceUSD <= 0).length;
+      var count = this.items.filter(x => isNaN(x.usd_price) || x.usd_price <= 0)
+        .length;
       if (count > 0) {
         this.$alert(
           "No estan asignados todos los precios en dolares.",
@@ -619,12 +625,10 @@ export default {
       if (index >= 0 && index < this.services.length) {
         this.service = this.services[index];
 
+        this.items.splice(0, this.items.length);
         if (this.service.items) {
-          this.items.splice(0, this.items.length);
           for (var j = 0; j < this.service.items.length; j++)
             this.items.push(this.service.items[j]);
-
-          //this.$refs.selectItem.$forceUpdate();
         }
       }
     },
@@ -687,8 +691,8 @@ export default {
       item.id = this.listItems[value].id;
       item.name = this.listItems[value].name;
       item.description = this.listItems[value].description;
+      item.usd_price = 1;
       item.price = 20;
-      item.priceUSD = 1;
       item.low = 10;
       item.low_price = 0;
       item.mid = 20;
@@ -732,7 +736,7 @@ export default {
       // alert("service_id: " + $this.service.service_id);
       // alert("csid: " + $this.service.id);
       // alert("warranty: " + $this.service.warranty);
-      // console.log($this.items);
+      console.log($this.items);
 
       $this.isSaving = true;
       var saveParams = {
