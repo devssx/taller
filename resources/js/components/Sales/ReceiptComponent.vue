@@ -94,8 +94,8 @@
                       v-bind:key="index"
                       class="row-item"
                     >
-                      <el-col :span="6" :offset="4">{{ item.name }}</el-col>
-                      <el-col :span="4">${{ formatPrice(item[order.price+"_price"]) }}</el-col>
+                      <el-col :span="6" :offset="4">{{ itemName (item) }}</el-col>
+                      <el-col :span="4">${{ formatPrice(itemPrice(item, service)) }}</el-col>
                     </el-row>
                     <el-row class="row-item" v-if="total != sumServiceTotal()">
                       <el-col :span="6" :offset="4">Otro</el-col>
@@ -231,6 +231,19 @@ export default {
     });
   },
   methods: {
+    itemPrice(item, service) {
+      // normal
+      if (this.order.price) return item[this.order.price + "_price"];
+    
+      // multi price (low, mid, high)
+      return item[service.selectedPrice + "_price"];
+    },
+    itemName(item) {
+      if (item.name) {
+        return item.name;
+      }
+      return item.item.name;
+    },
     refreshReceipt(sale) {
       this.currentSale = sale;
     },
@@ -470,11 +483,22 @@ export default {
       const order = this.order;
 
       for (var i in order.services) {
+        var serviceSelectedPrice = order.services[i].selectedPrice;
+
         for (var x in order.services[i].items) {
-          if (order.services[i].items[x][order.price + "_price"]) {
-            total += parseFloat(
-              order.services[i].items[x][order.price + "_price"]
-            );
+          // individual price
+          if (serviceSelectedPrice) {
+            if (order.services[i].items[x][serviceSelectedPrice + "_price"]) {
+              total += parseFloat(
+                order.services[i].items[x][serviceSelectedPrice + "_price"]
+              );
+            }
+          } else {
+            if (order.services[i].items[x][order.price + "_price"]) {
+              total += parseFloat(
+                order.services[i].items[x][order.price + "_price"]
+              );
+            }
           }
         }
       }
@@ -545,11 +569,22 @@ export default {
       const order = this.order;
 
       for (var i in order.services) {
+        var serviceSelectedPrice = order.services[i].selectedPrice;
+        
         for (var x in order.services[i].items) {
-          if (order.services[i].items[x][order.price + "_price"]) {
-            total += parseFloat(
-              order.services[i].items[x][order.price + "_price"]
-            );
+          // individual price
+          if (serviceSelectedPrice) {
+            if (order.services[i].items[x][serviceSelectedPrice + "_price"]) {
+              total += parseFloat(
+                order.services[i].items[x][serviceSelectedPrice + "_price"]
+              );
+            }
+          } else {
+            if (order.services[i].items[x][order.price + "_price"]) {
+              total += parseFloat(
+                order.services[i].items[x][order.price + "_price"]
+              );
+            }
           }
         }
       }

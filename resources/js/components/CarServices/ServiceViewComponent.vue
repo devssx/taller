@@ -96,7 +96,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <el-radio v-model="s.selectedPrice" label="min"></el-radio>
+                    <el-radio v-model="s.selectedPrice" label="low"></el-radio>
                   </td>
                   <td>
                     <el-radio v-model="s.selectedPrice" label="mid"></el-radio>
@@ -106,7 +106,7 @@
                   </td>
                 </tr>
               </table>
-              <el-checkbox v-model="s.selected">Seleccionar</el-checkbox>
+              <el-checkbox v-if="s.id" v-model="s.selected">Seleccionar</el-checkbox>
               <div class="edit-buttons">
                 <el-button v-if="s.id" @click="editService(s)" icon="el-icon-edit" size="mini"></el-button>
                 <el-button
@@ -379,7 +379,7 @@ export default {
 
       filterText: "",
       selectedServices: [],
-      selectedPrice: "low",
+      //selectedPrice: "low",
       car: "",
       cars: [],
       services: [],
@@ -451,7 +451,19 @@ export default {
           });
           return;
         }
-        console.log(services);
+
+        const order = {
+          services: services,
+          //price: 'low',
+          brand: this.brand,
+          year: this.year,
+
+          car: this.selectedCar
+        };
+
+        const parsed = JSON.stringify(order);
+        localStorage.setItem("order", parsed);
+        window.location.href = "/sales/receipt";
       } else {
         this.$message({
           message: "Selecciona Al menos un servicio.",
@@ -459,17 +471,6 @@ export default {
         });
         return;
       }
-
-      // const order = {
-      //   services: this.selectedServices,
-      //   price: this.selectedPrice,
-      //   brand: this.brand,
-      //   year: this.year
-      // };
-
-      // const parsed = JSON.stringify(order);
-      // localStorage.setItem("order", parsed);
-      window.location.href = "/sales/receipt";
     },
     getSelectedServices() {
       if (this.services.length == 0) return 0;
@@ -540,7 +541,7 @@ export default {
             $this.services.push({
               id: response.data[i].id, // clave (csid)
               selected: false,
-              selectedPrice: "min",
+              selectedPrice: "low",
               low_total: 0,
               mid_total: 0,
               high_total: 0,
@@ -552,6 +553,7 @@ export default {
               exchange_rate: response.data[i].exchange_rate,
               service_id: response.data[i].service_id,
               name: response.data[i].name,
+              label: response.data[i].name,
               items: response.data[i].items
             });
           }
@@ -582,7 +584,7 @@ export default {
         service_id: service.id,
         isNew: true,
         selected: false,
-        selectedPrice: "min",
+        selectedPrice: "low",
         comment: "",
         warranty: "",
         exchange_rate: 0,
@@ -675,7 +677,7 @@ export default {
     },
     search() {
       var $this = this;
-      $this.selectedPrice = "low";
+      //$this.selectedPrice = "low";
       $this.selectedServices = [];
       $this.services = [];
       $this.items.splice(0, $this.items.length);

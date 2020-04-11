@@ -17,7 +17,8 @@ class SalesController extends Controller
      * @return void
      */
     public function __construct()
-    { }
+    {
+    }
 
     public function index()
     {
@@ -172,9 +173,9 @@ class SalesController extends Controller
         }
 
         // Create a new client if id is not valid
-        if($sale->client_id == -1){
-            $clientName =  $request->has('clientname')? $request->get('clientname') : "Cliente S/N";   
-            $phoneNumber = $request->has('phonenumber')? $request->get('phonenumber') : "";
+        if ($sale->client_id == -1) {
+            $clientName =  $request->has('clientname') ? $request->get('clientname') : "Cliente S/N";
+            $phoneNumber = $request->has('phonenumber') ? $request->get('phonenumber') : "";
             $newClient = Client::firstOrCreate(['name' => $clientName, 'phonenumber' => $phoneNumber]);
             $sale->client_id = $newClient->id;
         }
@@ -220,15 +221,31 @@ class SalesController extends Controller
             }
         } else if ($request->has('services')) {
             foreach ($request->get('services') as $service) {
+
+                // mixed price
+                $price = $request->has('price') ? $request->get('price') : $service['selectedPrice'];
+
                 foreach ($service['items'] as $item) {
-                    SaleService::create([
-                        'sale_id' => $sale->id,
-                        'car_id' => $car->id,
-                        'service_id' => $service['id'],
-                        'item_id' => $item['id'],
-                        'year' => $year,
-                        'price' => $item[$price . '_price'],
-                    ]);
+                    if ($request->has('price')) {
+                        SaleService::create([
+                            'sale_id' => $sale->id,
+                            'car_id' => $car->id,
+                            'service_id' => $service['id'],
+                            'item_id' => $item['id'],
+                            'year' => $year,
+                            'price' => $item[$price . '_price'],
+                        ]);
+                    } else {
+                        // request comes from car services
+                        SaleService::create([
+                            'sale_id' => $sale->id,
+                            'car_id' => $car->id,
+                            'service_id' => $service['service_id'],
+                            'item_id' => $item['item_id'],
+                            'year' => $year,
+                            'price' => $item[$price . '_price'],
+                        ]);
+                    }
                 }
             }
         }
