@@ -234,7 +234,7 @@ export default {
     itemPrice(item, service) {
       // normal
       if (this.order.price) return item[this.order.price + "_price"];
-    
+
       // multi price (low, mid, high)
       return item[service.selectedPrice + "_price"];
     },
@@ -255,6 +255,14 @@ export default {
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     back() {
+      if (!this.order.price) {
+        this.$notify({
+          title: "No implementado",
+          message: "Función no implementada.",
+          type: "warning"
+        });
+        return;
+      }
       const parsed = JSON.stringify(this.order);
       localStorage.setItem("order", parsed);
       window.location.href = "/sales/create?back=1";
@@ -570,7 +578,7 @@ export default {
 
       for (var i in order.services) {
         var serviceSelectedPrice = order.services[i].selectedPrice;
-        
+
         for (var x in order.services[i].items) {
           // individual price
           if (serviceSelectedPrice) {
