@@ -80,7 +80,7 @@
             <el-collapse-item
               v-for="(s, index) in services"
               :key="index"
-              :title="s.name"
+              :title="s.selected ? s.name+' (Seleccionado)':s.name"
               :name="index"
             >
               <table style="width:100%">
