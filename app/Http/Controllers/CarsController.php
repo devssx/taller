@@ -64,6 +64,8 @@ class CarsController extends Controller
         return Car::firstOrCreate([
             'maker' => $request->get('maker'),
             'brand' => $request->get('brand'),
+            'motor' => $request->get('motor'),
+            'image' => $request->get('image'),
             'start_year' => $request->get('year')[0],
             'end_year' => $request->get('year')[1],
         ]);
