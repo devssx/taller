@@ -14,6 +14,10 @@
         </el-table-column>
         <el-table-column prop="maker" label="Marca"></el-table-column>
         <el-table-column prop="brand" label="Modelo"></el-table-column>
+        <el-table-column prop="motor" label="Motor"></el-table-column>
+        <el-table-column label="Foto">
+          <template slot-scope="scope">{{scope.row.image == '' ? '':'Asignada'}}</template>
+        </el-table-column>
         <el-table-column label="Año">
           <template slot-scope="scope">{{ scope.row.start_year }}-{{ scope.row.end_year }}</template>
         </el-table-column>

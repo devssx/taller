@@ -24,6 +24,12 @@
             <el-form-item label="Modelo" prop="brand">
               <el-input v-model="car.brand"></el-input>
             </el-form-item>
+            <el-form-item label="Motor" prop="motor">
+              <el-input v-model="car.motor"></el-input>
+            </el-form-item>
+            <el-form-item label="Foto" prop="image">
+              <el-input v-model="car.image"></el-input>
+            </el-form-item>
             <el-form-item :label="'Año (' + car.start_year + '-' + car.end_year + ')'">
               <el-slider
                 v-model="car.year"
@@ -35,6 +41,11 @@
               ></el-slider>
             </el-form-item>
           </el-form>
+        </el-col>
+      </el-row>
+      <el-row v-if="car.image!=''" type="flex" align="middle" style="text-align: center;">
+        <el-col :span="24">
+          <el-image style="width:256px;" :src="car.image"></el-image>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -64,6 +75,13 @@ export default {
           {
             required: true,
             message: "Campo Modelo es obligatorio",
+            trigger: "change"
+          }
+        ],
+        motor: [
+          {
+            required: true,
+            message: "Campo Motor es obligatorio",
             trigger: "change"
           }
         ]
