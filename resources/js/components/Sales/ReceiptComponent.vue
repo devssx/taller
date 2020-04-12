@@ -255,12 +255,10 @@ export default {
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     back() {
-      if (!this.order.price) {
-        this.$notify({
-          title: "No implementado",
-          message: "Función no implementada.",
-          type: "warning"
-        });
+      if (this.order.backTo) {
+        const parsed = JSON.stringify(this.order);
+        localStorage.setItem("order", parsed);
+        window.location.href = "/carservices/create?back=1";
         return;
       }
       const parsed = JSON.stringify(this.order);

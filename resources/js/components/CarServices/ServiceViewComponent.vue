@@ -321,7 +321,7 @@ export default {
       default: function() {
         return {};
       }
-    },
+    }
     // items: {
     //   type: Array,
     //   default: function() {
@@ -399,9 +399,6 @@ export default {
 
     $this.year = new Date().getFullYear();
     $this.motors = [];
-    $this.motors.push("");
-    $this.motors.push("1.8");
-    $this.motors.push("2.4");
     $this.motor = "";
 
     $this.articulos = [];
@@ -411,12 +408,18 @@ export default {
       $this.years.push(year);
     }
 
-    // axios.get("/api/cars?all=1").then(function(response) {
-    //   $this.cars = response.data;
-    //   // if ($this.carService) {
-    //   //   $this.car = $this.carService.car_id;
-    //   // }
-    // });
+    axios.get("/api/cars?all").then(function(response) {
+      $this.cars = response.data;
+
+      // load all motors
+      for (var i = 0; i < $this.cars.length; i++) {
+        var motor = $this.cars[i].motor;
+
+        if ($this.motors.filter(m => m == motor).length == 0) {
+          $this.motors.push($this.cars[i].motor);
+        }
+      }
+    });
 
     // axios.get("/api/services?all=1").then(function(response) {
     //   $this.services = response.data;
@@ -436,6 +439,23 @@ export default {
     axios.get("/api/car/brands").then(function(response) {
       $this.brands = response.data;
     });
+
+    // GoBack
+    if (localStorage.getItem("order") && $this.getParameter("back")) {
+      var order = JSON.parse(localStorage.getItem("order"));
+      setTimeout(function() {
+        if (order.car) {
+          $this.selectedCar = order.car;
+          setTimeout(function() {
+            $this.maker = $this.selectedCar.maker;
+            $this.motor = $this.selectedCar.motor;
+            $this.brand = order.brand;
+            $this.year = order.year;
+            $this.loadCarServices();
+          }, 1000);
+        }
+      }, 0);
+    }
   },
   methods: {
     next() {
@@ -457,7 +477,7 @@ export default {
           //price: 'low',
           brand: this.brand,
           year: this.year,
-
+          backTo: "carservices",
           car: this.selectedCar
         };
 
@@ -618,6 +638,36 @@ export default {
       $this.activeName = $this.services.length - 1;
       $this.serviceChanged($this.activeName);
     },
+    getParameter(name) {
+      var result = null,
+        tmp = [];
+      location.search
+        .substr(1)
+        .split("&")
+        .forEach(function(item) {
+          tmp = item.split("=");
+          if (tmp[0] === name) result = decodeURIComponent(tmp[1]);
+        });
+      return result;
+    },
+    // onYearChange(selectedValue) {
+    //   var cars = this.cars.filter(
+    //     c => c.start_year <= selectedValue && c.end_year >= selectedValue
+    //   );
+
+    //   console.log(cars);
+
+    //   this.maker = "";
+    //   this.makers = [];
+
+    //   for (var i = 0; i < cars.length; i++) {
+    //     var maker = cars[i].maker;
+    //     console.log(maker);
+    //     if (this.makers.filter(m => m.maker == maker).length == 0) {
+    //       this.makers.push(cars[i]);
+    //     }
+    //   }
+    // },
     onMakerChange(selectedValue) {
       var $this = this;
       $this.brand = "";
@@ -633,8 +683,9 @@ export default {
         });
     },
     onTDCChange(currentValue, oldValue) {
-      var count = this.service.items.filter(x => isNaN(x.usd_price) || x.usd_price <= 0)
-        .length;
+      var count = this.service.items.filter(
+        x => isNaN(x.usd_price) || x.usd_price <= 0
+      ).length;
       if (count > 0) {
         this.$alert(
           "No estan asignados todos los precios en dolares.",
@@ -697,6 +748,7 @@ export default {
             $this.selectedCar.id = response.data[0].id;
             $this.selectedCar.maker = response.data[0].maker;
             $this.selectedCar.brand = response.data[0].brand;
+            $this.selectedCar.motor = response.data[0].motor;
             $this.selectedCar.year = response.data[0].start_year;
             $this.selectedCar.endYear = response.data[0].end_year;
             $this.selectedCar.image = response.data[0].image;
