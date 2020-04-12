@@ -237,49 +237,53 @@ export default {
 
       // cliente
       if (currentSale.client) {
-        $this.context.fillText(currentSale.client.name, 160, 330); // Cliente
+        $this.context.fillText(currentSale.client.name, 160, 305); // Cliente
         $this.context.fillText(
           currentSale.phonenumber
             ? currentSale.phonenumber
             : currentSale.client.phonenumber,
           160,
-          305
+          330
         );
       } else if (currentSale.phonenumber) {
-        $this.context.fillText(currentSale.phonenumber, 160, 305); // tel
+        $this.context.fillText(currentSale.phonenumber, 160, 330); // tel
       }
 
-      $this.context.fillText(currentSale.user.name, 160, 362); // tecnico
+      $this.context.fillText(currentSale.user.name, 160, 355); // tecnico
 
       $this.context.fillText(
         currentSale.maker ? currentSale.maker : currentSale.car[0].maker,
-        600,
+        640,
         305
       );
       $this.context.fillText(
         currentSale.brand ? currentSale.brand : currentSale.car[0].brand,
-        600,
+        640,
         330
       );
       $this.context.fillText(
         currentSale.year ? currentSale.year : currentSale.sale_services[0].year,
-        600,
-        362
+        640,
+        355
       );
-      $this.context.fillText(currentSale.color, 850, 305);
-      $this.context.fillText(currentSale.km, 850, 330);
-      $this.context.fillText(currentSale.last_service, 850, 362);
+      $this.context.fillText(currentSale.color, 960, 305);
+      $this.context.fillText(currentSale.km, 960, 330);
+      $this.context.fillText(currentSale.last_service, 980, 355);
+
+      // $this.context.fillText("Negro Mate", 960, 305);
+      // $this.context.fillText("125,000", 960, 330);
+      // $this.context.fillText("25/04/2021", 980, 355);
 
       currentSale.total = parseFloat(currentSale.total);
 
       // Cantidad
-      $this.context.fillText("1", 90, 445);
+      $this.context.fillText("1", 90, 420);
 
       // Descripcion
       if (currentSale.concept) {
         var concept = currentSale.concept.match(/.{1,60}/g);
         for (var x = 0; x < concept.length; x++) {
-          $this.context.fillText(concept[x].toUpperCase(), 160, 445 + x * 32);
+          $this.context.fillText(concept[x].toUpperCase(), 160, 420 + x * 32);
         }
       }
 
@@ -287,7 +291,7 @@ export default {
       $this.context.fillText(
         "$" + $this.formatPrice(currentSale.total),
         960,
-        445
+        420
       );
 
       // Descripcion (repetida)
@@ -297,7 +301,7 @@ export default {
           $this.context.fillText(
             details[x].toUpperCase(),
             160,
-            445 + 32 * concept.length + x * 32
+            420 + 32 * concept.length + x * 32
           );
         }
       }
@@ -306,13 +310,13 @@ export default {
       for (var x = 0; x < 19; x++) {
         $this.context.strokeStyle = "black";
         $this.context.beginPath();
-        $this.context.moveTo(40, 455 + x * 31);
-        $this.context.lineTo(1100, 455 + x * 31);
+        $this.context.moveTo(40, 430 + x * 31);
+        $this.context.lineTo(1100, 430 + x * 31);
         $this.context.lineWidth = 1;
         $this.context.stroke();
       }
 
-      var y = 1070;
+      var y = 1040;
       var h = 26;
       // Subtotal
       $this.context.fillText(
@@ -352,8 +356,26 @@ export default {
 
       // Garantia
       if (currentSale.guaranty) {
-        $this.context.font = "24px Calibri";
-        $this.context.fillText(currentSale.guaranty, 200, 1080);
+        //$this.context.font = "24px Calibri";
+        $this.context.fillText(currentSale.guaranty, 160, 1040);
+      }
+
+      // metodo de pago
+      if (currentSale.method) {
+        $this.context.fillText(currentSale.method, 620, 1040);
+      }
+
+      // validado por...
+      if (currentSale.validator) {
+        $this.context.fillText(currentSale.validator, 255, 1115);
+      }
+      
+      // observaciones (56 char por linea)
+      if (currentSale.comments) {
+        var comment = currentSale.comments.match(/.{1,56}/g);
+        for (var i = 0; i < comment.length; i++) {
+          $this.context.fillText(comment[i].toUpperCase().trim(), 645, 1115 + i * 18);
+        }
       }
 
       var img = document.createElement("img");

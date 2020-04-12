@@ -451,6 +451,7 @@ export default {
             $this.motor = $this.selectedCar.motor;
             $this.brand = order.brand;
             $this.year = order.year;
+            $this.isValidCarId = true;
             $this.loadCarServices();
           }, 1000);
         }
