@@ -21,10 +21,18 @@
             <el-form-item label="Nombre del Articulo" prop="name">
               <el-input v-model="item.name"></el-input>
             </el-form-item>
-            <el-form-item label="Descripcion" prop="description">
+             <el-form-item label="Foto del Articulo" prop="image">
+              <el-input v-model="item.image"></el-input>
+            </el-form-item>
+            <el-form-item label="Descripción" prop="description">
               <el-input type="textarea" v-model="item.description"></el-input>
             </el-form-item>
           </el-form>
+        </el-col>
+      </el-row>
+        <el-row v-if="item.image!=''" type="flex" align="middle" style="text-align: center;">
+        <el-col :span="24">
+          <el-image style="width:256px;" :src="item.image"></el-image>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -79,6 +87,7 @@ export default {
       $this.$refs.itemForm.validate(valid => {
         if (valid) {
           $this.loading = true;
+
           axios
             .post("/api/items", $this.item)
             .then(function(response) {

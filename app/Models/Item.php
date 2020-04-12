@@ -9,7 +9,7 @@ class Item extends Model
 {
     use SoftDeletes;
 
-    public $fillable = ['name', 'description'];
+    public $fillable = ['name', 'image', 'description'];
 
     public function carServiceItems()
     {
