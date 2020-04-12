@@ -247,7 +247,7 @@
               <row-item
                 v-loading="isLoadingServices"
                 ref="selectItem"
-                :items="items"
+                :items="service.items"
                 :tdc="service.exchange_rate"
               ></row-item>
 
@@ -276,7 +276,7 @@
                     :autosize="{ minRows: 2, maxRows: 4}"
                     placeholder="Descripción"
                     v-model="service.comment"
-                    :disabled="isLoadingServices || items.length == 0"
+                    :disabled="isLoadingServices || service.items.length == 0"
                   ></el-input>
                 </el-col>
               </el-row>
@@ -289,7 +289,7 @@
                     :autosize="{ minRows: 2, maxRows: 4}"
                     placeholder="Garantía"
                     v-model="service.warranty"
-                    :disabled="isLoadingServices || items.length == 0"
+                    :disabled="isLoadingServices || service.items.length == 0"
                   ></el-input>
                 </el-col>
               </el-row>
@@ -300,7 +300,7 @@
                   <el-button
                     type="primary"
                     :loading="isSaving"
-                    :disabled="selectedCar.id == undefined || selectedCar.id == '' || service == '' || items.length == 0 || save"
+                    :disabled="selectedCar.id == undefined || selectedCar.id == '' || service == '' || service.items.length == 0 || save"
                     @click="saveService()"
                   >Guardar</el-button>
                 </el-col>
@@ -322,12 +322,12 @@ export default {
         return {};
       }
     },
-    items: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    }
+    // items: {
+    //   type: Array,
+    //   default: function() {
+    //     return [];
+    //   }
+    // }
   },
   watch: {
     filterText(val) {
@@ -633,7 +633,7 @@ export default {
         });
     },
     onTDCChange(currentValue, oldValue) {
-      var count = this.items.filter(x => isNaN(x.usd_price) || x.usd_price <= 0)
+      var count = this.service.items.filter(x => isNaN(x.usd_price) || x.usd_price <= 0)
         .length;
       if (count > 0) {
         this.$alert(
@@ -668,11 +668,11 @@ export default {
         this.service = this.services[index];
         this.isValidService = true;
 
-        this.items.splice(0, this.items.length);
-        if (this.service.items) {
-          for (var j = 0; j < this.service.items.length; j++)
-            this.items.push(this.service.items[j]);
-        }
+        // this.items.splice(0, this.items.length);
+        // if (this.service.items) {
+        //   for (var j = 0; j < this.service.items.length; j++)
+        //     this.items.push(this.service.items[j]);
+        // }
       }
     },
     search() {
@@ -680,7 +680,7 @@ export default {
       //$this.selectedPrice = "low";
       $this.selectedServices = [];
       $this.services = [];
-      $this.items.splice(0, $this.items.length);
+      //$this.service.items.splice(0, $this.service.items.length);
 
       axios
         .get("/api/car/search", {
@@ -746,7 +746,7 @@ export default {
       item.mid_price = 0;
       item.high = 30;
       item.high_price = 0;
-      this.items.push(item);
+      this.service.items.push(item);
       this.$refs.selectItem.$forceUpdate();
     },
     formatPrice(value) {
@@ -755,10 +755,10 @@ export default {
     },
     sumItemPrice(value) {
       var total = 0;
-      if (this.items) {
-        for (var item in this.items) {
-          if (this.items[item][value]) {
-            total += parseFloat(this.items[item][value]);
+      if (this.service.items) {
+        for (var item in this.service.items) {
+          if (this.service.items[item][value]) {
+            total += parseFloat(this.service.items[item][value]);
           }
         }
       }
@@ -790,7 +790,7 @@ export default {
       var saveParams = {
         car: $this.selectedCar.id, // Grabar car.id
         service: $this.service.service_id, //
-        items: $this.items, // itemlist
+        items: $this.service.items, // itemlist
 
         comment: $this.service.comment,
         warranty: $this.service.warranty,
@@ -809,7 +809,7 @@ export default {
         saveParams = {
           car: $this.selectedCar.id, // Grabar car.id
           service: $this.service.service_id, // service id
-          items: $this.items, // itemlist
+          items: $this.service.items, // itemlist
 
           comment: $this.service.comment,
           warranty: $this.service.warranty,
