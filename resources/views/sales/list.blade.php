@@ -7,7 +7,7 @@
             <h2>Ordenes de Servicio</h2>
         </el-col>
         <el-col :span="5" style="text-align:right;">
-            <el-button type="primary" icon="el-icon-circle-plus" v-on:click="goto('{{ route('sales.create') }}')">
+            <el-button type="primary" icon="el-icon-circle-plus" v-on:click="goto('{{ route('carservices.create') }}')">
                 Crear Orden de Servicio
             </el-button>
         </el-col>

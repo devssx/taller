@@ -15,7 +15,11 @@
       </el-row>
       <el-row>
         <el-col :span="7" v-if="!currentSale">
-          <el-checkbox v-model="isNewClient">Es Cliente Nuevo</el-checkbox>
+          <el-row>
+            <el-col>
+              <create-clients :onCreateClient="onCreateNewClient"></create-clients>
+            </el-col>
+          </el-row>
           <el-form
             :rules="rules"
             :model="form"
@@ -34,7 +38,7 @@
                 <el-option v-for="user in users" :key="user.id" :label="user.name" :value="user.id"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-if="!isNewClient" label="Cliente" prop="client">
+            <el-form-item label="Cliente" prop="client">
               <el-select
                 filterable
                 placeholder="Selecciona un Client"
@@ -48,9 +52,6 @@
                   :value="client.id"
                 ></el-option>
               </el-select>
-            </el-form-item>
-            <el-form-item v-if="isNewClient" label="Cliente" prop="clientname">
-              <el-input style="width: 220px;" v-model="form.clientname"></el-input>
             </el-form-item>
             <el-form-item label="Telefono" prop="phoenumber">
               <el-input style="width: 220px;" v-model="form.phonenumber"></el-input>
@@ -147,12 +148,10 @@ export default {
   props: ["sale"],
   data() {
     return {
-      isNewClient: false,
       order: {},
       currentSale: false,
       form: {
         client: "",
-        clientname: "",
         user: "",
         phonenumber: "",
         concept: "",
@@ -231,6 +230,13 @@ export default {
     });
   },
   methods: {
+    onCreateNewClient(newClient) {
+      if (newClient.id) {
+        this.clients.push(newClient);
+        this.form.client = newClient.id;
+        this.form.phonenumber = newClient.phonenumber;
+      }
+    },
     itemPrice(item, service) {
       // normal
       if (this.order.price) return item[this.order.price + "_price"];
@@ -550,14 +556,6 @@ export default {
           if ($this.form.client) {
             $this.order.client = $this.form.client;
           }
-
-          // id: -1 (new client)
-          if ($this.isNewClient) {
-            $this.order.client = -1;
-            $this.order.clientname = $this.form.clientname;
-          }
-
-          console.log($this.order);
 
           $this.order.phonenumber = $this.form.phonenumber;
           $this.order.concept = $this.form.concept;

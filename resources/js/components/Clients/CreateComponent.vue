@@ -4,7 +4,7 @@
       type="primary"
       icon="el-icon-circle-plus"
       @click="dialogVisible = true"
-      style="float:right;"
+      :style="onCreateClient?'':'float:right;'"
     >Agregar a un Cliente</el-button>
     <el-dialog
       title="Agregar a un Cliente"
@@ -45,6 +45,7 @@
 </template>
 <script>
 export default {
+  props: ["onCreateClient"],
   data() {
     return {
       dialogVisible: false,
@@ -96,6 +97,9 @@ export default {
           axios
             .post("/api/clients", $this.client)
             .then(function(response) {
+              // Event create client
+              if ($this.onCreateClient) $this.onCreateClient(response.data);
+
               $this.$notify({
                 title: "¡Exito!",
                 message: "Cliente fue agregado correctamente",
@@ -112,7 +116,7 @@ export default {
                   type: "error"
                 });
               }
-              $this.loading = false
+              $this.loading = false;
             });
         } else {
           return false;
