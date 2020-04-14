@@ -49,9 +49,16 @@
       </el-col>
     </el-row>
     -->
-    <el-row v-for="(item, index) in items" v-bind:key="index" type="flex" align="middle" class="br bl bt">
+    <el-row
+      v-for="(item, index) in items"
+      v-bind:key="index"
+      type="flex"
+      align="middle"
+      class="br bl bt"
+    >
       <el-col :span="1">
         <button
+          v-if="!isReadOnly"
           class="el-icon-close"
           @click="deleteItem(index)"
           style="cursor:pointer;border:none;background-color:white;margin:4px;"
@@ -62,6 +69,7 @@
       </el-col>
       <el-col :span="3">
         <el-input
+          :readonly="isReadOnly"
           size="mini"
           class="price"
           v-model="item.usd_price"
@@ -69,10 +77,17 @@
         ></el-input>
       </el-col>
       <el-col :span="2">
-        <el-input size="mini" class="price" v-model="item.price" @change="changeBase(item, index)"></el-input>
+        <el-input
+          :readonly="isReadOnly"
+          size="mini"
+          class="price"
+          v-model="item.price"
+          @change="changeBase(item, index)"
+        ></el-input>
       </el-col>
       <el-col :span="2">
         <el-input
+          :readonly="isReadOnly"
           size="mini"
           class="percentage"
           v-model="item.low"
@@ -80,10 +95,11 @@
         ></el-input>
       </el-col>
       <el-col :span="2">
-        <el-input size="mini" class="price" v-model="item.low_price"></el-input>
+        <el-input :readonly="isReadOnly" size="mini" class="price" v-model="item.low_price"></el-input>
       </el-col>
       <el-col :span="2">
         <el-input
+          :readonly="isReadOnly"
           size="mini"
           class="percentage"
           v-model="item.mid"
@@ -91,18 +107,19 @@
         ></el-input>
       </el-col>
       <el-col :span="2">
-        <el-input size="mini" class="price" v-model="item.mid_price"></el-input>
+        <el-input :readonly="isReadOnly" size="mini" class="price" v-model="item.mid_price"></el-input>
       </el-col>
       <el-col :span="2">
         <el-input
           size="mini"
           class="percentage"
           v-model="item.high"
+          :readonly="isReadOnly"
           @change="changePercentage('high', item, index)"
         ></el-input>
       </el-col>
       <el-col :span="2">
-        <el-input size="mini" class="price" v-model="item.high_price"></el-input>
+        <el-input :readonly="isReadOnly" size="mini" class="price" v-model="item.high_price"></el-input>
       </el-col>
     </el-row>
   </el-row>
@@ -110,7 +127,7 @@
 
 <script>
 export default {
-  props: ["items", "updatePrices", "tdc"],
+  props: ["items", "updatePrices", "tdc", "isReadOnly"],
   mounted: function() {},
   methods: {
     changeUSDPrice(item, index) {
@@ -130,7 +147,7 @@ export default {
     },
     changeGlobalPrecentage(currentValue, percentage) {
       if (isNaN(currentValue)) return;
-      
+
       // change all percentages
       for (var i = 0; i < this.items.length; i++) {
         var item = this.items[i];

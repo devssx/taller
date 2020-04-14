@@ -83,6 +83,7 @@
               :title="s.selected ? s.name+' (Seleccionado)':s.name"
               :name="index"
             >
+              <el-checkbox v-if="s.id" v-model="s.selected">Seleccionar</el-checkbox>
               <table style="width:100%">
                 <tr>
                   <th class="price-min">Precio Min</th>
@@ -106,15 +107,18 @@
                   </td>
                 </tr>
               </table>
-              <el-checkbox v-if="s.id" v-model="s.selected">Seleccionar</el-checkbox>
               <div class="edit-buttons">
-                <el-button v-if="s.id" @click="editService(s)" icon="el-icon-edit" size="mini"></el-button>
-                <el-button
-                  @click="deleteService(s)"
-                  type="danger"
-                  icon="el-icon-delete"
-                  size="mini"
-                ></el-button>
+                <el-tooltip v-if="s.id" effect="dark" content="Modificar Servicio" placement="top">
+                  <el-button @click="editService(s)" icon="el-icon-edit" size="mini"></el-button>
+                </el-tooltip>
+                <el-tooltip effect="dark" content="Eliminar Servicio" placement="top">
+                  <el-button
+                    @click="deleteService(s)"
+                    type="danger"
+                    icon="el-icon-delete"
+                    size="mini"
+                  ></el-button>
+                </el-tooltip>
               </div>
             </el-collapse-item>
           </el-collapse>
@@ -129,8 +133,18 @@
             <el-col :span="8"></el-col>
             <el-col :span="8">
               <div style="float:right;">
-                <el-button type="primary" icon="el-icon-tickets">Cotización</el-button>
-                <el-button type="primary" icon="el-icon-tickets" @click="next()">Recibo</el-button>
+                <el-button
+                  :disabled="getSelectedServices() == 0"
+                  type="primary"
+                  icon="el-icon-tickets"
+                  @click="next(0)"
+                >Cotización</el-button>
+                <el-button
+                  :disabled="getSelectedServices() == 0"
+                  type="primary"
+                  icon="el-icon-tickets"
+                  @click="next(1)"
+                >Recibo</el-button>
               </div>
             </el-col>
           </el-row>
@@ -170,7 +184,7 @@
                     :precision="2"
                     :step="0.1"
                     :min="0"
-                    :disabled="isLoadingServices"
+                    :disabled="service.isReadOnly"
                     style="width:100%;border-radius:0"
                   ></el-input-number>
                 </el-col>
@@ -183,6 +197,7 @@
                 <el-col :span="12" class="row-header">PORCENTAJE DE GANANCIA EN LAS PIEZAS:</el-col>
                 <el-col :span="2" class="price-min">
                   <el-input
+                    :readonly="service.isReadOnly"
                     size="mini"
                     @change="onGlobalLowPercentageChange"
                     maxlength="2"
@@ -193,6 +208,7 @@
                 <el-col :span="2"></el-col>
                 <el-col :span="2" class="price-med">
                   <el-input
+                    :readonly="service.isReadOnly"
                     size="mini"
                     @change="onGlobalMidPercentageChange"
                     maxlength="2"
@@ -203,6 +219,7 @@
                 <el-col :span="2"></el-col>
                 <el-col :span="2" class="price-max">
                   <el-input
+                    :readonly="service.isReadOnly"
                     size="mini"
                     @change="onGlobalHighPercentageChange"
                     maxlength="2"
@@ -211,25 +228,6 @@
                   ></el-input>
                 </el-col>
                 <el-col :span="2" style="height:28px"></el-col>
-              </el-row>
-              <el-row class="row-header">
-                <el-col class="price">
-                  <el-select
-                    size="mini"
-                    @change="handleChange"
-                    filterable
-                    placeholder="Agregar un Artículo"
-                    v-model="item"
-                    :disabled="listItems.length == 0 || !isValidCarId || service.service_id == undefined || service.service_id == ''"
-                  >
-                    <el-option
-                      v-for="(item, index) in listItems"
-                      :key="index"
-                      :label="item.name"
-                      :value="index"
-                    ></el-option>
-                  </el-select>
-                </el-col>
               </el-row>
               <el-row class="row-header">
                 <el-col :span="7">Refacción</el-col>
@@ -249,6 +247,7 @@
                 ref="selectItem"
                 :items="service.items"
                 :tdc="service.exchange_rate"
+                :isReadOnly="service.isReadOnly"
               ></row-item>
 
               <!-- Totales -->
@@ -276,7 +275,8 @@
                     :autosize="{ minRows: 2, maxRows: 4}"
                     placeholder="Descripción"
                     v-model="service.comment"
-                    :disabled="isLoadingServices || service.items.length == 0"
+                    :readonly="service.isReadOnly"
+                    :disabled="service.items.length == 0"
                   ></el-input>
                 </el-col>
               </el-row>
@@ -289,20 +289,36 @@
                     :autosize="{ minRows: 2, maxRows: 4}"
                     placeholder="Garantía"
                     v-model="service.warranty"
-                    :disabled="isLoadingServices || service.items.length == 0"
+                    :readonly="service.isReadOnly"
+                    :disabled="service.items.length == 0"
                   ></el-input>
                 </el-col>
               </el-row>
+              <el-row class="row-header" v-if="!service.isReadOnly">
+                <el-col class="price">
+                  Agregar Artículos:
+                  <el-select
+                    size="mini"
+                    @change="handleChange"
+                    filterable
+                    placeholder="Agregar un Artículo"
+                    v-model="item"
+                    :disabled="listItems.length == 0 || !isValidCarId || service.service_id == undefined || service.service_id == ''"
+                  >
+                    <el-option
+                      v-for="(item, index) in listItems"
+                      :key="index"
+                      :label="item.name"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
 
-              <el-row class="bt">
-                <el-col :span="4" :offset="20" style="text-align:right;">
+              <el-row class="bt" v-if="!service.isReadOnly">
+                <el-col :span="8" :offset="16" style="text-align:right;">
                   <br />
-                  <el-button
-                    type="primary"
-                    :loading="isSaving"
-                    :disabled="selectedCar.id == undefined || selectedCar.id == '' || service == '' || service.items.length == 0 || save"
-                    @click="saveService()"
-                  >Guardar</el-button>
+                  <el-button :loading="isSaving" type="primary" @click="saveService()">Guardar</el-button>
                 </el-col>
               </el-row>
             </div>
@@ -347,6 +363,7 @@ export default {
         low_total: 0,
         mid_total: 0,
         high_total: 0,
+        isReadOnly: true,
         exchange_rate: 0,
         low: 0,
         mid: 0,
@@ -459,15 +476,16 @@ export default {
     }
   },
   methods: {
-    next() {
+    next(mode) {
       var count = this.getSelectedServices();
       if (count > 0) {
         var unSaved = this.services.filter(s => !s.id).length > 0;
+        var editing = this.services.filter(s => !s.isReadOnly).length > 0;
         var services = this.services.filter(s => s.selected);
-        if (unSaved) {
+        if (unSaved || editing) {
           this.$message({
             message:
-              "Hay servicios sin guardar, guardalos o eliminalos para poder continuar.",
+              "Hay servicios sin guardar, termina de editarlos para continuar.",
             type: "warning"
           });
           return;
@@ -498,12 +516,16 @@ export default {
       return this.services.filter(x => x.selected).length;
     },
     editService(serviceItem) {
-      this.$confirm("Editar servicio ¿Desea continuar?", "Advertencia", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancel",
-        type: "warning"
-      }).then(() => {
-        //
+      this.$confirm(
+        "Al modificar el servicio puede agregar o eliminar artículos y sus precios ¿Desea continuar?",
+        "Advertencia",
+        {
+          confirmButtonText: "Si",
+          cancelButtonText: "No",
+          type: "warning"
+        }
+      ).then(() => {
+        serviceItem.isReadOnly = false;
       });
     },
     deleteService(serviceItem) {
@@ -563,6 +585,7 @@ export default {
               id: response.data[i].id, // clave (csid)
               selected: false,
               selectedPrice: "low",
+              isReadOnly: true,
               low_total: 0,
               mid_total: 0,
               high_total: 0,
@@ -606,6 +629,7 @@ export default {
         isNew: true,
         selected: false,
         selectedPrice: "low",
+        isReadOnly: false,
         comment: "",
         warranty: "",
         exchange_rate: 0,
@@ -670,18 +694,18 @@ export default {
     //   }
     // },
     onMakerChange(selectedValue) {
-      var $this = this;
-      $this.brand = "";
-      $this.brands.splice(0, this.brands.length);
-      axios
-        .get("/api/car/brandsByMaker", {
-          params: {
-            maker: selectedValue
+      this.brand = "";
+      this.brands.splice(0, this.brands.length);
+      
+      // filtra los modelos de la marca seleccionada
+      for (var i = 0; i < this.cars.length; i++) {
+        var maker = this.cars[i].maker;
+        if (maker == selectedValue) {
+          if (this.brands.filter(m => m.brand == this.cars[i].brand).length == 0) {
+            this.brands.push(this.cars[i]);
           }
-        })
-        .then(function(response) {
-          $this.brands = response.data;
-        });
+        }
+      }
     },
     onTDCChange(currentValue, oldValue) {
       var count = this.service.items.filter(
@@ -854,7 +878,7 @@ export default {
         csid: $this.service.id
       };
 
-      var reload = $this.service.isNew;
+      var isNew = $this.service.isNew;
 
       if ($this.service.isNew) {
         // create a new CarService
@@ -880,13 +904,19 @@ export default {
           // TODO save al editar cualquier campo $this.save = true;
           $this.$notify({
             title: "¡Exito!",
-            message: "Servicio fue agregado correctamente",
+            message: isNew
+              ? "Servicio fue agregado correctamente"
+              : "Se ha editado el servicio correctamente",
             type: "success"
           });
 
           // Reload services
-          if (reload) $this.loadCarServices();
+          // if (isNew) $this.loadCarServices();
+
+          $this.service.isReadOnly = true;
           $this.isSaving = false;
+
+          $this.loadCarServices();
           // setTimeout(function() {
           //   window.location.href = "/carservices";
           // }, 1000);
