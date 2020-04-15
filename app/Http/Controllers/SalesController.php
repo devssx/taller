@@ -193,6 +193,34 @@ class SalesController extends Controller
             $sale->km = $request->get('km');
         }
 
+        // Create Receipt
+        if ($request->has('maker')) {
+            $sale->maker = $request->get('maker');
+        }
+        if ($request->has('brand')) {
+            $sale->brand = $request->get('brand');
+        }
+        if ($request->has('year')) {
+            $sale->year = $request->get('year');
+        }
+        if ($request->has('status')) {
+            $sale->status = $request->get('status');
+            if ($sale->status == Sale::TERMINADO)
+                $sale->done_on = date('Y-m-d H:i:s');
+        }
+        if ($request->has('details')) {
+            $sale->details = $request->get('details');
+        }
+        if ($request->has('guaranty')) {
+            $sale->guaranty = $request->get('guaranty');
+        }
+        if ($request->has('tax')) {
+            $sale->tax = $request->get('tax');
+        }
+        if ($request->has('method')) {
+            $sale->method = $request->get('method');
+        }
+
         $sale->save();
 
         if ($request->has('service')) {

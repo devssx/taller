@@ -27,7 +27,13 @@
               </el-select>
             </el-form-item>
             <el-form-item label="Modelo">
-              <el-select v-model="brand" filterable class="year" :disabled="brands.length == 0">
+              <el-select
+                v-model="brand"
+                filterable
+                class="year"
+                :disabled="brands.length == 0"
+                @change="onBrandChange"
+              >
                 <el-option
                   v-for="brand in brands"
                   :key="brand.brand"
@@ -37,7 +43,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="Motor">
-              <el-select filterable v-model="motor">
+              <el-select filterable v-model="motor" :disabled="motors.length == 0">
                 <el-option v-for="m in motors" :key="m" :label="m" :value="m"></el-option>
               </el-select>
             </el-form-item>
@@ -429,13 +435,13 @@ export default {
       $this.cars = response.data;
 
       // load all motors
-      for (var i = 0; i < $this.cars.length; i++) {
-        var motor = $this.cars[i].motor;
+      // for (var i = 0; i < $this.cars.length; i++) {
+      //   var motor = $this.cars[i].motor;
 
-        if ($this.motors.filter(m => m == motor).length == 0) {
-          $this.motors.push($this.cars[i].motor);
-        }
-      }
+      //   if ($this.motors.filter(m => m == motor).length == 0) {
+      //     $this.motors.push($this.cars[i].motor);
+      //   }
+      // }
     });
 
     // axios.get("/api/services?all=1").then(function(response) {
@@ -453,9 +459,9 @@ export default {
       $this.makers = response.data;
     });
 
-    axios.get("/api/car/brands").then(function(response) {
-      $this.brands = response.data;
-    });
+    // axios.get("/api/car/brands").then(function(response) {
+    //   $this.brands = response.data;
+    // });
 
     // GoBack
     if (localStorage.getItem("order") && $this.getParameter("back")) {
@@ -497,6 +503,7 @@ export default {
           brand: this.brand,
           year: this.year,
           backTo: "carservices",
+          receiptMode: mode == 1,
           car: this.selectedCar
         };
 
@@ -696,15 +703,38 @@ export default {
     onMakerChange(selectedValue) {
       this.brand = "";
       this.brands.splice(0, this.brands.length);
-      
+
+      this.motor = "";
+      this.motors = [];
+
       // filtra los modelos de la marca seleccionada
       for (var i = 0; i < this.cars.length; i++) {
         var maker = this.cars[i].maker;
         if (maker == selectedValue) {
-          if (this.brands.filter(m => m.brand == this.cars[i].brand).length == 0) {
+          if (
+            this.brands.filter(m => m.brand == this.cars[i].brand).length == 0
+          ) {
             this.brands.push(this.cars[i]);
           }
         }
+      }
+    },
+    onBrandChange(selectedValue) {
+      this.motor = "";
+      this.motors = [];
+
+      // filtra los modelos de la marca seleccionada
+      for (var i = 0; i < this.brands.length; i++) {
+        var brand = this.brands[i].brand;
+        if (brand == selectedValue) {
+          if (this.motors.filter(m => m == this.brands[i].motor).length == 0) {
+            this.motors.push(this.brands[i].motor);
+          }
+        }
+      }
+
+      if (this.motors.length == 1) {
+        this.motor = this.motors[0];
       }
     },
     onTDCChange(currentValue, oldValue) {

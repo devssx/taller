@@ -59,6 +59,24 @@
             <el-form-item label="Concepto" prop="concept">
               <el-input style="width: 220px;" v-model="form.concept"></el-input>
             </el-form-item>
+
+            <div v-if="order.receiptMode">
+              <el-form-item label="Garantía" prop="guaranty">
+                <el-input style="width: 220px;" v-model="form.guaranty"></el-input>
+              </el-form-item>
+              <el-form-item label="Detalles" prop="details">
+                <el-input style="width: 220px;" v-model="form.details"></el-input>
+              </el-form-item>
+              <el-form-item label="Marca" prop="maker">
+                <el-input style="width: 220px;" v-model="form.maker"></el-input>
+              </el-form-item>
+              <el-form-item label="Modelo" prop="brand">
+                <el-input style="width: 220px;" v-model="form.brand"></el-input>
+              </el-form-item>
+              <el-form-item label="Año" prop="year">
+                <el-input style="width: 220px;" v-model="form.year"></el-input>
+              </el-form-item>
+            </div>
             <el-form-item label="Color" prop="color">
               <el-input style="width: 220px;" v-model="form.color"></el-input>
             </el-form-item>
@@ -68,6 +86,17 @@
             <el-form-item label="KM. de Ingreso" prop="km">
               <el-input style="width: 220px;" v-model="form.km"></el-input>
             </el-form-item>
+            <div v-if="order.receiptMode">
+              <el-form-item label="MDP:">
+                <el-radio-group v-model="method">
+                  <el-radio :label="1" name="type">Efectivo</el-radio>
+                  <el-radio :label="2" name="type">Electrónico</el-radio>
+                </el-radio-group>
+              </el-form-item>
+              <el-form-item label="IVA:">
+                <el-checkbox v-model="tax"></el-checkbox>
+              </el-form-item>
+            </div>
             <br />
           </el-form>
         </el-col>
@@ -148,6 +177,8 @@ export default {
   props: ["sale"],
   data() {
     return {
+      method: 0,
+      tax: 0,
       order: {},
       currentSale: false,
       form: {
@@ -155,6 +186,11 @@ export default {
         user: "",
         phonenumber: "",
         concept: "",
+        maker: "",
+        brand: "",
+        guaranty: "",
+        details: "",
+        year: "",
         color: "",
         last_service: "",
         km: ""
@@ -179,6 +215,13 @@ export default {
     if (localStorage.getItem("order")) {
       try {
         $this.order = JSON.parse(localStorage.getItem("order"));
+
+        if ($this.order.receiptMode) {
+          $this.form.maker = $this.order.car.maker;
+          $this.form.brand = $this.order.car.brand;
+          $this.form.year = $this.order.year;
+          $this.form.guaranty = "N/A";
+        }
       } catch (e) {
         localStorage.removeItem("order");
       }
@@ -563,6 +606,19 @@ export default {
           $this.order.last_service = $this.form.last_service;
           $this.order.km = $this.form.km;
           $this.order.total = $this.total;
+
+          // create a receipt
+          if ($this.order.receiptMode) {
+            $this.order.status = 2;
+            $this.order.maker = $this.form.maker;
+            $this.order.brand = $this.form.brand;
+            $this.order.year = $this.form.year;
+            $this.order.details = $this.form.details;
+            $this.order.guaranty = $this.form.guaranty;
+            $this.order.method = $this.method;
+            $this.order.tax = $this.tax;
+          }
+
           axios
             .post("/api/sales", $this.order)
             .then(function(response) {
