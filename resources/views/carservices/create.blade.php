@@ -8,7 +8,7 @@
     </el-row> --}}
     <el-row type="flex">
         <el-col :span="24">
-            <view-carservices ref="create"></view-carservices>
+            <view-carservices ref="create" :full-mode="true"></view-carservices>
         </el-col>
     </el-row>
 </el-main>

@@ -63,14 +63,18 @@
 
       <el-row>
         <el-col :span="6">
-          <el-row type="flex" align="middle" style="background-color:#f2f2f2;padding:4px">
+          <el-row
+            type="flex"
+            align="middle"
+            style="background-color:#f2f2f2;padding:4px;height:44px"
+          >
             <el-col :span="8">
               <h4>
                 Servicios
-                <span v-if="services.length > 0">({{getSelectedServices()}})</span>
+                <span v-if="getSelectedServices() > 0">({{getSelectedServices()}})</span>
               </h4>
             </el-col>
-            <el-col :span="16">
+            <el-col :span="16" v-if="fullMode">
               <div style="float:right;">
                 <create-pop-sales :disabled="!isValidCarId"></create-pop-sales>
               </div>
@@ -89,7 +93,7 @@
               :title="s.selected ? s.name+' (Seleccionado)':s.name"
               :name="index"
             >
-              <el-checkbox v-if="s.id" v-model="s.selected">Seleccionar</el-checkbox>
+              <el-checkbox v-if="!fullMode" v-model="s.selected">Seleccionar</el-checkbox>
               <table style="width:100%">
                 <tr>
                   <th class="price-min">Precio Min</th>
@@ -101,7 +105,7 @@
                   <td>${{formatPrice(s.mid_total)}}</td>
                   <td>${{formatPrice(s.high_total)}}</td>
                 </tr>
-                <tr>
+                <tr v-if="!fullMode">
                   <td>
                     <el-radio v-model="s.selectedPrice" label="low"></el-radio>
                   </td>
@@ -113,10 +117,10 @@
                   </td>
                 </tr>
               </table>
-              <div class="edit-buttons">
-                <el-tooltip v-if="s.id" effect="dark" content="Modificar Servicio" placement="top">
+              <div class="edit-buttons" v-if="fullMode">
+                <!--<el-tooltip v-if="s.id" effect="dark" content="Modificar Servicio" placement="top">
                   <el-button @click="editService(s)" icon="el-icon-edit" size="mini"></el-button>
-                </el-tooltip>
+                </el-tooltip>-->
                 <el-tooltip effect="dark" content="Eliminar Servicio" placement="top">
                   <el-button
                     @click="deleteService(s)"
@@ -132,12 +136,15 @@
         </el-col>
 
         <el-col :span="18" style="padding-left: 20px;">
-          <el-row type="flex" align="middle" style="background-color:#f2f2f2;padding:4px">
+          <el-row
+            type="flex"
+            align="middle"
+            style="background-color:#f2f2f2;padding:4px; height:44px"
+          >
             <el-col :span="8">
               <h3>{{service.name}}</h3>
             </el-col>
-            <el-col :span="8"></el-col>
-            <el-col :span="8">
+            <el-col :offset="8" :span="8" v-if="!fullMode">
               <div style="float:right;">
                 <el-button
                   :disabled="getSelectedServices() == 0"
@@ -256,6 +263,28 @@
                 :isReadOnly="service.isReadOnly"
               ></row-item>
 
+              <!-- ++ Items -->
+              <el-row class="row-header-left" v-if="!service.isReadOnly">
+                <el-col :span="24">
+                  Agregar más artículos:
+                  <el-select
+                    size="mini"
+                    @change="handleChange"
+                    filterable
+                    placeholder="Agregar un Artículo"
+                    v-model="item"
+                    :disabled="listItems.length == 0 || !isValidCarId || service.service_id == undefined || service.service_id == ''"
+                  >
+                    <el-option
+                      v-for="(item, index) in listItems"
+                      :key="index"
+                      :label="item.name"
+                      :value="index"
+                    ></el-option>
+                  </el-select>
+                </el-col>
+              </el-row>
+
               <!-- Totales -->
               <el-row class="bt bl br" style="height:28px" type="flex" align="middle">
                 <el-col style="padding:10px" :span="7">TOTAL</el-col>
@@ -300,26 +329,6 @@
                   ></el-input>
                 </el-col>
               </el-row>
-              <el-row class="row-header" v-if="!service.isReadOnly">
-                <el-col class="price">
-                  Agregar Artículos:
-                  <el-select
-                    size="mini"
-                    @change="handleChange"
-                    filterable
-                    placeholder="Agregar un Artículo"
-                    v-model="item"
-                    :disabled="listItems.length == 0 || !isValidCarId || service.service_id == undefined || service.service_id == ''"
-                  >
-                    <el-option
-                      v-for="(item, index) in listItems"
-                      :key="index"
-                      :label="item.name"
-                      :value="index"
-                    ></el-option>
-                  </el-select>
-                </el-col>
-              </el-row>
 
               <el-row class="bt" v-if="!service.isReadOnly">
                 <el-col :span="8" :offset="16" style="text-align:right;">
@@ -337,20 +346,7 @@
 
 <script>
 export default {
-  props: {
-    carService: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    }
-    // items: {
-    //   type: Array,
-    //   default: function() {
-    //     return [];
-    //   }
-    // }
-  },
+  props: ["fullMode"],
   watch: {
     filterText(val) {
       this.$refs.services.filter(val);
@@ -369,7 +365,7 @@ export default {
         low_total: 0,
         mid_total: 0,
         high_total: 0,
-        isReadOnly: true,
+        isReadOnly: false,
         exchange_rate: 0,
         low: 0,
         mid: 0,
@@ -384,8 +380,7 @@ export default {
         brand: "",
         year: "",
         endYear: "",
-        image:
-          "https://st.motortrend.ca/uploads/sites/10/2017/05/2017-ford-focus-titanium-sedan-angular-front.png"
+        image: ""
       },
 
       maker: "",
@@ -417,7 +412,7 @@ export default {
   mounted: function() {
     const $this = this;
 
-    // EVento boton add service
+    // Evento boton add service
     $this.$root.$on("addService", $this.addService);
 
     $this.year = new Date().getFullYear();
@@ -433,23 +428,7 @@ export default {
 
     axios.get("/api/cars?all").then(function(response) {
       $this.cars = response.data;
-
-      // load all motors
-      // for (var i = 0; i < $this.cars.length; i++) {
-      //   var motor = $this.cars[i].motor;
-
-      //   if ($this.motors.filter(m => m == motor).length == 0) {
-      //     $this.motors.push($this.cars[i].motor);
-      //   }
-      // }
     });
-
-    // axios.get("/api/services?all=1").then(function(response) {
-    //   $this.services = response.data;
-    //   if ($this.carService) {
-    //     $this.service = $this.carService.service_id;
-    //   }
-    // });
 
     axios.get("/api/items?all=1").then(function(response) {
       $this.listItems = response.data;
@@ -458,10 +437,6 @@ export default {
     axios.get("/api/car/makers").then(function(response) {
       $this.makers = response.data;
     });
-
-    // axios.get("/api/car/brands").then(function(response) {
-    //   $this.brands = response.data;
-    // });
 
     // GoBack
     if (localStorage.getItem("order") && $this.getParameter("back")) {
@@ -485,24 +460,23 @@ export default {
     next(mode) {
       var count = this.getSelectedServices();
       if (count > 0) {
-        var unSaved = this.services.filter(s => !s.id).length > 0;
-        var editing = this.services.filter(s => !s.isReadOnly).length > 0;
+        //var unSaved = this.services.filter(s => !s.id).length > 0;
+        //var editing = this.services.filter(s => !s.isReadOnly).length > 0;
         var services = this.services.filter(s => s.selected);
-        if (unSaved || editing) {
-          this.$message({
-            message:
-              "Hay servicios sin guardar, termina de editarlos para continuar.",
-            type: "warning"
-          });
-          return;
-        }
+        // if (unSaved || editing) {
+        //   this.$message({
+        //     message:
+        //       "Hay servicios sin guardar, termina de editarlos para continuar.",
+        //     type: "warning"
+        //   });
+        //   return;
+        // }
 
         const order = {
           services: services,
           //price: 'low',
           brand: this.brand,
           year: this.year,
-          backTo: "carservices",
           receiptMode: mode == 1,
           car: this.selectedCar
         };
@@ -522,28 +496,28 @@ export default {
       if (this.services.length == 0) return 0;
       return this.services.filter(x => x.selected).length;
     },
-    editService(serviceItem) {
-      this.$confirm(
-        "Al modificar el servicio puede agregar o eliminar artículos y sus precios ¿Desea continuar?",
-        "Advertencia",
-        {
-          confirmButtonText: "Si",
-          cancelButtonText: "No",
-          type: "warning"
-        }
-      ).then(() => {
-        serviceItem.isReadOnly = false;
-      });
-    },
+    // editService(serviceItem) {
+    //   this.$confirm(
+    //     "Al modificar el servicio puede agregar o eliminar artículos y sus precios ¿Desea continuar?",
+    //     "Advertencia",
+    //     {
+    //       confirmButtonText: "Si",
+    //       cancelButtonText: "No",
+    //       type: "warning"
+    //     }
+    //   ).then(() => {
+    //     serviceItem.isReadOnly = false;
+    //   });
+    // },
     deleteService(serviceItem) {
       var $this = this;
       $this
         .$confirm(
-          "Esto eliminará permanentemente el registro. ¿Desea continuar?",
+          "Esto eliminará permanentemente el servicio asociado a este carro. ¿Desea continuar?",
           "Advertencia",
           {
-            confirmButtonText: "OK",
-            cancelButtonText: "Cancel",
+            confirmButtonText: "Si",
+            cancelButtonText: "No",
             type: "warning"
           }
         )
@@ -592,7 +566,7 @@ export default {
               id: response.data[i].id, // clave (csid)
               selected: false,
               selectedPrice: "low",
-              isReadOnly: true,
+              isReadOnly: false,
               low_total: 0,
               mid_total: 0,
               high_total: 0,
@@ -742,14 +716,10 @@ export default {
         x => isNaN(x.usd_price) || x.usd_price <= 0
       ).length;
       if (count > 0) {
-        this.$alert(
-          "No estan asignados todos los precios en dolares.",
-          "Error",
-          {
-            confirmButtonText: "OK",
-            type: "error"
-          }
-        );
+        this.$alert("Favor de asignar todos los precios en dólares.", "Error", {
+          confirmButtonText: "OK",
+          type: "error"
+        });
         return;
       }
 
@@ -840,18 +810,19 @@ export default {
         });
     },
     handleChange(value) {
+      console.log(this.service);
       // BUG: debes crear un nuevo item si no no actualiza
       var item = new Object();
       item.id = this.listItems[value].id;
       item.name = this.listItems[value].name;
       item.description = this.listItems[value].description;
-      item.usd_price = 1;
-      item.price = 20;
-      item.low = 10;
+      item.usd_price = 0;
+      item.price = 0;
+      item.low = this.service.low;
       item.low_price = 0;
-      item.mid = 20;
+      item.mid = this.service.mid;
       item.mid_price = 0;
-      item.high = 30;
+      item.high = this.service.high;
       item.high_price = 0;
       this.service.items.push(item);
       this.$refs.selectItem.$forceUpdate();
@@ -943,7 +914,7 @@ export default {
           // Reload services
           // if (isNew) $this.loadCarServices();
 
-          $this.service.isReadOnly = true;
+          $this.service.isReadOnly = false;
           $this.isSaving = false;
 
           $this.loadCarServices();
@@ -985,6 +956,14 @@ td {
   font-weight: bold;
   text-align: center;
   padding: 4px;
+}
+
+.row-header-left {
+  background-color: #f2f2f2;
+  font-weight: bold;
+  text-align: left;
+  padding: 4px;
+  padding-left: 10px;
 }
 
 .center {

@@ -304,13 +304,6 @@ export default {
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
     back() {
-      // back to carservices
-      if (this.order.backTo) {
-        const parsed = JSON.stringify(this.order);
-        localStorage.setItem("order", parsed);
-        window.location.href = "/carservices/create?back=1";
-        return;
-      }
       const parsed = JSON.stringify(this.order);
       localStorage.setItem("order", parsed);
       window.location.href = "/sales/create?back=1";
