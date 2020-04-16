@@ -687,4 +687,7 @@ export default {
 .row-item:nth-child(odd) {
   background-color: #f2f2f2;
 }
+.el-form-item {
+  margin-bottom: 4px;
+}
 </style>
