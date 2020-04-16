@@ -164,9 +164,23 @@ export default {
       this.onChangePrice();
     },
     changeBase(item, index) {
-      this.items[index].low_price = item.price;
-      this.items[index].mid_price = item.price;
-      this.items[index].high_price = item.price;
+      // this.items[index].low_price = item.price;
+      // this.items[index].mid_price = item.price;
+      // this.items[index].high_price = item.price;
+
+      var low = this.items[index].low;
+      var mid = this.items[index].mid;
+      var high = this.items[index].high;
+
+      if (this.items[index].price != 0) {
+        this.items[index].low_price =
+          parseInt(item.price) + (item.price * low) / 100;
+        this.items[index].mid_price =
+          parseInt(item.price) + (item.price * mid) / 100;
+        this.items[index].high_price =
+          parseInt(item.price) + (item.price * high) / 100;
+      }
+
       this.onChangePrice();
     },
     changePercentage(price, item, index, isGlobal) {
