@@ -37,9 +37,9 @@
                         <el-menu-item style="padding-top: 10px;">
                             <quick-receipt></quick-receipt>
                         </el-menu-item>
-                        <el-menu-item index="dashboard" v-on:click="goto('{{ route('dashboard') }}')" v-if="">
+                        {{-- <el-menu-item index="dashboard" v-on:click="goto('{{ route('dashboard') }}')" v-if="">
                             Reporte de Ventas
-                        </el-menu-item>
+                        </el-menu-item> --}}
                         @can('listar ordenes')
                         <el-menu-item index="sales" v-on:click="goto('{{ route('sales.list') }}')" v-if="">
                             Ordenes de Servicio
