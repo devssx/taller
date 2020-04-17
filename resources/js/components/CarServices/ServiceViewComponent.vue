@@ -810,10 +810,10 @@ export default {
         });
     },
     handleChange(value) {
-      console.log(this.service);
       // BUG: debes crear un nuevo item si no no actualiza
       var item = new Object();
       item.id = this.listItems[value].id;
+      item.item_id = this.listItems[value].id;
       item.name = this.listItems[value].name;
       item.description = this.listItems[value].description;
       item.usd_price = 0;
