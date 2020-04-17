@@ -605,7 +605,7 @@ export default {
       }
 
       var newService = {
-        //id: null, // it has no id because it's neww
+        //id: null, // it has no id because it's new
         service_id: service.id,
         isNew: true,
         selected: false,
@@ -743,20 +743,12 @@ export default {
       if (index >= 0 && index < this.services.length) {
         this.service = this.services[index];
         this.isValidService = true;
-
-        // this.items.splice(0, this.items.length);
-        // if (this.service.items) {
-        //   for (var j = 0; j < this.service.items.length; j++)
-        //     this.items.push(this.service.items[j]);
-        // }
       }
     },
     search() {
       var $this = this;
-      //$this.selectedPrice = "low";
       $this.selectedServices = [];
       $this.services = [];
-      //$this.service.items.splice(0, $this.service.items.length);
 
       axios
         .get("/api/car/search", {
@@ -765,7 +757,7 @@ export default {
             brand: $this.brand,
             motor: $this.motor,
             year: $this.year,
-            end_year: $this.year // TODO END Year
+            end_year: $this.year
           }
         })
         .then(function(response) {
@@ -857,16 +849,9 @@ export default {
     // Guardar
     saveService() {
       var $this = this;
-      // alert("car_id: " + $this.selectedCar.id);
-      // alert("service_id: " + $this.service.service_id);
-      // alert("csid: " + $this.service.id);
-      // alert("warranty: " + $this.service.warranty);
-      // alert("exchange_rate: " + $this.service.exchange_rate);
-      // console.log($this.items);
-
       $this.isSaving = true;
       var saveParams = {
-        car: $this.selectedCar.id, // Grabar car.id
+        car: $this.selectedCar.id, // save car.id
         service: $this.service.service_id, //
         items: $this.service.items, // itemlist
 
@@ -883,9 +868,8 @@ export default {
 
       if ($this.service.isNew) {
         // create a new CarService
-        // alert("Es nuevo");
         saveParams = {
-          car: $this.selectedCar.id, // Grabar car.id
+          car: $this.selectedCar.id, // Save car.id
           service: $this.service.service_id, // service id
           items: $this.service.items, // itemlist
 
@@ -902,7 +886,6 @@ export default {
       axios
         .post("/api/carservices", saveParams)
         .then(function(response) {
-          // TODO save al editar cualquier campo $this.save = true;
           $this.$notify({
             title: "¡Exito!",
             message: isNew
@@ -911,16 +894,11 @@ export default {
             type: "success"
           });
 
-          // Reload services
-          // if (isNew) $this.loadCarServices();
-
           $this.service.isReadOnly = false;
           $this.isSaving = false;
-
+          
+          // reload
           $this.loadCarServices();
-          // setTimeout(function() {
-          //   window.location.href = "/carservices";
-          // }, 1000);
         })
         .catch(error => {
           if (error.response.data.errors) {

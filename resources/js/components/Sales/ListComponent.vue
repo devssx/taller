@@ -31,9 +31,9 @@
         <el-table-column label="Cliente">
           <template slot-scope="scope">{{ scope.row.client ? scope.row.client.name : '' }}</template>
         </el-table-column>
-        <el-table-column label="Estado">
+        <el-table-column label="Tipo">
           <template slot-scope="scope">
-            <el-select
+            <!-- <el-select
               v-model="scope.row.status"
               :class="status[scope.row.status].toLowerCase().replace(/\s+/g, '')"
               @change="handleChangeStatus(scope.$index)"
@@ -49,19 +49,20 @@
               >
                 <span>{{ status }}</span>
               </el-option>
-            </el-select>
+            </el-select>-->
+            {{status[scope.row.status]}}
           </template>
         </el-table-column>
         <el-table-column label="Total">
           <template slot-scope="scope">${{ formatPrice(scope.row.total) }}</template>
         </el-table-column>
         <el-table-column prop="created_at" label="Fecha"></el-table-column>
-        <el-table-column width="80px">
+        <el-table-column width="220px">
           <template slot-scope="scope">
             <el-tooltip
               class="item"
               effect="dark"
-              content="Cotizacion"
+              content="Ver Cotización"
               placement="top"
               v-if="scope.row.status != 2"
             >
@@ -70,7 +71,7 @@
             <el-tooltip
               class="item"
               effect="dark"
-              content="Recibo"
+              content="Ver Recibo"
               placement="top"
               v-if="scope.row.status == 2"
             >
@@ -78,6 +79,21 @@
                 icon="el-icon-tickets"
                 @click="goto('/sales/receipt/' + scope.row.id)"
                 :disabled="scope.row.status != 2"
+              ></el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="Convertir a Recibo" placement="top">
+              <el-button
+                :disabled="scope.row.status >= 2"
+                icon="el-icon-document-checked"
+                @click="covrterToReceipt(scope.row, scope.$index)"
+              ></el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="Cancelar" placement="top">
+              <el-button
+                :disabled="scope.row.status > 2"
+                type="danger"
+                icon="el-icon-document-delete"
+                @click="cancelOrder(scope.row, scope.$index)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -134,6 +150,14 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       this.refreshTable();
+    },
+    covrterToReceipt(sale, index) {
+      sale.status = 2;
+      this.handleChangeStatus(index);
+    },
+    cancelOrder(sale, index) {
+      sale.status = 3;
+      this.handleChangeStatus(index);
     },
     handleChangeStatus(index) {
       var $this = this;
@@ -369,12 +393,16 @@ export default {
       if (currentSale.validator) {
         $this.context.fillText(currentSale.validator, 255, 1115);
       }
-      
+
       // observaciones (56 char por linea)
       if (currentSale.comments) {
         var comment = currentSale.comments.match(/.{1,56}/g);
         for (var i = 0; i < comment.length; i++) {
-          $this.context.fillText(comment[i].toUpperCase().trim(), 645, 1115 + i * 18);
+          $this.context.fillText(
+            comment[i].toUpperCase().trim(),
+            645,
+            1115 + i * 18
+          );
         }
       }
 
@@ -391,7 +419,7 @@ export default {
     return {
       sales: [],
       oldSales: [],
-      status: ["Cotizacion", "En Proceso", "Terminado", "Cancelado"],
+      status: ["Cotización", "En Proceso", "Recibo", "Cancelado"],
       loading: true,
       page: 1
     };
