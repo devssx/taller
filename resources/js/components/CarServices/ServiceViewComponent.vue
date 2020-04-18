@@ -804,6 +804,8 @@ export default {
     handleChange(value) {
       // BUG: debes crear un nuevo item si no no actualiza
       var item = new Object();
+      item.isNew = true;
+      item.image = this.listItems[value].image;
       item.id = this.listItems[value].id;
       item.item_id = this.listItems[value].id;
       item.name = this.listItems[value].name;

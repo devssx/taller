@@ -220,7 +220,9 @@ export default {
           $this.form.maker = $this.order.car.maker;
           $this.form.brand = $this.order.car.brand;
           $this.form.year = $this.order.year;
-          $this.form.guaranty = "N/A";
+
+          var services = $this.order.services.filter(s => s.warranty);
+          $this.form.guaranty = services.length > 0 ? services[0].warranty : "";
         }
       } catch (e) {
         localStorage.removeItem("order");

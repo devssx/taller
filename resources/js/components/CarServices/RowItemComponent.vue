@@ -64,7 +64,10 @@
           style="cursor:pointer;border:none;background-color:white;margin:4px;"
         ></button>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="2">
+        <el-image style="width:90%;" v-if="itemImage(item)" :src="itemImage(item)"></el-image>
+      </el-col>
+      <el-col :span="4">
         <label class="el-form-item__label">{{ itemName(item) }}</label>
       </el-col>
       <el-col :span="3">
@@ -208,6 +211,12 @@ export default {
         return item.name;
       }
       return item.item.name;
+    },
+    itemImage(item) {
+      if (item.image || item.isNew) {
+        return item.image;
+      }
+      return item.item.image;
     }
   }
 };
