@@ -213,7 +213,7 @@ export default {
       return item.item.name;
     },
     itemImage(item) {
-      if (item.image || item.isNew) {
+      if (item.image || !item.item) {
         return item.image;
       }
       return item.item.image;
