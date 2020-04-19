@@ -111,6 +111,8 @@ Vue.component('quick-receipt', require('./components/Dashboard/QuickReceipt').de
 Vue.component('bitacora-cars', require('./components/Bitacora/CarListComponent').default);
 Vue.component('view-carservices', require('./components/CarServices/ServiceViewComponent').default);
 Vue.component('row-item', require('./components/CarServices/RowItemComponent').default);
+// Salomon S.A. Tools
+Vue.component('file-upload', require('./components/Tools/UploadFile').default);
 
 new Vue({
   el: '#app',

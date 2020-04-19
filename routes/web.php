@@ -56,8 +56,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/edit/{id}', 'CarServicesController@edit')->name('carservices.edit');
     });
 
-    
+
     Route::prefix('bitacora')->group(function () {
         Route::view('/cars', 'bitacora.index')->name('bitacora.cars');
     });
+
+    Route::post('files/uploadItem', 'FileController@imageUploadPost')->name('item.upload');
 });

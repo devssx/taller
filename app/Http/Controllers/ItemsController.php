@@ -49,6 +49,23 @@ class ItemsController extends Controller
 
         return Item::firstOrCreate($request->all());
     }
+    
+    public function update(Request $request)
+    {
+        if ($request->has('id')) {
+
+            $item = Item::find($request->get('id'));
+            if ($request->has('image'))
+                $item->image = $request->get('image');
+            if ($request->has('description'))
+                $item->description = $request->get('description');
+            $item->save();
+
+            return $item;
+        }
+
+        return Item::firstOrCreate($request->all());
+    }
 
     public function delete($id)
     {

@@ -34,6 +34,7 @@ Route::post('/sales/status', 'SalesController@changeStatus');
 
 Route::get('/items', 'ItemsController@get');
 Route::post('/items', 'ItemsController@save');
+Route::post('/updateItem', 'ItemsController@update');
 Route::delete('/items/{id}', 'ItemsController@delete');
 
 Route::get('/cars', 'CarsController@get');
