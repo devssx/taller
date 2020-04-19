@@ -135,6 +135,7 @@ export default {
       this.dialogVisible = false;
       this.loading = false;
       this.$refs.itemForm.resetFields();
+      this.selectedFile = null;
     },
     save() {
       var $this = this;
