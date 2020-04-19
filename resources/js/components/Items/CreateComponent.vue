@@ -21,26 +21,49 @@
             label-width="150px"
             ref="itemForm"
           >
-            <el-form-item label="Nombre del Articulo" prop="name">
+            <el-form-item label="Nombre del Artículo" prop="name">
               <el-input v-model="item.name"></el-input>
             </el-form-item>
-            <el-form-item label="Foto del Articulo" prop="image">
-              <el-input v-model="item.image"></el-input>
+
+            <el-form-item label="Foto del Artículo" prop="image">
+              <el-col :span="21">
+                <el-input v-model="item.image"></el-input>
+              </el-col>
+              <el-col :span="3">
+                <file-upload
+                  ref="uploader"
+                  :onSelected="onSelected"
+                  :onPreview="onPreview"
+                  action="/files/uploadItem"
+                ></file-upload>
+              </el-col>
             </el-form-item>
-            <el-form-item label="Descripcion" prop="description">
+
+            <el-form-item label="Descripción" prop="description">
               <el-input type="textarea" v-model="item.description"></el-input>
             </el-form-item>
           </el-form>
         </el-col>
       </el-row>
-      <el-row v-if="item.image!=''" type="flex" align="middle" style="text-align: center;">
+
+      <el-row v-if="selectedFile" type="flex" align="middle" style="text-align: center;">
+        <el-col :span="24">
+          <img id="preview" style="width:256px;" />
+        </el-col>
+      </el-row>
+      <el-row
+        v-if="!selectedFile && item.image!=''"
+        type="flex"
+        align="middle"
+        style="text-align: center;"
+      >
         <el-col :span="24">
           <el-image style="width:256px;" :src="item.image"></el-image>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel()">Cancelar</el-button>
-        <el-button type="primary" @click="saveItem()" :loading="loading">Agregar</el-button>
+        <el-button type="primary" @click="save()" :loading="loading">Agregar</el-button>
       </span>
     </el-dialog>
   </el-col>
@@ -49,6 +72,7 @@
 export default {
   data() {
     return {
+      selectedFile: null,
       dialogVisible: false,
       loading: false,
       labelPosition: "left",
@@ -69,11 +93,34 @@ export default {
     };
   },
   methods: {
+    onSelected(file) {
+      this.selectedFile = file;
+      this.item.image = this.selectedFile.name;
+
+      // size 512kb
+      if (this.selectedFile.size > 500000) {
+        this.$alert(
+          "Tamaño excedido, la imagen debe ser menor a 512 KB.",
+          "Error",
+          {
+            confirmButtonText: "OK",
+            type: "error"
+          }
+        );
+
+        // invalid size
+        this.selectedFile = null;
+        this.item.image = "";
+      }
+    },
+    onPreview(imgData) {
+      $("#preview").attr("src", imgData);
+    },
     handleClose(done) {
       var $this = this;
       if ($this.item.name) {
         $this
-          .$confirm("¿Estas seguro de no guardar el Articulo?")
+          .$confirm("¿Estas seguro de no guardar el Artículo?")
           .then(_ => {
             $this.cancel();
             done();
@@ -88,6 +135,41 @@ export default {
       this.dialogVisible = false;
       this.loading = false;
       this.$refs.itemForm.resetFields();
+    },
+    save() {
+      var $this = this;
+      $this.$refs.itemForm.validate(valid => {
+        console.log($this.selectedFile);
+        if (valid) {
+          $this.loading = true;
+
+          if ($this.selectedFile) {
+            // upload a file
+            $this.$refs.uploader.submit(
+              imgServerPath => {
+                // success
+                $this.item.image = imgServerPath;
+                $this.saveItem();
+              },
+              error => {
+                console.log(error);
+                $this.$notify({
+                  title: "Error!",
+                  message:
+                    "Ha ocurrido un error al intentar subir la imagen, intenta con otra",
+                  type: "error"
+                });
+
+                $this.loading = false;
+              }
+            );
+          } else {
+            $this.saveItem();
+          }
+        } else {
+          return false;
+        }
+      });
     },
     saveItem() {
       var $this = this;

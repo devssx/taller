@@ -11,7 +11,7 @@ class FileController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function imageUploadPost()
+    public function uploadItem()
     {
         request()->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg|max:512',
@@ -21,5 +21,17 @@ class FileController extends Controller
         request()->image->move(public_path('images/items'), $imageName);
 
         return "images/items/$imageName";
+    }
+
+    public function uploadCar()
+    {
+        request()->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:1024',
+        ]);
+
+        $imageName = time() . '.' . request()->image->getClientOriginalExtension();
+        request()->image->move(public_path('images/cars'), $imageName);
+
+        return "images/cars/$imageName";
     }
 }

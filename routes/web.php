@@ -61,5 +61,6 @@ Route::middleware(['auth'])->group(function () {
         Route::view('/cars', 'bitacora.index')->name('bitacora.cars');
     });
 
-    Route::post('files/uploadItem', 'FileController@imageUploadPost')->name('item.upload');
+    Route::post('files/uploadItem', 'FileController@uploadItem')->name('upload.item');
+    Route::post('files/uploadCar', 'FileController@uploadCar')->name('upload.car');
 });

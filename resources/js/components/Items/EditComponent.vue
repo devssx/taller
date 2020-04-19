@@ -19,7 +19,7 @@
             ref="itemForm"
           >
             <el-form-item label="Nombre del Artículo" prop="name">
-              <el-input v-model="item.name"></el-input>
+              <el-input v-model="item.name" :disabled="true"></el-input>
             </el-form-item>
             <el-form-item label="Foto del Artículo" prop="image">
               <el-col :span="21">
@@ -88,8 +88,8 @@ export default {
       this.item.image = this.selectedFile.name;
 
       // validar size, tipo
-      if (this.selectedFile.size > 50000) {
-        this.$alert("Tamaño excedido", "Error", {
+      if (this.selectedFile.size > 500000) {
+        this.$alert("Error la imagen debe ser menor a 512 KB", "Error", {
           confirmButtonText: "OK",
           type: "error"
         });
