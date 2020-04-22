@@ -33,23 +33,6 @@
         </el-table-column>
         <el-table-column label="Tipo">
           <template slot-scope="scope">
-            <!-- <el-select
-              v-model="scope.row.status"
-              :class="status[scope.row.status].toLowerCase().replace(/\s+/g, '')"
-              @change="handleChangeStatus(scope.$index)"
-              :disabled="scope.row.status == 2"
-            >
-              <el-option
-                v-for="(status, index) in status"
-                :key="index"
-                :label="status"
-                :value="index"
-                :disabled="index < scope.row.status"
-                :class="status.toLowerCase().replace(/\s+/g, '')"
-              >
-                <span>{{ status }}</span>
-              </el-option>
-            </el-select>-->
             {{status[scope.row.status]}}
           </template>
         </el-table-column>
@@ -57,7 +40,7 @@
           <template slot-scope="scope">${{ formatPrice(scope.row.total) }}</template>
         </el-table-column>
         <el-table-column prop="created_at" label="Fecha"></el-table-column>
-        <el-table-column width="220px">
+        <el-table-column width="150px">
           <template slot-scope="scope">
             <el-tooltip
               class="item"
@@ -66,7 +49,7 @@
               placement="top"
               v-if="scope.row.status != 2"
             >
-              <el-button icon="el-icon-tickets" @click="buildReceipt(scope.row)"></el-button>
+              <el-button icon="el-icon-tickets" @click="goto('/sales/receipt/' + scope.row.id)"></el-button>
             </el-tooltip>
             <el-tooltip
               class="item"
@@ -75,18 +58,7 @@
               placement="top"
               v-if="scope.row.status == 2"
             >
-              <el-button
-                icon="el-icon-tickets"
-                @click="goto('/sales/receipt/' + scope.row.id)"
-                :disabled="scope.row.status != 2"
-              ></el-button>
-            </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="Convertir a Recibo" placement="top">
-              <el-button
-                :disabled="scope.row.status >= 2"
-                icon="el-icon-document-checked"
-                @click="covrterToReceipt(scope.row, scope.$index)"
-              ></el-button>
+              <el-button icon="el-icon-tickets" @click="goto('/sales/receipt/' + scope.row.id)"></el-button>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="Cancelar" placement="top">
               <el-button
@@ -209,6 +181,7 @@ export default {
       }
       return s;
     },
+    /* Movido a Receipt
     buildReceipt(currentSale) {
       // crea el recibo pdf
       var $this = this;
@@ -413,7 +386,7 @@ export default {
 
       const d = new Printd();
       d.print(img);
-    }
+    }*/
   },
   data() {
     return {

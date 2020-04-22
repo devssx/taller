@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="edit ? 'Editar recibo': 'Cambiar orden de estado'"
+    :title="edit ? 'Editar recibo': 'Convertir a Recibo'"
     :visible.sync="dialogVisible"
     width="450px"
   >
@@ -11,7 +11,7 @@
         v-if="!edit"
       >¿Quieres cambiar el estado la Orden de Servicio?</el-col>
       <el-col :span="24">
-        <el-form ref="form" label-width="120px">
+        <el-form ref="form" label-width="130px">
           <el-form-item label="Empleado:">
             <el-select v-model="user" placeholder="Empleado">
               <el-option v-for="user in users" :key="user.id" :label="user.name" :value="user.id"></el-option>
@@ -87,7 +87,8 @@ export default {
       tax: false,
       users: [],
       sale: {},
-      loading: false
+      loading: false,
+      newStatus: 0
     };
   },
   mounted: function() {
@@ -98,8 +99,13 @@ export default {
     });
 
     this.$root.$on("confirmSale", this.openDialog);
+    this.$root.$on("changeStatus", this.changeStatus);
   },
   methods: {
+    changeStatus: function(sale, newStatus) {
+      this.newStatus = newStatus;
+      this.openDialog(sale);
+    },
     openDialog: function(sale, edit = false) {
       this.dialogVisible = true;
       this.edit = edit;
@@ -124,7 +130,7 @@ export default {
       axios
         .post("/api/sales/status", {
           id: $this.sale.id,
-          status: $this.sale.status,
+          status: $this.newStatus == 2 ? 2 : $this.sale.status,
           method: $this.method,
           concept: $this.concept,
           maker: $this.maker,
