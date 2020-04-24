@@ -113,6 +113,46 @@
         <el-col :span="currentSale? 18:16" :offset="currentSale? 3:1">
           <br />
           <el-card class="box-card">
+            <el-row v-if="currentSale">
+              <el-col :span="24">
+                <el-row>
+                  <el-col :span="6">
+                    <h3>Detalle General:</h3>
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6" :offset="4">
+                    <h4>Cliente:</h4>
+                  </el-col>
+                  <el-col :span="4">{{currentSale.client.name}}</el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6" :offset="4">
+                    <h4>Teléfono:</h4>
+                  </el-col>
+                  <el-col :span="4">{{ currentSale.phonenumber || "No especificado" }}</el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6" :offset="4">
+                    <h4>Ultimo Servicio:</h4>
+                  </el-col>
+                  <el-col :span="4">{{currentSale.client.last_service || "No especificado" }}</el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6" :offset="4">
+                    <h4>Concepto:</h4>
+                  </el-col>
+                  <el-col :span="4">{{currentSale.client.concept || "No especificado" }}</el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="6" :offset="4">
+                    <h4>Garantía:</h4>
+                  </el-col>
+                  <el-col :span="4">{{currentSale.client.guaranty || "No especificado" }}</el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+            <br />
             <el-row>
               <el-col :span="24">
                 <el-row>
@@ -358,7 +398,7 @@ export default {
 
       $this.context.font = "24px Calibri";
       $this.context.fillStyle = "red";
-      $this.context.fillText($this.pad(currentSale.id, 5), 960, 132); // FOLIO
+      $this.context.fillText("CO" + $this.pad(currentSale.id, 5), 940, 132); // FOLIO
 
       $this.context.fillStyle = "black";
       $this.context.fillText(
@@ -570,10 +610,14 @@ export default {
 
       $this.context.font = "24px Calibri";
       $this.context.fillStyle = "red";
-      $this.context.fillText($this.pad($this.currentSale.id, 5), 950, 105);
       $this.context.fillText(
-        $this.pad($this.currentSale.id, 5),
-        950,
+        "RE" + $this.pad($this.currentSale.id, 5),
+        930,
+        105
+      );
+      $this.context.fillText(
+        "RE" + $this.pad($this.currentSale.id, 5),
+        930,
         105 + 678
       );
 
