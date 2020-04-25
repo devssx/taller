@@ -115,39 +115,33 @@
           <el-card class="box-card">
             <el-row v-if="currentSale">
               <el-col :span="24">
-                <el-row>
+                <el-row class="row-item">
                   <el-col :span="6">
                     <h3>Detalle General:</h3>
                   </el-col>
                 </el-row>
-                <el-row>
-                  <el-col :span="6" :offset="4">
-                    <h4>Cliente:</h4>
-                  </el-col>
+                <el-row class="row-item">
+                  <el-col :span="6" :offset="4">Folio:</el-col>
+                  <el-col :span="4">{{getFolio(currentSale)}}</el-col>
+                </el-row>
+                <el-row class="row-item">
+                  <el-col :span="6" :offset="4">Cliente:</el-col>
                   <el-col :span="4">{{currentSale.client.name}}</el-col>
                 </el-row>
-                <el-row>
-                  <el-col :span="6" :offset="4">
-                    <h4>Teléfono:</h4>
-                  </el-col>
+                <el-row class="row-item">
+                  <el-col :span="6" :offset="4">Teléfono:</el-col>
                   <el-col :span="4">{{ currentSale.phonenumber || "No especificado" }}</el-col>
                 </el-row>
-                <el-row>
-                  <el-col :span="6" :offset="4">
-                    <h4>Ultimo Servicio:</h4>
-                  </el-col>
+                <el-row class="row-item">
+                  <el-col :span="6" :offset="4">Ultimo Servicio:</el-col>
                   <el-col :span="4">{{currentSale.client.last_service || "No especificado" }}</el-col>
                 </el-row>
-                <el-row>
-                  <el-col :span="6" :offset="4">
-                    <h4>Concepto:</h4>
-                  </el-col>
+                <el-row class="row-item">
+                  <el-col :span="6" :offset="4">Concepto:</el-col>
                   <el-col :span="4">{{currentSale.client.concept || "No especificado" }}</el-col>
                 </el-row>
-                <el-row>
-                  <el-col :span="6" :offset="4">
-                    <h4>Garantía:</h4>
-                  </el-col>
+                <el-row class="row-item">
+                  <el-col :span="6" :offset="4">Garantía:</el-col>
                   <el-col :span="4">{{currentSale.client.guaranty || "No especificado" }}</el-col>
                 </el-row>
               </el-col>
@@ -327,6 +321,10 @@ export default {
     });
   },
   methods: {
+    getFolio(sale) {
+      if (sale.status == 2) return "REC" + this.pad(sale.id, 5);
+      else return "COT" + this.pad(sale.id, 5);
+    },
     onCreateNewClient(newClient) {
       if (newClient.id) {
         this.clients.push(newClient);
