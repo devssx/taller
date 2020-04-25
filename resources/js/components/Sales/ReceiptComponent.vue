@@ -398,7 +398,7 @@ export default {
 
       $this.context.font = "24px Calibri";
       $this.context.fillStyle = "red";
-      $this.context.fillText("CO" + $this.pad(currentSale.id, 5), 940, 132); // FOLIO
+      $this.context.fillText("COT" + $this.pad(currentSale.id, 5), 935, 132); // FOLIO
 
       $this.context.fillStyle = "black";
       $this.context.fillText(
@@ -611,13 +611,13 @@ export default {
       $this.context.font = "24px Calibri";
       $this.context.fillStyle = "red";
       $this.context.fillText(
-        "RE" + $this.pad($this.currentSale.id, 5),
-        930,
+        "REC" + $this.pad($this.currentSale.id, 5),
+        920,
         105
       );
       $this.context.fillText(
-        "RE" + $this.pad($this.currentSale.id, 5),
-        930,
+        "REC" + $this.pad($this.currentSale.id, 5),
+        920,
         105 + 678
       );
 
