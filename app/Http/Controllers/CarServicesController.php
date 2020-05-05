@@ -148,7 +148,7 @@ class CarServicesController extends Controller
             if (isset($item['name'])) {
                 unset($item['id']);
                 unset($item['name']);
-                unset($item['image']);
+                // unset($item['image']);
                 unset($item['description']);
             }
 

@@ -57,12 +57,21 @@
       class="br bl bt"
     >
       <el-col :span="1">
-        <button
-          v-if="!isReadOnly"
-          class="el-icon-close"
-          @click="deleteItem(index)"
-          style="cursor:pointer;border:none;background-color:white;margin:4px;"
-        ></button>
+        <el-tooltip v-if="!isReadOnly" effect="dark" content="Eliminar Artículo" placement="right">
+          <button
+            v-if="!isReadOnly"
+            class="el-icon-close"
+            @click="deleteItem(index)"
+            style="cursor:pointer;border:none;background-color:white;margin:4px;color:#F56C6C;"
+          ></button>
+        </el-tooltip>
+        <el-tooltip v-if="!isReadOnly" effect="dark" content="Cambiar Foto" placement="right">
+          <button
+            v-if="!isReadOnly"
+            class="el-icon-camera"
+            style="cursor:pointer;border:none;background-color:white;margin:4px;color:#409EFF;"
+          ></button>
+        </el-tooltip>
       </el-col>
       <el-col :span="2">
         <el-image style="width:90%;" v-if="itemImage(item)" :src="itemImage(item)"></el-image>

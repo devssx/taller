@@ -13,6 +13,7 @@ class CarServiceItem extends Model
         'item_id',
         'car_id',
         'service_id',
+        'image',
         'comment',
         'usd_price',
         'price',
