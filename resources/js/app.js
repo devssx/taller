@@ -113,6 +113,7 @@ Vue.component('view-carservices', require('./components/CarServices/ServiceViewC
 Vue.component('row-item', require('./components/CarServices/RowItemComponent').default);
 // Salomon S.A. Tools
 Vue.component('file-upload', require('./components/Tools/UploadFile').default);
+Vue.component('image-dialog', require('./components/Tools/ImageDialog').default);
 
 new Vue({
   el: '#app',
