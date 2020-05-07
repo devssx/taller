@@ -2,7 +2,7 @@
   <span>
     <el-tooltip effect="dark" content="Seleccionar Foto" placement="right">
       <button
-        @click="dialogVisible=true"
+        @click="dialogVisible = true"
         class="el-icon-camera"
         style="cursor:pointer;border:none;background-color:white;margin:4px;color:#409EFF;"
       ></button>
@@ -16,7 +16,12 @@
     >
       <el-row>
         <el-col :span="24">
-          <el-form :label-position="labelPosition" :model="item" label-width="150px" ref="itemForm">
+          <el-form
+            :label-position="labelPosition"
+            :model="item"
+            label-width="150px"
+            ref="itemForm"
+          >
             <el-form-item label="Foto del Artículo">
               <el-col :span="21">
                 <el-input v-model="item.image"></el-input>
@@ -33,13 +38,18 @@
           </el-form>
         </el-col>
       </el-row>
-      <el-row v-if="selectedFile" type="flex" align="middle" style="text-align: center;">
+      <el-row
+        v-if="selectedFile"
+        type="flex"
+        align="middle"
+        style="text-align: center;"
+      >
         <el-col :span="24">
           <img id="preview" style="width:256px;" />
         </el-col>
       </el-row>
       <el-row
-        v-if="!selectedFile && item.image!=''"
+        v-if="!selectedFile && item.image != ''"
         type="flex"
         align="middle"
         style="text-align: center;"
@@ -49,7 +59,9 @@
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="save()" :loading="loading">Subir</el-button>
+        <el-button type="primary" @click="save()" :loading="loading"
+          >Subir</el-button
+        >
       </span>
     </el-dialog>
   </span>
@@ -62,7 +74,7 @@ export default {
       selectedFile: null,
       dialogVisible: false,
       loading: false,
-      labelPosition: "left"
+      labelPosition: "left",
     };
   },
   methods: {
@@ -73,7 +85,7 @@ export default {
       if (this.selectedFile.size > 500000) {
         this.$alert("Error la imagen debe ser menor a 512 KB", "Error", {
           confirmButtonText: "OK",
-          type: "error"
+          type: "error",
         });
 
         // invalid size
@@ -102,17 +114,17 @@ export default {
 
         // upload a file
         $this.$refs.uploader.submit(
-          imgServerPath => {
+          (imgServerPath) => {
             // success
             $this.item.image = imgServerPath;
             $this.cancel(false);
           },
-          error => {
+          (error) => {
             $this.$notify({
               title: "Error!",
               message:
                 "Ha ocurrido un error al intentar subir la imagen, intenta con otra",
-              type: "error"
+              type: "error",
             });
 
             $this.loading = false;
@@ -126,7 +138,7 @@ export default {
         )
           $this.cancel(false);
       }
-    }
-  }
+    },
+  },
 };
 </script>

@@ -57,7 +57,12 @@
       class="br bl bt"
     >
       <el-col :span="1">
-        <el-tooltip v-if="!isReadOnly" effect="dark" content="Eliminar Artículo" placement="right">
+        <el-tooltip
+          v-if="!isReadOnly"
+          effect="dark"
+          content="Eliminar Artículo"
+          placement="right"
+        >
           <button
             class="el-icon-close"
             @click="deleteItem(index)"
@@ -68,7 +73,11 @@
         <image-dialog v-if="fullMode" :item="item"></image-dialog>
       </el-col>
       <el-col :span="2">
-        <el-image style="width:90%;" v-if="itemImage(item)" :src="itemImage(item)"></el-image>
+        <el-image
+          style="width:90%;"
+          v-if="itemImage(item)"
+          :src="itemImage(item)"
+        ></el-image>
       </el-col>
       <el-col :span="4">
         <label class="el-form-item__label">{{ itemName(item) }}</label>
@@ -101,7 +110,12 @@
         ></el-input>
       </el-col>
       <el-col :span="2">
-        <el-input :readonly="isReadOnly" size="mini" class="price" v-model="item.low_price"></el-input>
+        <el-input
+          :readonly="isReadOnly"
+          size="mini"
+          class="price"
+          v-model="item.low_price"
+        ></el-input>
       </el-col>
       <el-col :span="2">
         <el-input
@@ -113,7 +127,12 @@
         ></el-input>
       </el-col>
       <el-col :span="2">
-        <el-input :readonly="isReadOnly" size="mini" class="price" v-model="item.mid_price"></el-input>
+        <el-input
+          :readonly="isReadOnly"
+          size="mini"
+          class="price"
+          v-model="item.mid_price"
+        ></el-input>
       </el-col>
       <el-col :span="2">
         <el-input
@@ -125,7 +144,12 @@
         ></el-input>
       </el-col>
       <el-col :span="2">
-        <el-input :readonly="isReadOnly" size="mini" class="price" v-model="item.high_price"></el-input>
+        <el-input
+          :readonly="isReadOnly"
+          size="mini"
+          class="price"
+          v-model="item.high_price"
+        ></el-input>
       </el-col>
     </el-row>
   </el-row>
@@ -220,8 +244,8 @@ export default {
         return item.image;
       }
       return item.item.image;
-    }
-  }
+    },
+  },
 };
 </script>
 

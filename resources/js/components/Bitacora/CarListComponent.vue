@@ -1,9 +1,14 @@
 <template>
   <el-row>
-    <el-row>
-      <el-col :span="6">FECHA DIA</el-col>
-      <el-col :span="18">
-        <el-date-picker v-model="value1" type="date" placeholder="Seleccionar Día"></el-date-picker>
+    <br />
+    <el-row class="br bl bt bb row-header">
+      <el-col :span="4"><h1 style="margin-top: 8px;">FECHA DIA</h1></el-col>
+      <el-col :span="20">
+        <el-date-picker
+          v-model="value1"
+          type="date"
+          placeholder="Seleccionar Día"
+        ></el-date-picker>
         <el-date-picker
           v-model="value1"
           type="week"
@@ -14,50 +19,107 @@
     </el-row>
 
     <!-- TABLA -->
-    <el-row>
+    <el-row class="br bl">
       <el-col :span="24">
         <el-table :data="tableData" style="width: 100%">
-          <el-table-column prop="date" label="HORA DE ENTRADA" width="160"></el-table-column>
-          <el-table-column prop="name" label="MARCA" width="120"></el-table-column>
-          <el-table-column prop="state" label="MODELO" width="120"></el-table-column>
-          <el-table-column prop="city" label="AñO" width="120"></el-table-column>
-          <el-table-column prop="address" label="COLOR" width="120"></el-table-column>
-          <el-table-column prop="zip" label="NOMBRE DEL CLIENTE" width="200"></el-table-column>
-          <el-table-column prop="zip" label="TELEFONO" width="120"></el-table-column>
-          <el-table-column prop="zip" label="TECNICO" width="120"></el-table-column>
-          <el-table-column prop="zip" label="DIAGNOSTICO CONCEPTO" width="300"></el-table-column>
-          <el-table-column prop="zip" label="PRECIO" width="120"></el-table-column>
-          <el-table-column prop="zip" label="AUTORIZO" width="120"></el-table-column>
-          <el-table-column prop="zip" label="RECIBO" width="120"></el-table-column>
+          <el-table-column
+            prop="date"
+            label="ENTRADA"
+            width="100"
+          ></el-table-column>
+          <el-table-column
+            prop="name"
+            label="MARCA"
+            width="100"
+          ></el-table-column>
+          <el-table-column
+            prop="state"
+            label="MODELO"
+            width="100"
+          ></el-table-column>
+          <el-table-column
+            prop="city"
+            label="AñO"
+            width="65"
+          ></el-table-column>
+          <el-table-column
+            prop="address"
+            label="COLOR"
+            width="100"
+          ></el-table-column>
+          <el-table-column
+            prop="zip"
+            label="CLIENTE"
+            width="180"
+          ></el-table-column>
+          <el-table-column
+            prop="zip"
+            label="TELEFONO"
+            width="100"
+          ></el-table-column>
+          <el-table-column
+            prop="zip"
+            label="TECNICO"
+            width="120"
+          ></el-table-column>
+          <el-table-column
+            prop="zip"
+            label="DIAGNOSTICO CONCEPTO"
+            width="300"
+          ></el-table-column>
+          <el-table-column
+            prop="zip"
+            label="PRECIO"
+            width="120"
+          ></el-table-column>
+          <el-table-column
+            prop="zip"
+            label="AUTORIZO"
+            width="100"
+          ></el-table-column>
+          <el-table-column
+            prop="zip"
+            label="RECIBO"
+            width="100"
+          ></el-table-column>
 
           <el-table-column fixed="right" label="Operaciones" width="120">
             <template>
-              <el-button @click="handleClick" type="text" size="small">Detalle</el-button>
-              <el-button type="text" size="small">Editar</el-button>
+              <el-button
+                @click="handleClick"
+                icon="el-icon-finished"
+                type="text"
+                size="small"
+              ></el-button>
+              <el-button
+                size="small"
+                icon="el-icon-edit"
+                type="text"
+              ></el-button>
             </template>
           </el-table-column>
         </el-table>
 
         <!-- PAGINACION -->
-        <div class="block" style="text-align: center;" v-if="items.total > 10">
+        <!-- <div class="block" style="text-align: center;" v-if="items.total > 10">
           <el-pagination
             layout="prev, pager, next"
             :page-size="10"
             :total="items.total"
             @current-change="handleCurrentChange"
           ></el-pagination>
-        </div>
+        </div> -->
       </el-col>
     </el-row>
 
     <!-- TOTALES -->
-    <el-row>
-      <el-col :span="6">TOTAL TRABAJOS AUTORIZADOS:</el-col>
-      <el-col :span="18">$ 00.00</el-col>
+    <el-row class="br bl bt">
+      <el-col :span="6" class="row-header">TOTAL TRABAJOS AUTORIZADOS:</el-col>
+      <el-col :span="18" style="padding: 4px;">$ 00.00</el-col>
     </el-row>
-    <el-row>
-      <el-col :span="6">TOTAL TRABAJOS NO AUTORIZADOS:</el-col>
-      <el-col :span="18">$ 00.00</el-col>
+    <el-row class="br bl bt bb">
+      <el-col :span="6" class="row-header">TOTAL TRABAJOS NO AUTORIZADOS:</el-col>
+      <el-col :span="18" style="padding: 4px;">$ 00.00</el-col>
     </el-row>
   </el-row>
 </template>
@@ -89,7 +151,7 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       this.refreshTable();
-    }
+    },
   },
   watch: {
     search: function() {
@@ -102,7 +164,7 @@ export default {
           "/api/clients?page=" + $this.page + "&search=" + $this.search
         );
       }, 1000);
-    }
+    },
   },
   data() {
     return {
@@ -115,43 +177,61 @@ export default {
 
       tableData: [
         {
-          date: "2016-05-03",
-          name: "Tom",
-          state: "California",
-          city: "Los Angeles",
-          address: "No. 189, Grove St, Los Angeles",
-          zip: "CA 90036",
-          tag: "Home"
+          date: "9:20 am",
+          name: "Chervolet",
+          state: "Malibu",
+          city: "2015",
+          address: "Verde",
+          zip: "4565465465",
+          tag: "Juan",
         },
         {
-          date: "2016-05-02",
-          name: "Tom",
-          state: "California",
-          city: "Los Angeles",
-          address: "No. 189, Grove St, Los Angeles",
-          zip: "CA 90036",
-          tag: "Office"
+          date: "9:25 am",
+          name: "Nissan",
+          state: "Sentra",
+          city: "2000",
+          address: "Rojo",
+          zip: "54654654",
+          tag: "Juan",
         },
         {
-          date: "2016-05-04",
-          name: "Tom",
-          state: "California",
-          city: "Los Angeles",
-          address: "No. 189, Grove St, Los Angeles",
-          zip: "CA 90036",
-          tag: "Home"
+          date: "9:26 am",
+          name: "Mazda",
+          state: "CRX",
+          city: "2015",
+          address: "Blanco",
+          zip: "4546544254",
+          tag: "Juan",
         },
         {
-          date: "2016-05-01",
-          name: "Tom",
-          state: "California",
-          city: "Los Angeles",
-          address: "No. 189, Grove St, Los Angeles",
-          zip: "CA 90036",
-          tag: "Office"
-        }
-      ]
+          date: "11:07 am",
+          name: "Honda",
+          state: "Civic",
+          city: "2011",
+          address: "Gris",
+          zip: "68621548",
+          tag: "Juan",
+        },
+      ],
     };
-  }
+  },
 };
 </script>
+<style>
+.bl {
+  border-left: 1px solid #ebeef5;
+}
+.br {
+  border-right: 1px solid #ebeef5;
+}
+.bt {
+  border-top: 1px solid #ebeef5;
+}
+.bb {
+  border-bottom: 1px solid #ebeef5;
+}
+.row-header {
+  background-color: #f2f2f2;
+  padding: 4px;
+}
+</style>
