@@ -96,9 +96,10 @@ export default {
     },
     save() {
       var $this = this;
-      $this.loading = true;
 
       if ($this.selectedFile) {
+        $this.loading = true;
+
         // upload a file
         $this.$refs.uploader.submit(
           imgServerPath => {
@@ -117,6 +118,13 @@ export default {
             $this.loading = false;
           }
         );
+      } else {
+        // es valido asignar una url
+        if (
+          $this.item.image.includes("www") ||
+          $this.item.image.includes("http")
+        )
+          $this.cancel(false);
       }
     }
   }

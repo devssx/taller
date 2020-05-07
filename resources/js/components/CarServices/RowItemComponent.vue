@@ -65,7 +65,7 @@
           ></button>
         </el-tooltip>
         <!-- Selector de imagen -->
-        <image-dialog v-if="!isReadOnly" :item="item"></image-dialog>
+        <image-dialog v-if="fullMode" :item="item"></image-dialog>
       </el-col>
       <el-col :span="2">
         <el-image style="width:90%;" v-if="itemImage(item)" :src="itemImage(item)"></el-image>
@@ -133,7 +133,7 @@
 
 <script>
 export default {
-  props: ["items", "updatePrices", "tdc", "isReadOnly"],
+  props: ["items", "updatePrices", "tdc", "isReadOnly", "fullMode"],
   mounted: function() {},
   methods: {
     changeUSDPrice(item, index) {

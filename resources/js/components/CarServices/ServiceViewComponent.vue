@@ -261,6 +261,7 @@
                 :items="service.items"
                 :tdc="service.exchange_rate"
                 :isReadOnly="service.isReadOnly"
+                :fullMode="fullMode"
               ></row-item>
 
               <!-- ++ Items -->
