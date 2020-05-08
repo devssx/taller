@@ -23,67 +23,63 @@
       <el-col :span="24">
         <el-table :data="tableData" style="width: 100%">
           <el-table-column
-            prop="date"
-            label="ENTRADA"
+            prop="entrada"
+            label="Entrada"
             width="100"
           ></el-table-column>
           <el-table-column
-            prop="name"
-            label="MARCA"
+            prop="marca"
+            label="Marca"
             width="100"
           ></el-table-column>
           <el-table-column
-            prop="state"
-            label="MODELO"
+            prop="modelo"
+            label="Modelo"
+            width="100"
+          ></el-table-column>
+          <el-table-column prop="year" label="Año" width="65"></el-table-column>
+          <el-table-column
+            prop="color"
+            label="Color"
             width="100"
           ></el-table-column>
           <el-table-column
-            prop="city"
-            label="AñO"
-            width="65"
-          ></el-table-column>
-          <el-table-column
-            prop="address"
-            label="COLOR"
-            width="100"
-          ></el-table-column>
-          <el-table-column
-            prop="zip"
-            label="CLIENTE"
+            prop="cliente"
+            label="Cliente"
             width="180"
           ></el-table-column>
           <el-table-column
-            prop="zip"
-            label="TELEFONO"
+            prop="telefono"
+            label="Teléfono"
             width="100"
           ></el-table-column>
           <el-table-column
-            prop="zip"
-            label="TECNICO"
+            prop="tecnico"
+            label="Técnico"
             width="120"
           ></el-table-column>
           <el-table-column
-            prop="zip"
-            label="DIAGNOSTICO CONCEPTO"
+            prop="concepto"
+            label="Diagnostico"
             width="300"
           ></el-table-column>
           <el-table-column
-            prop="zip"
-            label="PRECIO"
+            prop="precio"
+            label="Precio"
             width="120"
           ></el-table-column>
           <el-table-column
-            prop="zip"
-            label="AUTORIZO"
-            width="100"
+            prop="autorizado"
+            label="Autorizo"
+            width="85"
           ></el-table-column>
           <el-table-column
-            prop="zip"
-            label="RECIBO"
-            width="100"
+            prop="recibo"
+            label="Recibo"
+            width="85"
           ></el-table-column>
 
-          <el-table-column fixed="right" label="Operaciones" width="120">
+          <el-table-column fixed="right" label="Opciones" width="120">
             <template>
               <el-button
                 @click="handleClick"
@@ -118,7 +114,9 @@
       <el-col :span="18" style="padding: 4px;">$ 00.00</el-col>
     </el-row>
     <el-row class="br bl bt bb">
-      <el-col :span="6" class="row-header">TOTAL TRABAJOS NO AUTORIZADOS:</el-col>
+      <el-col :span="6" class="row-header"
+        >TOTAL TRABAJOS NO AUTORIZADOS:</el-col
+      >
       <el-col :span="18" style="padding: 4px;">$ 00.00</el-col>
     </el-row>
   </el-row>
@@ -177,40 +175,46 @@ export default {
 
       tableData: [
         {
-          date: "9:20 am",
-          name: "Chervolet",
-          state: "Malibu",
-          city: "2015",
-          address: "Verde",
-          zip: "4565465465",
-          tag: "Juan",
+          entrada: "9:20 am",
+          marca: "Chervolet",
+          modelo: "Malibu",
+          year: "2015",
+          color: "Verde",
+          telefono: "4565465465",
+          cliente: "Juan Zepeda Zepeda",
+          tecnico: "Julio",
+          concepto: "Cambio de Aceite",
+          precio: "1900",
+          autorizado: false,
+          recibo: "BTN",
         },
         {
-          date: "9:25 am",
-          name: "Nissan",
-          state: "Sentra",
-          city: "2000",
-          address: "Rojo",
-          zip: "54654654",
-          tag: "Juan",
+          entrada: "9:25 am",
+          marca: "Nissan",
+          modelo: "Sentra",
+          year: "2000",
+          color: "Rojo",
+          telefono: "54654654",
+          cliente: "Andy Sanchez Lopez",
+          tecnico: "Mario",
+          concepto: "Cambio de Aceite",
+          precio: "1900",
+          autorizado: false,
+          recibo: "BTN",
         },
         {
-          date: "9:26 am",
-          name: "Mazda",
-          state: "CRX",
-          city: "2015",
-          address: "Blanco",
-          zip: "4546544254",
-          tag: "Juan",
-        },
-        {
-          date: "11:07 am",
-          name: "Honda",
-          state: "Civic",
-          city: "2011",
-          address: "Gris",
-          zip: "68621548",
-          tag: "Juan",
+          entrada: "11:07 am",
+          marca: "Honda",
+          modelo: "Civic",
+          year: "2011",
+          color: "Gris",
+          telefono: "68621548",
+          cliente: "Mark Lopez Perez",
+          tecnico: "Mario",
+          concepto: "Cambio de Aceite",
+          precio: "1900",
+          autorizado: false,
+          recibo: "BTN",
         },
       ],
     };
