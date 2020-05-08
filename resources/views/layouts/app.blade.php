@@ -22,8 +22,9 @@
                 </a>
                 <ul class="header-operations">
                     <li>
-                        <a href="#" onclick="javascript:document.getElementById('form-logout').submit();" style="color:white;">
-                            Cerrar Sesion
+                        <a href="#" onclick="javascript:document.getElementById('form-logout').submit();"
+                            style="color:white;">
+                            Cerrar Sesion  {{ explode(".", Route::current()->getName())[0] }}
                         </a>
                         <form id="form-logout" method="POST" action="{{ route('logout') }}">
                             <input type="hidden" value="{{ csrf_token() }}" name="_token" />
@@ -41,6 +42,11 @@
                             Reporte de Ventas
                         </el-menu-item> --}}
                         @can('listar ordenes')
+                        <el-menu-item style="margin-top: 8px; margin-bottom: 10px;">
+                            <el-button type="primary" size="small" v-on:click="goto('{{ route('sales.create') }}')">
+                                Crear Orden de Servicio
+                            </el-button>
+                        </el-menu-item>
                         <el-menu-item index="sales" v-on:click="goto('{{ route('sales.list') }}')" v-if="">
                             Ordenes de Servicio
                         </el-menu-item>

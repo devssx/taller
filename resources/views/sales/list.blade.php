@@ -7,15 +7,15 @@
             <h2>Ordenes de Servicio</h2>
         </el-col>
         <el-col :span="5" style="text-align:right;">
-            <el-button type="primary" icon="el-icon-circle-plus" v-on:click="goto('{{ route('sales.create') }}')">
+            {{-- <el-button type="primary" icon="el-icon-circle-plus" v-on:click="goto('{{ route('sales.create') }}')">
                 Crear Orden de Servicio
-            </el-button>
+            </el-button> --}}
         </el-col>
     </el-row>
     <el-row type="flex">
         <el-col :span="24">
-            {{-- <list-sales></list-sales> --}}
-            <bitacora-cars></list-cars>
+            <list-sales></list-sales>
+            {{-- <bitacora-cars></list-cars> --}}
         </el-col>
     </el-row>
 
