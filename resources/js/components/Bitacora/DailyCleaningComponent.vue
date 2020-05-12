@@ -13,7 +13,6 @@
         <el-button
           type="primary"
           icon="el-icon-search"
-          @click="search"
           ></el-button
         >
       </el-col>
