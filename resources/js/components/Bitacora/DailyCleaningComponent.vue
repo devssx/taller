@@ -10,11 +10,9 @@
           format="dd-MM-yyyy"
           placeholder="Seleccionar Día"
         ></el-date-picker>
-        <el-button
-          type="primary"
-          icon="el-icon-search"
-          ></el-button
-        >
+        <el-button type="primary" icon="el-icon-search"></el-button>
+        <!-- Dialog Editor -->
+        <!-- <dc-edit></dc-edit> -->
       </el-col>
     </el-row>
 
@@ -25,7 +23,7 @@
           <el-table-column
             prop="employee"
             label="Empleado"
-            width="300"
+            width="295"
           ></el-table-column>
           <el-table-column
             align="center"
@@ -80,22 +78,17 @@
           <el-table-column
             prop="comentario"
             label="Comentario"
-            width="300"
+            width="290"
           ></el-table-column>
-          <el-table-column fixed="right" label="Modificar" width="120">
+          <el-table-column label="Modificar" width="120">
             <template slot-scope="scope">
-              <el-button
-                size="small"
-                icon="el-icon-edit"
-                type="text"
-              ></el-button>
-              <el-button
+              <dc-edit :selectedItem="tableData[scope.$index]"></dc-edit>
+              <!-- <el-button
                 @click="deleteRow(scope.$index, tableData)"
-                type="text"
                 size="small"
-              >
-                Eliminar
-              </el-button>
+                type="text"
+                >Editar</el-button
+              > -->
             </template>
           </el-table-column>
         </el-table>
@@ -107,13 +100,16 @@
 <script>
 export default {
   mounted: function() {
-    this.loadTable("/api/clients");
-
-    this.$root.$on("refreshTable", this.refreshTable);
+    // this.loadTable("/api/clients");
+    // this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
+    testSearch() {
+      this.$root.$emit("showEditor", null);
+    },
     deleteRow(index, rows) {
-      rows.splice(index, 1);
+      this.$root.$emit("showEditor", rows[index]);
+      //rows.splice(index, 1);
     },
     handleClick() {
       console.log("click");
@@ -151,6 +147,7 @@ export default {
   },
   data() {
     return {
+      showDialog: false,
       selectedDay: "",
       items: [],
       search: "",
