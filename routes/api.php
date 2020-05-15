@@ -58,3 +58,8 @@ Route::post('/roles', 'RolesController@save');
 Route::delete('/roles/{id}', 'RolesController@delete');
 
 Route::get('/dashboard', 'DashboardController@get');
+
+
+Route::get('/cleaning', 'CleaningController@get');
+Route::post('/cleaning', 'CleaningController@save');
+Route::delete('/cleaning/{id}', 'CleaningController@delete');

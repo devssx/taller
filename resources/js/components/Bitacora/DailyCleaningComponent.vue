@@ -19,35 +19,35 @@
     <!-- TABLA -->
     <el-row class="br bl">
       <el-col :span="24">
-        <el-table :data="tableData" style="width: 100%">
+        <el-table :data="tableData" style="width: 100%" v-loading="loading">
           <el-table-column
-            prop="employee"
+            prop="user_id"
             label="Empleado"
             width="295"
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="horaEntrada"
+            prop="start"
             label="Hora Entrada"
             width="120"
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="limpieza"
+            prop="cleaning"
             label="Limpieza"
             width="150"
           ></el-table-column>
           <el-table-column label="Hora Desayuno" align="center">
             <el-table-column
               align="center"
-              prop="horaDesayunoEntrada"
+              prop="breakfast_start"
               label="Entrada"
               width="120"
             >
             </el-table-column>
             <el-table-column
               align="center"
-              prop="horaDesayunoSalida"
+              prop="breakfast_end"
               label="Salida"
               width="120"
             >
@@ -56,13 +56,13 @@
           <el-table-column label="Hora Comida" align="center">
             <el-table-column
               align="center"
-              prop="horaComidaEntrada"
+              prop="lunch_start"
               label="Entrada"
               width="120"
             >
             </el-table-column>
             <el-table-column
-              prop="horaComidaSalida"
+              prop="lunch_end"
               label="Salida"
               width="120"
               align="center"
@@ -71,12 +71,12 @@
           </el-table-column>
           <el-table-column
             align="center"
-            prop="cumplio"
+            prop="done"
             label="Cumplió"
             width="120"
           ></el-table-column>
           <el-table-column
-            prop="comentario"
+            prop="comment"
             label="Comentario"
             width="290"
           ></el-table-column>
@@ -100,10 +100,18 @@
 <script>
 export default {
   mounted: function() {
-    // this.loadTable("/api/clients");
+    this.loadTable("/api/cleaning?all=1");
     // this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
+    loadTable(url) {
+      var $this = this;
+      $this.loading = true;
+      axios.get(url).then(function(response) {
+        $this.tableData = response.data;
+        $this.loading = false;
+      });
+    },
     testSearch() {
       this.$root.$emit("showEditor", null);
     },
@@ -113,14 +121,6 @@ export default {
     },
     handleClick() {
       console.log("click");
-    },
-    loadTable(url) {
-      var $this = this;
-      $this.loading = true;
-      axios.get(url).then(function(response) {
-        $this.items = response.data;
-        $this.loading = false;
-      });
     },
     refreshTable() {
       this.loadTable(
@@ -152,42 +152,7 @@ export default {
       items: [],
       search: "",
       loading: true,
-
-      tableData: [
-        {
-          employee: "Juan Medina Lopez",
-          horaEntrada: "6:59 am",
-          limpieza: "N/A",
-          horaDesayunoEntrada: "11:00 am",
-          horaDesayunoSalida: "10:00 am",
-          horaComidaEntrada: "4:00 pm",
-          horaComidaSalida: "3:30 pm",
-          cumplio: "Si",
-          comentario: "",
-        },
-        {
-          employee: "Alma Delia Lopez Sandoval",
-          horaEntrada: "6:59 am",
-          limpieza: "N/A",
-          horaDesayunoEntrada: "11:00 am",
-          horaDesayunoSalida: "10:00 am",
-          horaComidaEntrada: "4:00 pm",
-          horaComidaSalida: "3:30 pm",
-          cumplio: "Si",
-          comentario: "",
-        },
-        {
-          employee: "Juana Lopez Madrid",
-          horaEntrada: "6:55 am",
-          limpieza: "N/A",
-          horaDesayunoEntrada: "11:00 am",
-          horaDesayunoSalida: "10:00 am",
-          horaComidaEntrada: "4:40 pm",
-          horaComidaSalida: "3:30 pm",
-          cumplio: "No",
-          comentario: "Tardo comprando comida.",
-        },
-      ],
+      tableData: [],
     };
   },
 };
