@@ -37,6 +37,16 @@ class CleaningController extends Controller
         return Cleaning::paginate(10);
     }
 
+    public function searchBetween(Request $request)
+    {
+        //SELECT * FROM `cleanings` WHERE `start` > '2020-05-15' and `start` < '2020-05-16'
+        if ($request->has('start') && $request->has('end')) {
+            return Cleaning::where('start', '>=', $request->get('start'))->where('start', '<=', $request->get('end'))->get();
+        }
+
+        return Cleaning::all();
+    }
+
     public function save(Request $request)
     {
         // if ($request->has('id')) {

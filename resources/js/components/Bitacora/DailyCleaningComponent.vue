@@ -12,7 +12,7 @@
           format="dd-MM-yyyy"
           placeholder="Seleccionar Día"
         ></el-date-picker>
-        <el-button type="primary" icon="el-icon-search"></el-button>
+        <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
       </el-col>
     </el-row>
 
@@ -57,10 +57,31 @@
 <script>
 export default {
   mounted: function() {
-    this.loadTable("/api/cleaning?all=1");
+    //this.loadTable("/api/cleaning?all=1");
+    this.loadTable("/api/cleaning/search?ax=1");
     // this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
+    fixNumber(n) {
+      return n < 10 ? "0" + n : n;
+    },
+    toFixedFormat(dt, format) {
+      // 2020-05-15 15:00:00
+      var yyyy = dt.getFullYear();
+      var MM = this.fixNumber(dt.getMonth() + 1);
+      var dd = this.fixNumber(dt.getDate());
+
+      var hh = this.fixNumber(dt.getHours());
+      var mm = this.fixNumber(dt.getMinutes());
+      var ss = this.fixNumber(dt.getSeconds());
+
+      switch (format) {
+        case "yyyy-MM-dd":
+          return `${yyyy}-${MM}-${dd}`;
+      }
+
+      return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
+    },
     formatDate(date) {
       var hours = date.getHours();
       var minutes = date.getMinutes();
@@ -81,13 +102,20 @@ export default {
         $this.loading = false;
       });
     },
-    testSearch() {
-      this.$root.$emit("showEditor", null);
+    onSearch() {
+      var start = `${this.toFixedFormat(
+        this.selectedDay,
+        "yyyy-MM-dd"
+      )} 00:00:00`;
+
+      var end = `${this.toFixedFormat(
+        this.selectedDay,
+        "yyyy-MM-dd"
+      )} 23:59:59`;
+
+      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
     },
-    deleteRow(index, rows) {
-      this.$root.$emit("showEditor", rows[index]);
-      //rows.splice(index, 1);
-    },
+    deleteRow(index, rows) {},
     handleClick() {
       console.log("click");
     },
@@ -117,7 +145,7 @@ export default {
   data() {
     return {
       showDialog: false,
-      selectedDay: "",
+      selectedDay: new Date(),
       items: [],
       search: "",
       loading: true,
