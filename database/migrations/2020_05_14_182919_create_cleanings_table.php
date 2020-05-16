@@ -15,7 +15,7 @@ class CreateCleaningsTable extends Migration
     {
         Schema::create('cleanings', function (Blueprint $table) {
             $table->increments('id');
-            
+
             $table->unsignedInteger('user_id');
             $table->timestamp('start', 0);
             $table->string('cleaning');
@@ -23,7 +23,7 @@ class CreateCleaningsTable extends Migration
             $table->timestamp('breakfast_end', 0);   
             $table->timestamp('lunch_start', 0);
             $table->timestamp('lunch_end', 0);
-            $table->tinyInteger('done');
+            $table->string('done');
             $table->string('comment');
 
             $table->timestamps();

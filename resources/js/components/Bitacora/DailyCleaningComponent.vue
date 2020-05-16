@@ -2,7 +2,9 @@
   <el-row>
     <br />
     <el-row class="br bl bt bb row-header">
-      <el-col :span="2"><h1 style="margin-top: 8px;">FECHA DIA</h1></el-col>
+      <el-col :span="2">
+        <h1 style="margin-top: 8px;">FECHA DIA</h1>
+      </el-col>
       <el-col :span="22">
         <el-date-picker
           v-model="selectedDay"
@@ -11,8 +13,6 @@
           placeholder="Seleccionar Día"
         ></el-date-picker>
         <el-button type="primary" icon="el-icon-search"></el-button>
-        <!-- Dialog Editor -->
-        <!-- <dc-edit></dc-edit> -->
       </el-col>
     </el-row>
 
@@ -20,75 +20,32 @@
     <el-row class="br bl">
       <el-col :span="24">
         <el-table :data="tableData" style="width: 100%" v-loading="loading">
-          <el-table-column
-            prop="user_id"
-            label="Empleado"
-            width="295"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="start"
-            label="Hora Entrada"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="cleaning"
-            label="Limpieza"
-            width="150"
-          ></el-table-column>
+          <el-table-column prop="user_id" label="Empleado" width="295"></el-table-column>
+          <el-table-column align="center" label="Hora Entrada" width="120" prop="start">
+            <template slot-scope="scope">{{ fixDate(scope.row.start) }}</template>
+          </el-table-column>
+          <el-table-column align="center" prop="cleaning" label="Limpieza" width="150"></el-table-column>
           <el-table-column label="Hora Desayuno" align="center">
-            <el-table-column
-              align="center"
-              prop="breakfast_start"
-              label="Entrada"
-              width="120"
-            >
+            <el-table-column align="center" label="Inicio" width="120" prop="breakfast_start">
+              <template slot-scope="scope">{{ fixDate(scope.row.breakfast_start) }}</template>
             </el-table-column>
-            <el-table-column
-              align="center"
-              prop="breakfast_end"
-              label="Salida"
-              width="120"
-            >
+            <el-table-column align="center" label="Fin" width="120" prop="breakfast_end">
+              <template slot-scope="scope">{{ fixDate(scope.row.breakfast_end) }}</template>
             </el-table-column>
           </el-table-column>
           <el-table-column label="Hora Comida" align="center">
-            <el-table-column
-              align="center"
-              prop="lunch_start"
-              label="Entrada"
-              width="120"
-            >
+            <el-table-column align="center" label="Inicio" width="120" prop="lunch_start">
+              <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
             </el-table-column>
-            <el-table-column
-              prop="lunch_end"
-              label="Salida"
-              width="120"
-              align="center"
-            >
+            <el-table-column align="center" label="Fin" width="120" prop="lunch_end">
+              <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
             </el-table-column>
           </el-table-column>
-          <el-table-column
-            align="center"
-            prop="done"
-            label="Cumplió"
-            width="120"
-          ></el-table-column>
-          <el-table-column
-            prop="comment"
-            label="Comentario"
-            width="290"
-          ></el-table-column>
-          <el-table-column label="Modificar" width="120">
+          <el-table-column align="center" prop="done" label="Cumplió" width="120"></el-table-column>
+          <el-table-column prop="comment" label="Comentario" width="290"></el-table-column>
+          <el-table-column align="center" label="Modificar" width="120">
             <template slot-scope="scope">
               <dc-edit :selectedItem="tableData[scope.$index]"></dc-edit>
-              <!-- <el-button
-                @click="deleteRow(scope.$index, tableData)"
-                size="small"
-                type="text"
-                >Editar</el-button
-              > -->
             </template>
           </el-table-column>
         </el-table>
@@ -104,6 +61,18 @@ export default {
     // this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
+    formatDate(date) {
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? "pm" : "am";
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      minutes = minutes < 10 ? "0" + minutes : minutes + "";
+      return hours + ":" + minutes + " " + ampm;
+    },
+    fixDate(dt) {
+      return this.formatDate(new Date(dt));
+    },
     loadTable(url) {
       var $this = this;
       $this.loading = true;
@@ -130,7 +99,7 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       this.refreshTable();
-    },
+    }
   },
   watch: {
     search: function() {
@@ -143,7 +112,7 @@ export default {
           "/api/clients?page=" + $this.page + "&search=" + $this.search
         );
       }, 1000);
-    },
+    }
   },
   data() {
     return {
@@ -152,9 +121,9 @@ export default {
       items: [],
       search: "",
       loading: true,
-      tableData: [],
+      tableData: []
     };
-  },
+  }
 };
 </script>
 <style>
