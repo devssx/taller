@@ -20,7 +20,7 @@
     <el-row class="br bl">
       <el-col :span="24">
         <el-table :data="tableData" style="width: 100%" v-loading="loading">
-          <el-table-column prop="user_id" label="Empleado" width="295"></el-table-column>
+          <el-table-column prop="name" label="Empleado" width="295"></el-table-column>
           <el-table-column align="center" label="Hora Entrada" width="120" prop="start">
             <template slot-scope="scope">{{ fixDate(scope.row.start) }}</template>
           </el-table-column>
@@ -57,8 +57,8 @@
 <script>
 export default {
   mounted: function() {
-    //this.loadTable("/api/cleaning?all=1");
-    this.loadTable("/api/cleaning/search?ax=1");
+    var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
+    this.loadTable("/api/cleaning/search?today=" + today);
     // this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {

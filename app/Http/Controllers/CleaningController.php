@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cleaning;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CleaningController extends Controller
 {
@@ -19,32 +20,43 @@ class CleaningController extends Controller
 
     public function get(Request $request)
     {
-        if ($request->has('all')) {
-            return Cleaning::all();
-        }
-
-        // if ($request->filled('search')) {
-        //     return Cleaning::where('maker', 'LIKE', '%' . $request->get('search') . '%')
-        //         ->orWhere('start_year', 'LIKE', '%' . $request->get('search') . '%')
-        //         ->orWhere('end_year', 'LIKE', '%' . $request->get('search') . '%')
-        //         ->paginate(10)
-        //         ->setPath('')
-        //         ->appends(array(
-        //             'search' => $request->get('search'),
-        //         ));
-        // }
-
-        return Cleaning::paginate(10);
+        return DB::table('cleanings')
+            ->join('users', 'users.id', 'cleanings.user_id')
+            ->select('cleanings.*', 'users.name')
+            ->get();
     }
 
     public function searchBetween(Request $request)
     {
-        //SELECT * FROM `cleanings` WHERE `start` > '2020-05-15' and `start` < '2020-05-16'
+        // Join User Name
+        // SELECT * FROM `cleanings` WHERE `start` > '2020-05-15' and `start` < '2020-05-16'
         if ($request->has('start') && $request->has('end')) {
-            return Cleaning::where('start', '>=', $request->get('start'))->where('start', '<=', $request->get('end'))->get();
+
+            $data = DB::table('cleanings')
+                ->join('users', 'users.id', 'cleanings.user_id')
+                ->select('cleanings.*', 'users.name')
+                ->where('cleanings.start', '>=', $request->get('start'))
+                ->where('cleanings.start', '<=', $request->get('end'))
+                ->get();
+
+            return $data;
         }
 
-        return Cleaning::all();
+        if ($request->has('today')) {
+
+            return DB::table('cleanings')
+                ->join('users', 'users.id', 'cleanings.user_id')
+                ->select('cleanings.*', 'users.name')
+                ->where('cleanings.start', '>=', $request->get('today'))
+                ->get();
+        }
+
+
+        // all
+        return DB::table('cleanings')
+            ->join('users', 'users.id', 'cleanings.user_id')
+            ->select('cleanings.*', 'users.name')
+            ->get();
     }
 
     public function save(Request $request)
