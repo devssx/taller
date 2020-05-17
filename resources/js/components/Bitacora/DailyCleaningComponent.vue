@@ -163,7 +163,7 @@ export default {
       loading: true,
       tableData: [],
       newUser: {
-        user_id: 0,
+        user_id: 1,
         start: "",
         cleaning: "",
         breakfast_start: "",

@@ -77,14 +77,17 @@ class CleaningController extends Controller
         //     ]);
         // }
 
-        // return Cleaning::firstOrCreate([
-        //     'maker' => $request->get('maker'),
-        //     'brand' => $request->get('brand'),
-        //     'motor' => $request->get('motor'),
-        //     'image' => $request->get('image'),
-        //     'start_year' => $request->get('year')[0],
-        //     'end_year' => $request->get('year')[1],
-        // ]);
+        return Cleaning::firstOrCreate([
+            'user_id' => $request->get('user_id'),
+            'start' => $request->get('start'),
+            'cleaning' => $request->get('cleaning'),
+            'breakfast_start' => $request->get('breakfast_start'),
+            'breakfast_end' => $request->get('breakfast_end'),
+            'lunch_start' => $request->get('lunch_start'),
+            'lunch_end' => $request->get('lunch_end'),
+            'done' => $request->get('done'),
+            'comment' => $request->get('comment'),
+        ]);
     }
 
     public function delete($id)

@@ -16,12 +16,14 @@
             label-width="180px"
             ref="currentForm"
           >
-            <el-form-item v-if="!selectedItem.id" label="Empleado" prop="name">
-              <el-select v-model="selectedItem.name" filterable style="width:100%">
+            <!-- Selectoer de usurio (Modo insertar nuevo registro) -->
+            <el-form-item v-if="!selectedItem.id" label="Nombre" prop="name">
+              <el-select v-model="selectedItem.user_id" filterable style="width:100%">
                 <el-option v-for="opt in users" :key="opt.id" :label="opt.name" :value="opt.id"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Empleado" prop="name">
+
+            <el-form-item v-if="selectedItem.id" label="Empleado" prop="name">
               <el-input v-model="selectedItem.name" :disabled="true"></el-input>
             </el-form-item>
             <el-form-item label="Hora Entrada" prop="start">
@@ -190,7 +192,7 @@ export default {
             .then(function(response) {
               $this.$notify({
                 title: "¡Exito!",
-                message: "El registro fué editado correctamente",
+                message: "El registro fué editado correctamente.",
                 type: "success"
               });
               $this.$root.$emit("refreshTable");
