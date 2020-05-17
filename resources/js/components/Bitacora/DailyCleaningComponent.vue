@@ -159,7 +159,6 @@ export default {
     return {
       showDialog: false,
       selectedDay: new Date(),
-      items: [],
       search: "",
       loading: true,
       tableData: [],

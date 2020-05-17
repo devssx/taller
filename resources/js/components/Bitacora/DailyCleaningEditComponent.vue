@@ -16,6 +16,11 @@
             label-width="180px"
             ref="currentForm"
           >
+            <el-form-item v-if="!selectedItem.id" label="Empleado" prop="name">
+              <el-select v-model="selectedItem.name" filterable style="width:100%">
+                <el-option v-for="opt in users" :key="opt.id" :label="opt.name" :value="opt.id"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="Empleado" prop="name">
               <el-input v-model="selectedItem.name" :disabled="true"></el-input>
             </el-form-item>
@@ -84,9 +89,11 @@ export default {
   mounted: function() {
     // evento
     //this.$root.$on("insertNewRow", this.insertNewRow);
+    this.loadUsers("/api/users");
   },
   data() {
     return {
+      users: [],
       entrada: new Date(this.selectedItem.start),
 
       breakfast: [
@@ -116,6 +123,15 @@ export default {
     };
   },
   methods: {
+    loadUsers(url) {
+      var $this = this;
+      $this.loading = true;
+      axios.get(url).then(function(response) {
+        $this.users = response.data.data;
+        $this.loading = false;
+        console.log($this.users);
+      });
+    },
     insertNewRow(currentDay) {
       // Llamado desde el boton 'Nuevo'
       this.dialogVisible = true;
