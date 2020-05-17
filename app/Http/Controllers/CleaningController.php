@@ -61,9 +61,10 @@ class CleaningController extends Controller
 
     public function save(Request $request)
     {
-        // if ($request->has('id')) {
-        //     return Cleaning::updateOrCreate($request->only('id'), $request->except(['id', 'year', 'created_at', 'deleted_at', 'updated_at']));
-        // }
+        // Update
+        if ($request->has('id')) {
+            return Cleaning::updateOrCreate($request->only('id'), $request->except(['id', 'created_at', 'deleted_at', 'updated_at']));
+        }
 
         // $car = Cleaning::where('brand', '=', $request->get('brand'))
         //     ->where('start_year', '=', $request->get('year')[0])

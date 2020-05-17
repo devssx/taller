@@ -5,7 +5,7 @@
       <el-col :span="2">
         <h1 style="margin-top: 8px;">FECHA DIA</h1>
       </el-col>
-      <el-col :span="22">
+      <el-col :span="18">
         <el-date-picker
           v-model="selectedDay"
           type="date"
@@ -13,6 +13,17 @@
           placeholder="Seleccionar Día"
         ></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
+        <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
+      </el-col>
+      <el-col :span="4">
+        <div style="float:right;">
+          <el-button
+            :disabled="!selectedDay"
+            type="primary"
+            icon="el-icon-plus"
+            @click="addUserInfo"
+          >Nuevo</el-button>
+        </div>
       </el-col>
     </el-row>
 
@@ -59,7 +70,7 @@ export default {
   mounted: function() {
     var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
     this.loadTable("/api/cleaning/search?today=" + today);
-    // this.$root.$on("refreshTable", this.refreshTable);
+    this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
     fixNumber(n) {
@@ -115,14 +126,16 @@ export default {
 
       this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
     },
+    addUserInfo() {
+      this.$refs.newItem.insertNewRow(this.selectedDay || new Date());
+    },
     deleteRow(index, rows) {},
     handleClick() {
       console.log("click");
     },
     refreshTable() {
-      this.loadTable(
-        "/api/clients?page=" + this.page + "&search=" + this.search
-      );
+      var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
+      this.loadTable("/api/cleaning/search?today=" + today);
     },
     handleCurrentChange(val) {
       this.page = val;
@@ -149,7 +162,19 @@ export default {
       items: [],
       search: "",
       loading: true,
-      tableData: []
+      tableData: [],
+      newUser: {
+        user_id: 0,
+        start: "",
+        cleaning: "",
+        breakfast_start: "",
+        breakfast_end: "",
+        lunch_start: "",
+        lunch_end: "",
+        done: "No",
+        comment: "",
+        name: ""
+      }
     };
   }
 };

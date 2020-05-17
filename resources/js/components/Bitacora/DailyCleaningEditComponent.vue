@@ -1,6 +1,6 @@
 <template>
   <span>
-    <el-button @click="dialogVisible = true" size="small" type="text">Editar</el-button>
+    <el-button v-if="!hideButton" @click="dialogVisible = true" size="small" type="text">Editar</el-button>
     <el-dialog
       title="Editar Información"
       :visible.sync="dialogVisible"
@@ -16,11 +16,12 @@
             label-width="180px"
             ref="currentForm"
           >
-            <el-form-item label="Empleado" prop="employee">
-              <el-input v-model="selectedItem.employee" :disabled="true"></el-input>
+            <el-form-item label="Empleado" prop="name">
+              <el-input v-model="selectedItem.name" :disabled="true"></el-input>
             </el-form-item>
             <el-form-item label="Hora Entrada" prop="start">
-              <el-time-picker style="width:100%"
+              <el-time-picker
+                style="width:100%"
                 arrow-control
                 v-model="entrada"
                 :picker-options="{
@@ -33,20 +34,22 @@
               <el-input v-model="selectedItem.cleaning"></el-input>
             </el-form-item>
             <el-form-item label="Hora de Desayuno">
-              <el-time-picker style="width:100%"
+              <el-time-picker
+                style="width:100%"
                 is-range
                 arrow-control
-                v-model="value1"
+                v-model="breakfast"
                 range-separator="A"
                 start-placeholder="Inicio"
                 end-placeholder="Fin"
               ></el-time-picker>
             </el-form-item>
             <el-form-item label="Hora de Comida">
-              <el-time-picker style="width:100%"
+              <el-time-picker
+                style="width:100%"
                 is-range
                 arrow-control
-                v-model="value2"
+                v-model="lunch"
                 range-separator="A"
                 start-placeholder="Inicio"
                 end-placeholder="Fin"
@@ -77,19 +80,20 @@
 </template>
 <script>
 export default {
-  props: ["selectedItem"],
+  props: ["selectedItem", "hideButton"],
   mounted: function() {
-    //this.$root.$on("showEditor", this.showEditor);
+    // evento
+    //this.$root.$on("insertNewRow", this.insertNewRow);
   },
   data() {
     return {
       entrada: new Date(this.selectedItem.start),
 
-      value1: [
+      breakfast: [
         new Date(this.selectedItem.breakfast_start),
         new Date(this.selectedItem.breakfast_end)
       ],
-      value2: [
+      lunch: [
         new Date(this.selectedItem.lunch_start),
         new Date(this.selectedItem.lunch_end)
       ],
@@ -112,6 +116,19 @@ export default {
     };
   },
   methods: {
+    insertNewRow(currentDay) {
+      // Llamado desde el boton 'Nuevo'
+      this.dialogVisible = true;
+      this.selectedItem.start = currentDay;
+      this.selectedItem.breakfast_start = currentDay;
+      this.selectedItem.breakfast_end = currentDay;
+      this.selectedItem.lunch_start = currentDay;
+      this.selectedItem.lunch_end = currentDay;
+
+      this.entrada = currentDay;
+      this.breakfast = [currentDay, currentDay];
+      this.lunch = [currentDay, currentDay];
+    },
     fixNumber(n) {
       return n < 10 ? "0" + n : n;
     },
@@ -128,10 +145,6 @@ export default {
       // Implementar mas formatos usando un switch si es necesario
       return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
     },
-    // showEditor(item) {
-    //   this.selectedItem = item;
-    //   this.dialogVisible = true;
-    // },
     handleClose(done) {
       this.cancel();
       done();
@@ -147,40 +160,40 @@ export default {
 
       // ASIGNACION
       this.selectedItem.start = this.toFixedFormat(this.entrada);
-      this.selectedItem.breakfast_start = this.toFixedFormat(this.value1[0]);
-      this.selectedItem.breakfast_end = this.toFixedFormat(this.value1[1]);
-      this.selectedItem.lunch_start = this.toFixedFormat(this.value2[0]);
-      this.selectedItem.lunch_end = this.toFixedFormat(this.value2[1]);
+      this.selectedItem.breakfast_start = this.toFixedFormat(this.breakfast[0]);
+      this.selectedItem.breakfast_end = this.toFixedFormat(this.breakfast[1]);
+      this.selectedItem.lunch_start = this.toFixedFormat(this.lunch[0]);
+      this.selectedItem.lunch_end = this.toFixedFormat(this.lunch[1]);
 
-      // var $this = this;
-      // $this.$refs.carForm.validate((valid) => {
-      //   if (valid) {
-      //     $this.loading = true;
-      //     axios
-      //       .post("/api/cars", $this.car)
-      //       .then(function(response) {
-      //         $this.$notify({
-      //           title: "¡Exito!",
-      //           message: "El Carro fue editado correctamente",
-      //           type: "success",
-      //         });
-      //         $this.$root.$emit("refreshTable");
-      //         $this.cancel();
-      //       })
-      //       .catch((error) => {
-      //         if (error.response.data.errors) {
-      //           var errors = error.response.data.errors;
-      //           $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-      //             confirmButtonText: "OK",
-      //             type: "error",
-      //           });
-      //         }
-      //         $this.loading = false;
-      //       });
-      //   } else {
-      //     return false;
-      //   }
-      // });
+      var $this = this;
+      $this.$refs.currentForm.validate(valid => {
+        if (valid) {
+          $this.loading = true;
+          axios
+            .post("/api/cleaning", $this.selectedItem)
+            .then(function(response) {
+              $this.$notify({
+                title: "¡Exito!",
+                message: "El registro fué editado correctamente",
+                type: "success"
+              });
+              $this.$root.$emit("refreshTable");
+              $this.cancel();
+            })
+            .catch(error => {
+              if (error.response.data.errors) {
+                var errors = error.response.data.errors;
+                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
+                  confirmButtonText: "OK",
+                  type: "error"
+                });
+              }
+              $this.loading = false;
+            });
+        } else {
+          return false;
+        }
+      });
     }
   }
 };
