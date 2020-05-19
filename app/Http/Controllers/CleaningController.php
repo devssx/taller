@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Cleaning;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use DateTime;
+use DateInterval;
 
 class CleaningController extends Controller
 {
@@ -53,10 +55,30 @@ class CleaningController extends Controller
 
 
         // all
-        return DB::table('cleanings')
-            ->join('users', 'users.id', 'cleanings.user_id')
-            ->select('cleanings.*', 'users.name')
-            ->get();
+        return $this->get($request);
+    }
+
+    public function searchWeek(Request $request)
+    {
+        // Join User Name
+        // SELECT * FROM `cleanings` WHERE `start` > '2020-05-15' and `start` < '2020-05-16'
+        if ($request->has('start')) {
+            $end = new DateTime($request->get("start"));
+            $interval = new DateInterval('P6D'); // + 6 days
+            $end->add($interval);
+
+            $data = DB::table('cleanings')
+                ->join('users', 'users.id', 'cleanings.user_id')
+                ->select('cleanings.*', 'users.name')
+                ->where('cleanings.start', '>=', $request->get('start'))
+                ->where('cleanings.start', '<=', $end->format("Y-m-d H:i:s"))
+                ->get();
+
+            return $data;
+        }
+
+        // all
+        return $this->get($request);
     }
 
     public function save(Request $request)
@@ -65,17 +87,6 @@ class CleaningController extends Controller
         if ($request->has('id')) {
             return Cleaning::updateOrCreate($request->only('id'), $request->except(['id', 'created_at', 'deleted_at', 'updated_at']));
         }
-
-        // $car = Cleaning::where('brand', '=', $request->get('brand'))
-        //     ->where('start_year', '=', $request->get('year')[0])
-        //     ->where('end_year', '=', $request->get('year')[1])
-        //     ->first();
-
-        // if ($car) {
-        //     return response()->json([
-        //         'error' => 'El Carro ya existe',
-        //     ]);
-        // }
 
         return Cleaning::firstOrCreate([
             'user_id' => $request->get('user_id'),

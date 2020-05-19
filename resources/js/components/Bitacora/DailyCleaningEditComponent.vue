@@ -32,7 +32,7 @@
                 arrow-control
                 v-model="entrada"
                 :picker-options="{
-                  selectableRange: '06:00:00 - 18:00:00',
+                  selectableRange: '04:00:00 - 18:00:00',
                 }"
                 placeholder="Entrada"
               ></el-time-picker>

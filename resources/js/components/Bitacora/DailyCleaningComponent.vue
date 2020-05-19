@@ -14,6 +14,7 @@
         ></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
         <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
+        {{selectedDay}}
       </el-col>
       <el-col :span="4">
         <div style="float:right;">
@@ -78,6 +79,7 @@ export default {
     },
     toFixedFormat(dt, format) {
       // 2020-05-15 15:00:00
+      if (!dt) dt = new Date();
       var yyyy = dt.getFullYear();
       var MM = this.fixNumber(dt.getMonth() + 1);
       var dd = this.fixNumber(dt.getDate());
@@ -127,19 +129,13 @@ export default {
       this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
     },
     addUserInfo() {
-      this.$refs.newItem.insertNewRow(this.selectedDay || new Date());
-    },
-    deleteRow(index, rows) {},
-    handleClick() {
-      console.log("click");
+      this.$refs.newItem.insertNewRow(this.selectedDay);
     },
     refreshTable() {
-      var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
-      this.loadTable("/api/cleaning/search?today=" + today);
-    },
-    handleCurrentChange(val) {
-      this.page = val;
-      this.refreshTable();
+      var currentDay = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
+      var start = currentDay + " 00:00:00";
+      var end = currentDay + " 23:59:59";
+      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
     }
   },
   watch: {

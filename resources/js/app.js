@@ -110,6 +110,7 @@ Vue.component('quick-receipt', require('./components/Dashboard/QuickReceipt').de
 // 2020
 Vue.component('bitacora-cars', require('./components/Bitacora/CarListComponent').default);
 Vue.component('daily-cleaning', require('./components/Bitacora/DailyCleaningComponent').default);
+Vue.component('weekly-cleaning', require('./components/Bitacora/weeklyCleaningComponent').default);
 Vue.component('dc-edit', require('./components/Bitacora/DailyCleaningEditComponent').default);
 Vue.component('view-carservices', require('./components/CarServices/ServiceViewComponent').default);
 Vue.component('row-item', require('./components/CarServices/RowItemComponent').default);

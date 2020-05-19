@@ -17,6 +17,7 @@
             {{-- <list-sales></list-sales> --}}
             {{-- <bitacora-cars></list-cars> --}}
             <daily-cleaning></daily-cleaning>
+            <weekly-cleaning></weekly-cleaning>
         </el-col>
     </el-row>
 
