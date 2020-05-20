@@ -54,6 +54,12 @@
                         <el-menu-item index="carservices" v-on:click="goto('{{ route('carservices.list') }}')">
                             Carros y Servicios
                         </el-menu-item>
+                        <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.dailycleaning') }}')">
+                            Limpieza Diaria
+                        </el-menu-item>
+                        <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.weeklycleaning') }}')">
+                            Limpieza semanal
+                        </el-menu-item>
                         @endcan @can('listar servicios')
                         <el-menu-item index="services" v-on:click="goto('{{ route('services.list') }}')">
                             Servicios

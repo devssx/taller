@@ -61,7 +61,7 @@ Route::get('/dashboard', 'DashboardController@get');
 
 
 Route::get('/cleaning', 'CleaningController@get');
-Route::get('/cleaning/search', 'CleaningController@searchBetween');
+Route::get('/cleaning/search', 'CleaningController@search');
 Route::get('/cleaning/searchWeek', 'CleaningController@searchWeek');
 Route::post('/cleaning', 'CleaningController@save');
 Route::delete('/cleaning/{id}', 'CleaningController@delete');

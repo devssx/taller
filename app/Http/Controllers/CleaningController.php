@@ -17,7 +17,7 @@ class CleaningController extends Controller
      */
     public function index()
     {
-        //
+        return view('cars.index');
     }
 
     public function get(Request $request)
@@ -25,11 +25,21 @@ class CleaningController extends Controller
         return DB::table('cleanings')
             ->join('users', 'users.id', 'cleanings.user_id')
             ->select('cleanings.*', 'users.name')
+            ->orderBy('cleanings.start', 'asc')
             ->get();
     }
 
-    public function searchBetween(Request $request)
+    public function search(Request $request)
     {
+        // busca por id
+        if ($request->has('id')) {
+            return DB::table('cleanings')
+                ->join('users', 'users.id', 'cleanings.user_id')
+                ->select('cleanings.*', 'users.name')
+                ->where('cleanings.id', '=', $request->get('id'))
+                ->get();
+        }
+
         // Join User Name
         // SELECT * FROM `cleanings` WHERE `start` > '2020-05-15' and `start` < '2020-05-16'
         if ($request->has('start') && $request->has('end')) {
@@ -39,6 +49,7 @@ class CleaningController extends Controller
                 ->select('cleanings.*', 'users.name')
                 ->where('cleanings.start', '>=', $request->get('start'))
                 ->where('cleanings.start', '<=', $request->get('end'))
+                ->orderBy('cleanings.start', 'asc')
                 ->get();
 
             return $data;
@@ -72,6 +83,7 @@ class CleaningController extends Controller
                 ->select('cleanings.*', 'users.name')
                 ->where('cleanings.start', '>=', $request->get('start'))
                 ->where('cleanings.start', '<=', $end->format("Y-m-d H:i:s"))
+                ->orderBy('cleanings.start', 'asc')
                 ->get();
 
             return $data;

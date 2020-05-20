@@ -14,7 +14,6 @@
         ></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
         <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
-        {{selectedDay}}
       </el-col>
       <el-col :span="4">
         <div style="float:right;">
@@ -136,19 +135,6 @@ export default {
       var start = currentDay + " 00:00:00";
       var end = currentDay + " 23:59:59";
       this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
-    }
-  },
-  watch: {
-    search: function() {
-      var $this = this;
-      if ($this.timeout) {
-        clearTimeout($this.timeout);
-      }
-      $this.timeout = setTimeout(function() {
-        $this.loadTable(
-          "/api/clients?page=" + $this.page + "&search=" + $this.search
-        );
-      }, 1000);
     }
   },
   data() {

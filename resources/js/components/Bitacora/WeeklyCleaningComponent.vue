@@ -13,7 +13,6 @@
           placeholder="Seleccionar Semana"
         ></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
-        {{toFixedFormat(selectedDay, "yyyy-MM-dd")}}
       </el-col>
     </el-row>
 
@@ -40,7 +39,7 @@
       <el-col :span="20">
         <el-table :data="tableData" style="width: 100%" v-loading="loading">
           <el-table-column label="Día" width="120">
-            <template slot-scope="scope">{{dayOfWeek(scope.row.start)}}</template>
+            <template slot-scope="scope">{{ dayOfWeek(scope.row.start) }}</template>
           </el-table-column>
           <el-table-column align="center" label="Hora Entrada" width="120" prop="start">
             <template slot-scope="scope">{{ fixDate(scope.row.start) }}</template>
@@ -78,19 +77,15 @@
 <script>
 export default {
   mounted: function() {
-    //var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
-    //this.loadTable("/api/cleaning/search?today=" + today);
     this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
     handleSelect(key, keyPath) {
-      console.log(key, keyPath);
       this.activeIndex = key;
       this.showWeekOfEmployee(this.employees[key]);
     },
     showWeekOfEmployee(name) {
       this.tableData = this.employeeData.filter(e => e.name == name);
-      // TODO
     },
     dayOfWeek(dt) {
       var date = new Date(dt);
@@ -152,7 +147,7 @@ export default {
         $this.employeeData = response.data;
         $this.loading = false;
 
-        // load unique user name list
+        // Para el panel izquierdo (lista de empleados)
         $this.employeeData.forEach(element => {
           var name = element.name;
           if ($this.employees.filter(e => e == name).length == 0)
@@ -168,9 +163,25 @@ export default {
 
       this.loadTable(`/api/cleaning/searchWeek?start=${start}`);
     },
-    refreshTable() {
-      // var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
-      // this.loadTable("/api/cleaning/searchWeek?today=" + today);
+    refreshTable(id) {
+      // if (id) {
+      //   var url = `/api/cleaning/search?id=${id}`;
+      //   var $this = this;
+      //   $this.loading = true;
+      //   axios.get(url).then(function(response) {
+      //     var data = response.data;
+      //     if (data.length > 0) {
+      //       for (var i = 0; i < $this.employeeData.length; i++) {
+      //         // busca el item editado para actualizar en la tabla visual
+      //         if ($this.employeeData[i].id == id) {
+      //           $this.employeeData[i] = data[0];
+      //           break;
+      //         }
+      //       }
+      //     }
+      //     $this.loading = false;
+      //   });
+      // }
     }
   },
   data() {

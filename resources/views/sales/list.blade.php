@@ -8,22 +8,20 @@
         </el-col>
         <el-col :span="5" style="text-align:right;">
             {{-- <el-button type="primary" icon="el-icon-circle-plus" v-on:click="goto('{{ route('sales.create') }}')">
-                Crear Orden de Servicio
+            Crear Orden de Servicio
             </el-button> --}}
         </el-col>
     </el-row>
     <el-row type="flex">
         <el-col :span="24">
-            {{-- <list-sales></list-sales> --}}
+            <list-sales></list-sales>
             {{-- <bitacora-cars></list-cars> --}}
-            <daily-cleaning></daily-cleaning>
-            <weekly-cleaning></weekly-cleaning>
         </el-col>
     </el-row>
 
     @if (session('error'))
     <el-row type="flex">
-        <el-alert  title="{{ session('error') }}" type="error" show-icon>
+        <el-alert title="{{ session('error') }}" type="error" show-icon>
         </el-alert>
     </el-row>
     @endif

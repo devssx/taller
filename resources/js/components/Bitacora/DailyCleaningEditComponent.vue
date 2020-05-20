@@ -131,7 +131,6 @@ export default {
       axios.get(url).then(function(response) {
         $this.users = response.data.data;
         $this.loading = false;
-        console.log($this.users);
       });
     },
     insertNewRow(currentDay) {
@@ -177,25 +176,35 @@ export default {
       this.loading = false;
 
       // ASIGNACION
-      this.selectedItem.start = this.toFixedFormat(this.entrada);
-      this.selectedItem.breakfast_start = this.toFixedFormat(this.breakfast[0]);
-      this.selectedItem.breakfast_end = this.toFixedFormat(this.breakfast[1]);
-      this.selectedItem.lunch_start = this.toFixedFormat(this.lunch[0]);
-      this.selectedItem.lunch_end = this.toFixedFormat(this.lunch[1]);
-
       var $this = this;
+      $this.selectedItem.start = this.toFixedFormat(this.entrada);
+      $this.selectedItem.breakfast_start = this.toFixedFormat(this.breakfast[0]);
+      $this.selectedItem.breakfast_end = this.toFixedFormat(this.breakfast[1]);
+      $this.selectedItem.lunch_start = this.toFixedFormat(this.lunch[0]);
+      $this.selectedItem.lunch_end = this.toFixedFormat(this.lunch[1]);
+
+
       $this.$refs.currentForm.validate(valid => {
         if (valid) {
           $this.loading = true;
           axios
             .post("/api/cleaning", $this.selectedItem)
             .then(function(response) {
+
+
+      console.log('time:');
+      console.log($this.selectedItem.start);
+      console.log('response:');
+      console.log(response);
+
+
               $this.$notify({
                 title: "¡Exito!",
                 message: "El registro fué editado correctamente.",
                 type: "success"
               });
-              $this.$root.$emit("refreshTable");
+
+              $this.$root.$emit("refreshTable", response);
               $this.cancel();
             })
             .catch(error => {

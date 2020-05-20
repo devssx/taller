@@ -58,7 +58,10 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::prefix('bitacora')->group(function () {
-        Route::view('/cars', 'bitacora.index')->name('bitacora.cars');
+        //Route::view('/cars', 'bitacora.index')->name('bitacora.cars');
+        //Route::get('/cleaning', 'CleaningController@index')->name('sales'); 
+        Route::view('/dailycleaning', 'bitacora.cleaning.daily')->name('bitacora.dailycleaning');
+        Route::view('/weeklycleaning', 'bitacora.cleaning.weekly')->name('bitacora.weeklycleaning');
     });
 
     Route::post('files/uploadItem', 'FileController@uploadItem')->name('upload.item');
