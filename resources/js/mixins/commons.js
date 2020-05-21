@@ -25,9 +25,10 @@ export default {
 
             return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
         },
-        toFixedTime(date) {
-            var hours = date.getHours();
-            var minutes = this.fixNumber(date.getMinutes());
+        toFixedTime(dt) {
+            if (!dt) dt = new Date();
+            var hours = dt.getHours();
+            var minutes = this.fixNumber(dt.getMinutes());
             var ampm = hours >= 12 ? "pm" : "am";
 
             hours = hours % 12;

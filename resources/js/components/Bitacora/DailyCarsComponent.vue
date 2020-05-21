@@ -3,7 +3,7 @@
     <br />
     <el-row class="br bl bt bb row-header">
       <el-col :span="2">
-        <h1 style="margin-top: 8px;">FECHA DIA</h1>
+        <h1 style="margin-top: 8px;">Día</h1>
       </el-col>
       <el-col :span="18">
         <el-date-picker
@@ -14,6 +14,7 @@
         ></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
         <cars-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></cars-edit>
+        {{toFixedTime(selectedDay)}}
       </el-col>
       <el-col :span="4">
         <div style="float:right;">
@@ -21,7 +22,7 @@
             :disabled="!selectedDay"
             type="primary"
             icon="el-icon-plus"
-            @click="addUserInfo"
+            @click="addNewItem"
           >Nuevo</el-button>
         </div>
       </el-col>
@@ -30,33 +31,23 @@
     <!-- TABLA -->
     <el-row class="br bl">
       <el-col :span="24">
-        <el-table :data="tableData" style="width: 100%" v-loading="loading">
-          <el-table-column prop="name" label="Empleado" width="295"></el-table-column>
-          <el-table-column align="center" label="Hora Entrada" width="120" prop="start">
-            <template slot-scope="scope">{{ fixDate(scope.row.start) }}</template>
-          </el-table-column>
-          <el-table-column align="center" prop="cleaning" label="Limpieza" width="150"></el-table-column>
-          <el-table-column label="Hora Desayuno" align="center">
-            <el-table-column align="center" label="Inicio" width="120" prop="breakfast_start">
-              <template slot-scope="scope">{{ fixDate(scope.row.breakfast_start) }}</template>
-            </el-table-column>
-            <el-table-column align="center" label="Fin" width="120" prop="breakfast_end">
-              <template slot-scope="scope">{{ fixDate(scope.row.breakfast_end) }}</template>
-            </el-table-column>
-          </el-table-column>
-          <el-table-column label="Hora Comida" align="center">
-            <el-table-column align="center" label="Inicio" width="120" prop="lunch_start">
-              <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
-            </el-table-column>
-            <el-table-column align="center" label="Fin" width="120" prop="lunch_end">
-              <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
-            </el-table-column>
-          </el-table-column>
-          <el-table-column align="center" prop="done" label="Cumplió" width="120"></el-table-column>
-          <el-table-column prop="comment" label="Comentario" width="290"></el-table-column>
-          <el-table-column align="center" label="Modificar" width="120">
-            <template slot-scope="scope">
-              <cars-edit :selectedItem="tableData[scope.$index]"></cars-edit>
+        <el-table :data="tableData" style="width: 100%">
+          <el-table-column prop="entrada" label="Entrada" width="100"></el-table-column>
+          <el-table-column prop="marca" label="Marca" width="100"></el-table-column>
+          <el-table-column prop="modelo" label="Modelo" width="100"></el-table-column>
+          <el-table-column prop="year" label="Año" width="65"></el-table-column>
+          <el-table-column prop="color" label="Color" width="100"></el-table-column>
+          <el-table-column prop="cliente" label="Cliente" width="180"></el-table-column>
+          <el-table-column prop="telefono" label="Teléfono" width="100"></el-table-column>
+          <el-table-column prop="tecnico" label="Técnico" width="120"></el-table-column>
+          <el-table-column prop="concepto" label="Diagnóstico" width="300"></el-table-column>
+          <el-table-column prop="precio" label="Precio" width="120"></el-table-column>
+          <el-table-column prop="autorizado" label="Autorizó" width="85"></el-table-column>
+          <el-table-column prop="recibo" label="Recibo" width="85"></el-table-column>
+          <el-table-column fixed="right" label="Opciones" width="120">
+            <template>
+              <el-button @click="handleClick" icon="el-icon-finished" type="text" size="small"></el-button>
+              <el-button size="small" icon="el-icon-edit" type="text"></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -72,16 +63,17 @@ export default {
   },
   methods: {
     fixDate(dt) {
-      return this.formatDate(new Date(dt));
+      return this.toFixedTime(new Date(dt));
     },
     loadTable(url) {},
     onSearch() {
       // this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
     },
-    addUserInfo() {
+    addNewItem() {
       this.$refs.newItem.insertNewRow(this.selectedDay);
     },
-    refreshTable() {}
+    refreshTable() {},
+    handleClick() {}
   },
   data() {
     return {

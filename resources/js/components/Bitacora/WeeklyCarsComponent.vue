@@ -3,7 +3,7 @@
     <br />
     <el-row class="br bl bt bb row-header">
       <el-col :span="2">
-        <h1 style="margin-top: 8px;">SEMANA</h1>
+        <h1 style="margin-top: 8px;">Semana</h1>
       </el-col>
       <el-col :span="22">
         <el-date-picker
