@@ -14,8 +14,10 @@
     </el-row>
     <el-row type="flex">
         <el-col :span="24">
-            <list-sales></list-sales>
+            {{-- <list-sales></list-sales> --}}
             {{-- <bitacora-cars></list-cars> --}}
+            <daily-cars></daily-cars>
+            <weekly-cars></weekly-cars>
         </el-col>
     </el-row>
 

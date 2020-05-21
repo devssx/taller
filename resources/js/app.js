@@ -26,6 +26,7 @@ import store from './store';
 // Mixins
 import token from './mixins/token';
 import loader from './mixins/loader';
+import commons from './mixins/commons';
 
 window.axios.interceptors.request.use(function (request) {
   // store.commit('setLoaderState', true);
@@ -48,6 +49,7 @@ window.axios.interceptors.response.use(function (response) {
  */
 Vue.mixin(token);
 Vue.mixin(loader);
+Vue.mixin(commons);
 
 // configure language
 locale.use(lang);
@@ -112,8 +114,13 @@ Vue.component('bitacora-cars', require('./components/Bitacora/CarListComponent')
 Vue.component('daily-cleaning', require('./components/Bitacora/DailyCleaningComponent').default);
 Vue.component('weekly-cleaning', require('./components/Bitacora/weeklyCleaningComponent').default);
 Vue.component('dc-edit', require('./components/Bitacora/DailyCleaningEditComponent').default);
+Vue.component('daily-cars', require('./components/Bitacora/DailyCarsComponent').default);
+Vue.component('weekly-cars', require('./components/Bitacora/weeklyCarsComponent').default);
+Vue.component('cars-edit', require('./components/Bitacora/DailyCarsEditComponent').default);
 Vue.component('view-carservices', require('./components/CarServices/ServiceViewComponent').default);
 Vue.component('row-item', require('./components/CarServices/RowItemComponent').default);
+
+
 // Salomon S.A. Tools
 Vue.component('file-upload', require('./components/Tools/UploadFile').default);
 Vue.component('image-dialog', require('./components/Tools/ImageDialog').default);
