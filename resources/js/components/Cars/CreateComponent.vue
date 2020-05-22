@@ -1,6 +1,7 @@
 <template>
   <el-col :span="5">
     <el-button
+      v-if="!hidden"
       type="primary"
       icon="el-icon-circle-plus"
       @click="dialogVisible = true"
@@ -44,12 +45,17 @@
               </el-col>
             </el-form-item>
             <el-form-item :label="'Año (' + car.year[0] + '-' + car.year[1] + ')'" prop="year">
-              <el-slider v-model="car.year" range show-stops :min="1999" :max="2019"></el-slider>
+              <el-slider v-model="car.year" range show-stops :min="1999" :max="currentYear"></el-slider>
             </el-form-item>
           </el-form>
         </el-col>
       </el-row>
-      <el-row v-if="!selectedFile && car.image!=''" type="flex" align="middle" style="text-align: center;">
+      <el-row
+        v-if="!selectedFile && car.image!=''"
+        type="flex"
+        align="middle"
+        style="text-align: center;"
+      >
         <el-col :span="24">
           <el-image style="width:256px;" :src="car.image"></el-image>
         </el-col>
@@ -79,8 +85,10 @@
 </template>
 <script>
 export default {
+  props: ["hidden"],
   data() {
     return {
+      currentYear: new Date().getFullYear(),
       selectedFile: null,
       dialogVisible: false,
       labelPosition: "left",
@@ -90,7 +98,7 @@ export default {
         brand: "",
         motor: "",
         image: "",
-        year: [1999, 2019]
+        year: [1999, new Date().getFullYear()]
       },
       rules: {
         maker: [
@@ -118,6 +126,14 @@ export default {
     };
   },
   methods: {
+    showDialog(car) {
+      this.car.maker = car.maker;
+      this.car.brand = car.brand;
+      this.car.motor = car.motor;
+      this.car.year[0] = car.year;
+      this.car.year[1] = this.currentYear;
+      this.dialogVisible = true;
+    },
     onSelected(file) {
       this.selectedFile = file;
       this.car.image = this.selectedFile.name;
@@ -210,6 +226,8 @@ export default {
                 message: "El Carro fue agregado correctamente",
                 type: "success"
               });
+
+              $this.$root.$emit("onNewCarCreated", response.data);
               $this.$root.$emit("refreshTable");
               $this.cancel();
             })

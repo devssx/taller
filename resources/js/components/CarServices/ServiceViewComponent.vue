@@ -2,7 +2,7 @@
   <el-container>
     <el-main class="content">
       <!-- Top bar -->
-      <el-row>
+      <el-row type="flex" align="middle">
         <el-col :span="24">
           <el-form inline label-position="right" label-width="80px" class="query-form">
             <el-form-item label="Año">
@@ -14,8 +14,8 @@
               <el-select
                 v-model="maker"
                 filterable
+                allow-create
                 class="year"
-                :disabled="makers.length == 0"
                 @change="onMakerChange"
               >
                 <el-option
@@ -30,8 +30,8 @@
               <el-select
                 v-model="brand"
                 filterable
+                allow-create
                 class="year"
-                :disabled="brands.length == 0"
                 @change="onBrandChange"
               >
                 <el-option
@@ -43,7 +43,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="Motor">
-              <el-select filterable v-model="motor" :disabled="motors.length == 0">
+              <el-select filterable allow-create v-model="motor">
                 <el-option v-for="m in motors" :key="m" :label="m" :value="m"></el-option>
               </el-select>
             </el-form-item>
@@ -58,6 +58,8 @@
             </el-form-item>
           </el-form>
           <br />
+          <!-- Formulario Crear Carro -->
+          <create-cars ref="carsForm" :hidden="true"></create-cars>
         </el-col>
       </el-row>
 
@@ -144,7 +146,7 @@
             <el-col :span="8">
               <h3>{{service.name}}</h3>
             </el-col>
-            <el-col :offset="8" :span="8" v-if="!fullMode">
+            <el-col :span="8" v-if="!fullMode">
               <div style="float:right;">
                 <el-button
                   :disabled="getSelectedServices() == 0"
@@ -158,6 +160,16 @@
                   icon="el-icon-tickets"
                   @click="next(1)"
                 >Recibo</el-button>
+              </div>
+            </el-col>
+            <el-col :span="8" v-if="!fullMode">
+              <div style="float:right;">
+                <el-button
+                  :disabled="getSelectedServices() == 0"
+                  type="primary"
+                  icon="el-icon-edit"
+                  @click="next(1)"
+                >MODIFICAR</el-button>
               </div>
             </el-col>
           </el-row>
@@ -415,6 +427,7 @@ export default {
 
     // Evento boton add service
     $this.$root.$on("addService", $this.addService);
+    $this.$root.$on("onNewCarCreated", $this.onNewCarCreated);
 
     $this.year = new Date().getFullYear();
     $this.motors = [];
@@ -458,6 +471,9 @@ export default {
     }
   },
   methods: {
+    onNewCarCreated(car){
+      this.cars.push(car);
+    },
     next(mode) {
       var count = this.getSelectedServices();
       if (count > 0) {
@@ -598,7 +614,7 @@ export default {
       var $this = this;
       if ($this.selectedCar.id == undefined) {
         $this.$notify({
-          title: "Selecciona Un carro válido",
+          title: "Selecciona un carro válido",
           message: "El carro seleccionado no es válido",
           type: "error"
         });
@@ -778,11 +794,26 @@ export default {
             $this.isValidCarId = false;
             $this.isValidService = false;
 
-            $this.$notify({
-              title: "No existe el carro",
-              message: "No se encontró el carro seleccinado",
-              type: "warning"
-            });
+            $this
+              .$confirm(
+                "No se encontró el carro. ¿Desea registrar el carro con esta información?",
+                "Carro no encontrado",
+                {
+                  confirmButtonText: "Si",
+                  cancelButtonText: "No",
+                  type: "warning"
+                }
+              )
+              .then(e => {
+                const car = {
+                  maker: $this.maker,
+                  brand: $this.brand,
+                  motor: $this.motor,
+                  year: $this.year
+                };
+                $this.$refs.carsForm.showDialog(car);
+              })
+              .catch(e => {});
           }
 
           /* TODO TEMPORALMENTE COMENTADO

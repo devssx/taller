@@ -16,8 +16,9 @@
         <el-col :span="24">
             {{-- <list-sales></list-sales> --}}
             {{-- <bitacora-cars></list-cars> --}}
-            <daily-cars></daily-cars>
-            <weekly-cars></weekly-cars>
+            {{-- <daily-cars></daily-cars>
+            <weekly-cars></weekly-cars> --}}
+            <view-carservices ref="create" :full-mode="false"></view-carservices>
         </el-col>
     </el-row>
 

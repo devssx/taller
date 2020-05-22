@@ -15,6 +15,7 @@ class CreateCleaningsTable extends Migration
     {
         Schema::create('cleanings', function (Blueprint $table) {
             $table->increments('id');
+            $table->timestamps();
 
             $table->unsignedInteger('user_id');
             $table->timestamp('start', 0);
@@ -26,7 +27,6 @@ class CreateCleaningsTable extends Migration
             $table->string('done');
             $table->string('comment');
 
-            $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
         });
     }
