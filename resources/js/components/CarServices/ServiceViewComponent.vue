@@ -162,13 +162,15 @@
             </el-col>
             <el-col :span="8">
               <div style="float:right;">
-                <el-button
-                  :disabled="!hasChanged"
-                  :loading="isSaving"
-                  icon="el-icon-edit"
-                  type="primary"
-                  @click="saveService()"
-                >MODIFICAR</el-button>
+                <el-tooltip effect="dark" :content="getServiceName()" placement="top">
+                  <el-button
+                    :disabled="services.length == 0"
+                    :loading="isSaving"
+                    icon="el-icon-edit"
+                    type="primary"
+                    @click="saveService()"
+                  >MODIFICAR</el-button>
+                </el-tooltip>
               </div>
             </el-col>
           </el-row>
@@ -464,6 +466,11 @@ export default {
     }
   },
   methods: {
+    getServiceName() {
+      return this.service.name
+        ? `Modificar ${this.service.name}`
+        : "Modifica el servicio mostrado.";
+    },
     onNewCarCreated(car) {
       this.cars.push(car);
     },
@@ -885,7 +892,7 @@ export default {
     },
     // Guardar
     saveNewCarService(newService) {
-      var $this = this;
+      const $this = this;
       $this.isSaving = true;
 
       // create a new CarService
@@ -906,12 +913,38 @@ export default {
       axios
         .post("/api/carservices", saveParams)
         .then(function(response) {
-          console.log(response);
           $this.service.isReadOnly = false;
           $this.isSaving = false;
 
-          // reload
-          $this.loadCarServices();
+          // agrega a la lista de servicios el nuevo servicio grabado
+          if (response.data.createdService) {
+            for (var i = 0; i < response.data.createdService.length; i++) {
+              const dbService = response.data.createdService[i];
+              $this.services.push({
+                id: dbService.id,
+                selected: false,
+                selectedPrice: "low",
+                isReadOnly: false,
+                low_total: 0,
+                mid_total: 0,
+                high_total: 0,
+                low: dbService.low,
+                mid: dbService.mid,
+                high: dbService.high,
+                comment: dbService.comment,
+                warranty: dbService.warranty,
+                exchange_rate: dbService.exchange_rate,
+                service_id: dbService.service_id,
+                name: dbService.name,
+                label: dbService.name,
+                items: dbService.items
+              });
+            }
+
+            // set selected lastItem
+            $this.activeName = $this.services.length - 1;
+            $this.serviceChanged($this.activeName);
+          }
         })
         .catch(error => {
           if (error.response.data.errors) {
