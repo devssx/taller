@@ -76,6 +76,25 @@ class CarServicesController extends Controller
         return CarService::with('car')->with('service')->paginate(10);
     }
 
+    private function getCarService($id)
+    {
+        $carServices = DB::table('car_services')
+            ->join('services', 'services.id', 'car_services.service_id')
+            ->select('car_services.*', 'services.name')
+            ->where(['car_services.id' => $id])
+            ->get();
+
+        foreach ($carServices as $service) {
+            // le busca los items al servicio
+            $service->items = CarServiceItem::where([
+                'car_id' => $service->car_id,
+                'service_id' => $service->service_id,
+            ])->with('item')->get();
+        }
+
+        return $carServices;
+    }
+
     public function save(SaveCarServiceRequest $request)
     {
         $car = $request->get('car');
@@ -89,7 +108,7 @@ class CarServicesController extends Controller
         $mid = $request->has('mid') ? $request->get('mid') : 0;
         $high = $request->has('high') ? $request->get('high') : 0;
 
-
+        $newService = null;
         if ($request->has('csid')) {
             $carService = CarService::find($request->get('csid'));
             if ($carService) {
@@ -114,7 +133,7 @@ class CarServicesController extends Controller
                 ]);
             }
         } else {
-            CarService::firstOrCreate([
+            $newService = CarService::firstOrCreate([
                 'car_id' => $car,
                 'service_id' => $service,
                 'comment' => $comment,
@@ -166,9 +185,17 @@ class CarServicesController extends Controller
             }
         });
 
-        return response()->json([
-            'success' => true,
-        ]);
+        // obtiene el nuevo car service
+        if ($newService != null) {
+            $newCarService = $this->getCarService($newService->id);
+            return response()->json([
+                'success' => true, 'createdService' => $newCarService,
+            ]);
+        } else {
+            return response()->json([
+                'success' => true, 'createdService' => '',
+            ]);
+        }
     }
 
     public function delete($id)

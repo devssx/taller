@@ -18,7 +18,7 @@
             {{-- <bitacora-cars></list-cars> --}}
             {{-- <daily-cars></daily-cars>
             <weekly-cars></weekly-cars> --}}
-            <view-carservices ref="create" :full-mode="false"></view-carservices>
+            <view-carservices ref="create" :full-mode="true"></view-carservices>
         </el-col>
     </el-row>
 

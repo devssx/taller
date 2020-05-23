@@ -224,7 +224,7 @@ export default {
             .then(function(response) {
               $this.$notify({
                 title: "¡Exito!",
-                message: "La Orden de Servicio fue agregado correctamente",
+                message: "La Orden de Servicio fue agregada correctamente",
                 type: "success"
               });
               $this.$root.$emit("refreshTable");

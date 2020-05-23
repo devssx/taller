@@ -76,8 +76,9 @@
                 <span v-if="getSelectedServices() > 0">({{getSelectedServices()}})</span>
               </h4>
             </el-col>
-            <el-col :span="16" v-if="fullMode">
+            <el-col :span="16">
               <div style="float:right;">
+                <!-- Boton Agregar Servicio -->
                 <create-pop-sales :disabled="!isValidCarId"></create-pop-sales>
               </div>
             </el-col>
@@ -95,7 +96,7 @@
               :title="s.selected ? s.name+' (Seleccionado)':s.name"
               :name="index"
             >
-              <el-checkbox v-if="!fullMode" v-model="s.selected">Seleccionar</el-checkbox>
+              <el-checkbox v-model="s.selected">Seleccionar</el-checkbox>
               <table style="width:100%">
                 <tr>
                   <th class="price-min">Precio Min</th>
@@ -107,7 +108,7 @@
                   <td>${{formatPrice(s.mid_total)}}</td>
                   <td>${{formatPrice(s.high_total)}}</td>
                 </tr>
-                <tr v-if="!fullMode">
+                <tr>
                   <td>
                     <el-radio v-model="s.selectedPrice" label="low"></el-radio>
                   </td>
@@ -119,10 +120,7 @@
                   </td>
                 </tr>
               </table>
-              <div class="edit-buttons" v-if="fullMode">
-                <!--<el-tooltip v-if="s.id" effect="dark" content="Modificar Servicio" placement="top">
-                  <el-button @click="editService(s)" icon="el-icon-edit" size="mini"></el-button>
-                </el-tooltip>-->
+              <div class="edit-buttons">
                 <el-tooltip effect="dark" content="Eliminar Servicio" placement="top">
                   <el-button
                     @click="deleteService(s)"
@@ -146,7 +144,7 @@
             <el-col :span="8">
               <h3>{{service.name}}</h3>
             </el-col>
-            <el-col :span="8" v-if="!fullMode">
+            <el-col :span="8">
               <div style="float:right;">
                 <el-button
                   :disabled="getSelectedServices() == 0"
@@ -162,13 +160,14 @@
                 >Recibo</el-button>
               </div>
             </el-col>
-            <el-col :span="8" v-if="!fullMode">
+            <el-col :span="8">
               <div style="float:right;">
                 <el-button
-                  :disabled="getSelectedServices() == 0"
-                  type="primary"
+                  :disabled="!hasChanged"
+                  :loading="isSaving"
                   icon="el-icon-edit"
-                  @click="next(1)"
+                  type="primary"
+                  @click="saveService()"
                 >MODIFICAR</el-button>
               </div>
             </el-col>
@@ -342,13 +341,6 @@
                   ></el-input>
                 </el-col>
               </el-row>
-
-              <el-row class="bt" v-if="!service.isReadOnly">
-                <el-col :span="8" :offset="16" style="text-align:right;">
-                  <br />
-                  <el-button :loading="isSaving" type="primary" @click="saveService()">Guardar</el-button>
-                </el-col>
-              </el-row>
             </div>
           </el-card>
         </el-col>
@@ -367,6 +359,7 @@ export default {
   },
   data() {
     return {
+      hasChanged: false,
       isLoadingServices: false,
       isSaving: false,
       isValidCarId: false,
@@ -471,7 +464,7 @@ export default {
     }
   },
   methods: {
-    onNewCarCreated(car){
+    onNewCarCreated(car) {
       this.cars.push(car);
     },
     next(mode) {
@@ -611,11 +604,21 @@ export default {
         });
     },
     addService: function(service, total) {
-      var $this = this;
-      if ($this.selectedCar.id == undefined) {
-        $this.$notify({
+      if (this.selectedCar.id == undefined) {
+        this.$notify({
           title: "Selecciona un carro válido",
           message: "El carro seleccionado no es válido",
+          type: "error"
+        });
+        return;
+      }
+
+      // don't duplicate services
+      var count = this.services.filter(x => x.name == service.name).length;
+      if (count > 0) {
+        this.$notify({
+          title: "Ya existe.",
+          message: "El servicio seleccionado ya existe.",
           type: "error"
         });
         return;
@@ -655,11 +658,13 @@ export default {
         ]
       };
 
-      $this.services.push(newService);
+      // saves the new Service
+      this.saveNewCarService(newService);
 
+      //this.services.push(newService);
       // set selected lastItem
-      $this.activeName = $this.services.length - 1;
-      $this.serviceChanged($this.activeName);
+      //this.activeName = $this.services.length - 1;
+      //this.serviceChanged($this.activeName);
     },
     getParameter(name) {
       var result = null,
@@ -878,6 +883,48 @@ export default {
 
       return total;
     },
+    // Guardar
+    saveNewCarService(newService) {
+      var $this = this;
+      $this.isSaving = true;
+
+      // create a new CarService
+      const saveParams = {
+        car: $this.selectedCar.id, // Save car.id
+        service: newService.service_id, // service id
+        items: newService.items, // itemlist
+
+        comment: newService.comment,
+        warranty: newService.warranty,
+        exchange_rate: newService.exchange_rate,
+        low: newService.low,
+        mid: newService.mid,
+        high: newService.high,
+        high: newService.high
+      };
+
+      axios
+        .post("/api/carservices", saveParams)
+        .then(function(response) {
+          console.log(response);
+          $this.service.isReadOnly = false;
+          $this.isSaving = false;
+
+          // reload
+          $this.loadCarServices();
+        })
+        .catch(error => {
+          if (error.response.data.errors) {
+            var errors = error.response.data.errors;
+            $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
+              confirmButtonText: "OK",
+              type: "error"
+            });
+          }
+
+          $this.isSaving = false;
+        });
+    },
 
     // Guardar
     saveService() {
@@ -898,7 +945,6 @@ export default {
       };
 
       var isNew = $this.service.isNew;
-
       if ($this.service.isNew) {
         // create a new CarService
         saveParams = {

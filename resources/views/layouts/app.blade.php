@@ -42,11 +42,11 @@
                             Reporte de Ventas
                         </el-menu-item> --}}
                         @can('listar ordenes')
-                        <el-menu-item style="margin-top: 8px; margin-bottom: 10px;">
+                        {{-- <el-menu-item style="margin-top: 8px; margin-bottom: 10px;">
                             <el-button type="primary" size="small" v-on:click="goto('{{ route('sales.create') }}')">
                                 Crear Orden de Servicio
                             </el-button>
-                        </el-menu-item>
+                        </el-menu-item> --}}
                         <el-menu-item index="sales" v-on:click="goto('{{ route('sales.list') }}')" v-if="">
                             Ordenes de Servicio
                         </el-menu-item>
