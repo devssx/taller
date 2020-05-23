@@ -818,9 +818,9 @@ export default {
               )
               .then(e => {
                 const car = {
-                  maker: $this.maker,
-                  brand: $this.brand,
-                  motor: $this.motor,
+                  maker: $this.maker.trim(),
+                  brand: $this.brand.trim(),
+                  motor: $this.motor.trim(),
                   year: $this.year
                 };
                 $this.$refs.carsForm.showDialog(car);

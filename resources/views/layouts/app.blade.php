@@ -24,7 +24,7 @@
                     <li>
                         <a href="#" onclick="javascript:document.getElementById('form-logout').submit();"
                             style="color:white;">
-                            Cerrar Sesion  {{ explode(".", Route::current()->getName())[0] }}
+                            Cerrar Sesion {{ explode(".", Route::current()->getName())[0] }}
                         </a>
                         <form id="form-logout" method="POST" action="{{ route('logout') }}">
                             <input type="hidden" value="{{ csrf_token() }}" name="_token" />
@@ -32,33 +32,36 @@
                     </li>
                 </ul>
             </el-header>
-            <el-container class="wrapper">
-                <el-aside class="menu" width="200px">
-                    <el-menu default-active="{{ explode(".", Route::current()->getName())[0] }}">
+            <el-row type="flex" style="text-align: center;margin: auto;">
+                <el-col :span="24">
+                    <el-menu class="el-menu-demo" mode="horizontal"
+                        default-active="{{ explode(".", Route::current()->getName())[0] }}">
                         {{-- <el-menu-item style="padding-top: 10px;">
-                            <quick-receipt></quick-receipt>
-                        </el-menu-item> --}}
+                            <quick-receipt></quick-receipt>  </el-menu-item> --}}
                         {{-- <el-menu-item index="dashboard" v-on:click="goto('{{ route('dashboard') }}')" v-if="">
-                            Reporte de Ventas
+                        Reporte de Ventas
                         </el-menu-item> --}}
                         @can('listar ordenes')
                         {{-- <el-menu-item style="margin-top: 8px; margin-bottom: 10px;">
-                            <el-button type="primary" size="small" v-on:click="goto('{{ route('sales.create') }}')">
-                                Crear Orden de Servicio
-                            </el-button>
+                         <el-button type="primary" size="small" v-on:click="goto('{{ route('sales.create') }}')">
+                        Crear Orden de Servicio
+                        </el-button>
                         </el-menu-item> --}}
+                        <el-submenu index="bitacora">
+                            <template slot="title">Bitácora</template>
+                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.dailycleaning') }}')">
+                                Limpieza Diaria
+                            </el-menu-item>
+                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.weeklycleaning') }}')">
+                                Limpieza Semanal
+                            </el-menu-item>
+                        </el-submenu>
                         <el-menu-item index="sales" v-on:click="goto('{{ route('sales.list') }}')" v-if="">
                             Ordenes de Servicio
                         </el-menu-item>
                         @endcan @can('listar carros_servicios')
                         <el-menu-item index="carservices" v-on:click="goto('{{ route('carservices.list') }}')">
                             Carros y Servicios
-                        </el-menu-item>
-                        <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.dailycleaning') }}')">
-                            Limpieza Diaria
-                        </el-menu-item>
-                        <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.weeklycleaning') }}')">
-                            Limpieza semanal
                         </el-menu-item>
                         @endcan @can('listar servicios')
                         <el-menu-item index="services" v-on:click="goto('{{ route('services.list') }}')">
@@ -86,7 +89,10 @@
                         </el-menu-item>
                         @endcan
                     </el-menu>
-                </el-aside>
+                </el-col>
+            </el-row>
+            <el-container class="wrapper">
+                {{-- <el-aside class="menu" width="200px"></el-aside> --}}
                 @yield('content')
             </el-container>
         </el-container>
