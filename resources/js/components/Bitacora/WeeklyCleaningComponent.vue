@@ -66,7 +66,12 @@
           <el-table-column align="center" label="Modificar" width="160">
             <template slot-scope="scope">
               <dc-edit :selectedItem="tableData[scope.$index]"></dc-edit>
-              <el-button style="margin-left:16px" size="small" type="text">Eliminar</el-button>
+              <el-button
+                @click="eliminarRegistro(tableData[scope.$index].id)"
+                style="margin-left:16px"
+                size="small"
+                type="text"
+              >Eliminar</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -81,6 +86,44 @@ export default {
     this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
+    eliminarRegistro(id) {
+      const $this = this;
+      $this
+        .$confirm(
+          "Esto eliminará permanentemente el registro. ¿Desea continuar?",
+          "Advertencia",
+          {
+            confirmButtonText: "Si",
+            cancelButtonText: "Cancelar",
+            type: "warning"
+          }
+        )
+        .then(() => {
+          $this.loading = true;
+          axios
+            .delete("/api/cleaning/" + id)
+            .then(function(response) {
+              $this.$message({
+                type: "success",
+                message: "Registro eliminado"
+              });
+
+              $this.tableData = $this.tableData.filter(item => item.id != id);
+              $this.loading = false;
+            })
+            .catch(error => {
+              $this.loading = false;
+              if (error.response.data.errors) {
+                var errors = error.response.data.errors;
+                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
+                  confirmButtonText: "OK",
+                  type: "error"
+                });
+              }
+            });
+        })
+        .catch(() => {});
+    },
     handleSelect(key, keyPath) {
       this.activeIndex = key;
       this.showWeekOfEmployee(this.employees[key]);
