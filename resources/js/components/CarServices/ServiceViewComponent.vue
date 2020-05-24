@@ -4,7 +4,7 @@
       <!-- Top bar -->
       <el-row type="flex" align="middle">
         <el-col :span="24">
-          <el-form inline label-position="right" label-width="80px" class="query-form">
+          <el-form inline label-position="right" label-width="80px" class="query-form" style="text-align: end;">
             <el-form-item label="Año">
               <el-select v-model="year" filterable class="year" :disabled="years.length == 0">
                 <el-option v-for="year in years" :key="year" :label="year" :value="year"></el-option>

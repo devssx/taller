@@ -42,11 +42,6 @@
                         Reporte de Ventas
                         </el-menu-item> --}}
                         @can('listar ordenes')
-                        {{-- <el-menu-item style="margin-top: 8px; margin-bottom: 10px;">
-                         <el-button type="primary" size="small" v-on:click="goto('{{ route('sales.create') }}')">
-                        Crear Orden de Servicio
-                        </el-button>
-                        </el-menu-item> --}}
                         <el-submenu index="bitacora">
                             <template slot="title">Bitácora</template>
                             <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.dailycleaning') }}')">
@@ -56,9 +51,15 @@
                                 Limpieza Semanal
                             </el-menu-item>
                         </el-submenu>
-                        <el-menu-item index="sales" v-on:click="goto('{{ route('sales.list') }}')" v-if="">
-                            Ordenes de Servicio
-                        </el-menu-item>
+                        <el-submenu index="sales">
+                            <template slot="title">Ordenes de Servicio</template>
+                            <el-menu-item index="sales" v-on:click="goto('{{ route('sales') }}')">
+                                Crear Orden de Servicio
+                            </el-menu-item>
+                            <el-menu-item index="sales" v-on:click="goto('{{ route('sales.list') }}')">
+                                Lista Ordenes de servicio
+                            </el-menu-item>
+                        </el-submenu>
                         @endcan @can('listar carros_servicios')
                         <el-menu-item index="carservices" v-on:click="goto('{{ route('carservices.list') }}')">
                             Carros y Servicios

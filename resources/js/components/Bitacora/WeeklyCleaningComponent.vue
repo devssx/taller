@@ -44,7 +44,7 @@
           <el-table-column align="center" label="Hora Entrada" width="120" prop="start">
             <template slot-scope="scope">{{ fixDate(scope.row.start) }}</template>
           </el-table-column>
-          <el-table-column align="center" prop="cleaning" label="Limpieza" width="150"></el-table-column>
+          <el-table-column align="center" prop="cleaning" label="Limpieza" width="260"></el-table-column>
           <el-table-column label="Hora Desayuno" align="center">
             <el-table-column align="center" label="Inicio" width="120" prop="breakfast_start">
               <template slot-scope="scope">{{ fixDate(scope.row.breakfast_start) }}</template>
@@ -62,10 +62,11 @@
             </el-table-column>
           </el-table-column>
           <el-table-column align="center" prop="done" label="Cumplió" width="120"></el-table-column>
-          <el-table-column prop="comment" label="Comentario" width="200"></el-table-column>
-          <el-table-column align="center" label="Modificar" width="120">
+          <el-table-column prop="comment" label="Comentario" width="220"></el-table-column>
+          <el-table-column align="center" label="Modificar" width="160">
             <template slot-scope="scope">
               <dc-edit :selectedItem="tableData[scope.$index]"></dc-edit>
+              <el-button style="margin-left:16px" size="small" type="text">Eliminar</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -143,9 +144,11 @@ export default {
     loadTable(url) {
       var $this = this;
       $this.loading = true;
+      $this.tableData = [];
       axios.get(url).then(function(response) {
         $this.employeeData = response.data;
         $this.loading = false;
+        $this.employees = [];
 
         // Para el panel izquierdo (lista de empleados)
         $this.employeeData.forEach(element => {

@@ -31,11 +31,11 @@
     <el-row class="br bl">
       <el-col :span="24">
         <el-table :data="tableData" style="width: 100%" v-loading="loading">
-          <el-table-column prop="name" label="Empleado" width="295"></el-table-column>
+          <el-table-column prop="name" label="Empleado" width="310"></el-table-column>
           <el-table-column align="center" label="Hora Entrada" width="120" prop="start">
             <template slot-scope="scope">{{ fixDate(scope.row.start) }}</template>
           </el-table-column>
-          <el-table-column align="center" prop="cleaning" label="Limpieza" width="150"></el-table-column>
+          <el-table-column align="center" prop="cleaning" label="Limpieza" width="300"></el-table-column>
           <el-table-column label="Hora Desayuno" align="center">
             <el-table-column align="center" label="Inicio" width="120" prop="breakfast_start">
               <template slot-scope="scope">{{ fixDate(scope.row.breakfast_start) }}</template>
@@ -53,10 +53,11 @@
             </el-table-column>
           </el-table-column>
           <el-table-column align="center" prop="done" label="Cumplió" width="120"></el-table-column>
-          <el-table-column prop="comment" label="Comentario" width="290"></el-table-column>
-          <el-table-column align="center" label="Modificar" width="120">
+          <el-table-column prop="comment" label="Comentario" width="300"></el-table-column>
+          <el-table-column align="center" label="Modificar" width="147">
             <template slot-scope="scope">
               <dc-edit :selectedItem="tableData[scope.$index]"></dc-edit>
+              <el-button style="margin-left:16px" size="small" type="text">Eliminar</el-button>
             </template>
           </el-table-column>
         </el-table>
