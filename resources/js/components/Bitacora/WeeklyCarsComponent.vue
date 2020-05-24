@@ -18,54 +18,28 @@
 
     <!-- User list -->
     <el-row class="br bl">
-      <el-col :span="4">
-        <span v-if="employees.length == 0" style="padding:8px;">No hay información</span>
-
-        <el-menu
-          :default-active="activeIndex"
-          class="el-menu-vertical-demo"
-          @select="handleSelect"
-          v-for="(employee, i) in employees"
-          v-bind:key="i"
-        >
-          <el-menu-item :index="i+''">
-            <i class="el-icon-user"></i>
-            <span>{{employee}}</span>
-          </el-menu-item>
-        </el-menu>
-      </el-col>
-
       <!-- TABLA -->
-      <el-col :span="20">
+      <el-col :span="24">
         <el-table :data="tableData" style="width: 100%" v-loading="loading">
           <el-table-column label="Día" width="120">
             <template slot-scope="scope">{{ dayOfWeek(scope.row.start) }}</template>
           </el-table-column>
-          <el-table-column align="center" label="Hora Entrada" width="120" prop="start">
-            <template slot-scope="scope">{{ fixDate(scope.row.start) }}</template>
-          </el-table-column>
-          <el-table-column align="center" prop="cleaning" label="Limpieza" width="150"></el-table-column>
-          <el-table-column label="Hora Desayuno" align="center">
-            <el-table-column align="center" label="Inicio" width="120" prop="breakfast_start">
-              <template slot-scope="scope">{{ fixDate(scope.row.breakfast_start) }}</template>
-            </el-table-column>
-            <el-table-column align="center" label="Fin" width="120" prop="breakfast_end">
-              <template slot-scope="scope">{{ fixDate(scope.row.breakfast_end) }}</template>
-            </el-table-column>
-          </el-table-column>
-          <el-table-column label="Hora Comida" align="center">
-            <el-table-column align="center" label="Inicio" width="120" prop="lunch_start">
-              <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
-            </el-table-column>
-            <el-table-column align="center" label="Fin" width="120" prop="lunch_end">
-              <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
-            </el-table-column>
-          </el-table-column>
-          <el-table-column align="center" prop="done" label="Cumplió" width="120"></el-table-column>
-          <el-table-column prop="comment" label="Comentario" width="200"></el-table-column>
-          <el-table-column align="center" label="Modificar" width="120">
-            <template slot-scope="scope">
-              <dc-edit :selectedItem="tableData[scope.$index]"></dc-edit>
+          <el-table-column prop="entrada" label="Entrada" width="100"></el-table-column>
+          <el-table-column prop="marca" label="Marca" width="100"></el-table-column>
+          <el-table-column prop="modelo" label="Modelo" width="100"></el-table-column>
+          <el-table-column prop="year" label="Año" width="65"></el-table-column>
+          <el-table-column prop="color" label="Color" width="100"></el-table-column>
+          <el-table-column prop="cliente" label="Cliente" width="300"></el-table-column>
+          <el-table-column prop="telefono" label="Teléfono" width="100"></el-table-column>
+          <el-table-column prop="tecnico" label="Técnico" width="120"></el-table-column>
+          <el-table-column prop="concepto" label="Diagnóstico" width="300"></el-table-column>
+          <el-table-column prop="precio" label="Precio" width="120"></el-table-column>
+          <el-table-column prop="autorizado" label="Autorizó" width="85"></el-table-column>
+          <el-table-column prop="recibo" label="Recibo" width="85"></el-table-column>
+          <el-table-column label="Opciones" width="120">
+            <template>
+              <el-button icon="el-icon-finished" type="text" size="small"></el-button>
+              <el-button size="small" icon="el-icon-edit" type="text"></el-button>
             </template>
           </el-table-column>
         </el-table>

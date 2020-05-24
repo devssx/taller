@@ -14,7 +14,6 @@
         ></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
         <cars-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></cars-edit>
-        {{toFixedTime(selectedDay)}}
       </el-col>
       <el-col :span="4">
         <div style="float:right;">
@@ -37,16 +36,16 @@
           <el-table-column prop="modelo" label="Modelo" width="100"></el-table-column>
           <el-table-column prop="year" label="Año" width="65"></el-table-column>
           <el-table-column prop="color" label="Color" width="100"></el-table-column>
-          <el-table-column prop="cliente" label="Cliente" width="180"></el-table-column>
+          <el-table-column prop="cliente" label="Cliente" width="300"></el-table-column>
           <el-table-column prop="telefono" label="Teléfono" width="100"></el-table-column>
           <el-table-column prop="tecnico" label="Técnico" width="120"></el-table-column>
           <el-table-column prop="concepto" label="Diagnóstico" width="300"></el-table-column>
           <el-table-column prop="precio" label="Precio" width="120"></el-table-column>
           <el-table-column prop="autorizado" label="Autorizó" width="85"></el-table-column>
           <el-table-column prop="recibo" label="Recibo" width="85"></el-table-column>
-          <el-table-column fixed="right" label="Opciones" width="120">
+          <el-table-column label="Opciones" width="120">
             <template>
-              <el-button @click="handleClick" icon="el-icon-finished" type="text" size="small"></el-button>
+              <el-button icon="el-icon-finished" type="text" size="small"></el-button>
               <el-button size="small" icon="el-icon-edit" type="text"></el-button>
             </template>
           </el-table-column>
