@@ -1,7 +1,7 @@
 <template>
   <span>
     <el-tooltip class="item" effect="dark" content="Eliminar" placement="top">
-      <el-button icon="el-icon-delete" type="danger" @click="dialogVisible = true"></el-button>
+      <el-button size="mini" icon="el-icon-delete" type="danger" @click="dialogVisible = true"></el-button>
     </el-tooltip>
     <el-dialog title="Advertencia" :visible.sync="dialogVisible" width="30%" center>
       <span>

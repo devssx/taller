@@ -1,7 +1,7 @@
 <template>
   <span>
     <el-tooltip class="item" effect="dark" content="Editar" placement="top">
-      <el-button icon="el-icon-edit" @click="dialogVisible = true"></el-button>
+      <el-button size="mini" icon="el-icon-edit" @click="dialogVisible = true"></el-button>
     </el-tooltip>
     <el-dialog
       title="Editar un Artículo"

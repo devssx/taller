@@ -6,7 +6,7 @@
         <el-col :span="24">
           <el-form inline label-position="right" label-width="80px" class="query-form" style="text-align: end;">
             <el-form-item label="Año">
-              <el-select v-model="year" filterable class="year" :disabled="years.length == 0">
+              <el-select  default-first-option v-model="year" filterable class="year" :disabled="years.length == 0">
                 <el-option v-for="year in years" :key="year" :label="year" :value="year"></el-option>
               </el-select>
             </el-form-item>
@@ -15,6 +15,7 @@
                 v-model="maker"
                 filterable
                 allow-create
+                default-first-option
                 class="year"
                 @change="onMakerChange"
               >
@@ -31,6 +32,7 @@
                 v-model="brand"
                 filterable
                 allow-create
+                default-first-option
                 class="year"
                 @change="onBrandChange"
               >
@@ -43,7 +45,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="Motor">
-              <el-select filterable allow-create v-model="motor">
+              <el-select filterable allow-create default-first-option v-model="motor">
                 <el-option v-for="m in motors" :key="m" :label="m" :value="m"></el-option>
               </el-select>
             </el-form-item>
@@ -473,6 +475,20 @@ export default {
     },
     onNewCarCreated(car) {
       this.cars.push(car);
+      this.setSelectedCar(car);
+    },
+    setSelectedCar(car){
+      console.log(car);
+      this.selectedCar.id = car.id;
+      this.selectedCar.maker = car.maker;
+      this.selectedCar.brand = car.brand;
+      this.selectedCar.motor = car.motor;
+      this.selectedCar.year = car.start_year;
+      this.selectedCar.endYear = car.end_year;
+      this.selectedCar.image = car.image;
+
+      this.isValidCarId = true;
+      this.loadCarServices();
     },
     next(mode) {
       var count = this.getSelectedServices();
@@ -791,16 +807,7 @@ export default {
         })
         .then(function(response) {
           if (response.data.length > 0) {
-            $this.selectedCar.id = response.data[0].id;
-            $this.selectedCar.maker = response.data[0].maker;
-            $this.selectedCar.brand = response.data[0].brand;
-            $this.selectedCar.motor = response.data[0].motor;
-            $this.selectedCar.year = response.data[0].start_year;
-            $this.selectedCar.endYear = response.data[0].end_year;
-            $this.selectedCar.image = response.data[0].image;
-
-            $this.isValidCarId = true;
-            $this.loadCarServices();
+            $this.setSelectedCar(response.data[0]);
           } else {
             $this.selectedCar.id = "";
             $this.isValidCarId = false;
