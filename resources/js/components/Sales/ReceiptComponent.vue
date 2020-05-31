@@ -7,16 +7,22 @@
           <el-form inline label-position="right" label-width="80px" class="query-form" ref="form">
             <el-form-item style="float: right;">
               <el-button
+                :disabled="!image1Loaded || !image2Loaded"
                 v-if="currentSale.status < 2"
                 icon="el-icon-edit"
                 @click="convertToReceipt()"
               >Convertir a recibo</el-button>
               <el-button
+                :disabled="!image1Loaded || !image2Loaded"
                 v-if="currentSale.status == 2"
                 icon="el-icon-edit"
                 @click="openConfirm()"
               >Editar</el-button>
-              <el-button icon="el-icon-printer" @click="buildReceipt()">Imprimir</el-button>
+              <el-button
+                :disabled="!image1Loaded || !image2Loaded"
+                icon="el-icon-printer"
+                @click="buildReceipt()"
+              >Imprimir</el-button>
             </el-form-item>
             <br style="clear:both;" />
           </el-form>
@@ -202,10 +208,10 @@
       </el-row>
       <el-row type="flex" justify="end" style="opacity: 0;overflow: hidden;height: 50px;">
         <el-col :span="8">
-          <img ref="quotation" src="/img/receipt.jpg" width="1200px" />
+          <img ref="quotation" @load="image1Loaded=true" src="/img/receipt.jpg" width="1200px" />
         </el-col>
         <el-col :span="8">
-          <img ref="receipt" src="/img/receipt2.jpg" width="1200px" />
+          <img ref="receipt" @load="image2Loaded=true" src="/img/receipt2.jpg" width="1200px" />
         </el-col>
         <el-col :span="8">
           <canvas ref="my-canvas"></canvas>
@@ -223,6 +229,8 @@ export default {
   props: ["sale"],
   data() {
     return {
+      image1Loaded: false,
+      image2Loaded: false,
       method: 0,
       tax: 0,
       order: {},

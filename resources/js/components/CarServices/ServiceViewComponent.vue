@@ -4,9 +4,21 @@
       <!-- Top bar -->
       <el-row type="flex" align="middle">
         <el-col :span="24">
-          <el-form inline label-position="right" label-width="80px" class="query-form" style="text-align: end;">
+          <el-form
+            inline
+            label-position="right"
+            label-width="80px"
+            class="query-form"
+            style="text-align: end;"
+          >
             <el-form-item label="Año">
-              <el-select  default-first-option v-model="year" filterable class="year" :disabled="years.length == 0">
+              <el-select
+                default-first-option
+                v-model="year"
+                filterable
+                class="select-year"
+                :disabled="years.length == 0"
+              >
                 <el-option v-for="year in years" :key="year" :label="year" :value="year"></el-option>
               </el-select>
             </el-form-item>
@@ -52,6 +64,7 @@
             <el-form-item>
               <el-button
                 :loading="isLoadingServices"
+                :size="btnSize"
                 type="primary"
                 icon="el-icon-search"
                 @click="search"
@@ -95,10 +108,10 @@
             <el-collapse-item
               v-for="(s, index) in services"
               :key="index"
-              :title="s.selected ? s.name+' (Seleccionado)':s.name"
+              :title="s.isSelected ? s.name+' (Seleccionado)':s.name"
               :name="index"
             >
-              <el-checkbox v-model="s.selected">Seleccionar</el-checkbox>
+              <h4>Selectexd Price: {{s.selectedPrice}}</h4>
               <table style="width:100%">
                 <tr>
                   <th class="price-min">Precio Min</th>
@@ -112,13 +125,13 @@
                 </tr>
                 <tr>
                   <td>
-                    <el-radio v-model="s.selectedPrice" label="low"></el-radio>
+                    <el-checkbox v-model="s.isLowSelected" @change="onServiceChecked(s, 'low')"></el-checkbox>
                   </td>
                   <td>
-                    <el-radio v-model="s.selectedPrice" label="mid"></el-radio>
+                    <el-checkbox v-model="s.isMidSelected" @change="onServiceChecked(s, 'mid')"></el-checkbox>
                   </td>
                   <td>
-                    <el-radio v-model="s.selectedPrice" label="high"></el-radio>
+                    <el-checkbox v-model="s.isMaxSelected" @change="onServiceChecked(s, 'high')"></el-checkbox>
                   </td>
                 </tr>
               </table>
@@ -128,7 +141,7 @@
                     @click="deleteService(s)"
                     type="danger"
                     icon="el-icon-delete"
-                    size="mini"
+                    :size="btnSize"
                   ></el-button>
                 </el-tooltip>
               </div>
@@ -152,10 +165,12 @@
                   :disabled="getSelectedServices() == 0"
                   type="primary"
                   icon="el-icon-tickets"
+                  :size="btnSize"
                   @click="next(0)"
                 >Cotización</el-button>
                 <el-button
                   :disabled="getSelectedServices() == 0"
+                  :size="btnSize"
                   type="primary"
                   icon="el-icon-tickets"
                   @click="next(1)"
@@ -166,6 +181,7 @@
               <div style="float:right;">
                 <el-tooltip effect="dark" :content="getServiceName()" placement="top">
                   <el-button
+                    :size="btnSize"
                     :disabled="services.length == 0"
                     :loading="isSaving"
                     icon="el-icon-edit"
@@ -363,6 +379,7 @@ export default {
   },
   data() {
     return {
+      btnSize: "medium",
       hasChanged: false,
       isLoadingServices: false,
       isSaving: false,
@@ -468,6 +485,30 @@ export default {
     }
   },
   methods: {
+    onServiceChecked(item, type) {
+      item.selectedPrice = "";
+
+      switch (type) {
+        case "low":
+          if (item.isLowSelected) item.selectedPrice = "low";
+          item.isSelected = item.isLowSelected;
+          item.isMidSelected = false;
+          item.isMaxSelected = false;
+          break;
+        case "mid":
+          if (item.isMidSelected) item.selectedPrice = "mid";
+          item.isSelected = item.isMidSelected;
+          item.isLowSelected = false;
+          item.isMaxSelected = false;
+          break;
+        case "high":
+          if (item.isMaxSelected) item.selectedPrice = "high";
+          item.isSelected = item.isMaxSelected;
+          item.isLowSelected = false;
+          item.isMidSelected = false;
+          break;
+      }
+    },
     getServiceName() {
       return this.service.name
         ? `Modificar ${this.service.name}`
@@ -477,7 +518,7 @@ export default {
       this.cars.push(car);
       this.setSelectedCar(car);
     },
-    setSelectedCar(car){
+    setSelectedCar(car) {
       console.log(car);
       this.selectedCar.id = car.id;
       this.selectedCar.maker = car.maker;
@@ -495,7 +536,7 @@ export default {
       if (count > 0) {
         //var unSaved = this.services.filter(s => !s.id).length > 0;
         //var editing = this.services.filter(s => !s.isReadOnly).length > 0;
-        var services = this.services.filter(s => s.selected);
+        var services = this.services.filter(s => s.isSelected);
         // if (unSaved || editing) {
         //   this.$message({
         //     message:
@@ -527,7 +568,7 @@ export default {
     },
     getSelectedServices() {
       if (this.services.length == 0) return 0;
-      return this.services.filter(x => x.selected).length;
+      return this.services.filter(x => x.isSelected).length;
     },
     // editService(serviceItem) {
     //   this.$confirm(
@@ -597,8 +638,11 @@ export default {
           for (var i = 0; i < response.data.length; i++) {
             $this.services.push({
               id: response.data[i].id, // clave (csid)
-              selected: false,
-              selectedPrice: "low",
+              isSelected: false,
+              isLowSelected: false,
+              isMidSelected: false,
+              isMaxSelected: false,
+              selectedPrice: "",
               isReadOnly: false,
               low_total: 0,
               mid_total: 0,
@@ -651,8 +695,11 @@ export default {
         //id: null, // it has no id because it's new
         service_id: service.id,
         isNew: true,
-        selected: false,
-        selectedPrice: "low",
+        isSelected: false,
+        isLowSelected: false,
+        isMidSelected: false,
+        isMaxSelected: false,
+        selectedPrice: "",
         isReadOnly: false,
         comment: "",
         warranty: "",
@@ -685,7 +732,7 @@ export default {
       this.saveNewCarService(newService);
 
       //this.services.push(newService);
-      // set selected lastItem
+      // set isSelected lastItem
       //this.activeName = $this.services.length - 1;
       //this.serviceChanged($this.activeName);
     },
@@ -701,24 +748,6 @@ export default {
         });
       return result;
     },
-    // onYearChange(selectedValue) {
-    //   var cars = this.cars.filter(
-    //     c => c.start_year <= selectedValue && c.end_year >= selectedValue
-    //   );
-
-    //   console.log(cars);
-
-    //   this.maker = "";
-    //   this.makers = [];
-
-    //   for (var i = 0; i < cars.length; i++) {
-    //     var maker = cars[i].maker;
-    //     console.log(maker);
-    //     if (this.makers.filter(m => m.maker == maker).length == 0) {
-    //       this.makers.push(cars[i]);
-    //     }
-    //   }
-    // },
     onMakerChange(selectedValue) {
       this.brand = "";
       this.brands.splice(0, this.brands.length);
@@ -929,8 +958,11 @@ export default {
               const dbService = response.data.createdService[i];
               $this.services.push({
                 id: dbService.id,
-                selected: false,
-                selectedPrice: "low",
+                isSelected: false,
+                isLowSelected: false,
+                isMidSelected: false,
+                isMaxSelected: false,
+                selectedPrice: "",
                 isReadOnly: false,
                 low_total: 0,
                 mid_total: 0,
@@ -948,7 +980,7 @@ export default {
               });
             }
 
-            // set selected lastItem
+            // set isSelected lastItem
             $this.activeName = $this.services.length - 1;
             $this.serviceChanged($this.activeName);
           }
@@ -1147,5 +1179,9 @@ td {
   color: white;
   font-size: small;
   text-align: center;
+}
+
+.select-year {
+  width: 80px;
 }
 </style>
