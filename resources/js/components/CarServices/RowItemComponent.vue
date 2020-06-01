@@ -1,54 +1,5 @@
 <template>
   <el-row syle="margin-top:2px;">
-    <!--<el-row v-for="(item, index) in items" v-bind:key="index">
-      <el-col :span="1">
-        <button
-          class="el-icon-close"
-          @click="deleteItem(index)"
-          style="cursor:pointer;border:none;background-color:white;"
-        ></button>
-      </el-col>
-      <el-col :span="5">
-        <label class="el-form-item__label">{{ item.name }}</label>
-      </el-col>
-      <el-col :span="3">
-        <el-input class="price" v-model="item.price" @change="changeBase(item, index)"></el-input>
-      </el-col>
-      <el-col :span="2" style="text-align:center;" v-bind:class="{ priceSelected: price == 'low'}">
-        <el-input
-          class="percentage"
-          maxlength="2"
-          v-model="item.low"
-          @change="changePercentage('low', item, index)"
-        ></el-input>
-      </el-col>
-      <el-col :span="3" style="text-align:center;" v-bind:class="{ priceSelected: price == 'low'}">
-        <el-input class="price" v-model="item.low_price" @change="onChangePrice()"></el-input>
-      </el-col>
-      <el-col :span="2" style="text-align:center;" v-bind:class="{ priceSelected: price == 'mid'}">
-        <el-input
-          class="percentage"
-          maxlength="2"
-          v-model="item.mid"
-          @change="changePercentage('mid', item, index)"
-        ></el-input>
-      </el-col>
-      <el-col :span="3" style="text-align:center;" v-bind:class="{ priceSelected: price == 'mid'}">
-        <el-input class="price" v-model="item.mid_price" @change="onChangePrice()"></el-input>
-      </el-col>
-      <el-col :span="2" style="text-align:center;" v-bind:class="{ priceSelected: price == 'high'}">
-        <el-input
-          class="percentage"
-          maxlength="2"
-          v-model="item.high"
-          @change="changePercentage('high', item, index)"
-        ></el-input>
-      </el-col>
-      <el-col :span="3" style="text-align:center;" v-bind:class="{ priceSelected: price == 'high'}">
-        <el-input class="price" v-model="item.high_price" @change="onChangePrice()"></el-input>
-      </el-col>
-    </el-row>
-    -->
     <el-row
       v-for="(item, index) in items"
       v-bind:key="index"
@@ -58,7 +9,6 @@
     >
       <el-col :span="1">
         <el-tooltip
-          v-if="!isReadOnly"
           effect="dark"
           content="Eliminar Artículo"
           placement="right"
@@ -70,7 +20,8 @@
           ></button>
         </el-tooltip>
         <!-- Selector de imagen -->
-        <image-dialog v-if="fullMode" :item="item"></image-dialog>
+        <br>
+        <image-dialog :item="item"></image-dialog>
       </el-col>
       <el-col :span="2">
         <el-image

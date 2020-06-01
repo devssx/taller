@@ -3,6 +3,7 @@
     <el-button
       type="primary"
       icon="el-icon-circle-plus"
+      :size="size"
       :disabled="disabled"
       @click="dialogVisible = true"
     >Agregar Servicio</el-button>
@@ -92,7 +93,7 @@
 </template>
 <script>
 export default {
-  props: ["disabled"],
+  props: ["disabled", "size"],
   data() {
     return {
       dialogVisible: false,

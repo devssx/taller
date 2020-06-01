@@ -13,6 +13,7 @@
           >
             <el-form-item label="Año">
               <el-select
+                :size="controlSize"
                 default-first-option
                 v-model="year"
                 filterable
@@ -24,11 +25,12 @@
             </el-form-item>
             <el-form-item label="Marca">
               <el-select
+                class="select-ipad"
+                :size="controlSize"
                 v-model="maker"
                 filterable
                 allow-create
                 default-first-option
-                class="year"
                 @change="onMakerChange"
               >
                 <el-option
@@ -41,11 +43,12 @@
             </el-form-item>
             <el-form-item label="Modelo">
               <el-select
+                class="select-ipad"
+                :size="controlSize"
                 v-model="brand"
                 filterable
                 allow-create
                 default-first-option
-                class="year"
                 @change="onBrandChange"
               >
                 <el-option
@@ -57,14 +60,21 @@
               </el-select>
             </el-form-item>
             <el-form-item label="Motor">
-              <el-select filterable allow-create default-first-option v-model="motor">
+              <el-select
+                class="select-ipad"
+                :size="controlSize"
+                filterable
+                allow-create
+                default-first-option
+                v-model="motor"
+              >
                 <el-option v-for="m in motors" :key="m" :label="m" :value="m"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
               <el-button
                 :loading="isLoadingServices"
-                :size="btnSize"
+                :size="controlSize"
                 type="primary"
                 icon="el-icon-search"
                 @click="search"
@@ -94,7 +104,7 @@
             <el-col :span="16">
               <div style="float:right;">
                 <!-- Boton Agregar Servicio -->
-                <create-pop-sales :disabled="!isValidCarId"></create-pop-sales>
+                <create-pop-sales :disabled="!isValidCarId" :size="controlSize"></create-pop-sales>
               </div>
             </el-col>
           </el-row>
@@ -141,7 +151,7 @@
                     @click="deleteService(s)"
                     type="danger"
                     icon="el-icon-delete"
-                    :size="btnSize"
+                    :size="controlSize"
                   ></el-button>
                 </el-tooltip>
               </div>
@@ -165,12 +175,12 @@
                   :disabled="getSelectedServices() == 0"
                   type="primary"
                   icon="el-icon-tickets"
-                  :size="btnSize"
+                  :size="controlSize"
                   @click="next(0)"
                 >Cotización</el-button>
                 <el-button
                   :disabled="getSelectedServices() == 0"
-                  :size="btnSize"
+                  :size="controlSize"
                   type="primary"
                   icon="el-icon-tickets"
                   @click="next(1)"
@@ -181,7 +191,7 @@
               <div style="float:right;">
                 <el-tooltip effect="dark" :content="getServiceName()" placement="top">
                   <el-button
-                    :size="btnSize"
+                    :size="controlSize"
                     :disabled="services.length == 0"
                     :loading="isSaving"
                     icon="el-icon-edit"
@@ -379,7 +389,7 @@ export default {
   },
   data() {
     return {
-      btnSize: "medium",
+      controlSize: "mini",
       hasChanged: false,
       isLoadingServices: false,
       isSaving: false,
@@ -438,6 +448,9 @@ export default {
   },
   mounted: function() {
     const $this = this;
+
+    const width = window.innerWidth > 0 ? window.innerWidth : screen.width;
+    if (width > 1366) $this.controlSize = "medium";
 
     // Evento boton add service
     $this.$root.$on("addService", $this.addService);
@@ -519,7 +532,6 @@ export default {
       this.setSelectedCar(car);
     },
     setSelectedCar(car) {
-      console.log(car);
       this.selectedCar.id = car.id;
       this.selectedCar.maker = car.maker;
       this.selectedCar.brand = car.brand;
@@ -1183,5 +1195,54 @@ td {
 
 .select-year {
   width: 80px;
+}
+
+.el-form-item {
+  margin-bottom: 8px;
+}
+.query-form {
+  margin-top: 0;
+  padding-top: 8px;
+  background-color: #f2f2f2;
+}
+
+/* Ipad Pro */
+@media only screen and (max-width: 1366px) {
+  .content.el-main {
+    padding: 5px;
+  }
+  .select-ipad {
+    width: 170px;
+  }
+
+  .el-form-item {
+    margin-bottom: 4px;
+  }
+
+  .query-form {
+    margin-top: 0;
+    padding-top: 4px;
+    background-color: #f2f2f2;
+  }
+}
+
+/* Ipad */
+@media only screen and (max-width: 1024px) {
+  .content.el-main {
+    padding: 5px;
+  }
+  .select-ipad {
+    width: 130px;
+  }
+
+  .el-form-item {
+    margin-bottom: 4px;
+  }
+
+  .query-form {
+    margin-top: 0;
+    padding-top: 4px;
+    background-color: #f2f2f2;
+  }
 }
 </style>
