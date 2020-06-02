@@ -22,33 +22,15 @@
             label-width="150px"
             ref="saleForm"
           >
-            <!--el-form-item label="Vehiculo" prop="brand">
-              <el-select
-                v-model="sale.brand"
-                filterable
-                placeholder="Selecciona un Vehiculo"
-                @change="changeCar"
-              >
-                <el-option
-                  v-for="brand in brands"
-                  :key="brand.brand"
-                  :label="brand.brand"
-                  :value="brand.brand"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Año" prop="year">
-              <el-select
-                v-model="sale.year"
-                filterable
-                placeholder="Selecciona un Año"
-                @change="changeCar"
-              >
-                <el-option v-for="year in years" :key="year" :label="year" :value="year"></el-option>
-              </el-select>
-            </el-form-item-->
             <el-form-item label="Servicio" prop="service">
-              <el-select v-model="sale.service" filterable placeholder="Selecciona un Servicio">
+              <el-select
+                style="width:100%"
+                v-model="sale.service"
+                filterable
+                allow-create
+                default-first-option
+                placeholder="Selecciona un Servicio"
+              >
                 <el-option
                   v-for="service in services"
                   :key="service.id"
@@ -57,21 +39,6 @@
                 ></el-option>
               </el-select>
             </el-form-item>
-            <!--el-form-item label="Empleado" prop="user">
-              <el-select v-model="sale.user" filterable placeholder="Selecciona un Empleado">
-                <el-option v-for="user in users" :key="user.id" :label="user.name" :value="user.id"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Cliente" prop="client">
-              <el-select v-model="sale.client" filterable placeholder="Selecciona un Cliente">
-                <el-option
-                  v-for="client in clients"
-                  :key="client.id"
-                  :label="client.name"
-                  :value="client.id"
-                ></el-option>
-              </el-select>
-            </el-form-item-->
             <el-form-item
               label="Total"
               prop="total"
@@ -213,46 +180,66 @@ export default {
       this.$refs.saleForm.resetFields();
     },
     saveCar() {
-      var $this = this;
+      const $this = this;
+
+      if (typeof $this.sale.service == "string") {
+        var newService = $this.sale.service;
+        if (newService == "") return;
+
+        // este servicio no existe lo busca si no esta se registra
+        var encontrados = $this.services.filter(
+          s => s.name.toUpperCase() == newService.toUpperCase()
+        );
+
+        if (encontrados.length > 0) {
+          $this.sale.service = encontrados[0];
+        } else {
+          $this
+            .$confirm(
+              `El servicio '${newService}' no existe ¿Desea registrarlo?`,
+              "Advertencia",
+              {
+                confirmButtonText: "Si, Registrar",
+                cancelButtonText: "Cancelar",
+                type: "warning"
+              }
+            )
+            .then(() => {
+              $this.loading = true;
+              axios
+                .post("/api/services", { name: newService, description: "" })
+                .then(function(response) {
+                  // nuevo servicio creado
+                  $this.services.push(response.data);
+                  $this.loading = true;
+
+                  $this.$root.$emit(
+                    "addService",
+                    response.data,
+                    $this.sale.total
+                  );
+                  $this.cancel();
+                })
+                .catch(error => {
+                  if (error.response.data.errors) {
+                    var errors = error.response.data.errors;
+                    $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
+                      confirmButtonText: "OK",
+                      type: "error"
+                    });
+                  }
+                });
+            })
+            .catch(() => {});
+
+          return;
+        }
+      }
+
+      // Nomal selection
       $this.$root.$emit("addService", $this.sale.service, $this.sale.total);
       $this.cancel();
-      return;
-      $this.$refs.saleForm.validate(valid => {
-        if (valid) {
-          $this.loading = true;
-          axios
-            .post("/api/sales", $this.sale)
-            .then(function(response) {
-              $this.$notify({
-                title: "¡Exito!",
-                message: "La Orden de Servicio fue agregada correctamente",
-                type: "success"
-              });
-              $this.$root.$emit("refreshTable");
-              $this.cancel();
-            })
-            .catch(error => {
-              if (error.response.data.errors) {
-                var errors = error.response.data.errors;
-                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-                  confirmButtonText: "OK",
-                  type: "error"
-                });
-              }
-              $this.loading = false;
-            });
-        } else {
-          return false;
-        }
-      });
     }
   }
 };
 </script>
-<style>
-.popup {
-  .el-input {
-    width: 220px;
-  }
-}
-</style>
