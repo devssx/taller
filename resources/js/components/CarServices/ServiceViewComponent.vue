@@ -311,8 +311,10 @@
                   Agregar más artículos:
                   <el-select
                     size="mini"
-                    @change="handleChange"
+                    @change="onItemSelected"
                     filterable
+                    allow-create
+                    default-first-option
                     placeholder="Agregar un Artículo"
                     v-model="item"
                     :disabled="listItems.length == 0 || !isValidCarId || service.service_id == undefined || service.service_id == ''"
@@ -522,10 +524,28 @@ export default {
           break;
       }
     },
+    saveNewItem(item) {
+      var $this = this;
+      axios
+        .post("/api/items", item)
+        .then(function(response) {
+          $this.listItems.push(response.data);
+          $this.adItemToService(response.data);
+        })
+        .catch(error => {
+          if (error.response.data.errors) {
+            var errors = error.response.data.errors;
+            $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
+              confirmButtonText: "OK",
+              type: "error"
+            });
+          }
+        });
+    },
     getServiceName() {
       return this.service.name
         ? `Modificar ${this.service.name}`
-        : "Modifica el servicio mostrado.";
+        : "Modificar el servicio mostrado.";
     },
     onNewCarCreated(car) {
       this.cars.push(car);
@@ -582,19 +602,6 @@ export default {
       if (this.services.length == 0) return 0;
       return this.services.filter(x => x.isSelected).length;
     },
-    // editService(serviceItem) {
-    //   this.$confirm(
-    //     "Al modificar el servicio puede agregar o eliminar artículos y sus precios ¿Desea continuar?",
-    //     "Advertencia",
-    //     {
-    //       confirmButtonText: "Si",
-    //       cancelButtonText: "No",
-    //       type: "warning"
-    //     }
-    //   ).then(() => {
-    //     serviceItem.isReadOnly = false;
-    //   });
-    // },
     deleteService(serviceItem) {
       var $this = this;
       $this
@@ -742,11 +749,6 @@ export default {
 
       // saves the new Service
       this.saveNewCarService(newService);
-
-      //this.services.push(newService);
-      // set isSelected lastItem
-      //this.activeName = $this.services.length - 1;
-      //this.serviceChanged($this.activeName);
     },
     getParameter(name) {
       var result = null,
@@ -893,14 +895,49 @@ export default {
           } */
         });
     },
-    handleChange(value) {
+    onItemSelected(value) {
+      const $this = this;
+      if (value && typeof value == "string") {
+        // este item no existe lo busca si no esta se registra
+        var index = -1;
+        for (var i = 0; i < this.listItems.length; i++) {
+          if (this.listItems[i].name.toUpperCase() == value.toUpperCase()) {
+            index = i;
+            value = i;
+            break;
+          }
+        }
+
+        // crea el item
+        if (index < 0) {
+          var newItem = { name: value, image: "", description: "" };
+          this.$confirm(
+            `El Artículo '${value}' no existe ¿Desea registrarlo?`,
+            "Artículo Nuevo",
+            {
+              confirmButtonText: "Si, Registrar",
+              cancelButtonText: "Cancelar",
+              type: "warning"
+            }
+          )
+            .then(() => {
+              $this.saveNewItem(newItem);
+            })
+            .catch(() => {});
+          return;
+        }
+      }
+      
+      this.adItemToService(this.listItems[value]);
+    },
+    adItemToService(selectedItem) {
       // BUG: debes crear un nuevo item si no no actualiza
       var item = new Object();
-      item.image = this.listItems[value].image;
-      item.id = this.listItems[value].id;
-      item.item_id = this.listItems[value].id;
-      item.name = this.listItems[value].name;
-      item.description = this.listItems[value].description;
+      item.image = selectedItem.image;
+      item.id = selectedItem.id;
+      item.item_id = selectedItem.id;
+      item.name = selectedItem.name;
+      item.description = selectedItem.description;
       item.usd_price = 0;
       item.price = 0;
       item.low = this.service.low;
