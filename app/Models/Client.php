@@ -10,6 +10,6 @@ class Client extends Model
     use SoftDeletes;
 
     public $fillable = [
-        'name', 'phonenumber', 'address', 'reference',
+        'name', 'phonenumber','phonenumber2', 'address', 'reference', 'email', 'information', 'details', 'reminder', 'reminder_date'
     ];
 }

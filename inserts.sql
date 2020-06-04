@@ -14,6 +14,19 @@ ALTER TABLE `items` ADD `image` VARCHAR(512) NOT NULL DEFAULT '' AFTER `name`;
 
 ALTER TABLE `car_service_items` ADD `image` VARCHAR(512) NOT NULL DEFAULT '' AFTER `item_id`;
 
+-- phonenumber2
+-- email
+-- information
+-- details
+-- reminder
+-- reminder_date
+ALTER TABLE `clients` ADD `phonenumber2` VARCHAR(512) NOT NULL DEFAULT '' AFTER `phonenumber`;
+ALTER TABLE `clients` ADD `email` VARCHAR(64) NOT NULL DEFAULT '' AFTER `phonenumber2`;
+ALTER TABLE `clients` ADD `information` text COLLATE utf8_unicode_ci AFTER `reference`;
+ALTER TABLE `clients` ADD `details` text COLLATE utf8_unicode_ci AFTER `information`;
+ALTER TABLE `clients` ADD `reminder` text COLLATE utf8_unicode_ci AFTER `details`;
+ALTER TABLE `clients` ADD `reminder_date` timestamp NOT NULL DEFAULT '2020-01-01 00:00:00' AFTER `reminder`;
+
 
 CREATE TABLE `cleanings` (
   `id` int(10) UNSIGNED NOT NULL,
