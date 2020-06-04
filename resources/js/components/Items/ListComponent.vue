@@ -1,7 +1,8 @@
 <template>
   <el-row>
     <el-col :span="24">
-      <el-table
+      <el-table 
+        size="mini"
         v-loading="loading"
         :data="items.data"
         class="table"
@@ -12,9 +13,9 @@
         <el-table-column prop="id" label="#" width="50px">
           <template slot-scope="scope">{{ scope.row.id }}</template>
         </el-table-column>
-        <el-table-column prop="name" label="Articulo"></el-table-column>
-        <el-table-column prop="description" label="Descripcion"></el-table-column>
-        <el-table-column width="280px">
+        <el-table-column prop="name" label="Artículo"></el-table-column>
+        <el-table-column prop="description" label="Descripción"></el-table-column>
+        <el-table-column width="200px">
           <template slot="header" slot-scope="scope">
             <el-input
               v-model="search"
@@ -29,10 +30,10 @@
           </template>
         </el-table-column>
       </el-table>
-      <div class="block" style="text-align: center;" v-if="items.total > 10">
+      <div class="block" style="text-align: center;" v-if="items.total > 15">
         <el-pagination
           layout="prev, pager, next"
-          :page-size="10"
+          :page-size="15"
           :total="items.total"
           @current-change="handleCurrentChange"
         ></el-pagination>

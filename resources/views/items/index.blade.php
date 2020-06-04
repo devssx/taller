@@ -3,7 +3,7 @@
 <el-main class="content">
     <el-row type="flex">
         <el-col :span="19">
-            <h2>Articulos</h2>
+            <h2>Artículos</h2>
         </el-col>
         <create-items></create-items>
     </el-row>

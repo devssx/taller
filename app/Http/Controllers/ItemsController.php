@@ -31,14 +31,14 @@ class ItemsController extends Controller
         }
         if ($request->filled('search')) {
             return Item::where('name', 'LIKE', '%' . $request->get('search') . '%')
-                ->paginate(10)
+                ->paginate(15)
                 ->setPath('')
                 ->appends(array(
                     'search' => $request->get('search'),
                 ));
         }
 
-        return Item::paginate(10);
+        return Item::paginate(15);
     }
 
     public function save(SaveItemRequest $request)
