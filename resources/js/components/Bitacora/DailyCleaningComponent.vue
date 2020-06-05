@@ -35,7 +35,7 @@
           <el-table-column align="center" label="Hora Entrada" width="120" prop="start">
             <template slot-scope="scope">{{ fixDate(scope.row.start) }}</template>
           </el-table-column>
-          <el-table-column align="center" prop="cleaning" label="Limpieza" width="300"></el-table-column>
+          <el-table-column align="center" prop="cleaning" label="Limpieza"></el-table-column>
           <el-table-column label="Hora Desayuno" align="center">
             <el-table-column align="center" label="Inicio" width="120" prop="breakfast_start">
               <template slot-scope="scope">{{ fixDate(scope.row.breakfast_start) }}</template>

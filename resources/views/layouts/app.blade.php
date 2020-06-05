@@ -44,12 +44,12 @@
                         @can('listar ordenes')
                         <el-submenu index="bitacora">
                             <template slot="title">Bitácora</template>
-                            {{-- <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.dailycars') }}')">
-                            Registro de carros del día
+                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.dailycars') }}')">
+                                Registro de carros del día
                             </el-menu-item>
                             <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.weeklycars') }}')">
                                 Registro de carros de la semana
-                            </el-menu-item> --}}
+                            </el-menu-item>
                             <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.dailycleaning') }}')">
                                 Limpieza Diaria
                             </el-menu-item>
@@ -85,24 +85,24 @@
                         <el-submenu index="mantenimiento">
                             <template slot="title">Mantenimiento</template>
                             @can('listar servicios')
-                            <el-menu-item index="services" v-on:click="goto('{{ route('services.list') }}')">                                
+                            <el-menu-item index="services" v-on:click="goto('{{ route('services.list') }}')">
                                 <i class="el-icon-magic-stick"></i>
                                 <span>Servicios</span>
                             </el-menu-item>
                             @endcan
                             {{-- @can('listar carros_servicios')
-                            <el-menu-item index="carservices" v-on:click="goto('{{ route('carservices.list') }}')">                                
-                                <i class="el-icon-truck"></i>
-                                <span>Carros y Servicios</span>
+                            <el-menu-item index="carservices" v-on:click="goto('{{ route('carservices.list') }}')">
+                            <i class="el-icon-truck"></i>
+                            <span>Carros y Servicios</span>
                             </el-menu-item>
-                            @endcan  --}}
+                            @endcan --}}
                             @can('listar carros')
                             <el-menu-item index="cars" v-on:click="goto('{{ route('cars.list') }}')">
                                 <i class="el-icon-truck"></i>
                                 <span>Carros</span>
                             </el-menu-item>
                             @endcan @can('listar articulos')
-                            <el-menu-item index="items" v-on:click="goto('{{ route('items.list') }}')">                                
+                            <el-menu-item index="items" v-on:click="goto('{{ route('items.list') }}')">
                                 <i class="el-icon-box"></i>
                                 <span>Artículos</span>
                             </el-menu-item>

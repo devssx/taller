@@ -32,7 +32,7 @@
           <el-table-column prop="cliente" label="Cliente" width="300"></el-table-column>
           <el-table-column prop="telefono" label="Teléfono" width="100"></el-table-column>
           <el-table-column prop="tecnico" label="Técnico" width="120"></el-table-column>
-          <el-table-column prop="concepto" label="Diagnóstico" width="300"></el-table-column>
+          <el-table-column prop="concepto" label="Diagnóstico"></el-table-column>
           <el-table-column prop="precio" label="Precio" width="120"></el-table-column>
           <el-table-column prop="autorizado" label="Autorizó" width="85"></el-table-column>
           <el-table-column prop="recibo" label="Recibo" width="85"></el-table-column>

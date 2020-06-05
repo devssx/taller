@@ -121,7 +121,7 @@
               :title="s.isSelected ? s.name+' (Seleccionado)':s.name"
               :name="index"
             >
-              <h4>Selectexd Price: {{s.selectedPrice}}</h4>
+              <!-- {{s.selectedPrice}} -->
               <table style="width:100%">
                 <tr>
                   <th class="price-min">Precio Min</th>
@@ -529,8 +529,8 @@ export default {
       axios
         .post("/api/items", item)
         .then(function(response) {
-          $this.listItems.push(response.data);
           $this.adItemToService(response.data);
+          $this.listItems.push(response.data);
         })
         .catch(error => {
           if (error.response.data.errors) {
@@ -910,24 +910,27 @@ export default {
 
         // crea el item
         if (index < 0) {
-          var newItem = { name: value, image: "", description: "" };
-          this.$confirm(
-            `El Artículo '${value}' no existe ¿Desea registrarlo?`,
-            "Artículo Nuevo",
-            {
-              confirmButtonText: "Si, Registrar",
-              cancelButtonText: "Cancelar",
-              type: "warning"
-            }
-          )
-            .then(() => {
-              $this.saveNewItem(newItem);
-            })
-            .catch(() => {});
+          setTimeout(function() {
+            var newItem = { name: value, image: "", description: "" };
+            $this
+              .$confirm(
+                `El Artículo '${value}' no existe ¿Desea registrarlo?`,
+                "Artículo Nuevo",
+                {
+                  confirmButtonText: "Si, Registrar",
+                  cancelButtonText: "Cancelar",
+                  type: "warning"
+                }
+              )
+              .then(() => {
+                $this.saveNewItem(newItem);
+              })
+              .catch(() => {});
+          }, 400);
           return;
         }
       }
-      
+
       this.adItemToService(this.listItems[value]);
     },
     adItemToService(selectedItem) {
