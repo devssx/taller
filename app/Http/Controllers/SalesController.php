@@ -8,6 +8,8 @@ use App\Models\CarServiceItem;
 use App\Models\Sale;
 use App\Models\SaleService;
 use Illuminate\Http\Request;
+use DateTime;
+use DateInterval;
 
 class SalesController extends Controller
 {
@@ -57,17 +59,43 @@ class SalesController extends Controller
         }])->where('done_on', NULL)->orWhere('done_on', '>', date('Y-m-d 00:00:00', strtotime('-7 days')))->paginate(10);
     }
 
-    public function getByDay()
+    public function searchByDay(Request $request)
     {
-        return Sale::with('saleServices')->with('client')->with('user')->with(['car' => function ($query) {
-            $query->distinct('id');
-        }])->with(['services' => function ($query) {
-            $query->distinct('id');
-        }])
-        ->where('done_on', NULL)
-        // f => dd f <= dd
-        ->orWhere('done_on', '>', date('Y-m-d 00:00:00', strtotime('-7 days')));
+        if ($request->has('start') && $request->has('end')) {
+            return Sale::with('saleServices')->with('client')->with('user')->with(['car' => function ($query) {
+                $query->distinct('id');
+            }])->with(['services' => function ($query) {
+                $query->distinct('id');
+            }])
+                ->where('created_at', '>=', $request->get('start'))
+                ->where('created_at', '<=', $request->get('end'))
+                ->paginate(10000);
+        }
+
+        return [];
     }
+
+    public function searchByWeek(Request $request)
+    {
+        if ($request->has('start')) {
+            $end = new DateTime($request->get("start"));
+            $interval = new DateInterval('P6D'); // + 6 days
+            $end->add($interval);
+
+            return Sale::with('saleServices')->with('client')->with('user')->with(['car' => function ($query) {
+                $query->distinct('id');
+            }])->with(['services' => function ($query) {
+                $query->distinct('id');
+            }])
+                ->where('created_at', '>=', $request->get('start'))
+                ->where('created_at', '<=', $end->format("Y-m-d H:i:s"))
+                ->paginate(10000);
+        }
+
+        return [];
+    }
+
+
 
     public function changeStatus(Request $request)
     {

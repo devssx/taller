@@ -14,16 +14,7 @@
         ></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
       </el-col>
-      <el-col :span="4">
-        <!-- <div style="float:right;">
-          <el-button
-            :disabled="!selectedDay"
-            type="primary"
-            icon="el-icon-plus"
-            @click="addNewItem"
-          >Nuevo</el-button>
-        </div>-->
-      </el-col>
+      <el-col :span="4"></el-col>
     </el-row>
 
     <!-- TABLA -->
@@ -86,7 +77,7 @@
       <el-col :span="4" style="margin-top: 7px;">
         <h4>Total Autorizados</h4>
       </el-col>
-      <el-col :span="20" class="row-headerb">
+      <el-col :span="20" class="row-headerb" align="end">
         <h4>${{formatPrice(autorizados())}}</h4>
       </el-col>
     </el-row>
@@ -94,7 +85,7 @@
       <el-col :span="4" style="margin-top: 7px;">
         <h4>Total No Autorizados</h4>
       </el-col>
-      <el-col :span="20" class="row-headerb">
+      <el-col :span="20" class="row-headerb" align="end">
         <h4>${{formatPrice(noAutorizados())}}</h4>
       </el-col>
     </el-row>
@@ -108,17 +99,42 @@ export default {
     this.loadTable("/api/sales");
   },
   methods: {
+    onSearch() {
+      if (!this.selectedDay) {
+        return;
+      }
+
+      var start = `${this.toFixedFormat(
+        this.selectedDay,
+        "yyyy-MM-dd"
+      )} 00:00:00`;
+
+      var end = `${this.toFixedFormat(
+        this.selectedDay,
+        "yyyy-MM-dd"
+      )} 23:59:59`;
+
+      this.loadTable(
+        `/api/sales/searchByDay?start=${start}&end=${end}`
+      );
+    },
     autorizo(item) {
       return item.status == 2 ? `Si` : `No`;
     },
     autorizados() {
       var total = 0.0;
-      this.sales.data.forEach(s => (total += parseFloat(s.total)));
+      if (this.sales.data) {
+        var selection = this.sales.data.filter(i => i.status == 2);
+        selection.forEach(s => (total += parseFloat(s.total)));
+      }
       return total;
     },
     noAutorizados() {
       var total = 0.0;
-      this.sales.data.forEach(s => (total += parseFloat(s.total)));
+      if (this.sales.data) {
+        var selection = this.sales.data.filter(i => i.status != 2);
+        selection.forEach(s => (total += parseFloat(s.total)));
+      }
       return total;
     },
     fixDate(dt) {
@@ -133,9 +149,6 @@ export default {
         $this.oldSales = JSON.parse(JSON.stringify(response.data));
         $this.loading = false;
       });
-    },
-    onSearch() {
-      // this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
     },
     addNewItem() {
       this.$refs.newItem.insertNewRow(this.selectedDay);

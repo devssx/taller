@@ -29,6 +29,23 @@ export default {
 
             return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
         },
+        toFixedFormat(dt, format) {
+            if (!dt) dt = new Date();
+            var yyyy = dt.getFullYear();
+            var MM = this.fixNumber(dt.getMonth() + 1);
+            var dd = this.fixNumber(dt.getDate());
+
+            var hh = this.fixNumber(dt.getHours());
+            var mm = this.fixNumber(dt.getMinutes());
+            var ss = this.fixNumber(dt.getSeconds());
+
+            switch (format) {
+                case "yyyy-MM-dd":
+                    return `${yyyy}-${MM}-${dd}`;
+            }
+
+            return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
+        },
         toFixedTime(dt) {
             if (!dt) dt = new Date();
             var hours = dt.getHours();
