@@ -30,42 +30,51 @@
     <el-row class="br bl">
       <el-col :span="24">
         <el-table v-loading="loading" size="mini" :data="sales.data" style="width: 100%">
-          <el-table-column label="Entrada" width="100">
+          <el-table-column label="Entrada" width="100" header-align="center" align="center">
             <template slot-scope="scope">{{ fixDate(scope.row.created_at) }}</template>
           </el-table-column>
-          <el-table-column label="Marca" width="100">
+          <el-table-column label="Marca" width="130">
             <template slot-scope="scope">{{ scope.row.car[0].maker }}</template>
           </el-table-column>
-          <el-table-column label="Modelo" width="120">
+          <el-table-column label="Modelo" width="130">
             <template slot-scope="scope">{{ scope.row.car[0].brand }}</template>
           </el-table-column>
-          <el-table-column label="Año" width="65">
+          <el-table-column label="Año" width="65" header-align="center" align="center">
             <template slot-scope="scope">{{ scope.row.year }}</template>
           </el-table-column>
-          <el-table-column label="Color" width="100">
+          <el-table-column label="Color" width="100" header-align="center" align="center">
             <template slot-scope="scope">{{ scope.row.color }}</template>
           </el-table-column>
-          <el-table-column label="Cliente" width="300">
+          <el-table-column label="Cliente" width="250">
             <template slot-scope="scope">{{ scope.row.client.name }}</template>
           </el-table-column>
-          <el-table-column label="Teléfono" width="100">
+          <el-table-column label="Teléfono" width="130">
             <template slot-scope="scope">{{ scope.row.client.phonenumber }}</template>
           </el-table-column>
-          <el-table-column label="Técnico" width="120">
+          <el-table-column label="Técnico" width="200">
             <template slot-scope="scope">{{ scope.row.user.name }}</template>
           </el-table-column>
           <el-table-column label="Diagnóstico">
             <template slot-scope="scope">{{ scope.row.concept }}</template>
           </el-table-column>
-          <el-table-column label="Precio" width="120" align="end">
+          <el-table-column label="Precio" width="150" header-align="right" align="right">
             <template slot-scope="scope">{{ scope.row.total }}</template>
           </el-table-column>
-          <el-table-column prop="autorizado" label="Autorizó" width="85"></el-table-column>
-          <el-table-column prop="recibo" label="Recibo" width="85"></el-table-column>
-          <el-table-column label="Opciones" width="120">
+          <el-table-column label="Autorizó" width="100" header-align="center" align="center">
+            <template slot-scope="scope">{{autorizo(scope.row)}}</template>
+          </el-table-column>
+          <el-table-column label="Recibo" width="100" header-align="center" align="center">
+            <template slot-scope="scope">
+              <el-button
+                size="small"
+                icon="el-icon-document"
+                type="text"
+              >{{scope.row.status==2?`Recibo`: `Cotización`}}</el-button>
+            </template>
+          </el-table-column>
+          <el-table-column label="Opciones" width="100" header-align="center" align="center">
             <template>
-              <el-button icon="el-icon-finished" type="text" size="small"></el-button>
-              <el-button size="small" icon="el-icon-edit" type="text"></el-button>
+              <el-button size="small" icon="el-icon-edit" type="text">Editar</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -75,18 +84,18 @@
     <!-- TOTALES -->
     <el-row class="br bl bb row-header">
       <el-col :span="4" style="margin-top: 7px;">
-        <h5>Total Autorizados</h5>
+        <h4>Total Autorizados</h4>
       </el-col>
       <el-col :span="20" class="row-headerb">
-        <h5>$0.00</h5>
+        <h4>${{formatPrice(autorizados())}}</h4>
       </el-col>
     </el-row>
     <el-row class="br bl bb row-header">
       <el-col :span="4" style="margin-top: 7px;">
-        <h5>Total No Autorizados</h5>
+        <h4>Total No Autorizados</h4>
       </el-col>
       <el-col :span="20" class="row-headerb">
-        <h5>$0.00</h5>
+        <h4>${{formatPrice(noAutorizados())}}</h4>
       </el-col>
     </el-row>
   </el-row>
@@ -99,6 +108,19 @@ export default {
     this.loadTable("/api/sales");
   },
   methods: {
+    autorizo(item) {
+      return item.status == 2 ? `Si` : `No`;
+    },
+    autorizados() {
+      var total = 0.0;
+      this.sales.data.forEach(s => (total += parseFloat(s.total)));
+      return total;
+    },
+    noAutorizados() {
+      var total = 0.0;
+      this.sales.data.forEach(s => (total += parseFloat(s.total)));
+      return total;
+    },
     fixDate(dt) {
       return this.toFixedTime(new Date(dt));
     },

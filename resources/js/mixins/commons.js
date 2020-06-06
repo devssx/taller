@@ -4,6 +4,10 @@
 
 export default {
     methods: {
+        formatPrice(value) {
+            let val = (value / 1).toFixed(2);
+            return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        },
         fixNumber: function (n) {
             return n < 10 ? "0" + n : n;
         },

@@ -57,6 +57,18 @@ class SalesController extends Controller
         }])->where('done_on', NULL)->orWhere('done_on', '>', date('Y-m-d 00:00:00', strtotime('-7 days')))->paginate(10);
     }
 
+    public function getByDay()
+    {
+        return Sale::with('saleServices')->with('client')->with('user')->with(['car' => function ($query) {
+            $query->distinct('id');
+        }])->with(['services' => function ($query) {
+            $query->distinct('id');
+        }])
+        ->where('done_on', NULL)
+        // f => dd f <= dd
+        ->orWhere('done_on', '>', date('Y-m-d 00:00:00', strtotime('-7 days')));
+    }
+
     public function changeStatus(Request $request)
     {
         $sale = Sale::find($request->get('id'));
