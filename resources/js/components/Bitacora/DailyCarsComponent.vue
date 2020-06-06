@@ -60,12 +60,19 @@
                 size="small"
                 icon="el-icon-document"
                 type="text"
+                :disabled="!image1Loaded || !image2Loaded"
+                @click="showReceipt(scope.row)"
               >{{scope.row.status==2?`Recibo`: `Cotización`}}</el-button>
             </template>
           </el-table-column>
           <el-table-column label="Opciones" width="100" header-align="center" align="center">
-            <template>
-              <el-button size="small" icon="el-icon-edit" type="text">Editar</el-button>
+            <template slot-scope="scope">
+              <el-button
+                size="small"
+                icon="el-icon-edit"
+                type="text"
+                @click="editItem(scope.row)"
+              >Editar</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -89,6 +96,19 @@
         <h4>${{formatPrice(noAutorizados())}}</h4>
       </el-col>
     </el-row>
+
+    <!-- Imagenes Recibos -->
+    <el-row type="flex" justify="end" style="opacity: 0;overflow: hidden;height: 50px;">
+      <el-col :span="8">
+        <img ref="quotation" @load="image1Loaded=true" src="/img/receipt.jpg" width="1200px" />
+      </el-col>
+      <el-col :span="8">
+        <img ref="receipt" @load="image2Loaded=true" src="/img/receipt2.jpg" width="1200px" />
+      </el-col>
+      <el-col :span="8">
+        <canvas ref="my-canvas"></canvas>
+      </el-col>
+    </el-row>
   </el-row>
 </template>
 
@@ -99,6 +119,20 @@ export default {
     this.loadTable("/api/sales");
   },
   methods: {
+    showReceipt(item) {
+      // const COTIZACION = 0;
+      // const PROCESO = 1;
+      // const TERMINADO = 2;
+      // const CANCELADO = 3;
+
+      var canvas = this.$refs["my-canvas"];
+      if (item.status == 2) {
+        this.createReceipt(item, this.$refs["receipt"], canvas);
+      } else {
+        this.createQuotation(item, this.$refs["quotation"], canvas);
+      }
+    },
+    editItem(item) {},
     onSearch() {
       if (!this.selectedDay) {
         return;
@@ -114,9 +148,7 @@ export default {
         "yyyy-MM-dd"
       )} 23:59:59`;
 
-      this.loadTable(
-        `/api/sales/searchByDay?start=${start}&end=${end}`
-      );
+      this.loadTable(`/api/sales/searchByDay?start=${start}&end=${end}`);
     },
     autorizo(item) {
       return item.status == 2 ? `Si` : `No`;
@@ -156,8 +188,11 @@ export default {
     refreshTable() {},
     handleClick() {}
   },
+
   data() {
     return {
+      image1Loaded: false,
+      image2Loaded: false,
       sales: [],
       oldSales: [],
       loading: true,

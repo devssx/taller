@@ -1,6 +1,7 @@
 /* You can define here your global methods 
  *
  */
+import { Printd } from "printd";
 
 export default {
     methods: {
@@ -74,6 +75,460 @@ export default {
                 case 7:
                     return "Domingo";
             }
+        },
+        pad(number, size) {
+            var s = String(number);
+            while (s.length < (size || 2)) {
+                s = "0" + s;
+            }
+            return s;
+        },
+        createReceipt(currentSale, receiptImg, myCanvas) {
+            var $this = this;
+            myCanvas.width = receiptImg.width;
+            myCanvas.height = receiptImg.height - 109;
+            $this.context = myCanvas.getContext("2d");
+
+            $this.context.clearRect(
+                0,
+                0,
+                myCanvas.width,
+                myCanvas.height
+            );
+
+            $this.context.fillStyle = "#FFFFFF";
+            $this.context.fillRect(
+                0,
+                0,
+                myCanvas.width,
+                myCanvas.height
+            );
+            $this.context.drawImage(
+                receiptImg,
+                -30,
+                -30,
+                receiptImg.width,
+                receiptImg.height
+            );
+
+            $this.context.font = "24px Calibri";
+            $this.context.fillStyle = "red";
+            $this.context.fillText(
+                "REC" + $this.pad(currentSale.id, 5),
+                920,
+                105
+            );
+            $this.context.fillText(
+                "REC" + $this.pad(currentSale.id, 5),
+                920,
+                105 + 678
+            );
+
+            $this.context.fillStyle = "black";
+            $this.context.fillText(
+                new Date()
+                    .toLocaleDateString("es-ES", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit"
+                    })
+                    .replace("/", "-")
+                    .replace("/", "-"),
+                920,
+                155
+            );
+            $this.context.fillText(
+                new Date()
+                    .toLocaleDateString("es-ES", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit"
+                    })
+                    .replace("/", "-")
+                    .replace("/", "-"),
+                920,
+                155 + 678
+            );
+
+            // Lineas
+            for (var x = 0; x < 8; x++) {
+                $this.context.strokeStyle = "black";
+                $this.context.beginPath();
+                $this.context.moveTo(40, 360 + x * 30);
+                $this.context.lineTo(1100, 360 + x * 30);
+                $this.context.moveTo(40, 360 + x * 30 + 678);
+                $this.context.lineTo(1100, 360 + x * 30 + 678);
+                $this.context.lineWidth = 1;
+                $this.context.stroke();
+            }
+
+            $this.context.font = "16px Calibri";
+            // MDP
+            if (currentSale.method) {
+                $this.context.fillText(
+                    currentSale.method == 1 ? "Efectivo" : "Electrónico",
+                    630,
+                    615
+                );
+                $this.context.fillText(
+                    currentSale.method == 1 ? "Efectivo" : "Electrónico",
+                    630,
+                    615 + 678
+                );
+            }
+
+            if (currentSale.client) {
+                $this.context.fillText(currentSale.client.name, 160, 240);
+                $this.context.fillText(currentSale.client.name, 160, 240 + 678);
+                $this.context.fillText(
+                    currentSale.phonenumber
+                        ? currentSale.phonenumber
+                        : currentSale.client.phonenumber,
+                    160,
+                    265
+                );
+                $this.context.fillText(
+                    currentSale.phonenumber
+                        ? currentSale.phonenumber
+                        : currentSale.client.phonenumber,
+                    160,
+                    265 + 678
+                );
+            } else if (currentSale.phonenumber) {
+                $this.context.fillText(currentSale.phonenumber, 160, 265);
+                $this.context.fillText(currentSale.phonenumber, 160, 265 + 678);
+            }
+
+            $this.context.fillText(currentSale.user.name, 160, 290);
+            $this.context.fillText(currentSale.user.name, 160, 290 + 678);
+
+            $this.context.fillText(currentSale.maker, 662, 240);
+            $this.context.fillText(currentSale.maker, 662, 240 + 678);
+            $this.context.fillText(currentSale.brand, 662, 265);
+            $this.context.fillText(currentSale.brand, 662, 265 + 678);
+            $this.context.fillText(currentSale.year, 662, 290);
+            $this.context.fillText(currentSale.year, 662, 290 + 678);
+            $this.context.fillText(currentSale.color, 960, 240);
+            $this.context.fillText(currentSale.color, 960, 240 + 678);
+            $this.context.fillText(currentSale.km, 960, 265);
+            $this.context.fillText(currentSale.km, 960, 265 + 678);
+            $this.context.fillText(currentSale.last_service, 1010, 290);
+            $this.context.fillText(currentSale.last_service, 1010, 290 + 678);
+
+            currentSale.total = parseFloat(currentSale.total);
+
+            $this.context.fillText("1", 100, 350);
+            $this.context.fillText("1", 100, 350 + 678);
+            if (currentSale.concept) {
+                var concept = currentSale.concept.match(/.{1,60}/g);
+                for (var x = 0; x < concept.length; x++) {
+                    $this.context.fillText(concept[x].toUpperCase(), 160, 350 + x * 32);
+                    $this.context.fillText(
+                        concept[x].toUpperCase(),
+                        160,
+                        350 + 678 + x * 32
+                    );
+                }
+            }
+            $this.context.fillText(
+                "$" + $this.formatPrice(currentSale.total),
+                950,
+                350
+            );
+            $this.context.fillText(
+                "$" + $this.formatPrice(currentSale.total),
+                950,
+                350 + 678
+            );
+
+            // Detalles
+            if (currentSale.details) {
+                var details = currentSale.details.match(/.{1,60}/g);
+                for (var x = 0; x < details.length; x++) {
+                    $this.context.fillText(
+                        details[x].toUpperCase(),
+                        160,
+                        350 + 32 * concept.length + x * 32
+                    );
+                    $this.context.fillText(
+                        details[x].toUpperCase(),
+                        160,
+                        350 + 678 + 32 * concept.length + x * 32
+                    );
+                }
+            }
+
+            $this.context.fillText(
+                "$" + $this.formatPrice(currentSale.total),
+                950,
+                615
+            );
+            $this.context.fillText(
+                "$" + $this.formatPrice(currentSale.total),
+                950,
+                615 + 678
+            );
+            if (currentSale.tax) {
+                $this.context.fillText(
+                    "$" + $this.formatPrice(currentSale.total * 0.08),
+                    950,
+                    640
+                );
+                $this.context.fillText(
+                    "$" + $this.formatPrice(currentSale.total * 0.08),
+                    950,
+                    640 + 678
+                );
+            } else {
+                $this.context.fillText("$0", 950, 640);
+                $this.context.fillText("$0", 950, 640 + 678);
+            }
+
+            if (currentSale.tax) {
+                $this.context.fillText(
+                    "$" +
+                    $this.formatPrice(
+                        currentSale.total + currentSale.total * 0.08
+                    ),
+                    950,
+                    668
+                );
+                $this.context.fillText(
+                    "$" +
+                    $this.formatPrice(
+                        currentSale.total + currentSale.total * 0.08
+                    ),
+                    950,
+                    668 + 678
+                );
+            } else {
+                $this.context.fillText(
+                    "$" + $this.formatPrice(currentSale.total),
+                    950,
+                    668
+                );
+                $this.context.fillText(
+                    "$" + $this.formatPrice(currentSale.total),
+                    950,
+                    668 + 678
+                );
+            }
+
+            if (currentSale.guaranty) {
+                $this.context.font = "24px Calibri";
+                $this.context.fillText(currentSale.guaranty, 170, 620);
+                $this.context.fillText(currentSale.guaranty, 170, 620 + 678);
+            }
+
+            var img = document.createElement("img");
+            img.src = myCanvas.toDataURL("image/jpeg");
+            img.width = myCanvas.width;
+            img.height = myCanvas.height;
+
+            new Printd().print(img);
+        },
+        createQuotation(currentSale, quotationImg, myCanvas) {
+            var $this = this;
+
+            myCanvas.width = quotationImg.width;
+            myCanvas.height = quotationImg.height - 109;
+            $this.context = myCanvas.getContext("2d");
+
+            $this.context.clearRect(
+                0,
+                0,
+                myCanvas.width,
+                myCanvas.height
+            );
+
+            $this.context.fillStyle = "#FFFFFF";
+            $this.context.fillRect(
+                0,
+                0,
+                myCanvas.width,
+                myCanvas.height
+            );
+            $this.context.drawImage(
+                quotationImg,
+                -30,
+                -30,
+                quotationImg.width,
+                quotationImg.height
+            );
+
+            $this.context.font = "24px Calibri";
+            $this.context.fillStyle = "red";
+            $this.context.fillText("COT" + $this.pad(currentSale.id, 5), 935, 132); // FOLIO
+
+            $this.context.fillStyle = "black";
+            $this.context.fillText(
+                new Date()
+                    .toLocaleDateString("es-ES", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit"
+                    })
+                    .replace("/", "-")
+                    .replace("/", "-"),
+                930,
+                190
+            );
+
+            $this.context.font = "16px Calibri";
+
+            // cliente
+            if (currentSale.client) {
+                $this.context.fillText(currentSale.client.name, 160, 305); // Cliente
+                $this.context.fillText(
+                    currentSale.phonenumber
+                        ? currentSale.phonenumber
+                        : currentSale.client.phonenumber,
+                    160,
+                    330
+                );
+            } else if (currentSale.phonenumber) {
+                $this.context.fillText(currentSale.phonenumber, 160, 330); // tel
+            }
+
+            $this.context.fillText(currentSale.user.name, 160, 355); // tecnico
+
+            $this.context.fillText(
+                currentSale.maker ? currentSale.maker : currentSale.car[0].maker,
+                640,
+                305
+            );
+            $this.context.fillText(
+                currentSale.brand ? currentSale.brand : currentSale.car[0].brand,
+                640,
+                330
+            );
+            $this.context.fillText(
+                currentSale.year ? currentSale.year : currentSale.sale_services[0].year,
+                640,
+                355
+            );
+            $this.context.fillText(currentSale.color, 960, 305);
+            $this.context.fillText(currentSale.km, 960, 330);
+            $this.context.fillText(currentSale.last_service, 980, 355);
+
+            // $this.context.fillText("Negro Mate", 960, 305);
+            // $this.context.fillText("125,000", 960, 330);
+            // $this.context.fillText("25/04/2021", 980, 355);
+
+            currentSale.total = parseFloat(currentSale.total);
+
+            // Cantidad
+            $this.context.fillText("1", 90, 420);
+
+            // Descripcion
+            if (currentSale.concept) {
+                var concept = currentSale.concept.match(/.{1,60}/g);
+                for (var x = 0; x < concept.length; x++) {
+                    $this.context.fillText(concept[x].toUpperCase(), 160, 420 + x * 32);
+                }
+            }
+
+            // Importe
+            $this.context.fillText(
+                "$" + $this.formatPrice(currentSale.total),
+                960,
+                420
+            );
+
+            // Descripcion (repetida)
+            if (currentSale.details) {
+                var details = currentSale.details.match(/.{1,60}/g);
+                for (var x = 0; x < details.length; x++) {
+                    $this.context.fillText(
+                        details[x].toUpperCase(),
+                        160,
+                        420 + 32 * concept.length + x * 32
+                    );
+                }
+            }
+
+            // Lineas
+            for (var x = 0; x < 19; x++) {
+                $this.context.strokeStyle = "black";
+                $this.context.beginPath();
+                $this.context.moveTo(40, 430 + x * 31);
+                $this.context.lineTo(1100, 430 + x * 31);
+                $this.context.lineWidth = 1;
+                $this.context.stroke();
+            }
+
+            var y = 1040;
+            var h = 26;
+            // Subtotal
+            $this.context.fillText(
+                "$" + $this.formatPrice(currentSale.total),
+                960,
+                y
+            );
+            y += h;
+
+            // IVA
+            if (currentSale.tax) {
+                $this.context.fillText(
+                    "$" + $this.formatPrice(currentSale.total * 0.08),
+                    960,
+                    y
+                );
+            } else {
+                $this.context.fillText("$0", 960, y);
+            }
+            y += h;
+
+            // Total
+            if (currentSale.tax) {
+                $this.context.fillText(
+                    "$" + $this.formatPrice(currentSale.total + currentSale.total * 0.08),
+                    960,
+                    y
+                );
+            } else {
+                $this.context.fillText(
+                    "$" + $this.formatPrice(currentSale.total),
+                    960,
+                    y
+                );
+            }
+            y += h;
+
+            // Garantia
+            if (currentSale.guaranty) {
+                //$this.context.font = "24px Calibri";
+                $this.context.fillText(currentSale.guaranty, 160, 1040);
+            }
+
+            // metodo de pago
+            if (currentSale.method) {
+                $this.context.fillText(currentSale.method, 620, 1040);
+            }
+
+            // validado por...
+            if (currentSale.validator) {
+                $this.context.fillText(currentSale.validator, 255, 1115);
+            }
+
+            // observaciones (56 char por linea)
+            if (currentSale.comments) {
+                var comment = currentSale.comments.match(/.{1,56}/g);
+                for (var i = 0; i < comment.length; i++) {
+                    $this.context.fillText(
+                        comment[i].toUpperCase().trim(),
+                        645,
+                        1115 + i * 18
+                    );
+                }
+            }
+
+            var img = document.createElement("img");
+            img.src = myCanvas.toDataURL("image/jpeg");
+            img.width = myCanvas.width;
+            img.height = myCanvas.height;
+
+            new Printd().print(img);
         },
     }
 };
