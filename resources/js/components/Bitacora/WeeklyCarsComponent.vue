@@ -1,11 +1,12 @@
 <template>
   <el-row>
+    <confirm-sales></confirm-sales>
     <br />
     <el-row class="br bl bt bb row-header">
       <el-col :span="2">
-        <h1 style="margin-top: 8px;">Semana</h1>
+        <h1 style="margin-top: 8px; padding-left:4px;">Semana</h1>
       </el-col>
-      <el-col :span="22">
+      <el-col :span="18">
         <el-date-picker
           v-model="selectedDay"
           type="week"
@@ -14,35 +15,103 @@
         ></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
       </el-col>
+      <el-col :span="4"></el-col>
     </el-row>
 
-    <!-- User list -->
+    <!-- TABLA -->
     <el-row class="br bl">
-      <!-- TABLA -->
       <el-col :span="24">
-        <el-table :data="tableData" style="width: 100%" v-loading="loading">
-          <el-table-column label="Día" width="120">
-            <template slot-scope="scope">{{ dayOfWeek(scope.row.start) }}</template>
+        <el-table v-loading="loading" size="mini" :data="sales.data" style="width: 100%">
+          <el-table-column label="Día" width="100" header-align="center" align="center">
+            <template slot-scope="scope">{{ dayOfWeek(new Date(scope.row.created_at)) }}</template>
           </el-table-column>
-          <el-table-column prop="entrada" label="Entrada" width="100"></el-table-column>
-          <el-table-column prop="marca" label="Marca" width="100"></el-table-column>
-          <el-table-column prop="modelo" label="Modelo" width="100"></el-table-column>
-          <el-table-column prop="year" label="Año" width="65"></el-table-column>
-          <el-table-column prop="color" label="Color" width="100"></el-table-column>
-          <el-table-column prop="cliente" label="Cliente" width="300"></el-table-column>
-          <el-table-column prop="telefono" label="Teléfono" width="100"></el-table-column>
-          <el-table-column prop="tecnico" label="Técnico" width="120"></el-table-column>
-          <el-table-column prop="concepto" label="Diagnóstico"></el-table-column>
-          <el-table-column prop="precio" label="Precio" width="120"></el-table-column>
-          <el-table-column prop="autorizado" label="Autorizó" width="85"></el-table-column>
-          <el-table-column prop="recibo" label="Recibo" width="85"></el-table-column>
-          <el-table-column label="Opciones" width="120">
-            <template>
-              <el-button icon="el-icon-finished" type="text" size="small"></el-button>
-              <el-button size="small" icon="el-icon-edit" type="text"></el-button>
+          <el-table-column label="Entrada" width="100" header-align="center" align="center">
+            <template slot-scope="scope">{{ fixDate(scope.row.created_at) }}</template>
+          </el-table-column>
+          <el-table-column label="Marca" width="130">
+            <template slot-scope="scope">{{ scope.row.car[0].maker }}</template>
+          </el-table-column>
+          <el-table-column label="Modelo" width="130">
+            <template slot-scope="scope">{{ scope.row.car[0].brand }}</template>
+          </el-table-column>
+          <el-table-column label="Año" width="65" header-align="center" align="center">
+            <template slot-scope="scope">{{ scope.row.year }}</template>
+          </el-table-column>
+          <el-table-column label="Color" width="100" header-align="center" align="center">
+            <template slot-scope="scope">{{ scope.row.color }}</template>
+          </el-table-column>
+          <el-table-column label="Cliente" width="250">
+            <template slot-scope="scope">{{ scope.row.client.name }}</template>
+          </el-table-column>
+          <el-table-column label="Teléfono" width="130">
+            <template slot-scope="scope">{{ scope.row.client.phonenumber }}</template>
+          </el-table-column>
+          <el-table-column label="Técnico" width="200">
+            <template slot-scope="scope">{{ scope.row.user.name }}</template>
+          </el-table-column>
+          <el-table-column label="Diagnóstico">
+            <template slot-scope="scope">{{ scope.row.concept }}</template>
+          </el-table-column>
+          <el-table-column label="Precio" width="150" header-align="right" align="right">
+            <template slot-scope="scope">{{ scope.row.total }}</template>
+          </el-table-column>
+          <el-table-column label="Autorizó" width="100" header-align="center" align="center">
+            <template slot-scope="scope">{{autorizo(scope.row)}}</template>
+          </el-table-column>
+          <el-table-column label="Recibo" width="100" header-align="center" align="center">
+            <template slot-scope="scope">
+              <el-button
+                size="small"
+                icon="el-icon-document"
+                type="text"
+                :disabled="!image1Loaded || !image2Loaded"
+                @click="showReceipt(scope.row)"
+              >{{scope.row.status==2?`Recibo`: `Cotización`}}</el-button>
+            </template>
+          </el-table-column>
+          <el-table-column label="Opciones" width="100" header-align="center" align="center">
+            <template slot-scope="scope">
+              <el-button
+                size="small"
+                icon="el-icon-edit"
+                type="text"
+                :disabled="scope.row.status!=2"
+                @click="editItem(scope.row)"
+              >Editar</el-button>
             </template>
           </el-table-column>
         </el-table>
+      </el-col>
+    </el-row>
+
+    <!-- TOTALES -->
+    <el-row class="br bl bb row-header">
+      <el-col :span="4" style="margin-top: 7px;">
+        <h4>Total Autorizados</h4>
+      </el-col>
+      <el-col :span="20" class="row-headerb" align="end">
+        <h4>${{formatPrice(autorizados())}}</h4>
+      </el-col>
+    </el-row>
+    <el-row class="br bl bb row-header">
+      <el-col :span="4" style="margin-top: 7px;">
+        <h4>Total No Autorizados</h4>
+      </el-col>
+      <el-col :span="20" class="row-headerb" align="end">
+        <h4>${{formatPrice(noAutorizados())}}</h4>
+      </el-col>
+    </el-row>
+
+    <!-- Imagenes Recibos -->
+    <el-row type="flex" justify="end" style="opacity: 0;overflow: hidden;height: 50px;">
+      <el-col :span="8">
+        <img ref="quotation" @load="image1Loaded=true" src="/img/receipt.jpg" width="1200px" />
+      </el-col>
+      <el-col :span="8">
+        <img ref="receipt" @load="image2Loaded=true" src="/img/receipt2.jpg" width="1200px" />
+      </el-col>
+      <el-col :span="8">
+        <canvas ref="my-canvas"></canvas>
       </el-col>
     </el-row>
   </el-row>
@@ -54,65 +123,80 @@ export default {
     this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
-    handleSelect(key, keyPath) {
-      this.activeIndex = key;
-      this.showWeekOfEmployee(this.employees[key]);
+    showReceipt(item) {
+      // const COTIZACION = 0;
+      // const PROCESO = 1;
+      // const TERMINADO = 2;
+      // const CANCELADO = 3;
+
+      var canvas = this.$refs["my-canvas"];
+      if (item.status == 2) {
+        this.createReceipt(item, this.$refs["receipt"], canvas);
+      } else {
+        this.createQuotation(item, this.$refs["quotation"], canvas);
+      }
     },
-    showWeekOfEmployee(name) {
-      this.tableData = this.employeeData.filter(e => e.name == name);
+    editItem(item) {
+      this.$root.$emit("confirmSale", item, true);
+    },
+    onSearch() {
+      if (!this.selectedDay) {
+        return;
+      }
+
+      this.searchSales(this.selectedDay);
+    },
+    searchSales(day) {
+      this.prevDay = day;
+      var start = `${this.toFixedFormat(day, "yyyy-MM-dd")} 00:00:00`;
+      this.loadTable(`/api/sales/searchByWeek?start=${start}`);
+    },
+    autorizo(item) {
+      return item.status == 2 ? `Si` : `No`;
+    },
+    autorizados() {
+      var total = 0.0;
+      if (this.sales.data) {
+        var selection = this.sales.data.filter(i => i.status == 2);
+        selection.forEach(s => (total += parseFloat(s.total)));
+      }
+      return total;
+    },
+    noAutorizados() {
+      var total = 0.0;
+      if (this.sales.data) {
+        var selection = this.sales.data.filter(i => i.status != 2);
+        selection.forEach(s => (total += parseFloat(s.total)));
+      }
+      return total;
     },
     fixDate(dt) {
-      return this.formatDate(new Date(dt));
+      return this.toFixedTime(new Date(dt));
     },
     loadTable(url) {
       var $this = this;
       $this.loading = true;
       axios.get(url).then(function(response) {
-        $this.employeeData = response.data;
+        $this.sales = response.data;
+        $this.oldSales = JSON.parse(JSON.stringify(response.data));
         $this.loading = false;
-
-        // Para el panel izquierdo (lista de empleados)
-        $this.employeeData.forEach(element => {
-          var name = element.name;
-          if ($this.employees.filter(e => e == name).length == 0)
-            $this.employees.push(name);
-        });
       });
     },
-    onSearch() {
-      // this.loadTable(`/api/cleaning/searchWeek?start=${start}`);
-    },
-    refreshTable(id) {
-      // if (id) {
-      //   var url = `/api/cleaning/search?id=${id}`;
-      //   var $this = this;
-      //   $this.loading = true;
-      //   axios.get(url).then(function(response) {
-      //     var data = response.data;
-      //     if (data.length > 0) {
-      //       for (var i = 0; i < $this.employeeData.length; i++) {
-      //         // busca el item editado para actualizar en la tabla visual
-      //         if ($this.employeeData[i].id == id) {
-      //           $this.employeeData[i] = data[0];
-      //           break;
-      //         }
-      //       }
-      //     }
-      //     $this.loading = false;
-      //   });
-      // }
+    refreshTable() {
+      this.searchSales(this.prevDay);
     }
   },
   data() {
     return {
-      activeIndex: "0",
-      showDialog: false,
-      selectedDay: new Date(),
-      search: "",
+      image1Loaded: false,
+      image2Loaded: false,
+      sales: [],
+      oldSales: [],
       loading: false,
-      employeeData: [],
-      tableData: [],
-      employees: []
+      page: 1,
+      selectedDay: new Date(),
+      prevDay: new Date(),
+      search: ""
     };
   }
 };
@@ -132,6 +216,10 @@ export default {
 }
 .row-header {
   background-color: #f5f7fa;
+  padding: 4px;
+}
+.row-headerb {
+  background-color: white;
   padding: 4px;
 }
 </style>

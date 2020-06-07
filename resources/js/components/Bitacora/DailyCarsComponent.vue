@@ -181,9 +181,6 @@ export default {
         $this.loading = false;
       });
     },
-    addNewItem() {
-      this.$refs.newItem.insertNewRow(this.selectedDay);
-    },
     refreshTable() {
       this.searchSales(this.prevDay);
     }
