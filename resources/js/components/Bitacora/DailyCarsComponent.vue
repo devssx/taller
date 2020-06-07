@@ -1,5 +1,6 @@
 <template>
   <el-row>
+    <confirm-sales></confirm-sales>
     <br />
     <el-row class="br bl bt bb row-header">
       <el-col :span="2">
@@ -132,22 +133,20 @@ export default {
         this.createQuotation(item, this.$refs["quotation"], canvas);
       }
     },
-    editItem(item) {},
+    editItem(item) {
+      this.$root.$emit("confirmSale", item, true);
+    },
     onSearch() {
       if (!this.selectedDay) {
         return;
       }
 
-      var start = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 00:00:00`;
-
-      var end = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 23:59:59`;
-
+      this.searchSales(this.selectedDay);
+    },
+    searchSales(day) {
+      this.prevDay = day;
+      var start = `${this.toFixedFormat(day, "yyyy-MM-dd")} 00:00:00`;
+      var end = `${this.toFixedFormat(day, "yyyy-MM-dd")} 23:59:59`;
       this.loadTable(`/api/sales/searchByDay?start=${start}&end=${end}`);
     },
     autorizo(item) {
@@ -185,10 +184,10 @@ export default {
     addNewItem() {
       this.$refs.newItem.insertNewRow(this.selectedDay);
     },
-    refreshTable() {},
-    handleClick() {}
+    refreshTable() {
+      this.searchSales(this.prevDay);
+    }
   },
-
   data() {
     return {
       image1Loaded: false,
@@ -198,6 +197,7 @@ export default {
       loading: true,
       page: 1,
       selectedDay: new Date(),
+      prevDay: new Date(),
       search: ""
     };
   }
