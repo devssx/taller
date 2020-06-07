@@ -72,6 +72,7 @@
                 size="small"
                 icon="el-icon-edit"
                 type="text"
+                :disabled="scope.row.status!=2"
                 @click="editItem(scope.row)"
               >Editar</el-button>
             </template>
@@ -117,7 +118,7 @@
 export default {
   mounted: function() {
     this.$root.$on("refreshTable", this.refreshTable);
-    this.loadTable("/api/sales");
+    // this.loadTable("/api/sales");
   },
   methods: {
     showReceipt(item) {
@@ -175,7 +176,6 @@ export default {
       var $this = this;
       $this.loading = true;
       axios.get(url).then(function(response) {
-        console.log(response);
         $this.sales = response.data;
         $this.oldSales = JSON.parse(JSON.stringify(response.data));
         $this.loading = false;
@@ -194,7 +194,7 @@ export default {
       image2Loaded: false,
       sales: [],
       oldSales: [],
-      loading: true,
+      loading: false,
       page: 1,
       selectedDay: new Date(),
       prevDay: new Date(),
