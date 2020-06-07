@@ -3,14 +3,14 @@
     <br />
     <el-row class="br bl bt bb row-header">
       <el-col :span="2">
-        <h1 style="margin-top: 8px;">FECHA DIA</h1>
+        <h1 style="margin-top: 8px;">Semana</h1>
       </el-col>
       <el-col :span="18">
         <el-date-picker
           v-model="selectedDay"
           type="date"
           format="dd-MM-yyyy"
-          placeholder="Seleccionar Día"
+          placeholder="Seleccionar Semana"
         ></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
         <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
@@ -31,32 +31,89 @@
     <el-row class="br bl">
       <el-col :span="24">
         <el-table :data="tableData" style="width: 100%" v-loading="loading">
-          <el-table-column prop="name" label="Empleado" width="310"></el-table-column>
-          <el-table-column align="center" label="Hora Entrada" width="120" prop="start">
-            <template slot-scope="scope">{{ fixDate(scope.row.start) }}</template>
-          </el-table-column>
-          <el-table-column align="center" prop="cleaning" label="Limpieza"></el-table-column>
-          <el-table-column label="Hora Desayuno" align="center">
-            <el-table-column align="center" label="Inicio" width="120" prop="breakfast_start">
-              <template slot-scope="scope">{{ fixDate(scope.row.breakfast_start) }}</template>
-            </el-table-column>
-            <el-table-column align="center" label="Fin" width="120" prop="breakfast_end">
-              <template slot-scope="scope">{{ fixDate(scope.row.breakfast_end) }}</template>
-            </el-table-column>
-          </el-table-column>
-          <el-table-column label="Hora Comida" align="center">
-            <el-table-column align="center" label="Inicio" width="120" prop="lunch_start">
-              <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
-            </el-table-column>
-            <el-table-column align="center" label="Fin" width="120" prop="lunch_end">
-              <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
-            </el-table-column>
-          </el-table-column>
-          <el-table-column align="center" prop="done" label="Cumplió" width="120"></el-table-column>
-          <el-table-column prop="comment" label="Comentario" width="300"></el-table-column>
+          <el-table-column prop="saturday" label="Sabado" width="100"></el-table-column>
+          <el-table-column prop="monday" label="Sabado" width="100"></el-table-column>
+          <el-table-column prop="tuesday" label="Sabado" width="100"></el-table-column>
+          <el-table-column prop="wednesday" label="Sabado" width="100"></el-table-column>
+          <el-table-column prop="thursday" label="Sabado" width="100"></el-table-column>
+          <el-table-column prop="friday" label="Sabado" width="100"></el-table-column>
+
+          <el-table-column prop="wednesday" label="T. Semana" width="100"></el-table-column>
+          <el-table-column prop="thursday" label="% A/C" width="100"></el-table-column>
+          <el-table-column prop="friday" label="T. Neto Comiciones" width="100"></el-table-column>
+          <el-table-column prop="wednesday" label="Sueldo" width="100"></el-table-column>
+          <el-table-column prop="thursday" label="Sub Total" width="100"></el-table-column>
+          <el-table-column prop="friday" label="Descuentos" width="100"></el-table-column>
+          <el-table-column prop="friday" label="Total" width="100"></el-table-column>
+
           <el-table-column align="center" label="Modificar" width="147">
             <template slot-scope="scope">
-              <dc-edit :selectedItem="tableData[scope.$index]"></dc-edit>
+              <el-button
+                @click="eliminarRegistro(tableData[scope.$index].id)"
+                style="margin-left:16px"
+                size="small"
+                type="text"
+              >Eliminar</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+
+    <!-- TABLA -->
+    <el-row class="br bl">
+      <el-col :span="24">
+        <el-table :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table-column prop="saturday" label="Sabado" width="100"></el-table-column>
+          <el-table-column prop="monday" label="Sabado" width="100"></el-table-column>
+          <el-table-column prop="tuesday" label="Sabado" width="100"></el-table-column>
+          <el-table-column prop="wednesday" label="Sabado" width="100"></el-table-column>
+          <el-table-column prop="thursday" label="Sabado" width="100"></el-table-column>
+          <el-table-column prop="friday" label="Sabado" width="100"></el-table-column>
+
+          <el-table-column prop="wednesday" label="T. Semana" width="100"></el-table-column>
+          <el-table-column prop="thursday" label="% A/C" width="100"></el-table-column>
+          <el-table-column prop="friday" label="T. Neto Comiciones" width="100"></el-table-column>
+          <el-table-column prop="wednesday" label="Sueldo" width="100"></el-table-column>
+          <el-table-column prop="thursday" label="Sub Total" width="100"></el-table-column>
+          <el-table-column prop="friday" label="Descuentos" width="100"></el-table-column>
+          <el-table-column prop="friday" label="Total" width="100"></el-table-column>
+
+          <el-table-column align="center" label="Modificar" width="147">
+            <template slot-scope="scope">
+              <el-button
+                @click="eliminarRegistro(tableData[scope.$index].id)"
+                style="margin-left:16px"
+                size="small"
+                type="text"
+              >Eliminar</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+
+    <!-- TABLA -->
+    <el-row class="br bl">
+      <el-col :span="24">
+        <el-table :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table-column prop="saturday" label="Sabado" width="100"></el-table-column>
+          <el-table-column prop="monday" label="Sabado" width="100"></el-table-column>
+          <el-table-column prop="tuesday" label="Sabado" width="100"></el-table-column>
+          <el-table-column prop="wednesday" label="Sabado" width="100"></el-table-column>
+          <el-table-column prop="thursday" label="Sabado" width="100"></el-table-column>
+          <el-table-column prop="friday" label="Sabado" width="100"></el-table-column>
+
+          <el-table-column prop="wednesday" label="T. Semana" width="100"></el-table-column>
+          <el-table-column prop="thursday" label="% A/C" width="100"></el-table-column>
+          <el-table-column prop="friday" label="T. Neto Comiciones" width="100"></el-table-column>
+          <el-table-column prop="wednesday" label="Sueldo" width="100"></el-table-column>
+          <el-table-column prop="thursday" label="Sub Total" width="100"></el-table-column>
+          <el-table-column prop="friday" label="Descuentos" width="100"></el-table-column>
+          <el-table-column prop="friday" label="Total" width="100"></el-table-column>
+
+          <el-table-column align="center" label="Modificar" width="147">
+            <template slot-scope="scope">
               <el-button
                 @click="eliminarRegistro(tableData[scope.$index].id)"
                 style="margin-left:16px"
