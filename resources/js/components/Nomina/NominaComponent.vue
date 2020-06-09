@@ -15,36 +15,83 @@
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
         <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
       </el-col>
-      <el-col :span="4">
-        <div style="float:right;">
-          <el-button
-            :disabled="!selectedDay"
-            type="primary"
-            icon="el-icon-plus"
-            @click="addUserInfo"
-          >Nuevo</el-button>
-        </div>
+      <el-col :span="4" align="end">
+        <el-button :disabled="!selectedDay" type="primary" icon="el-icon-edit">Modificar</el-button>
+      </el-col>
+    </el-row>
+
+    <el-row class="br bl">
+      <!-- Lista de empleados -->
+      <el-col :span="6">
+        <el-row>
+          <el-col>
+            <el-card class="box-card" shadow="never">
+              <span v-if="employees.length == 0" style="padding:8px;">No hay información</span>
+
+              <el-menu
+                :default-active="activeIndex"
+                class="el-menu-vertical-demo"
+                @select="handleSelect"
+                v-for="(employee, i) in employees"
+                v-bind:key="i"
+              >
+                <el-menu-item :index="i+''">
+                  <i class="el-icon-user"></i>
+                  <span>{{employee}}</span>
+                </el-menu-item>
+              </el-menu>
+            </el-card>
+          </el-col>
+        </el-row>
+      </el-col>
+
+      <!-- Header -->
+      <el-col :span="18">
+        <el-row class="br bl row-header">
+          <el-col :span="24" align="center">
+            <h1 style="color:#909399">Resumen Nómina Técnico</h1>
+          </el-col>
+        </el-row>
+        <el-row class="br bt bl row-header">
+          <el-col :span="4" style="margin-top: 7px;">
+            <h4>Nombre del Técnico:</h4>
+          </el-col>
+          <el-col :span="20" class="row-headerb">Jorge Sepulveda</el-col>
+        </el-row>
+        <el-row class="br bb bl row-header">
+          <el-col :span="4" style="margin-top: 7px;">
+            <h4>Observación:</h4>
+          </el-col>
+          <el-col :span="20" class="row-headerb">No le den bono</el-col>
+        </el-row>
+      </el-col>
+    </el-row>
+
+    <br />
+    <el-row class="br bt bl row-header">
+      <el-col :span="24" align="center">
+        <h1 style="color:#909399">A/C Automotríz</h1>
       </el-col>
     </el-row>
 
     <!-- TABLA -->
     <el-row class="br bl">
       <el-col :span="24">
-        <el-table :data="tableData" style="width: 100%" v-loading="loading">
-          <el-table-column prop="saturday" label="Sabado" width="100"></el-table-column>
-          <el-table-column prop="monday" label="Sabado" width="100"></el-table-column>
-          <el-table-column prop="tuesday" label="Sabado" width="100"></el-table-column>
-          <el-table-column prop="wednesday" label="Sabado" width="100"></el-table-column>
-          <el-table-column prop="thursday" label="Sabado" width="100"></el-table-column>
-          <el-table-column prop="friday" label="Sabado" width="100"></el-table-column>
+        <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table-column label="Sabado" width="100"></el-table-column>
+          <el-table-column label="Lunes" width="100"></el-table-column>
+          <el-table-column label="Martes" width="100"></el-table-column>
+          <el-table-column label="Miercoles" width="100"></el-table-column>
+          <el-table-column label="Jueves" width="100"></el-table-column>
+          <el-table-column label="Viernes" width="100"></el-table-column>
 
-          <el-table-column prop="wednesday" label="T. Semana" width="100"></el-table-column>
-          <el-table-column prop="thursday" label="% A/C" width="100"></el-table-column>
-          <el-table-column prop="friday" label="T. Neto Comiciones" width="100"></el-table-column>
-          <el-table-column prop="wednesday" label="Sueldo" width="100"></el-table-column>
-          <el-table-column prop="thursday" label="Sub Total" width="100"></el-table-column>
-          <el-table-column prop="friday" label="Descuentos" width="100"></el-table-column>
-          <el-table-column prop="friday" label="Total" width="100"></el-table-column>
+          <el-table-column label="Total Semana"></el-table-column>
+          <el-table-column label="% A/C" width="100"></el-table-column>
+          <el-table-column label="Total Neto Comisiones"></el-table-column>
+          <el-table-column label="Sueldo" width="100"></el-table-column>
+          <el-table-column label="Sub Total" width="100"></el-table-column>
+          <el-table-column label="Descuentos" width="100"></el-table-column>
+          <el-table-column label="Total"></el-table-column>
 
           <el-table-column align="center" label="Modificar" width="147">
             <template slot-scope="scope">
@@ -60,24 +107,31 @@
       </el-col>
     </el-row>
 
+    <br />
+    <el-row class="br bt bl row-header">
+      <el-col :span="24" align="center">
+        <h1 style="color:#909399">Mecánica Automotríz</h1>
+      </el-col>
+    </el-row>
+
     <!-- TABLA -->
     <el-row class="br bl">
       <el-col :span="24">
-        <el-table :data="tableData" style="width: 100%" v-loading="loading">
-          <el-table-column prop="saturday" label="Sabado" width="100"></el-table-column>
-          <el-table-column prop="monday" label="Sabado" width="100"></el-table-column>
-          <el-table-column prop="tuesday" label="Sabado" width="100"></el-table-column>
-          <el-table-column prop="wednesday" label="Sabado" width="100"></el-table-column>
-          <el-table-column prop="thursday" label="Sabado" width="100"></el-table-column>
-          <el-table-column prop="friday" label="Sabado" width="100"></el-table-column>
+        <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table-column label="Sabado" width="100"></el-table-column>
+          <el-table-column label="Lunes" width="100"></el-table-column>
+          <el-table-column label="Martes" width="100"></el-table-column>
+          <el-table-column label="Miercoles" width="100"></el-table-column>
+          <el-table-column label="Jueves" width="100"></el-table-column>
+          <el-table-column label="Viernes" width="100"></el-table-column>
 
-          <el-table-column prop="wednesday" label="T. Semana" width="100"></el-table-column>
-          <el-table-column prop="thursday" label="% A/C" width="100"></el-table-column>
-          <el-table-column prop="friday" label="T. Neto Comiciones" width="100"></el-table-column>
-          <el-table-column prop="wednesday" label="Sueldo" width="100"></el-table-column>
-          <el-table-column prop="thursday" label="Sub Total" width="100"></el-table-column>
-          <el-table-column prop="friday" label="Descuentos" width="100"></el-table-column>
-          <el-table-column prop="friday" label="Total" width="100"></el-table-column>
+          <el-table-column label="Total Semana"></el-table-column>
+          <el-table-column label="% A/C" width="100"></el-table-column>
+          <el-table-column label="Total Neto Comisiones"></el-table-column>
+          <el-table-column label="Sueldo" width="100"></el-table-column>
+          <el-table-column label="Sub Total" width="100"></el-table-column>
+          <el-table-column label="Descuentos" width="100"></el-table-column>
+          <el-table-column label="Total"></el-table-column>
 
           <el-table-column align="center" label="Modificar" width="147">
             <template slot-scope="scope">
@@ -93,24 +147,31 @@
       </el-col>
     </el-row>
 
+    <br />
+    <el-row class="br bt bl row-header">
+      <el-col :span="24" align="center">
+        <h1 style="color:#909399">Auto Eléctrico Automotríz</h1>
+      </el-col>
+    </el-row>
+
     <!-- TABLA -->
     <el-row class="br bl">
       <el-col :span="24">
-        <el-table :data="tableData" style="width: 100%" v-loading="loading">
-          <el-table-column prop="saturday" label="Sabado" width="100"></el-table-column>
-          <el-table-column prop="monday" label="Sabado" width="100"></el-table-column>
-          <el-table-column prop="tuesday" label="Sabado" width="100"></el-table-column>
-          <el-table-column prop="wednesday" label="Sabado" width="100"></el-table-column>
-          <el-table-column prop="thursday" label="Sabado" width="100"></el-table-column>
-          <el-table-column prop="friday" label="Sabado" width="100"></el-table-column>
+        <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table-column label="Sabado" width="100"></el-table-column>
+          <el-table-column label="Lunes" width="100"></el-table-column>
+          <el-table-column label="Martes" width="100"></el-table-column>
+          <el-table-column label="Miercoles" width="100"></el-table-column>
+          <el-table-column label="Jueves" width="100"></el-table-column>
+          <el-table-column label="Viernes" width="100"></el-table-column>
 
-          <el-table-column prop="wednesday" label="T. Semana" width="100"></el-table-column>
-          <el-table-column prop="thursday" label="% A/C" width="100"></el-table-column>
-          <el-table-column prop="friday" label="T. Neto Comiciones" width="100"></el-table-column>
-          <el-table-column prop="wednesday" label="Sueldo" width="100"></el-table-column>
-          <el-table-column prop="thursday" label="Sub Total" width="100"></el-table-column>
-          <el-table-column prop="friday" label="Descuentos" width="100"></el-table-column>
-          <el-table-column prop="friday" label="Total" width="100"></el-table-column>
+          <el-table-column label="Total Semana"></el-table-column>
+          <el-table-column label="% A/C" width="100"></el-table-column>
+          <el-table-column label="Total Neto Comisiones"></el-table-column>
+          <el-table-column label="Sueldo" width="100"></el-table-column>
+          <el-table-column label="Sub Total" width="100"></el-table-column>
+          <el-table-column label="Descuentos" width="100"></el-table-column>
+          <el-table-column label="Total"></el-table-column>
 
           <el-table-column align="center" label="Modificar" width="147">
             <template slot-scope="scope">
@@ -126,13 +187,14 @@
       </el-col>
     </el-row>
 
+    <br />
     <!-- TOTALES -->
-    <el-row class="br bl bb row-header">
+    <el-row class="br bt bl bb row-header">
       <el-col :span="4" style="margin-top: 7px;">
         <h4>Sueldo:</h4>
       </el-col>
       <el-col :span="20" class="row-headerb" align="end">
-        <h4></h4>
+        <h4>$0.00</h4>
       </el-col>
     </el-row>
     <el-row class="br bl bb row-header">
@@ -140,7 +202,7 @@
         <h4>Comiciones:</h4>
       </el-col>
       <el-col :span="20" class="row-headerb" align="end">
-        <h4></h4>
+        <h4>$0.00</h4>
       </el-col>
     </el-row>
     <el-row class="br bl bb row-header">
@@ -148,7 +210,7 @@
         <h4>Descuentos:</h4>
       </el-col>
       <el-col :span="20" class="row-headerb" align="end">
-        <h4></h4>
+        <h4>$0.00</h4>
       </el-col>
     </el-row>
     <el-row class="br bl bb row-header">
@@ -156,7 +218,7 @@
         <h4>Total:</h4>
       </el-col>
       <el-col :span="20" class="row-headerb" align="end">
-        <h4></h4>
+        <h4>$0.00</h4>
       </el-col>
     </el-row>
   </el-row>
@@ -170,6 +232,9 @@ export default {
     this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
+    handleSelect(key, keyPath) {
+      this.activeIndex = key;
+    },
     eliminarRegistro(id) {
       const $this = this;
       $this
@@ -274,6 +339,8 @@ export default {
   },
   data() {
     return {
+      activeIndex: 0,
+      employees: ["Salomon", "Juanito", "Julio", "Alma"],
       showDialog: false,
       selectedDay: new Date(),
       search: "",
@@ -296,6 +363,18 @@ export default {
 };
 </script>
 <style>
+.box-card {
+  min-height: 90px;
+  max-height: 102px;
+  overflow-y: auto;
+}
+.el-card__body {
+  padding: 0 !important;
+}
+.el-menu-item {
+  height: 24px !important;
+  line-height: 24px !important;
+}
 .bl {
   border-left: 1px solid #ebeef5;
 }
@@ -310,6 +389,10 @@ export default {
 }
 .row-header {
   background-color: #f5f7fa;
+  padding: 4px;
+}
+.row-headerb {
+  background-color: white;
   padding: 4px;
 }
 </style>

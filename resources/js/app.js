@@ -117,6 +117,7 @@ Vue.component('daily-cars', require('./components/Bitacora/DailyCarsComponent').
 Vue.component('weekly-cars', require('./components/Bitacora/weeklyCarsComponent').default);
 Vue.component('view-carservices', require('./components/CarServices/ServiceViewComponent').default);
 Vue.component('row-item', require('./components/CarServices/RowItemComponent').default);
+Vue.component('nomina-general', require('./components/Nomina/NominaComponent').default);
 
 
 // Salomon S.A. Tools
