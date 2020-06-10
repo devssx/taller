@@ -9,7 +9,8 @@
     <el-row type="flex">
         <el-col :span="24">
             {{-- <daily-cars></daily-cars> --}}
-            <nomina-general></nomina-general>
+            {{-- <nomina-general></nomina-general> --}}
+            <nomina-completa></nomina-completa>
         </el-col>
     </el-row>
 </el-main>
