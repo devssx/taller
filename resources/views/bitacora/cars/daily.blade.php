@@ -10,7 +10,8 @@
         <el-col :span="24">
             {{-- <daily-cars></daily-cars> --}}
             {{-- <nomina-general></nomina-general> --}}
-            <nomina-completa></nomina-completa>
+            {{-- <nomina-completa></nomina-completa> --}}
+            <gastos-component></gastos-component>
         </el-col>
     </el-row>
 </el-main>
