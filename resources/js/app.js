@@ -121,6 +121,9 @@ Vue.component('nomina-general', require('./components/Nomina/NominaComponent').d
 Vue.component('nomina-completa', require('./components/Nomina/NominaCompletaComponent').default);
 Vue.component('ingresos-component', require('./components/Nomina/IngresosComponent').default);
 Vue.component('gastos-component', require('./components/Nomina/GastosComponent').default);
+Vue.component('ingresos-utilidad-component', require('./components/Nomina/IngresosUtilidadComponent').default);
+Vue.component('ingresos-tecnicos-component', require('./components/Nomina/IngresosDeTecnicosComponent').default);
+Vue.component('garantias-component', require('./components/Nomina/GarantiasAnualesComponent').default);
 
 
 // Salomon S.A. Tools

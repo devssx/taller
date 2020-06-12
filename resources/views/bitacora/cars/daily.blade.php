@@ -11,7 +11,7 @@
             {{-- <daily-cars></daily-cars> --}}
             {{-- <nomina-general></nomina-general> --}}
             {{-- <nomina-completa></nomina-completa> --}}
-            <gastos-component></gastos-component>
+            <garantias-component></garantias-component>
         </el-col>
     </el-row>
 </el-main>
