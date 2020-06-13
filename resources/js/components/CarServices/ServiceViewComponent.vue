@@ -910,23 +910,25 @@ export default {
 
         // crea el item
         if (index < 0) {
-          setTimeout(function() {
             var newItem = { name: value, image: "", description: "" };
-            $this
-              .$confirm(
-                `El Artículo '${value}' no existe ¿Desea registrarlo?`,
-                "Artículo Nuevo",
-                {
-                  confirmButtonText: "Si, Registrar",
-                  cancelButtonText: "Cancelar",
-                  type: "warning"
-                }
-              )
-              .then(() => {
-                $this.saveNewItem(newItem);
-              })
-              .catch(() => {});
-          }, 400);
+            $this.saveNewItem(newItem);
+
+          // setTimeout(function() {
+          //   $this
+          //     .$confirm(
+          //       `El Artículo '${value}' no existe ¿Desea registrarlo?`,
+          //       "Artículo Nuevo",
+          //       {
+          //         confirmButtonText: "Si, Registrar",
+          //         cancelButtonText: "Cancelar",
+          //         type: "warning"
+          //       }
+          //     )
+          //     .then(() => {
+          //       $this.saveNewItem(newItem);
+          //     })
+          //     .catch(() => {});
+          // }, 400);
           return;
         }
       }
