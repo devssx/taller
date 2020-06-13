@@ -56,6 +56,27 @@
                             <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.weeklycleaning') }}')">
                                 Limpieza Semanal
                             </el-menu-item>
+                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.nominageneral') }}')">
+                                Nómina
+                            </el-menu-item>
+                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.nominadetail') }}')">
+                                Nómina Completa Resumen
+                            </el-menu-item>
+                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.expenses') }}')">
+                                Gastos
+                            </el-menu-item>
+                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.income') }}')">
+                                Ingresos
+                            </el-menu-item>
+                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.profit') }}')">
+                                Ingresos y Utilidad
+                            </el-menu-item>
+                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.employeeincome') }}')">
+                                Ingresos del Empleado
+                            </el-menu-item>
+                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.guarantee') }}')">
+                                Garantías del Año
+                            </el-menu-item>
                         </el-submenu>
                         <el-submenu index="sales">
                             <template slot="title">Ordenes de Servicio</template>

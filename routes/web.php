@@ -64,6 +64,13 @@ Route::middleware(['auth'])->group(function () {
         Route::view('/weeklycleaning', 'bitacora.cleaning.weekly')->name('bitacora.weeklycleaning');
         Route::view('/dailycars', 'bitacora.cars.daily')->name('bitacora.dailycars');
         Route::view('/weeklycars', 'bitacora.cars.weekly')->name('bitacora.weeklycars');
+        Route::view('/nomina', 'bitacora.nomina.general')->name('bitacora.nominageneral');
+        Route::view('/nominadetalle', 'bitacora.nomina.detail')->name('bitacora.nominadetail');
+        Route::view('/employeeincome', 'bitacora.iexpenses.employeeincome')->name('bitacora.employeeincome');
+        Route::view('/expenses', 'bitacora.iexpenses.expenses')->name('bitacora.expenses');
+        Route::view('/guarantee', 'bitacora.iexpenses.guarantee')->name('bitacora.guarantee');
+        Route::view('/income', 'bitacora.iexpenses.income')->name('bitacora.income');
+        Route::view('/profit', 'bitacora.iexpenses.profit')->name('bitacora.profit');
     });
 
     Route::post('files/uploadItem', 'FileController@uploadItem')->name('upload.item');

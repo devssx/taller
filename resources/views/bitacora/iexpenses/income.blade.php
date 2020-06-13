@@ -3,12 +3,12 @@
 <el-main class="content">
     <el-row type="flex">
         <el-col :span="19">
-            <h2>Registro de carros del día</h2>
+            <h2>Ingresos</h2>
         </el-col>
     </el-row>
     <el-row type="flex">
         <el-col :span="24">
-            <daily-cars></daily-cars>
+            <dingresos-component></ingresos-component>
         </el-col>
     </el-row>
 </el-main>
