@@ -24,11 +24,34 @@
             <el-form-item label="Telefono" prop="phonenumber">
               <el-input v-model="client.phonenumber"></el-input>
             </el-form-item>
+            <el-form-item label="Telefono 2" prop="phonenumber2">
+              <el-input v-model="client.phonenumber2"></el-input>
+            </el-form-item>
             <el-form-item label="Direccion" prop="address">
               <el-input type="textarea" v-model="client.address"></el-input>
             </el-form-item>
+            <el-form-item label="E-mail" prop="email">
+              <el-input v-model="client.email"></el-input>
+            </el-form-item>
             <el-form-item label="Referencia" prop="reference">
               <el-input v-model="client.reference"></el-input>
+            </el-form-item>
+            <el-form-item label="Otra Información" prop="information">
+              <el-input type="textarea" v-model="client.information"></el-input>
+            </el-form-item>
+            <el-form-item label="Observación" prop="details">
+              <el-input type="textarea" v-model="client.details"></el-input>
+            </el-form-item>
+            <el-form-item label="Recordatorio" prop="reminder">
+              <el-input type="textarea" v-model="client.reminder"></el-input>
+            </el-form-item>
+            <el-form-item label="Fecha Recordatorio" prop="reminder_date">
+              <el-date-picker
+                v-model="client.reminder_date"
+                type="date"
+                format="dd-MM-yyyy"
+                placeholder="Seleccionar Día"
+              ></el-date-picker>
             </el-form-item>
           </el-form>
         </el-col>
