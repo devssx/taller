@@ -29,8 +29,13 @@
           <el-form-item label="Color:">
             <el-input v-model="color"></el-input>
           </el-form-item>
-          <el-form-item label="Ultimo Servicio:">
-            <el-input v-model="last_service"></el-input>
+          <el-form-item label="Próximo Servicio:">
+            <el-date-picker
+              v-model="next_service"
+              type="date"
+              format="dd-MM-yyyy"
+              placeholder="Seleccionar Día"
+            ></el-date-picker>
           </el-form-item>
           <el-form-item label="KM. de Ingreso:">
             <el-input v-model="km"></el-input>
@@ -87,7 +92,7 @@ export default {
       brand: "",
       year: "",
       color: "",
-      last_service: "",
+      next_service: "",
       km: "",
       details: "",
       guaranty: "",
@@ -126,7 +131,7 @@ export default {
       this.brand = sale.brand ? sale.brand : sale.car[0].brand;
       this.year = sale.year ? sale.year : sale.sale_services[0].year;
       this.color = sale.color;
-      this.last_service = sale.last_service;
+      this.next_service = sale.next_service;
       this.km = sale.km;
       this.details = sale.details;
       this.guaranty = sale.guaranty;
@@ -150,7 +155,7 @@ export default {
           brand: $this.brand,
           year: $this.year,
           color: $this.color,
-          last_service: $this.last_service,
+          next_service: $this.next_service,
           km: $this.km,
           total: $this.total,
           user: $this.user,

@@ -95,8 +95,14 @@
             <el-form-item label="Color" prop="color">
               <el-input style="width: 220px;" v-model="form.color"></el-input>
             </el-form-item>
-            <el-form-item label="Ultimo servicio" prop="last_service">
-              <el-input style="width: 220px;" v-model="form.last_service"></el-input>
+            <!-- Cambido a proximo sevicio -->
+            <el-form-item label="Próximo servicio" prop="next_service">
+              <el-date-picker
+                v-model="form.next_service"
+                type="date"
+                format="dd-MM-yyyy"
+                placeholder="Seleccionar Día"
+              ></el-date-picker>
             </el-form-item>
             <el-form-item label="KM. de Ingreso" prop="km">
               <el-input style="width: 220px;" v-model="form.km"></el-input>
@@ -267,7 +273,7 @@ export default {
         details: "",
         year: "",
         color: "",
-        last_service: "",
+        next_service: "",
         km: ""
       },
       clients: [],
@@ -485,7 +491,7 @@ export default {
       );
       $this.context.fillText(currentSale.color, 960, 305);
       $this.context.fillText(currentSale.km, 960, 330);
-      $this.context.fillText(currentSale.last_service, 980, 355);
+      $this.context.fillText(currentSale.next_service, 980, 355);
 
       // $this.context.fillText("Negro Mate", 960, 305);
       // $this.context.fillText("125,000", 960, 330);
@@ -745,8 +751,8 @@ export default {
       $this.context.fillText($this.currentSale.color, 960, 240 + 678);
       $this.context.fillText($this.currentSale.km, 960, 265);
       $this.context.fillText($this.currentSale.km, 960, 265 + 678);
-      $this.context.fillText($this.currentSale.last_service, 1010, 290);
-      $this.context.fillText($this.currentSale.last_service, 1010, 290 + 678);
+      $this.context.fillText($this.currentSale.next_service, 1010, 290);
+      $this.context.fillText($this.currentSale.next_service, 1010, 290 + 678);
 
       $this.currentSale.total = parseFloat($this.currentSale.total);
 
@@ -907,7 +913,7 @@ export default {
           $this.order.phonenumber = $this.form.phonenumber;
           $this.order.concept = $this.form.concept;
           $this.order.color = $this.form.color;
-          $this.order.last_service = $this.form.last_service;
+          $this.order.next_service = $this.form.next_service;
           $this.order.km = $this.form.km;
           $this.order.total = $this.total;
 

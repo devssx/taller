@@ -132,6 +132,9 @@ class SalesController extends Controller
             if ($request->has('last_service')) {
                 $sale->last_service = $request->get('last_service');
             }
+            if ($request->has('next_service')) {
+                $sale->next_service = $request->get('next_service');
+            }
             if ($request->has('km')) {
                 $sale->km = $request->get('km');
             }
@@ -232,6 +235,9 @@ class SalesController extends Controller
         }
         if ($request->has('last_service')) {
             $sale->last_service = $request->get('last_service');
+        }
+        if ($request->has('next_service')) {
+            $sale->next_service = $request->get('next_service');
         }
         if ($request->has('km')) {
             $sale->km = $request->get('km');

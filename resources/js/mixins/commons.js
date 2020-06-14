@@ -165,16 +165,16 @@ export default {
             $this.context.font = "16px Calibri";
             // MDP
             if (currentSale.method) {
-                $this.context.fillText(
-                    currentSale.method == 1 ? "Efectivo" : "Electrónico",
-                    630,
-                    615
-                );
-                $this.context.fillText(
-                    currentSale.method == 1 ? "Efectivo" : "Electrónico",
-                    630,
-                    615 + 678
-                );
+                var mdp = "Efectivo";
+                switch (currentSale.method) {
+                    case 2: mdp = `Cheque`; break;
+                    case 3: mdp = `Transferencia`; break;
+                    case 4: mdp = `Tarjeta de Crédito`; break;
+                    case 5: mdp = `Tarjeta de Débito`; break;
+                }
+
+                $this.context.fillText(mdp, 630, 615);
+                $this.context.fillText(mdp, 630, 615 + 678);
             }
 
             if (currentSale.client) {
@@ -201,6 +201,10 @@ export default {
 
             $this.context.fillText(currentSale.user.name, 160, 290);
             $this.context.fillText(currentSale.user.name, 160, 290 + 678);
+
+            // Tipo: A/C, Ele. Mec.
+            $this.context.fillText(currentSale.service_type, 470, 290);
+            $this.context.fillText(currentSale.service_type, 470, 290 + 678);
 
             $this.context.fillText(currentSale.maker, 662, 240);
             $this.context.fillText(currentSale.maker, 662, 240 + 678);
