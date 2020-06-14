@@ -144,6 +144,10 @@ class SalesController extends Controller
             if ($request->has('tax')) {
                 $sale->tax = $request->get('tax');
             }
+            if ($request->has('service_type')) {
+                $sale->service_type = $request->get('service_type');
+            }
+    
             $sale->method = $request->get('method');
         }
 
@@ -259,6 +263,9 @@ class SalesController extends Controller
         }
         if ($request->has('method')) {
             $sale->method = $request->get('method');
+        }
+        if ($request->has('service_type')) {
+            $sale->service_type = $request->get('service_type');
         }
 
         $sale->save();

@@ -56,7 +56,7 @@
             <el-form-item label="Cliente" prop="client">
               <el-select
                 filterable
-                placeholder="Selecciona un Client"
+                placeholder="Selecciona un Cliente"
                 v-model="form.client"
                 :disabled="currentSale != false"
               >
@@ -102,10 +102,20 @@
               <el-input style="width: 220px;" v-model="form.km"></el-input>
             </el-form-item>
             <div v-if="order.receiptMode">
+              <el-form-item label="Tipo:">
+                <el-radio-group v-model="service_type">
+                  <el-radio :label="1" name="type">A/C</el-radio>
+                  <el-radio :label="2" name="type">Eléctrico</el-radio>
+                  <el-radio :label="3" name="type">Mecánico</el-radio>
+                </el-radio-group>
+              </el-form-item>
               <el-form-item label="MDP:">
                 <el-radio-group v-model="method">
-                  <el-radio :label="1" name="type">Efectivo</el-radio>
-                  <el-radio :label="2" name="type">Electrónico</el-radio>
+                  <el-radio :label="1" name="type" style="display:block">Efectivo</el-radio>
+                  <el-radio :label="2" name="type" style="display:block">Cheque</el-radio>
+                  <el-radio :label="3" name="type" style="display:block">Transferencia</el-radio>
+                  <el-radio :label="4" name="type" style="display:block">Tarjeta de Crédito</el-radio>
+                  <el-radio :label="5" name="type" style="display:block">Tarjeta de Débito</el-radio>
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="IVA:">
@@ -122,7 +132,7 @@
             <el-row v-if="currentSale">
               <el-col :span="24">
                 <el-row class="row-item">
-                  <el-col :span="6">
+                  <el-col>
                     <h3>Detalle General:</h3>
                   </el-col>
                 </el-row>
@@ -174,11 +184,11 @@
                       class="row-item"
                     >
                       <el-col :span="6" :offset="4">{{ itemName (item) }}</el-col>
-                      <el-col :span="4">${{ formatPrice(itemPrice(item, service)) }}</el-col>
+                      <el-col :span="4">{{ hiddenFormatPrice(itemPrice(item, service)) }}</el-col>
                     </el-row>
                     <el-row class="row-item" v-if="total != sumServiceTotal()">
                       <el-col :span="6" :offset="4">Otro</el-col>
-                      <el-col :span="4">${{ formatPrice(total - sumServiceTotal()) }}</el-col>
+                      <el-col :span="4">{{ hiddenFormatPrice(total - sumServiceTotal()) }}</el-col>
                     </el-row>
                     <br />
                   </el-col>
@@ -192,9 +202,18 @@
             </el-row>
             <el-row>
               <el-col :span="2">
-                <h4>Total</h4>
+                <h4 v-if="showPrices">Total</h4>
               </el-col>
-              <el-col :span="3" :offset="8">${{ formatPrice(total) }}</el-col>
+              <el-col :span="3" :offset="8">{{ hiddenFormatPrice(total) }}</el-col>
+              <el-col>
+                <div style="float: right;">
+                  <el-button
+                    @click="showPrices=!showPrices"
+                    size="mini"
+                    type="text"
+                  >{{ textBtnInfo() }}</el-button>
+                </div>
+              </el-col>
             </el-row>
           </el-card>
         </el-col>
@@ -229,9 +248,11 @@ export default {
   props: ["sale"],
   data() {
     return {
+      showPrices: false,
       image1Loaded: false,
       image2Loaded: false,
       method: 0,
+      service_type: 0,
       tax: 0,
       order: {},
       currentSale: false,
@@ -362,6 +383,15 @@ export default {
     },
     openConfirm() {
       this.$root.$emit("confirmSale", this.currentSale, true);
+    },
+    textBtnInfo() {
+      return this.showPrices ? `Ocultar Precios` : `Mostrar Precios`;
+    },
+    hiddenFormatPrice(value) {
+      let val = (value / 1).toFixed(2);
+      var price = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+      return this.showPrices ? `$${price}` : ``;
     },
     formatPrice(value) {
       let val = (value / 1).toFixed(2);
@@ -890,7 +920,20 @@ export default {
             $this.order.details = $this.form.details;
             $this.order.guaranty = $this.form.guaranty;
             $this.order.method = $this.method;
+            $this.order.service_type = $this.service_type;
             $this.order.tax = $this.tax;
+
+            if ($this.service_type == 0) {
+              $this.$alert(
+                "Favor de seleccionar el tipo de servicio.",
+                "Tipo de Servicio",
+                {
+                  confirmButtonText: "OK",
+                  type: "warning"
+                }
+              );
+              return;
+            }
           }
 
           axios

@@ -41,16 +41,26 @@
           <el-form-item label="Detalle:">
             <el-input type="textarea" :rows="3" v-model="details"></el-input>
           </el-form-item>
-          <el-form-item label="Garantia:">
+          <el-form-item label="Garantía:">
             <el-input v-model="guaranty"></el-input>
           </el-form-item>
           <el-form-item label="Total:">
             <el-input v-model="total"></el-input>
           </el-form-item>
+          <el-form-item label="Tipo de Servico:">
+            <el-radio-group v-model="service_type">
+              <el-radio :label="1" name="type">A/C</el-radio>
+              <el-radio :label="3" name="type">Mecánico</el-radio>
+              <el-radio :label="2" name="type">Eléctrico</el-radio>
+            </el-radio-group>
+          </el-form-item>
           <el-form-item label="Metodo de Pago:">
             <el-radio-group v-model="method">
-              <el-radio :label="1" name="type">Efectivo</el-radio>
-              <el-radio :label="2" name="type">Electronico</el-radio>
+              <el-radio :label="1" name="type" style="display:block">Efectivo</el-radio>
+              <el-radio :label="2" name="type" style="display:block">Cheque</el-radio>
+              <el-radio :label="3" name="type" style="display:block">Transferencia</el-radio>
+              <el-radio :label="4" name="type" style="display:block">Tarjeta de Crédito</el-radio>
+              <el-radio :label="5" name="type" style="display:block">Tarjeta de Débito</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="IVA:">
@@ -83,6 +93,7 @@ export default {
       guaranty: "",
       total: "",
       method: 1,
+      service_type: 1,
       user: "",
       tax: false,
       users: [],
@@ -121,6 +132,7 @@ export default {
       this.guaranty = sale.guaranty;
       this.tax = sale.tax;
       this.method = sale.method ? sale.method : 1;
+      this.service_type = sale.service_type ? sale.service_type : 1;
       this.user = sale.user_id;
       this.total = sale.total;
     },
@@ -132,6 +144,7 @@ export default {
           id: $this.sale.id,
           status: $this.newStatus == 2 ? 2 : $this.sale.status,
           method: $this.method,
+          service_type: $this.service_type,
           concept: $this.concept,
           maker: $this.maker,
           brand: $this.brand,

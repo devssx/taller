@@ -48,3 +48,6 @@ ALTER TABLE `cleanings`
 ALTER TABLE `cleanings`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 COMMIT;
+
+-- tipo de servicio: A/C, Mecanico, Electrico
+ALTER TABLE `sales` ADD `service_type` INT NOT NULL DEFAULT '0' AFTER `method`;
