@@ -22,13 +22,14 @@
                 </a>
                 <ul class="header-operations">
                     <li>
-                        <a href="#" onclick="javascript:document.getElementById('form-logout').submit();"
-                            style="color:white;">
-                            Cerrar Sesion {{ explode(".", Route::current()->getName())[0] }}
-                        </a>
+                        <notify-component></Notify-component>
+                    </li>
+                    <li>
                         <form id="form-logout" method="POST" action="{{ route('logout') }}">
                             <input type="hidden" value="{{ csrf_token() }}" name="_token" />
                         </form>
+                        <a href="#" onclick="javascript:document.getElementById('form-logout').submit();"
+                            style="color:white;">Cerrar Sesion</a>
                     </li>
                 </ul>
             </el-header>

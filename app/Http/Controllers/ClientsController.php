@@ -15,7 +15,6 @@ class ClientsController extends Controller
      */
     public function __construct()
     {
-
     }
 
     /**
@@ -25,6 +24,10 @@ class ClientsController extends Controller
     {
         if ($request->has('all')) {
             return Client::all();
+        }
+
+        if ($request->has('reminders')) {
+            return $this->getReminders();
         }
 
         if ($request->filled('search')) {
@@ -39,6 +42,16 @@ class ClientsController extends Controller
         }
 
         return Client::paginate(10);
+    }
+
+    public function getReminders()
+    {
+        $today = date("Y-m-d H:i:s", mktime(0, 0, 0, date("m"), date("d"), date("Y")));
+        $tomorrow = date("Y-m-d H:i:s", mktime(0, 0, 0, date("m"), date("d") + 1, date("Y")));
+        return Client::where('reminder', '!=', '')
+            ->where('reminder_date', '>=', $today)
+            ->where('reminder_date', '<=', $tomorrow)
+            ->get();
     }
 
     public function index()

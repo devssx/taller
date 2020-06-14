@@ -130,6 +130,7 @@ Vue.component('garantias-component', require('./components/Nomina/GarantiasAnual
 Vue.component('file-upload', require('./components/Tools/UploadFile').default);
 Vue.component('image-dialog', require('./components/Tools/ImageDialog').default);
 Vue.component('bar-chart', require('./components/Tools/ChartComponent').default);
+Vue.component('notify-component', require('./components/Tools/Notifications').default);
 
 new Vue({
   el: '#app',

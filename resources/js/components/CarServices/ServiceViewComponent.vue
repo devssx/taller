@@ -910,8 +910,8 @@ export default {
 
         // crea el item
         if (index < 0) {
-            var newItem = { name: value, image: "", description: "" };
-            $this.saveNewItem(newItem);
+          var newItem = { name: value, image: "", description: "" };
+          $this.saveNewItem(newItem);
 
           // setTimeout(function() {
           //   $this
