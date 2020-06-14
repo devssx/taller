@@ -51,4 +51,4 @@ COMMIT;
 
 -- tipo de servicio: A/C, Mecanico, Electrico
 ALTER TABLE `sales` ADD `service_type` INT NOT NULL DEFAULT '0' AFTER `method`;
-ALTER TABLE `sales` ADD `next_service` TIMESTAMP AFTER `last_service`;
+ALTER TABLE `sales` ADD `next_service` date DEFAULT NULL AFTER `last_service`;

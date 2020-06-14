@@ -216,8 +216,27 @@ export default {
             $this.context.fillText(currentSale.color, 960, 240 + 678);
             $this.context.fillText(currentSale.km, 960, 265);
             $this.context.fillText(currentSale.km, 960, 265 + 678);
-            $this.context.fillText(currentSale.last_service, 1010, 290);
-            $this.context.fillText(currentSale.last_service, 1010, 290 + 678);
+            //$this.context.fillText(currentSale.last_service, 1010, 290);
+            //$this.context.fillText(currentSale.last_service, 1010, 290 + 678);
+
+            var nextService = ``;
+            if (currentSale.next_service) {
+                try {
+                    nextService = new Date(currentSale.next_service)
+                        .toLocaleDateString("es-ES", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit"
+                        })
+                        .replace("/", "-")
+                        .replace("/", "-")
+                } catch (e) {
+                    console.error(`No se puedo convertir la fecha de proximo servicio ${currentSale.next_service}`);
+                }
+            }
+
+            $this.context.fillText(nextService, 1010, 290);
+            $this.context.fillText(nextService, 1010, 290 + 678);
 
             currentSale.total = parseFloat(currentSale.total);
 
@@ -413,7 +432,8 @@ export default {
             );
             $this.context.fillText(currentSale.color, 960, 305);
             $this.context.fillText(currentSale.km, 960, 330);
-            $this.context.fillText(currentSale.last_service, 980, 355);
+            //$this.context.fillText(currentSale.last_service, 980, 355);
+            $this.context.fillText(currentSale.next_service, 980, 355);
 
             // $this.context.fillText("Negro Mate", 960, 305);
             // $this.context.fillText("125,000", 960, 330);
