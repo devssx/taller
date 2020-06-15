@@ -25,7 +25,7 @@ ALTER TABLE `clients` ADD `email` VARCHAR(64) NOT NULL DEFAULT '' AFTER `phonenu
 ALTER TABLE `clients` ADD `information` text COLLATE utf8_unicode_ci AFTER `reference`;
 ALTER TABLE `clients` ADD `details` text COLLATE utf8_unicode_ci AFTER `information`;
 ALTER TABLE `clients` ADD `reminder` text COLLATE utf8_unicode_ci AFTER `details`;
-ALTER TABLE `clients` ADD `reminder_date` timestamp NOT NULL DEFAULT '2020-01-01 00:00:00' AFTER `reminder`;
+ALTER TABLE `clients` ADD `reminder_date` date DEFAULT NULL AFTER `reminder`;
 
 
 CREATE TABLE `cleanings` (
