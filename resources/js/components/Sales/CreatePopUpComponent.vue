@@ -35,7 +35,7 @@
                   v-for="service in services"
                   :key="service.id"
                   :label="service.name"
-                  :value="service"
+                  :value="service.name"
                 ></el-option>
               </el-select>
             </el-form-item>

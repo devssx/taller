@@ -118,10 +118,11 @@
               <el-form-item label="MDP:">
                 <el-radio-group v-model="method">
                   <el-radio :label="1" name="type" style="display:block">Efectivo</el-radio>
-                  <el-radio :label="2" name="type" style="display:block">Cheque</el-radio>
-                  <el-radio :label="3" name="type" style="display:block">Transferencia</el-radio>
-                  <el-radio :label="4" name="type" style="display:block">Tarjeta de Crédito</el-radio>
-                  <el-radio :label="5" name="type" style="display:block">Tarjeta de Débito</el-radio>
+                  <el-radio :label="2" name="type" style="display:block">Tarjeta de Crédito</el-radio>
+                  <el-radio :label="3" name="type" style="display:block">Tarjeta de Débito</el-radio>
+                  <el-radio :label="4" name="type" style="display:block">Cheque</el-radio>
+                  <el-radio :label="5" name="type" style="display:block">Transferencia</el-radio>
+                  <el-radio :label="6" name="type" style="display:block">Crédito</el-radio>
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="IVA:">
@@ -208,9 +209,9 @@
             </el-row>
             <el-row>
               <el-col :span="2">
-                <h4 v-if="showPrices">Total</h4>
+                <h4>Total</h4>
               </el-col>
-              <el-col :span="3" :offset="8">{{ hiddenFormatPrice(total) }}</el-col>
+              <el-col :span="3" :offset="8">${{ formatPrice(total) }}</el-col>
               <el-col>
                 <div style="float: right;">
                   <el-button

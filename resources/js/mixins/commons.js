@@ -167,10 +167,11 @@ export default {
             if (currentSale.method) {
                 var mdp = "Efectivo";
                 switch (currentSale.method) {
-                    case 2: mdp = `Cheque`; break;
-                    case 3: mdp = `Transferencia`; break;
-                    case 4: mdp = `Tarjeta de Crédito`; break;
-                    case 5: mdp = `Tarjeta de Débito`; break;
+                    case 2: mdp = `Tarjeta de Crédito`; break;
+                    case 3: mdp = `Tarjeta de Débito`; break;
+                    case 4: mdp = `Cheque`; break;
+                    case 5: mdp = `Transferencia`; break;
+                    case 6: mdp = `Crédito`; break;
                 }
 
                 $this.context.fillText(mdp, 630, 615);
@@ -432,8 +433,23 @@ export default {
             );
             $this.context.fillText(currentSale.color, 960, 305);
             $this.context.fillText(currentSale.km, 960, 330);
-            //$this.context.fillText(currentSale.last_service, 980, 355);
-            $this.context.fillText(currentSale.next_service, 980, 355);
+
+            var nextService = ``;
+            if (currentSale.next_service) {
+                try {
+                    nextService = new Date(currentSale.next_service)
+                        .toLocaleDateString("es-ES", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit"
+                        })
+                        .replace("/", "-")
+                        .replace("/", "-")
+                } catch (e) {
+                    console.error(`No se puedo convertir la fecha de proximo servicio ${currentSale.next_service}`);
+                }
+            }
+            $this.context.fillText(nextService, 980, 355);
 
             // $this.context.fillText("Negro Mate", 960, 305);
             // $this.context.fillText("125,000", 960, 330);

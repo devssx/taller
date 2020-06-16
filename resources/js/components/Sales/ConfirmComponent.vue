@@ -62,10 +62,11 @@
           <el-form-item label="Metodo de Pago:">
             <el-radio-group v-model="method">
               <el-radio :label="1" name="type" style="display:block">Efectivo</el-radio>
-              <el-radio :label="2" name="type" style="display:block">Cheque</el-radio>
-              <el-radio :label="3" name="type" style="display:block">Transferencia</el-radio>
-              <el-radio :label="4" name="type" style="display:block">Tarjeta de Crédito</el-radio>
-              <el-radio :label="5" name="type" style="display:block">Tarjeta de Débito</el-radio>
+              <el-radio :label="2" name="type" style="display:block">Tarjeta de Crédito</el-radio>
+              <el-radio :label="3" name="type" style="display:block">Tarjeta de Débito</el-radio>
+              <el-radio :label="4" name="type" style="display:block">Cheque</el-radio>
+              <el-radio :label="5" name="type" style="display:block">Transferencia</el-radio>
+              <el-radio :label="6" name="type" style="display:block">Crédito</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="IVA:">
