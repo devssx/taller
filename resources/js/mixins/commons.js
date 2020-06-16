@@ -5,6 +5,20 @@ import { Printd } from "printd";
 
 export default {
     methods: {
+        saveObject(obj, name) {
+            const json = JSON.stringify(obj);
+            localStorage.setItem(name, json);
+        },
+        loadObject(name) {
+            if (localStorage.getItem(name))
+                return JSON.parse(localStorage.getItem(name));
+            return null;
+        },
+        deleteObject(name, clear) {
+            localStorage.removeItem(name);
+            if (clear)
+                localStorage.clear();
+        },
         formatPrice(value) {
             let val = (value / 1).toFixed(2);
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -65,13 +79,13 @@ export default {
                 case 2:
                     return "Martes";
                 case 3:
-                    return "Miercoles";
+                    return "Miércoles";
                 case 4:
                     return "Jueves";
                 case 5:
                     return "Viernes";
                 case 6:
-                    return "Sabado";
+                    return "Sábado";
                 case 7:
                     return "Domingo";
             }
