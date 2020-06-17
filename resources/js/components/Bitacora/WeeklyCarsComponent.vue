@@ -40,7 +40,7 @@
           <el-table-column label="Color" header-align="center" align="center">
             <template slot-scope="scope">{{ scope.row.color }}</template>
           </el-table-column>
-          <el-table-column label="Cliente">
+          <el-table-column label="Cliente" width="150">
             <template slot-scope="scope">{{ scope.row.client.name }}</template>
           </el-table-column>
           <el-table-column label="Teléfono">
@@ -49,7 +49,7 @@
           <el-table-column label="Técnico">
             <template slot-scope="scope">{{ scope.row.user.name }}</template>
           </el-table-column>
-          <el-table-column label="Diagnóstico">
+          <el-table-column label="Diagnóstico" width="150">
             <template slot-scope="scope">{{ scope.row.concept }}</template>
           </el-table-column>
           <el-table-column label="Precio" header-align="right" align="right">
@@ -75,9 +75,16 @@
                 size="small"
                 icon="el-icon-edit"
                 type="text"
-                :disabled="scope.row.status!=2"
+                v-if="scope.row.status == 2"
                 @click="editItem(scope.row)"
               >Editar</el-button>
+              <el-button
+                size="small"
+                icon="el-icon-check"
+                type="text"
+                v-if="scope.row.status == 0"
+                @click="convertToReceipt(scope.row)"
+              >Autorizar</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -121,6 +128,7 @@
 export default {
   mounted: function() {
     this.$root.$on("refreshTable", this.refreshTable);
+    this.searchSales(this.selectedDay);
   },
   methods: {
     showReceipt(item) {
@@ -135,6 +143,10 @@ export default {
       } else {
         this.createQuotation(item, this.$refs["quotation"], canvas);
       }
+    },
+    convertToReceipt(item) {
+      // convierte cotizacion a recibo
+      this.$root.$emit("changeStatus", item, 2);
     },
     editItem(item) {
       this.$root.$emit("confirmSale", item, true);
@@ -194,8 +206,8 @@ export default {
       oldSales: [],
       loading: false,
       page: 1,
-      selectedDay: new Date(),
-      prevDay: new Date(),
+      selectedDay: this.initDayOfWeekDate(),
+      prevDay: this.initDayOfWeekDate(),
       search: ""
     };
   }

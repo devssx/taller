@@ -22,40 +22,40 @@
     <el-row class="br bl">
       <el-col :span="24">
         <el-table v-loading="loading" size="mini" :data="sales.data" style="width: 100%">
-          <el-table-column label="Entrada" width="100" header-align="center" align="center">
+          <el-table-column label="Entrada" header-align="center" align="center">
             <template slot-scope="scope">{{ fixDate(scope.row.created_at) }}</template>
           </el-table-column>
-          <el-table-column label="Marca" width="130">
+          <el-table-column label="Marca">
             <template slot-scope="scope">{{ scope.row.car[0].maker }}</template>
           </el-table-column>
-          <el-table-column label="Modelo" width="130">
+          <el-table-column label="Modelo">
             <template slot-scope="scope">{{ scope.row.car[0].brand }}</template>
           </el-table-column>
           <el-table-column label="Año" width="65" header-align="center" align="center">
             <template slot-scope="scope">{{ scope.row.year }}</template>
           </el-table-column>
-          <el-table-column label="Color" width="100" header-align="center" align="center">
+          <el-table-column label="Color" header-align="center" align="center">
             <template slot-scope="scope">{{ scope.row.color }}</template>
           </el-table-column>
-          <el-table-column label="Cliente" width="250">
+          <el-table-column label="Cliente">
             <template slot-scope="scope">{{ scope.row.client.name }}</template>
           </el-table-column>
-          <el-table-column label="Teléfono" width="130">
+          <el-table-column label="Teléfono">
             <template slot-scope="scope">{{ scope.row.client.phonenumber }}</template>
           </el-table-column>
-          <el-table-column label="Técnico" width="200">
+          <el-table-column label="Técnico">
             <template slot-scope="scope">{{ scope.row.user.name }}</template>
           </el-table-column>
           <el-table-column label="Diagnóstico">
             <template slot-scope="scope">{{ scope.row.concept }}</template>
           </el-table-column>
-          <el-table-column label="Precio" width="150" header-align="right" align="right">
+          <el-table-column label="Precio" header-align="right" align="right">
             <template slot-scope="scope">{{ scope.row.total }}</template>
           </el-table-column>
-          <el-table-column label="Autorizó" width="100" header-align="center" align="center">
+          <el-table-column label="Autorizó" header-align="center" align="center">
             <template slot-scope="scope">{{autorizo(scope.row)}}</template>
           </el-table-column>
-          <el-table-column label="Recibo" width="100" header-align="center" align="center">
+          <el-table-column label="Recibo" header-align="center" align="center">
             <template slot-scope="scope">
               <el-button
                 size="small"
@@ -66,15 +66,22 @@
               >{{scope.row.status==2?`Recibo`: `Cotización`}}</el-button>
             </template>
           </el-table-column>
-          <el-table-column label="Opciones" width="100" header-align="center" align="center">
+          <el-table-column label="Opciones" header-align="center" align="center">
             <template slot-scope="scope">
               <el-button
                 size="small"
                 icon="el-icon-edit"
                 type="text"
-                :disabled="scope.row.status!=2"
+                v-if="scope.row.status == 2"
                 @click="editItem(scope.row)"
               >Editar</el-button>
+              <el-button
+                size="small"
+                icon="el-icon-check"
+                type="text"
+                v-if="scope.row.status == 0"
+                @click="convertToReceipt(scope.row)"
+              >Autorizar</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -118,7 +125,7 @@
 export default {
   mounted: function() {
     this.$root.$on("refreshTable", this.refreshTable);
-    // this.loadTable("/api/sales");
+    this.searchSales(this.selectedDay);
   },
   methods: {
     showReceipt(item) {
@@ -136,6 +143,10 @@ export default {
     },
     editItem(item) {
       this.$root.$emit("confirmSale", item, true);
+    },
+    convertToReceipt(item) {
+      // convierte cotizacion a recibo
+      this.$root.$emit("changeStatus", item, 2);
     },
     onSearch() {
       if (!this.selectedDay) {
@@ -220,5 +231,12 @@ export default {
 .row-headerb {
   background-color: white;
   padding: 4px;
+}
+
+/* Ipad Pro */
+@media only screen and (max-width: 1366px) {
+  .content.el-main {
+    padding: 5px;
+  }
 }
 </style>

@@ -90,6 +90,11 @@ export default {
                     return "Domingo";
             }
         },
+        initDayOfWeekDate() {
+            var today = new Date();
+            today.setDate(today.getDate() - today.getDay() + 1);
+            return today;
+        },
         pad(number, size) {
             var s = String(number);
             while (s.length < (size || 2)) {
