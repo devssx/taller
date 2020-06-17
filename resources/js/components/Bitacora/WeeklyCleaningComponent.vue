@@ -37,41 +37,35 @@
 
       <!-- TABLA -->
       <el-col :span="20">
-        <el-table :data="tableData" style="width: 100%" v-loading="loading">
-          <el-table-column label="Día" width="120">
+        <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table-column label="Día" width="75">
             <template slot-scope="scope">{{ dayOfWeek(scope.row.start) }}</template>
           </el-table-column>
-          <el-table-column align="center" label="Hora Entrada" width="120" prop="start">
+          <el-table-column align="center" label="Hora Entrada" width="110" prop="start">
             <template slot-scope="scope">{{ fixDate(scope.row.start) }}</template>
           </el-table-column>
-          <el-table-column align="center" prop="cleaning" label="Limpieza"></el-table-column>
+          <el-table-column align="center" prop="cleaning" label="Limpieza" width="110"></el-table-column>
           <el-table-column label="Hora Desayuno" align="center">
-            <el-table-column align="center" label="Inicio" width="120" prop="breakfast_start">
+            <el-table-column align="center" label="Inicio" width="100" prop="breakfast_start">
               <template slot-scope="scope">{{ fixDate(scope.row.breakfast_start) }}</template>
             </el-table-column>
-            <el-table-column align="center" label="Fin" width="120" prop="breakfast_end">
+            <el-table-column align="center" label="Fin" width="100" prop="breakfast_end">
               <template slot-scope="scope">{{ fixDate(scope.row.breakfast_end) }}</template>
             </el-table-column>
           </el-table-column>
           <el-table-column label="Hora Comida" align="center">
-            <el-table-column align="center" label="Inicio" width="120" prop="lunch_start">
+            <el-table-column align="center" label="Inicio" width="100" prop="lunch_start">
               <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
             </el-table-column>
-            <el-table-column align="center" label="Fin" width="120" prop="lunch_end">
+            <el-table-column align="center" label="Fin" width="100" prop="lunch_end">
               <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
             </el-table-column>
           </el-table-column>
-          <el-table-column align="center" prop="done" label="Cumplió" width="120"></el-table-column>
-          <el-table-column prop="comment" label="Comentario" width="220"></el-table-column>
-          <el-table-column align="center" label="Modificar" width="160">
+          <el-table-column align="center" prop="done" label="Cumplió" width="80"></el-table-column>
+          <el-table-column prop="comment" label="Comentario"></el-table-column>
+          <el-table-column align="center" label="Modificar" width="100">
             <template slot-scope="scope">
               <dc-edit :selectedItem="tableData[scope.$index]"></dc-edit>
-              <el-button
-                @click="eliminarRegistro(tableData[scope.$index].id)"
-                style="margin-left:16px"
-                size="small"
-                type="text"
-              >Eliminar</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -130,25 +124,6 @@ export default {
     },
     showWeekOfEmployee(name) {
       this.tableData = this.employeeData.filter(e => e.name == name);
-    },
-    dayOfWeek(dt) {
-      var date = new Date(dt);
-      switch (date.getDay()) {
-        case 1:
-          return "Lunes";
-        case 2:
-          return "Martes";
-        case 3:
-          return "Miercoles";
-        case 4:
-          return "Jueves";
-        case 5:
-          return "Viernes";
-        case 6:
-          return "Sabado";
-        case 7:
-          return "Domingo";
-      }
     },
     fixNumber(n) {
       return n < 10 ? "0" + n : n;
@@ -260,5 +235,11 @@ export default {
 .row-header {
   background-color: #f5f7fa;
   padding: 4px;
+}
+/* Ipad Pro */
+@media only screen and (max-width: 1366px) {
+  .content.el-main {
+    padding: 5px;
+  }
 }
 </style>
