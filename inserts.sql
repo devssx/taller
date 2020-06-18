@@ -30,23 +30,25 @@ ALTER TABLE `clients` ADD `reminder_date` date DEFAULT NULL AFTER `reminder`;
 
 CREATE TABLE `cleanings` (
   `id` int(10) UNSIGNED NOT NULL,
+  `day` int(11) NOT NULL,
   `user_id` int(10) UNSIGNED NOT NULL,
-  `start` timestamp NOT NULL DEFAULT '2020-01-01 00:00:00',
+  `start` datetime DEFAULT NULL,
   `cleaning` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `breakfast_start` timestamp NOT NULL DEFAULT '2020-01-01 00:00:00',
-  `breakfast_end` timestamp NOT NULL DEFAULT '2020-01-01 00:00:00',
-  `lunch_start` timestamp NOT NULL DEFAULT '2020-01-01 00:00:00',
-  `lunch_end` timestamp NOT NULL DEFAULT '2020-01-01 00:00:00',
+  `breakfast_start` timestamp NULL DEFAULT NULL,
+  `breakfast_end` timestamp NULL DEFAULT NULL,
+  `lunch_start` timestamp NULL DEFAULT NULL,
+  `lunch_end` timestamp NULL DEFAULT NULL,
   `done` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `comment` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 ALTER TABLE `cleanings`
   ADD PRIMARY KEY (`id`);
+
 ALTER TABLE `cleanings`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 -- tipo de servicio: A/C, Mecanico, Electrico

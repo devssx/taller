@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cleaning extends Model
 {
-    public $fillable = ['user_id', 'start', 'cleaning', 'breakfast_start', 'breakfast_end', 'lunch_start', 'lunch_end', 'done', 'comment'];
+    public $fillable = ['day', 'user_id', 'start', 'cleaning', 'breakfast_start', 'breakfast_end', 'lunch_start', 'lunch_end', 'done', 'comment'];
 }

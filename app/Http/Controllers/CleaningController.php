@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cleaning;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\User;
 use DateTime;
 use DateInterval;
 
@@ -42,28 +43,51 @@ class CleaningController extends Controller
 
         // Join User Name
         // SELECT * FROM `cleanings` WHERE `start` > '2020-05-15' and `start` < '2020-05-16'
-        if ($request->has('start') && $request->has('end')) {
+        //if ($request->has('start') && $request->has('end')) {
+        if ($request->has('day')) {
+
+            // if ($request->has('role')) {
+            //     return User::role($request->get('role'))->get();
+            // }
+
+            // crear registros si no existen:
+            //$users = User::with('roles')->all();
+            $users = User::with('roles')->get();
+            foreach ($users as $u) {
+                if ($request->has('format')) {
+                    $dateFormat = $request->get('format');
+                    Cleaning::firstOrCreate(['user_id' => $u->id, 'day' => $request->get('day')], [
+                        'start' => $dateFormat,
+                        'breakfast_start' => $dateFormat,
+                        'breakfast_end' => $dateFormat,
+                        'lunch_start' => $dateFormat,
+                        'lunch_end' => $dateFormat
+                    ]);
+                } else {
+                    Cleaning::firstOrCreate(['user_id' => $u->id, 'day' => $request->get('day')]);
+                }
+            }
 
             $data = DB::table('cleanings')
                 ->join('users', 'users.id', 'cleanings.user_id')
                 ->select('cleanings.*', 'users.name')
-                ->where('cleanings.start', '>=', $request->get('start'))
-                ->where('cleanings.start', '<=', $request->get('end'))
-                ->orderBy('cleanings.start', 'asc')
+                //->where('cleanings.start', '>=', $request->get('start'))
+                //->where('cleanings.start', '<=', $request->get('end'))
+                ->where('cleanings.day', '=', $request->get('day'))
+                //->orderBy('cleanings.start', 'asc')
+                ->orderBy('users.name', 'asc')
                 ->get();
 
             return $data;
         }
 
         if ($request->has('today')) {
-
             return DB::table('cleanings')
                 ->join('users', 'users.id', 'cleanings.user_id')
                 ->select('cleanings.*', 'users.name')
                 ->where('cleanings.start', '>=', $request->get('today'))
                 ->get();
         }
-
 
         // all
         return $this->get($request);

@@ -55,8 +55,8 @@ export default {
             var ss = this.fixNumber(dt.getSeconds());
 
             switch (format) {
-                case "yyyy-MM-dd":
-                    return `${yyyy}-${MM}-${dd}`;
+                case "yyyy-MM-dd": return `${yyyy}-${MM}-${dd}`;
+                case "yyyyMMdd": return `${yyyy}${MM}${dd}`;
             }
 
             return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;

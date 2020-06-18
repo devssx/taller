@@ -15,8 +15,7 @@
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
         <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
       </el-col>
-      <el-col :span="4">
-      </el-col>
+      <el-col :span="4"></el-col>
     </el-row>
 
     <!-- TABLA -->
@@ -60,9 +59,8 @@
 <script>
 export default {
   mounted: function() {
-    var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
-    this.loadTable("/api/cleaning/search?today=" + today);
     this.$root.$on("refreshTable", this.refreshTable);
+    this.onSearch();
   },
   methods: {
     eliminarRegistro(id) {
@@ -106,24 +104,6 @@ export default {
     fixNumber(n) {
       return n < 10 ? "0" + n : n;
     },
-    toFixedFormat(dt, format) {
-      // 2020-05-15 15:00:00
-      if (!dt) dt = new Date();
-      var yyyy = dt.getFullYear();
-      var MM = this.fixNumber(dt.getMonth() + 1);
-      var dd = this.fixNumber(dt.getDate());
-
-      var hh = this.fixNumber(dt.getHours());
-      var mm = this.fixNumber(dt.getMinutes());
-      var ss = this.fixNumber(dt.getSeconds());
-
-      switch (format) {
-        case "yyyy-MM-dd":
-          return `${yyyy}-${MM}-${dd}`;
-      }
-
-      return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
-    },
     formatDate(date) {
       var hours = date.getHours();
       var minutes = date.getMinutes();
@@ -134,7 +114,8 @@ export default {
       return hours + ":" + minutes + " " + ampm;
     },
     fixDate(dt) {
-      return this.formatDate(new Date(dt));
+      var dText = this.formatDate(new Date(dt));
+      return dText == `12:00 am` ? `` : dText;
     },
     loadTable(url) {
       var $this = this;
@@ -145,26 +126,18 @@ export default {
       });
     },
     onSearch() {
-      var start = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 00:00:00`;
-
-      var end = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 23:59:59`;
-
-      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
+      var day = `${this.toFixedFormat(this.selectedDay, "yyyyMMdd")}`;
+      var df = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
+      console.log(df);
+      this.loadTable(`/api/cleaning/search?day=${day}&format=${df}`);
     },
     addUserInfo() {
       this.$refs.newItem.insertNewRow(this.selectedDay);
     },
     refreshTable() {
-      var currentDay = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
-      var start = currentDay + " 00:00:00";
-      var end = currentDay + " 23:59:59";
-      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
+      var day = `${this.toFixedFormat(this.selectedDay, "yyyyMMdd")}`;
+      var df = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
+      this.loadTable(`/api/cleaning/search?day=${day}&format=${df}`);
     }
   },
   data() {
