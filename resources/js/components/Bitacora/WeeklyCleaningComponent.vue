@@ -80,44 +80,6 @@ export default {
     this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
-    eliminarRegistro(id) {
-      const $this = this;
-      $this
-        .$confirm(
-          "Esto eliminará permanentemente el registro. ¿Desea continuar?",
-          "Advertencia",
-          {
-            confirmButtonText: "Si",
-            cancelButtonText: "Cancelar",
-            type: "warning"
-          }
-        )
-        .then(() => {
-          $this.loading = true;
-          axios
-            .delete("/api/cleaning/" + id)
-            .then(function(response) {
-              $this.$message({
-                type: "success",
-                message: "Registro eliminado"
-              });
-
-              $this.tableData = $this.tableData.filter(item => item.id != id);
-              $this.loading = false;
-            })
-            .catch(error => {
-              $this.loading = false;
-              if (error.response.data.errors) {
-                var errors = error.response.data.errors;
-                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-                  confirmButtonText: "OK",
-                  type: "error"
-                });
-              }
-            });
-        })
-        .catch(() => {});
-    },
     handleSelect(key, keyPath) {
       this.activeIndex = key;
       this.showWeekOfEmployee(this.employees[key]);
@@ -125,39 +87,8 @@ export default {
     showWeekOfEmployee(name) {
       this.tableData = this.employeeData.filter(e => e.name == name);
     },
-    fixNumber(n) {
-      return n < 10 ? "0" + n : n;
-    },
-    toFixedFormat(dt, format) {
-      if (!dt) dt = new Date();
-
-      // 2020-05-15 15:00:00
-      var yyyy = dt.getFullYear();
-      var MM = this.fixNumber(dt.getMonth() + 1);
-      var dd = this.fixNumber(dt.getDate());
-
-      var hh = this.fixNumber(dt.getHours());
-      var mm = this.fixNumber(dt.getMinutes());
-      var ss = this.fixNumber(dt.getSeconds());
-
-      switch (format) {
-        case "yyyy-MM-dd":
-          return `${yyyy}-${MM}-${dd}`;
-      }
-
-      return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
-    },
-    formatDate(date) {
-      var hours = date.getHours();
-      var minutes = date.getMinutes();
-      var ampm = hours >= 12 ? "pm" : "am";
-      hours = hours % 12;
-      hours = hours ? hours : 12;
-      minutes = minutes < 10 ? "0" + minutes : minutes + "";
-      return hours + ":" + minutes + " " + ampm;
-    },
     fixDate(dt) {
-      return this.formatDate(new Date(dt));
+      return this.toFixedTime(new Date(dt));
     },
     loadTable(url) {
       var $this = this;
@@ -177,12 +108,9 @@ export default {
       });
     },
     onSearch() {
-      var start = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 00:00:00`;
-
-      this.loadTable(`/api/cleaning/searchWeek?start=${start}`);
+      var newDate = this.initDayOfWeekDate(this.selectedDay);
+      var day = `${this.toFixedFormat(newDate, "yyyyMMdd")}`;
+      this.loadTable(`/api/cleaning/searchWeek?start=${day}`);
     },
     refreshTable(id) {
       // if (id) {

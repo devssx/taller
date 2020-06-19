@@ -71,25 +71,13 @@ class CleaningController extends Controller
             $data = DB::table('cleanings')
                 ->join('users', 'users.id', 'cleanings.user_id')
                 ->select('cleanings.*', 'users.name')
-                //->where('cleanings.start', '>=', $request->get('start'))
-                //->where('cleanings.start', '<=', $request->get('end'))
                 ->where('cleanings.day', '=', $request->get('day'))
-                //->orderBy('cleanings.start', 'asc')
                 ->orderBy('users.name', 'asc')
                 ->get();
 
             return $data;
         }
 
-        if ($request->has('today')) {
-            return DB::table('cleanings')
-                ->join('users', 'users.id', 'cleanings.user_id')
-                ->select('cleanings.*', 'users.name')
-                ->where('cleanings.start', '>=', $request->get('today'))
-                ->get();
-        }
-
-        // all
         return $this->get($request);
     }
 
@@ -98,17 +86,30 @@ class CleaningController extends Controller
         // Join User Name
         // SELECT * FROM `cleanings` WHERE `start` > '2020-05-15' and `start` < '2020-05-16'
         if ($request->has('start')) {
-            $end = new DateTime($request->get("start"));
-            $interval = new DateInterval('P6D'); // + 6 days
-            $end->add($interval);
+
+            // week range
+            $start = intval($request->get('start'));
+            $end = $start + 6;
 
             $data = DB::table('cleanings')
                 ->join('users', 'users.id', 'cleanings.user_id')
                 ->select('cleanings.*', 'users.name')
-                ->where('cleanings.start', '>=', $request->get('start'))
-                ->where('cleanings.start', '<=', $end->format("Y-m-d H:i:s"))
-                ->orderBy('cleanings.start', 'asc')
+                ->where('cleanings.day', '>=', $start)
+                ->where('cleanings.day', '<=', $end)
+                ->orderBy('cleanings.day', 'asc')
                 ->get();
+
+            //$end = new DateTime($request->get("start"));
+            //$interval = new DateInterval('P6D'); // + 6 days
+            //$end->add($interval);
+
+            // $data = DB::table('cleanings')
+            //     ->join('users', 'users.id', 'cleanings.user_id')
+            //     ->select('cleanings.*', 'users.name')
+            //     ->where('cleanings.start', '>=', $request->get('start'))
+            //     ->where('cleanings.start', '<=', $end->format("Y-m-d H:i:s"))
+            //     ->orderBy('cleanings.start', 'asc')
+            //     ->get();
 
             return $data;
         }

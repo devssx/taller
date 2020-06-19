@@ -101,9 +101,6 @@ export default {
         })
         .catch(() => {});
     },
-    fixNumber(n) {
-      return n < 10 ? "0" + n : n;
-    },
     formatDate(date) {
       var hours = date.getHours();
       var minutes = date.getMinutes();
@@ -126,15 +123,23 @@ export default {
       });
     },
     onSearch() {
+      if (this.dayName(this.selectedDay) == `Domingo`) {
+        this.$alert("El día seleccionado no es válido.", "Día no válido", {
+          confirmButtonText: "OK",
+          type: "error"
+        });
+        return;
+      }
+
       var day = `${this.toFixedFormat(this.selectedDay, "yyyyMMdd")}`;
       var df = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
-      console.log(df);
       this.loadTable(`/api/cleaning/search?day=${day}&format=${df}`);
     },
-    addUserInfo() {
-      this.$refs.newItem.insertNewRow(this.selectedDay);
-    },
     refreshTable() {
+      if (this.dayName(this.selectedDay) == `Domingo`) {
+        return;
+      }
+
       var day = `${this.toFixedFormat(this.selectedDay, "yyyyMMdd")}`;
       var df = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
       this.loadTable(`/api/cleaning/search?day=${day}&format=${df}`);

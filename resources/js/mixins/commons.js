@@ -74,6 +74,8 @@ export default {
         dayOfWeek(dt) {
             var date = new Date(dt);
             switch (date.getDay()) {
+                case 0:
+                    return "Domingo";
                 case 1:
                     return "Lunes";
                 case 2:
@@ -86,8 +88,24 @@ export default {
                     return "Viernes";
                 case 6:
                     return "Sábado";
-                case 7:
+            }
+        },
+        dayName(date) {
+            switch (date.getDay()) {
+                case 0:
                     return "Domingo";
+                case 1:
+                    return "Lunes";
+                case 2:
+                    return "Martes";
+                case 3:
+                    return "Miércoles";
+                case 4:
+                    return "Jueves";
+                case 5:
+                    return "Viernes";
+                case 6:
+                    return "Sábado";
             }
         },
         initDayOfWeekDate() {
