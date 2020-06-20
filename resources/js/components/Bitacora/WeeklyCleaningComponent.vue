@@ -94,10 +94,11 @@ export default {
       var $this = this;
       $this.loading = true;
       $this.tableData = [];
+      $this.employees = [];
+
       axios.get(url).then(function(response) {
         $this.employeeData = response.data;
         $this.loading = false;
-        $this.employees = [];
 
         // Para el panel izquierdo (lista de empleados)
         $this.employeeData.forEach(element => {

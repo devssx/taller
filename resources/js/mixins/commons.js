@@ -108,8 +108,8 @@ export default {
                     return "Sábado";
             }
         },
-        initDayOfWeekDate() {
-            var today = new Date();
+        initDayOfWeekDate(day) {
+            var today = day || new Date();
             today.setDate(today.getDate() - today.getDay() + 1);
             return today;
         },
