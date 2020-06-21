@@ -106,6 +106,10 @@ export default {
           if ($this.employees.filter(e => e == name).length == 0)
             $this.employees.push(name);
         });
+
+        // seleccionar primero
+        if ($this.employeeData.length > 0)
+          $this.showWeekOfEmployee($this.employeeData[0].name);
       });
     },
     onSearch() {
@@ -113,25 +117,32 @@ export default {
       var day = `${this.toFixedFormat(newDate, "yyyyMMdd")}`;
       this.loadTable(`/api/cleaning/searchWeek?start=${day}`);
     },
-    refreshTable(id) {
-      // if (id) {
-      //   var url = `/api/cleaning/search?id=${id}`;
-      //   var $this = this;
-      //   $this.loading = true;
-      //   axios.get(url).then(function(response) {
-      //     var data = response.data;
-      //     if (data.length > 0) {
-      //       for (var i = 0; i < $this.employeeData.length; i++) {
-      //         // busca el item editado para actualizar en la tabla visual
-      //         if ($this.employeeData[i].id == id) {
-      //           $this.employeeData[i] = data[0];
-      //           break;
-      //         }
-      //       }
-      //     }
-      //     $this.loading = false;
-      //   });
-      // }
+    refreshTable(item) {
+      if (item && item.id) {
+        for (var i = 0; i < this.employeeData.length; i++) {
+          // busca el item editado para actualizar en la tabla visual
+          if (this.employeeData[i].id == item.id) {
+            var newObject = new Object();
+            newObject.created_at = this.employeeData[i].created_at;
+            newObject.day = this.employeeData[i].day;
+            newObject.id = this.employeeData[i].id;
+            newObject.name = this.employeeData[i].name;
+            newObject.updated_at = this.employeeData[i].updated_at;
+            newObject.user_id = this.employeeData[i].user_id;
+            newObject.start = item.start;
+            newObject.breakfast_start = item.breakfast_start;
+            newObject.breakfast_end = item.breakfast_end;
+            newObject.lunch_start = item.lunch_start;
+            newObject.lunch_end = item.lunch_end;
+            newObject.cleaning = item.cleaning;
+            newObject.comment = item.comment;
+            newObject.done = item.done;
+            this.employeeData[i] = newObject;
+            this.showWeekOfEmployee(newObject.name);
+            break;
+          }
+        }
+      }
     }
   },
   data() {
