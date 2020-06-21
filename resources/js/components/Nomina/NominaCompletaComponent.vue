@@ -8,8 +8,9 @@
       <el-col :span="18">
         <el-date-picker
           v-model="selectedDay"
-          type="date"
-          format="dd-MM-yyyy"
+          firstDayOfWeek="3"
+          type="week"
+          format="Week WW"
           placeholder="Seleccionar Semana"
         ></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
@@ -28,7 +29,7 @@
     <!-- TABLA -->
     <el-row class="br bl">
       <el-col :span="24">
-        <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+        <el-table border size="mini" :data="tableData" style="width: 100%" v-loading="loading">
           <el-table-column label="Técnico"></el-table-column>
           <el-table-column align="right" label="Total A/C" width="200"></el-table-column>
           <el-table-column align="right" label="Total Mecánica" width="200"></el-table-column>
@@ -79,8 +80,7 @@
 <script>
 export default {
   mounted: function() {
-    var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
-    this.loadTable("/api/cleaning/search?today=" + today);
+    // this.loadTable("/api/cleaning/search?today=" + today);
     this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
@@ -128,24 +128,6 @@ export default {
     fixNumber(n) {
       return n < 10 ? "0" + n : n;
     },
-    toFixedFormat(dt, format) {
-      // 2020-05-15 15:00:00
-      if (!dt) dt = new Date();
-      var yyyy = dt.getFullYear();
-      var MM = this.fixNumber(dt.getMonth() + 1);
-      var dd = this.fixNumber(dt.getDate());
-
-      var hh = this.fixNumber(dt.getHours());
-      var mm = this.fixNumber(dt.getMinutes());
-      var ss = this.fixNumber(dt.getSeconds());
-
-      switch (format) {
-        case "yyyy-MM-dd":
-          return `${yyyy}-${MM}-${dd}`;
-      }
-
-      return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
-    },
     formatDate(date) {
       var hours = date.getHours();
       var minutes = date.getMinutes();
@@ -167,26 +149,16 @@ export default {
       });
     },
     onSearch() {
-      var start = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 00:00:00`;
-
-      var end = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 23:59:59`;
-
-      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
+      //this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
     },
     addUserInfo() {
       this.$refs.newItem.insertNewRow(this.selectedDay);
     },
     refreshTable() {
-      var currentDay = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
-      var start = currentDay + " 00:00:00";
-      var end = currentDay + " 23:59:59";
-      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
+      // var currentDay = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
+      // var start = currentDay + " 00:00:00";
+      // var end = currentDay + " 23:59:59";
+      // this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
     }
   },
   data() {
@@ -196,7 +168,7 @@ export default {
       showDialog: false,
       selectedDay: new Date(),
       search: "",
-      loading: true,
+      loading: false,
       tableData: [],
       newUser: {
         user_id: 1,

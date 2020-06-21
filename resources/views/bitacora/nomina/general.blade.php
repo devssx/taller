@@ -3,12 +3,12 @@
 <el-main class="content">
     <el-row type="flex">
         <el-col :span="19">
-            <h2>Nómina Por Técnico</h2>
+            <h2>Nómina</h2>
         </el-col>
     </el-row>
     <el-row type="flex">
         <el-col :span="24">
-            <nomina-general></nomina-general>
+            <nomina-container></nomina-container>
         </el-col>
     </el-row>
 </el-main>
