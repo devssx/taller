@@ -30,6 +30,7 @@ Route::delete('/clients/{id}', 'ClientsController@delete');
 
 Route::get('/sales/searchByDay', 'SalesController@searchByDay');
 Route::get('/sales/searchByWeek', 'SalesController@searchByWeek');
+Route::get('/sales/searchReceiptByWeek', 'SalesController@searchReceiptByWeek');
 Route::get('/sales', 'SalesController@get');
 Route::post('/sales', 'SalesController@save');
 Route::post('/sales/status', 'SalesController@changeStatus');

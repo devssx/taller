@@ -95,6 +95,27 @@ class SalesController extends Controller
         return [];
     }
 
+    public function searchReceiptByWeek(Request $request)
+    {
+        if ($request->has('start')) {
+            $end = new DateTime($request->get("start"));
+            $interval = new DateInterval('P6D'); // + 6 days
+            $end->add($interval);
+
+            return Sale::with('saleServices')->with('client')->with('user')->with(['car' => function ($query) {
+                $query->distinct('id');
+            }])->with(['services' => function ($query) {
+                $query->distinct('id');
+            }])
+                ->where('created_at', '>=', $request->get('start'))
+                ->where('created_at', '<=', $end->format("Y-m-d H:i:s"))
+                ->where('status', '=', Sale::TERMINADO)
+                ->paginate(10000);
+        }
+
+        return [];
+    }
+
 
 
     public function changeStatus(Request $request)
@@ -150,7 +171,7 @@ class SalesController extends Controller
             if ($request->has('service_type')) {
                 $sale->service_type = $request->get('service_type');
             }
-    
+
             $sale->method = $request->get('method');
         }
 

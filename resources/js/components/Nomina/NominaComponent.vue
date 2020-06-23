@@ -79,29 +79,112 @@
     <el-row class="br bl">
       <el-col :span="24">
         <el-table border size="mini" :data="tableData" style="width: 100%" v-loading="loading">
-          <el-table-column label="Sabado" width="100"></el-table-column>
-          <el-table-column label="Lunes" width="100"></el-table-column>
-          <el-table-column label="Martes" width="100"></el-table-column>
-          <el-table-column label="Miercoles" width="100"></el-table-column>
-          <el-table-column label="Jueves" width="100"></el-table-column>
-          <el-table-column label="Viernes" width="100"></el-table-column>
+          <el-table-column
+            label="Sábado"
+            width="100"
+            header-align="center"
+            align="right"
+            prop="saturday"
+          >
+            <template slot-scope="scope">{{ formatPrice(scope.row.saturday) }}</template>
+          </el-table-column>
+          <el-table-column
+            label="Lunes"
+            width="100"
+            header-align="center"
+            align="right"
+            prop="monday"
+          >
+            <template slot-scope="scope">{{ formatPrice(scope.row.monday) }}</template>
+          </el-table-column>
+          <el-table-column
+            label="Martes"
+            width="100"
+            header-align="center"
+            align="right"
+            prop="tuesday"
+          >
+            <template slot-scope="scope">{{ formatPrice(scope.row.tuesday) }}</template>
+          </el-table-column>
+          <el-table-column
+            label="Miercoles"
+            width="100"
+            header-align="center"
+            align="right"
+            prop="wednesday"
+          >
+            <template slot-scope="scope">{{ formatPrice(scope.row.wednesday) }}</template>
+          </el-table-column>
+          <el-table-column
+            label="Jueves"
+            width="100"
+            header-align="center"
+            align="right"
+            prop="thursday"
+          >
+            <template slot-scope="scope">{{ formatPrice(scope.row.thursday) }}</template>
+          </el-table-column>
+          <el-table-column
+            label="Viernes"
+            width="100"
+            header-align="center"
+            align="right"
+            prop="friday"
+          >
+            <template slot-scope="scope">{{ formatPrice(scope.row.friday) }}</template>
+          </el-table-column>
 
-          <el-table-column label="Total Semana"></el-table-column>
-          <el-table-column label="% A/C" width="100"></el-table-column>
-          <el-table-column label="Total Neto Comisiones"></el-table-column>
-          <el-table-column label="Sueldo" width="100"></el-table-column>
-          <el-table-column label="Sub Total" width="100"></el-table-column>
-          <el-table-column label="Descuentos" width="100"></el-table-column>
-          <el-table-column label="Total"></el-table-column>
+          <el-table-column
+            label="Total Semana"
+            header-align="center"
+            align="center"
+            prop="totalWeek"
+          >
+            <template slot-scope="scope">{{ formatPrice(scope.row.totalWeek) }}</template>
+          </el-table-column>
+          <el-table-column label="% A/C" width="100" header-align="center" align="right" prop="ac"></el-table-column>
+          <el-table-column
+            label="Total Neto Comisiones"
+            header-align="center"
+            align="right"
+            prop="commission"
+          >
+            <template slot-scope="scope">{{ formatPrice(scope.row.commission) }}</template>
+          </el-table-column>
+          <el-table-column
+            label="Sueldo"
+            width="100"
+            header-align="center"
+            align="right"
+            prop="sueldo"
+          >
+            <template slot-scope="scope">{{ formatPrice(scope.row.sueldo) }}</template>
+          </el-table-column>
+          <el-table-column
+            label="Sub Total"
+            width="100"
+            header-align="center"
+            align="right"
+            prop="subtotal"
+          >
+            <template slot-scope="scope">{{ formatPrice(scope.row.subtotal) }}</template>
+          </el-table-column>
+          <el-table-column
+            label="Descuentos"
+            width="100"
+            header-align="center"
+            align="right"
+            prop="discounts"
+          >
+            <template slot-scope="scope">{{ formatPrice(scope.row.discounts) }}</template>
+          </el-table-column>
+          <el-table-column label="Total" header-align="center" align="right" prop="total">
+            <template slot-scope="scope">{{ formatPrice(scope.row.total) }}</template>
+          </el-table-column>
 
           <el-table-column align="center" label="Modificar" width="147">
             <template slot-scope="scope">
-              <el-button
-                @click="eliminarRegistro(tableData[scope.$index].id)"
-                style="margin-left:16px"
-                size="small"
-                type="text"
-              >Eliminar</el-button>
+              <el-button type="text" size="mini">Editar</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -228,52 +311,13 @@
 <script>
 export default {
   mounted: function() {
-    console.log("mountedc");
-    // this.loadTable("/api/cleaning/search?today=" + today);
     this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
     handleSelect(key, keyPath) {
       this.activeIndex = key;
     },
-    eliminarRegistro(id) {
-      const $this = this;
-      $this
-        .$confirm(
-          "Esto eliminará permanentemente el registro. ¿Desea continuar?",
-          "Advertencia",
-          {
-            confirmButtonText: "Si",
-            cancelButtonText: "Cancelar",
-            type: "warning"
-          }
-        )
-        .then(() => {
-          $this.loading = true;
-          axios
-            .delete("/api/cleaning/" + id)
-            .then(function(response) {
-              $this.$message({
-                type: "success",
-                message: "Registro eliminado"
-              });
-
-              $this.tableData = $this.tableData.filter(item => item.id != id);
-              $this.loading = false;
-            })
-            .catch(error => {
-              $this.loading = false;
-              if (error.response.data.errors) {
-                var errors = error.response.data.errors;
-                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-                  confirmButtonText: "OK",
-                  type: "error"
-                });
-              }
-            });
-        })
-        .catch(() => {});
-    },
+    eliminarRegistro(id) {},
     fixNumber(n) {
       return n < 10 ? "0" + n : n;
     },
@@ -293,9 +337,43 @@ export default {
       const $this = this;
       $this.loading = true;
       axios.get(url).then(function(response) {
-        $this.tableData = response.data;
+        $this.weekData = response.data;
+        $this.tableData = $this.getACUserData();
+        console.log(response);
         $this.loading = false;
       });
+    },
+    getACUserData(user) {
+      let week = {
+        saturday: 500,
+        monday: 2000,
+        tuesday: 4500,
+        wednesday: 600,
+        thursday: 9000,
+        friday: 14000,
+        totalWeek: 0,
+        ac: 0.07,
+        commission: 0,
+        sueldo: 0,
+        subtotal: 0,
+        discounts: 60,
+        total: 0
+      };
+
+      week.totalWeek =
+        week.saturday +
+        week.monday +
+        week.tuesday +
+        week.wednesday +
+        week.thursday +
+        week.friday;
+
+      // comision
+      week.commission = week.totalWeek * week.ac;
+      week.subtotal = week.commission + week.sueldo;
+      week.total = week.subtotal - week.discounts;
+
+      return [week];
     },
     onSearch() {
       // TODO Buscar recibos de la semana
@@ -304,7 +382,13 @@ export default {
       // user
       // formulas:
       //
-      // this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
+
+      this.prevDay = this.selectedDay;
+      var start = `${this.toFixedFormat(
+        this.selectedDay,
+        "yyyy-MM-dd"
+      )} 00:00:00`;
+      this.loadTable(`/api/sales/searchReceiptByWeek?start=${start}`);
     },
     refreshTable() {
       // TODO
@@ -319,7 +403,9 @@ export default {
       activeIndex: "0",
       employees: ["Salomon", "Juanito", "Julio", "Alma"],
       showDialog: false,
+      weekData: [],
       selectedDay: new Date(),
+      prevDay: new Date(),
       search: "",
       loading: false,
       tableData: [],
