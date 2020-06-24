@@ -63,44 +63,6 @@ export default {
     this.onSearch();
   },
   methods: {
-    eliminarRegistro(id) {
-      const $this = this;
-      $this
-        .$confirm(
-          "Esto eliminará permanentemente el registro. ¿Desea continuar?",
-          "Advertencia",
-          {
-            confirmButtonText: "Si",
-            cancelButtonText: "Cancelar",
-            type: "warning"
-          }
-        )
-        .then(() => {
-          $this.loading = true;
-          axios
-            .delete("/api/cleaning/" + id)
-            .then(function(response) {
-              $this.$message({
-                type: "success",
-                message: "Registro eliminado"
-              });
-
-              $this.tableData = $this.tableData.filter(item => item.id != id);
-              $this.loading = false;
-            })
-            .catch(error => {
-              $this.loading = false;
-              if (error.response.data.errors) {
-                var errors = error.response.data.errors;
-                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-                  confirmButtonText: "OK",
-                  type: "error"
-                });
-              }
-            });
-        })
-        .catch(() => {});
-    },
     formatDate(date) {
       var hours = date.getHours();
       var minutes = date.getMinutes();
