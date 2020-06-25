@@ -141,7 +141,13 @@
           >
             <template slot-scope="scope">{{ formatPrice(scope.row.totalWeek) }}</template>
           </el-table-column>
-          <el-table-column label="% A/C" width="100" header-align="center" align="right" prop="ac"></el-table-column>
+          <el-table-column
+            label="% A/C"
+            width="100"
+            header-align="center"
+            align="right"
+            prop="percentCommission"
+          ></el-table-column>
           <el-table-column
             label="Total Neto Comisiones"
             header-align="center"
@@ -264,7 +270,13 @@
           >
             <template slot-scope="scope">{{ formatPrice(scope.row.totalWeek) }}</template>
           </el-table-column>
-          <el-table-column label="% Mecánica" width="100" header-align="center" align="right" prop="ac"></el-table-column>
+          <el-table-column
+            label="% Mecánica"
+            width="100"
+            header-align="center"
+            align="right"
+            prop="percentCommission"
+          ></el-table-column>
           <el-table-column
             label="Total Neto Comisiones"
             header-align="center"
@@ -387,7 +399,13 @@
           >
             <template slot-scope="scope">{{ formatPrice(scope.row.totalWeek) }}</template>
           </el-table-column>
-          <el-table-column label="% Eléctrico" width="100" header-align="center" align="right" prop="ac"></el-table-column>
+          <el-table-column
+            label="% Eléctrico"
+            width="100"
+            header-align="center"
+            align="right"
+            prop="percentCommission"
+          ></el-table-column>
           <el-table-column
             label="Total Neto Comisiones"
             header-align="center"
@@ -443,7 +461,7 @@
         <h4>Sueldo:</h4>
       </el-col>
       <el-col :span="20" class="row-headerb" align="end">
-        <h4>$0.00</h4>
+        <h4>${{formatPrice(salary)}}</h4>
       </el-col>
     </el-row>
     <el-row class="br bl bb row-header">
@@ -451,7 +469,7 @@
         <h4>Comisiones:</h4>
       </el-col>
       <el-col :span="20" class="row-headerb" align="end">
-        <h4>$0.00</h4>
+        <h4>${{formatPrice(comissions)}}</h4>
       </el-col>
     </el-row>
     <el-row class="br bl bb row-header">
@@ -459,7 +477,7 @@
         <h4>Descuentos:</h4>
       </el-col>
       <el-col :span="20" class="row-headerb" align="end">
-        <h4>$0.00</h4>
+        <h4>${{formatPrice(discounts)}}</h4>
       </el-col>
     </el-row>
     <el-row class="br bl bb row-header">
@@ -467,7 +485,7 @@
         <h4>Total:</h4>
       </el-col>
       <el-col :span="20" class="row-headerb" align="end">
-        <h4>$0.00</h4>
+        <h4>${{formatPrice(total)}}</h4>
       </el-col>
     </el-row>
   </el-row>
@@ -486,6 +504,11 @@ export default {
       this.tableACData = this.getEmployeeData(name, 1, 0.07, 1500.0);
       this.tableMecData = this.getEmployeeData(name, 2, 0.025, 0);
       this.tableElecData = this.getEmployeeData(name, 3, 0.025, 0);
+      this.computeTotal(
+        this.tableACData[0],
+        this.tableMecData[0],
+        this.tableElecData[0]
+      );
     },
     eliminarRegistro(id) {},
     fixNumber(n) {
@@ -512,6 +535,9 @@ export default {
 
         // (lista de empleados)
         $this.employees = [];
+        $this.tableACData = [];
+        $this.tableMecData = [];
+        $this.tableElecData = [];
         $this.weekData.data.forEach(sale => {
           var name = sale.user.name;
           if ($this.employees.filter(e => e == name).length == 0)
@@ -598,10 +624,22 @@ export default {
       //let start = currentDay + " 00:00:00";
       //let end = currentDay + " 23:59:59";
       //this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
+    },
+    computeTotal(tableAc, tableMec, tableElec) {
+      this.salary = tableAc.sueldo + tableMec.sueldo + tableElec.sueldo;
+      this.comissions =
+        tableAc.commission + tableMec.commission + tableElec.commission;
+      this.discounts =
+        tableAc.discounts + tableMec.discounts + tableElec.discounts;
+      this.total = tableAc.total + tableMec.total + tableElec.total;
     }
   },
   data() {
     return {
+      total: 0,
+      discounts: 0,
+      comissions: 0,
+      salary: 0,
       comment: "N/A",
       selectedEmployee: "N/A",
       activeIndex: "0",

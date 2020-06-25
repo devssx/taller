@@ -55,8 +55,8 @@
           <el-form-item label="Tipo de Servico:">
             <el-radio-group v-model="service_type">
               <el-radio :label="1" name="type">A/C</el-radio>
-              <el-radio :label="3" name="type">Mecánico</el-radio>
-              <el-radio :label="2" name="type">Eléctrico</el-radio>
+              <el-radio :label="2" name="type">Mecánico</el-radio>
+              <el-radio :label="3" name="type">Eléctrico</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="Metodo de Pago:">

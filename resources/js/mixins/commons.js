@@ -148,6 +148,16 @@ export default {
                 receiptImg.height
             );
 
+            // fecha de recibo
+            let doneOn = new Date();
+            if (currentSale.done_on) {
+                try {
+                    nextService = new Date(currentSale.done_on)
+                } catch (e) {
+                    doneOn = new Date();
+                }
+            }
+
             $this.context.font = "24px Calibri";
             $this.context.fillStyle = "red";
             $this.context.fillText(
@@ -163,24 +173,22 @@ export default {
 
             $this.context.fillStyle = "black";
             $this.context.fillText(
-                new Date()
-                    .toLocaleDateString("es-ES", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit"
-                    })
+                doneOn.toLocaleDateString("es-ES", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit"
+                })
                     .replace("/", "-")
                     .replace("/", "-"),
                 920,
                 155
             );
             $this.context.fillText(
-                new Date()
-                    .toLocaleDateString("es-ES", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit"
-                    })
+                doneOn.toLocaleDateString("es-ES", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit"
+                })
                     .replace("/", "-")
                     .replace("/", "-"),
                 920,
