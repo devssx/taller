@@ -2,11 +2,11 @@
 import { Bar } from "vue-chartjs";
 
 export default {
-  props: ["sales"],
+  props: ["chartData"],
   extends: Bar,
   data: () => ({
     data: {
-      labels: ["Juan", "Pablo", "Alma", "Francisco"],
+      labels: [],
       datasets: []
     },
     options: {
@@ -22,7 +22,7 @@ export default {
               beginAtZero: true,
               callback: function(value) {
                 var ranges = [
-                  { divider: 1e6, suffix: "M" },
+                  { divider: 1e6, suffix: "M" }
                   //{ divider: 1e3, suffix: "K" }
                 ];
                 function formatNumber(n) {
@@ -57,44 +57,29 @@ export default {
     }
   }),
   mounted() {
-    var i = 0;
-    var sales = ["a", "b", "c"];
-    this.data.datasets = [];
-    if (sales.length > 0) {
-      this.data.datasets.push({
-        label: "Ingresos",
-        backgroundColor: ["#909399", "#e6a23c", "#67c23a", "#f56c6c"],
-        data: [0, 0, 0, 0]
-      });
-      for (var label in this.data.labels) {
-        for (var sale in sales) {
-          //if (this.sales[sale].status == label) {
-          this.data.datasets[0].data[label] = 100*i;
-          i++;
-          //}
-        }
-      }
-    }
-    this.renderChart(this.data, this.options);
+    this.setData(this.chartData);
   },
   methods: {
-    refresh(sales) {
-      /*this.data.datasets = [];
-      if (sales.length > 0) {
-        this.data.datasets.push({
-          label: "Ingresos",
-          backgroundColor: ["#909399", "#e6a23c", "#67c23a", "#f56c6c"],
-          data: [0, 0, 0, 0]
-        });
-        for (var label in this.data.labels) {
-          for (var sale in sales) {
-            if (sales[sale].status == label) {
-              this.data.datasets[0].data[label] = parseFloat(sales[sale].total);
-            }
-          }
+    setData(newData) {
+      this.data.labels = [];
+      this.data.datasets = [
+        {
+          label: ``,
+          backgroundColor: [],
+          data: []
         }
+      ];
+
+      if (newData && newData.length > 0) {
+        var i = 0;
+        newData.forEach(column => {
+          this.data.datasets[0].data[i++] = column.value;
+          this.data.labels.push(column.name);
+          this.data.datasets[0].backgroundColor.push(column.color);
+        });
       }
-      this.renderChart(this.data, this.options);*/
+
+      this.renderChart(this.data, this.options);
     }
   }
 };

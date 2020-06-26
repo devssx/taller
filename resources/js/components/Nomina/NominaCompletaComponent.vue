@@ -71,7 +71,7 @@
         </el-row>
       </el-col>
       <el-col :span="12">
-        <bar-chart ref="dashboardChart"></bar-chart>
+        <bar-chart ref="myChart" :chartData="userData" style="height: 400px"></bar-chart>
       </el-col>
     </el-row>
   </el-row>
@@ -149,6 +149,9 @@ export default {
       });
     },
     onSearch() {
+      this.userData[0].value = 2000;
+      this.userData[0].name = "Salomon";
+      this.$refs.myChart.setData(this.userData);
       //this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
     },
     addUserInfo() {
@@ -163,6 +166,12 @@ export default {
   },
   data() {
     return {
+      userData: [
+        { name: `Paco`, value: 1700, color: this.getColor(0) },
+        { name: `Cuca`, value: 800, color: this.getColor(1) },
+        { name: `Mark`, value: 800, color: this.getColor(2) },
+        { name: `Julio`, value: 3200, color: this.getColor(3) }
+      ],
       activeIndex: 0,
       employees: ["Salomon", "Juanito", "Julio", "Alma"],
       showDialog: false,

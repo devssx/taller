@@ -611,11 +611,9 @@ export default {
       return [week];
     },
     onSearch() {
-      this.prevDay = this.selectedDay;
-      var start = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 00:00:00`;
+      var newDate = this.initDayOfWeekDate(this.selectedDay);
+      this.prevDay = newDate;
+      var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
       this.loadTable(`/api/sales/searchReceiptByWeek?start=${start}`);
     },
     refreshTable() {

@@ -57,8 +57,8 @@
                             <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.weeklycleaning') }}')">
                                 Limpieza Semanal
                             </el-menu-item>
-                            {{--<el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.nominageneral') }}')">
-                            Nómina
+                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.nominageneral') }}')">
+                                Nómina
                             </el-menu-item>
                             {{-- <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.nominadetail') }}')">
                                 Nómina Completa Resumen
