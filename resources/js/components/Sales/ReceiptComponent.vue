@@ -111,8 +111,8 @@
               <el-form-item label="Tipo:">
                 <el-radio-group v-model="service_type">
                   <el-radio :label="1" name="type">A/C</el-radio>
-                  <el-radio :label="2" name="type">Eléctrico</el-radio>
-                  <el-radio :label="3" name="type">Mecánico</el-radio>
+                  <el-radio :label="2" name="type">Mecánico</el-radio>
+                  <el-radio :label="3" name="type">Eléctrico</el-radio>
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="MDP:">
@@ -943,6 +943,30 @@ export default {
             $this.order.method = $this.method;
             $this.order.service_type = $this.service_type;
             $this.order.tax = $this.tax;
+
+            if (!$this.order.client) {
+              $this.$alert(
+                "Favor de seleccionar un cliente",
+                "Cliente no válido",
+                {
+                  confirmButtonText: "OK",
+                  type: "warning"
+                }
+              );
+              return;
+            }
+
+            if (!$this.order.user) {
+              $this.$alert(
+                "Favor de seleccionar un empleado",
+                "Empleado no válido",
+                {
+                  confirmButtonText: "OK",
+                  type: "warning"
+                }
+              );
+              return;
+            }
 
             if ($this.service_type == 0) {
               $this.$alert(

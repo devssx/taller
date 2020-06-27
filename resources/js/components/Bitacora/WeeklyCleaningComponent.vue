@@ -87,8 +87,18 @@ export default {
     showWeekOfEmployee(name) {
       this.tableData = this.employeeData.filter(e => e.name == name);
     },
+    formatDate(date) {
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? "pm" : "am";
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      minutes = minutes < 10 ? "0" + minutes : minutes + "";
+      return hours + ":" + minutes + " " + ampm;
+    },
     fixDate(dt) {
-      return this.toFixedTime(new Date(dt));
+      var dText = this.formatDate(new Date(dt));
+      return dText == `12:00 am` ? `` : dText;
     },
     loadTable(url) {
       var $this = this;
