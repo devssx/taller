@@ -14,7 +14,6 @@
           placeholder="Seleccionar Semana"
         ></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
-        <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
       </el-col>
       <el-col :span="4" align="end"></el-col>
     </el-row>
@@ -30,21 +29,33 @@
     <el-row class="br bl">
       <el-col :span="24">
         <el-table border size="mini" :data="tableData" style="width: 100%" v-loading="loading">
-          <el-table-column label="Técnico"></el-table-column>
-          <el-table-column align="right" label="Total A/C" width="200"></el-table-column>
-          <el-table-column align="right" label="Total Mecánica" width="200"></el-table-column>
-          <el-table-column align="right" label="Total Auto Eléctrico" width="200"></el-table-column>
-          <el-table-column align="right" label="Subtotal" width="200"></el-table-column>
-          <el-table-column align="right" label="Descuentos" width="200"></el-table-column>
-          <el-table-column align="right" label="Total" width="200"></el-table-column>
-          <el-table-column align="center" label="Modificar" width="200">
+          <el-table-column label="Técnico" prop="employee"></el-table-column>
+          <el-table-column align="right" label="Total A/C" width="180" prop="totalA">
+            <template slot-scope="scope">{{ formatPrice(scope.row.totalA) }}</template>
+          </el-table-column>
+          <el-table-column align="right" label="Total Mecánica" width="180" prop="totalB">
+            <template slot-scope="scope">{{ formatPrice(scope.row.totalB) }}</template>
+          </el-table-column>
+          <el-table-column align="right" label="Total Auto Eléctrico" width="180" prop="totalC">
+            <template slot-scope="scope">{{ formatPrice(scope.row.totalC) }}</template>
+          </el-table-column>
+          <el-table-column align="right" label="Subtotal" width="180" prop="subtotal">
+            <template slot-scope="scope">{{ formatPrice(scope.row.subtotal) }}</template>
+          </el-table-column>
+          <el-table-column align="right" label="Descuentos" width="180" prop="discounts">
+            <template slot-scope="scope">{{ formatPrice(scope.row.discounts) }}</template>
+          </el-table-column>
+          <el-table-column align="right" label="Total" width="180" prop="total">
+            <template slot-scope="scope">{{ formatPrice(scope.row.total) }}</template>
+          </el-table-column>
+          <el-table-column align="center" label="Modificar" width="180">
             <template slot-scope="scope">
               <el-button
-                @click="eliminarRegistro(tableData[scope.$index].id)"
+                @click="editarRegistro(tableData[scope.$index])"
                 style="margin-left:16px"
                 size="small"
                 type="text"
-              >Eliminar</el-button>
+              >Editar</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -60,18 +71,23 @@
             <h4>Total Nómina:</h4>
           </el-col>
           <el-col :span="20" class="row-headerb">
-            <h4>$0.00</h4>
+            <h4>${{formatPrice(total)}}</h4>
           </el-col>
         </el-row>
         <el-row class="br bl bb row-header">
           <el-col :span="4" style="margin-top: 7px;">
             <h4>Observaciones:</h4>
           </el-col>
-          <el-col :span="20" class="row-headerb">TEXTO</el-col>
+          <el-col :span="20" class="row-headerb">Comentario...</el-col>
         </el-row>
       </el-col>
-      <el-col :span="12">
-        <bar-chart ref="myChart" :chartData="userData" style="height: 400px"></bar-chart>
+      <el-col :span="12" align="center">
+        <el-row class="br bt bb row-header">
+          <h3 style="color:#909399">Ingresos</h3>
+        </el-row>
+        <el-row>
+          <bar-chart ref="myChart" :chartData="[]" style="height: 400px"></bar-chart>
+        </el-row>
       </el-col>
     </el-row>
   </el-row>
@@ -80,117 +96,115 @@
 <script>
 export default {
   mounted: function() {
-    // this.loadTable("/api/cleaning/search?today=" + today);
-    this.$root.$on("refreshTable", this.refreshTable);
+    // this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
-    handleSelect(key, keyPath) {
-      this.activeIndex = key;
-    },
-    eliminarRegistro(id) {
-      const $this = this;
-      $this
-        .$confirm(
-          "Esto eliminará permanentemente el registro. ¿Desea continuar?",
-          "Advertencia",
-          {
-            confirmButtonText: "Si",
-            cancelButtonText: "Cancelar",
-            type: "warning"
-          }
-        )
-        .then(() => {
-          $this.loading = true;
-          axios
-            .delete("/api/cleaning/" + id)
-            .then(function(response) {
-              $this.$message({
-                type: "success",
-                message: "Registro eliminado"
-              });
-
-              $this.tableData = $this.tableData.filter(item => item.id != id);
-              $this.loading = false;
-            })
-            .catch(error => {
-              $this.loading = false;
-              if (error.response.data.errors) {
-                var errors = error.response.data.errors;
-                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-                  confirmButtonText: "OK",
-                  type: "error"
-                });
-              }
-            });
-        })
-        .catch(() => {});
-    },
-    fixNumber(n) {
-      return n < 10 ? "0" + n : n;
-    },
-    formatDate(date) {
-      var hours = date.getHours();
-      var minutes = date.getMinutes();
-      var ampm = hours >= 12 ? "pm" : "am";
-      hours = hours % 12;
-      hours = hours ? hours : 12;
-      minutes = minutes < 10 ? "0" + minutes : minutes + "";
-      return hours + ":" + minutes + " " + ampm;
-    },
-    fixDate(dt) {
-      return this.formatDate(new Date(dt));
-    },
+    editarRegistro(item) {},
+    refreshTable() {},
     loadTable(url) {
-      var $this = this;
+      const $this = this;
       $this.loading = true;
       axios.get(url).then(function(response) {
-        $this.tableData = response.data;
         $this.loading = false;
+
+        // reset
+        $this.employees = [];
+        $this.tableData = [];
+        $this.total = 0;
+
+        $this.weekData = response.data;
+        $this.weekData.data.forEach(sale => {
+          var name = sale.user.name;
+          if ($this.employees.filter(e => e == name).length == 0)
+            $this.employees.push(name);
+        });
+
+        // calcula totales de cada empleado
+        if ($this.employees.length > 0) {
+          $this.employees.forEach(emp =>
+            $this.tableData.push($this.getPayroll(emp, 0.07, 0.025, 0.07))
+          );
+        }
+
+        // crear grafica
+        var chart = $this.createChartData($this.tableData);
+        $this.$refs.myChart.setData(chart);
+
+        // nomina total
+        $this.tableData.forEach(n => ($this.total += n.total));
       });
     },
+    getPayroll(user, cAc, cMec, cElec) {
+      let emp = {
+        employee: user,
+        totalA: 0,
+        totalB: 0,
+        totalC: 0,
+        comisionA: 0,
+        comisionB: 0,
+        comisionC: 0,
+        subtotal: 0,
+        discounts: 0,
+        total: 0
+      };
+
+      // Carga totales de recibos tipo AC del empleado
+      this.weekData.data.forEach(sale => {
+        if (sale.user.name == user) {
+          switch (sale.service_type) {
+            case 3: // Servicio Electrico
+              emp.totalC += parseFloat(sale.total);
+              break;
+            case 2: // Servicio Mecanico
+              emp.totalC += parseFloat(sale.total);
+              break;
+            default:
+              // Servicio AC
+              emp.totalA += parseFloat(sale.total);
+              break;
+          }
+        }
+      });
+
+      // Ganancias para el empleado
+      emp.comisionA = emp.totalA * cAc;
+      emp.comisionB = emp.totalB * cMec;
+      emp.comisionC = emp.totalC * cElec;
+
+      // subtotal (suma de cada comision servicio)
+      emp.subtotal = emp.comisionA + emp.comisionB + emp.comisionC;
+
+      // Total
+      emp.total = emp.subtotal - emp.discounts;
+      return emp;
+    },
     onSearch() {
-      this.userData[0].value = 2000;
-      this.userData[0].name = "Salomon";
-      this.$refs.myChart.setData(this.userData);
-      //this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
+      var newDate = this.initDayOfWeekDate(this.selectedDay);
+      this.prevDay = newDate;
+      var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
+      this.loadTable(`/api/sales/searchReceiptByWeek?start=${start}`);
     },
-    addUserInfo() {
-      this.$refs.newItem.insertNewRow(this.selectedDay);
-    },
-    refreshTable() {
-      // var currentDay = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
-      // var start = currentDay + " 00:00:00";
-      // var end = currentDay + " 23:59:59";
-      // this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
+    createChartData(data) {
+      let chartData = [];
+      let i = 0;
+      data.forEach(e =>
+        chartData.push({
+          name: e.employee,
+          value: e.total,
+          color: this.getColor(i++)
+        })
+      );
+      return chartData;
     }
   },
   data() {
     return {
-      userData: [
-        { name: `Paco`, value: 1700, color: this.getColor(0) },
-        { name: `Cuca`, value: 800, color: this.getColor(1) },
-        { name: `Mark`, value: 800, color: this.getColor(2) },
-        { name: `Julio`, value: 3200, color: this.getColor(3) }
-      ],
-      activeIndex: 0,
-      employees: ["Salomon", "Juanito", "Julio", "Alma"],
-      showDialog: false,
+      total: 0,
       selectedDay: new Date(),
-      search: "",
       loading: false,
-      tableData: [],
-      newUser: {
-        user_id: 1,
-        start: "",
-        cleaning: "",
-        breakfast_start: "",
-        breakfast_end: "",
-        lunch_start: "",
-        lunch_end: "",
-        done: "No",
-        comment: "",
-        name: ""
-      }
+      weekData: [],
+      employees: [],
+      tableData: []
     };
   }
 };

@@ -6,7 +6,7 @@ import { Printd } from "printd";
 export default {
     methods: {
         getColor(index) {
-            var palete = ['#909399', '#F56C6C', '#E6A23C', '#67C23A', '#409EFF',
+            var palete = ['#409EFF', '#F56C6C', '#E6A23C', '#67C23A', '#909399',
                 '#FFA07A', '#FF7F50', '#FFDAB9', '#9ACD32', '#40E0D0',
                 '#87CEFA', '#EE82EE', '#FF69B4', '#F5DEB3', '#D2691E',
                 '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
