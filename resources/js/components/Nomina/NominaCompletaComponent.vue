@@ -156,7 +156,7 @@ export default {
               emp.totalC += parseFloat(sale.total);
               break;
             case 2: // Servicio Mecanico
-              emp.totalC += parseFloat(sale.total);
+              emp.totalB += parseFloat(sale.total);
               break;
             default:
               // Servicio AC
