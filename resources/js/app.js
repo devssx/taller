@@ -118,6 +118,7 @@ Vue.component('weekly-cars', require('./components/Bitacora/weeklyCarsComponent'
 Vue.component('view-carservices', require('./components/CarServices/ServiceViewComponent').default);
 Vue.component('row-item', require('./components/CarServices/RowItemComponent').default);
 Vue.component('nomina-general', require('./components/Nomina/NominaComponent').default);
+Vue.component('nomina-item', require('./components/Nomina/NominaItemComponent').default);
 Vue.component('nomina-completa', require('./components/Nomina/NominaCompletaComponent').default);
 Vue.component('nomina-container', require('./components/Nomina/TabContainerComponent').default);
 Vue.component('ingresos-component', require('./components/Nomina/IngresosComponent').default);
