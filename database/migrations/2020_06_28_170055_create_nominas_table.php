@@ -13,7 +13,7 @@ class CreateNominasTable extends Migration
      */
     public function up()
     {
-        Schema::create('ngeneral', function (Blueprint $table) {
+        Schema::create('nominas_global_comments', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('week');
             $table->unsignedInteger('user_id');
@@ -23,12 +23,13 @@ class CreateNominasTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
         });
 
-        Schema::create('ndetail', function (Blueprint $table) {
+        Schema::create('nominas', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('week');
             $table->unsignedInteger('user_id');
            
             $table->integer('type');
+            $table->decimal('total_week');
             $table->decimal('comission');
             $table->decimal('discount');
             $table->decimal('salary');
@@ -38,7 +39,7 @@ class CreateNominasTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
         });
 
-        Schema::create('ncomment', function (Blueprint $table) {
+        Schema::create('nominas_user_comments', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('week');
             $table->unsignedInteger('user_id');
@@ -55,8 +56,8 @@ class CreateNominasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ngeneral');
-        Schema::dropIfExists('ncomment');
-        Schema::dropIfExists('ndetail');
+        Schema::dropIfExists('nominas');
+        Schema::dropIfExists('nominas_user_comments');
+        Schema::dropIfExists('nominas_global_comments');
     }
 }
