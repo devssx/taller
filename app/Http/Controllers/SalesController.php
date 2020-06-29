@@ -107,8 +107,8 @@ class SalesController extends Controller
             }])->with(['services' => function ($query) {
                 $query->distinct('id');
             }])
-                ->where('created_at', '>=', $request->get('start'))
-                ->where('created_at', '<=', $end->format("Y-m-d H:i:s"))
+                ->where('done_on', '>=', $request->get('start'))
+                ->where('done_on', '<=', $end->format("Y-m-d H:i:s"))
                 ->where('status', '=', Sale::TERMINADO)
                 ->paginate(10000);
         }

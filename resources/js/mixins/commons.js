@@ -121,9 +121,12 @@ export default {
                     return "Sábado";
             }
         },
-        initDayOfWeekDate(day) {
+        initDayOfWeekDate(day, offset) {
             var today = day || new Date();
-            today.setDate(today.getDate() - today.getDay() + 1);
+            if (offset)
+                today.setDate(today.getDate() - (today.getDay() + offset) + 1);
+            else
+                today.setDate(today.getDate() - today.getDay() + 1);
             return today;
         },
         pad(number, size) {
