@@ -191,7 +191,7 @@
             <template slot-scope="scope">
               <el-button type="text" size="mini">Editar</el-button>
             </template>
-          </el-table-column> -->
+          </el-table-column>-->
         </el-table>
       </el-col>
     </el-row>
@@ -202,6 +202,12 @@
         <h1 style="color:#909399">Mecánica Automotríz</h1>
       </el-col>
     </el-row>
+    <el-row>
+      <el-col :span="24" align="center">
+        <nomina-item :items="tableMecData"></nomina-item>
+      </el-col>
+    </el-row>
+    <br />
 
     <!-- TABLA -->
     <el-row class="br bl">
@@ -320,7 +326,7 @@
             <template slot-scope="scope">
               <el-button type="text" size="mini">Editar</el-button>
             </template>
-          </el-table-column> -->
+          </el-table-column>-->
         </el-table>
       </el-col>
     </el-row>
@@ -449,7 +455,7 @@
             <template slot-scope="scope">
               <el-button type="text" size="mini">Editar</el-button>
             </template>
-          </el-table-column> -->
+          </el-table-column>-->
         </el-table>
       </el-col>
     </el-row>
@@ -551,6 +557,12 @@ export default {
     // Carga recibos tipo: 1: A/C, 2: Mecanica, 3: Electrico
     getEmployeeData(user, serviceType, comision, sueldo) {
       let week = {
+        salesA: [],
+        salesB: [],
+        salesC: [],
+        salesD: [],
+        salesE: [],
+        salesF: [],
         saturday: 0,
         monday: 0,
         tuesday: 0,
@@ -570,26 +582,33 @@ export default {
       let userSales = [];
       this.weekData.data.forEach(sale => {
         if (sale.service_type == serviceType && sale.user.name == user) {
+            console.log(sale);
           userSales.push(sale);
           switch (this.dayOfWeek(sale.created_at)) {
             case "Sábado": // sabado es menor a la fecha del dia lunes
               week.saturday += parseFloat(sale.total);
+              week.salesA.push(sale);
               break;
             case "Domingo": //  no deberia haber nada en domingo...
             case "Lunes":
               week.monday += parseFloat(sale.total);
+              week.salesB.push(sale);
               break;
             case "Martes":
               week.tuesday += parseFloat(sale.total);
+              week.salesC.push(sale);
               break;
             case "Miércoles":
               week.wednesday += parseFloat(sale.total);
+              week.salesD.push(sale);
               break;
             case "Jueves":
               week.thursday += parseFloat(sale.total);
+              week.salesE.push(sale);
               break;
             case "Viernes":
               week.friday += parseFloat(sale.total);
+              week.salesF.push(sale);
               break;
           }
         }

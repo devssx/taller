@@ -1,71 +1,106 @@
 <template>
   <div>
     <el-row class="row-header br bl bb bt">
-      <el-col :span="4" align="center" class="header">Empleado</el-col>
-      <el-col :span="3" align="center" class="header">Total A/C</el-col>
-      <el-col :span="3" align="center" class="header">Total Mecánica</el-col>
-      <el-col :span="3" align="center" class="header">Total Eléctrico</el-col>
-      <el-col :span="3" align="center" class="header">Subtotal</el-col>
-      <el-col :span="3" align="center" class="header">Descuentos</el-col>
-      <el-col :span="3" align="center" class="header">Total</el-col>
-      <el-col :span="2" align="center" class="header">Options</el-col>
+      <el-col :span="2" align="center" class="header">Sábado</el-col>
+      <el-col :span="2" align="center" class="header">Lunes</el-col>
+      <el-col :span="2" align="center" class="header">Martes</el-col>
+      <el-col :span="2" align="center" class="header">Miércoles</el-col>
+      <el-col :span="2" align="center" class="header">Jueves</el-col>
+      <el-col :span="2" align="center" class="header">Viernes</el-col>
+      <el-col :span="2" align="center" class="header">Total</el-col>
+      <el-col :span="1" align="center" class="header">%</el-col>
+      <el-col :span="2" align="center" class="header">Comisión</el-col>
+      <el-col :span="2" align="center" class="header">Sueldo</el-col>
+      <el-col :span="2" align="center" class="header">Subtotal</el-col>
+      <el-col :span="1" align="center" class="header">Desc.</el-col>
+      <el-col :span="2" align="center" class="header">Total</el-col>
     </el-row>
     <el-row v-if="items.length == 0">
       <el-col :span="24" class="bl br bb hr text-mini empty-data" align="center">Sin Datos</el-col>
     </el-row>
     <el-row>
       <el-row v-for="(item, index) in items" v-bind:key="index">
-        <el-col :span="4" class="bl br bb hr">
-          <label class="pl-10 text-mini">{{ item.employee }}</label>
-        </el-col>
-        <el-col :span="3" class="br bb hr" align="end">
-          <el-popover
-            placement="top-start"
-            title="Title"
-            width="200"
-            trigger="hover"
-            content="this is content, this is content, this is content"
-          >
-            <label slot="reference" class="pr-10 text-mini">{{ formatPrice(item.totalA) }}</label>
+        <el-col :span="2" align="end" class="bl br bb hr">
+          <el-popover placement="right" width="400" trigger="hover">
+            <el-table size="mini" :data="item.salesA">
+              <el-table-column width="70" property="year" label="Año"></el-table-column>
+              <el-table-column property="brand" label="Modelo"></el-table-column>
+              <el-table-column width="100" property="total" label="Total" align="end"></el-table-column>
+            </el-table>
+            <label slot="reference" class="pr-10 text-mini">{{ formatPrice(item.saturday) }}</label>
           </el-popover>
         </el-col>
-        <el-col :span="3" class="br bb hr" align="end">
-          <label class="pr-10 text-mini">{{ formatPrice(item.totalB)}}</label>
+        <el-col :span="2" align="end" class="br bb hr">
+          <el-popover placement="right" width="350" trigger="hover">
+            <el-table size="mini" :data="item.salesB">
+              <el-table-column width="70" property="year" label="Año"></el-table-column>
+              <el-table-column property="brand" label="Modelo"></el-table-column>
+              <el-table-column width="100" property="total" label="Total" align="end"></el-table-column>
+            </el-table>
+            <label slot="reference" class="pr-10 text-mini">{{ formatPrice(item.monday) }}</label>
+          </el-popover>
         </el-col>
-        <el-col :span="3" class="br bb hr" align="end">
-          <label class="pr-10 text-mini">{{ formatPrice(item.totalC)}}</label>
+        <el-col :span="2" align="end" class="br bb hr">
+          <el-popover placement="right" width="350" trigger="hover">
+            <el-table size="mini" :data="item.salesC">
+              <el-table-column width="70" property="year" label="Año"></el-table-column>
+              <el-table-column property="brand" label="Modelo"></el-table-column>
+              <el-table-column width="100" property="total" label="Total" align="end"></el-table-column>
+            </el-table>
+            <label slot="reference" class="pr-10 text-mini">{{ formatPrice(item.tuesday) }}</label>
+          </el-popover>
         </el-col>
-        <el-col :span="3" class="br bb hr" align="end">
+        <el-col :span="2" align="end" class="br bb hr">
+          <el-popover placement="right" width="350" trigger="hover">
+            <el-table size="mini" :data="item.salesF">
+              <el-table-column width="70" property="year" label="Año"></el-table-column>
+              <el-table-column property="brand" label="Modelo"></el-table-column>
+              <el-table-column width="100" property="total" label="Total" align="end"></el-table-column>
+            </el-table>
+            <label slot="reference" class="pr-10 text-mini">{{ formatPrice(item.wednesday) }}</label>
+          </el-popover>
+        </el-col>
+        <el-col :span="2" align="end" class="br bb hr">
+          <el-popover placement="right" width="350" trigger="hover">
+            <el-table size="mini" :data="item.salesE">
+              <el-table-column width="70" property="year" label="Año"></el-table-column>
+              <el-table-column property="brand" label="Modelo"></el-table-column>
+              <el-table-column width="100" property="total" label="Total" align="end"></el-table-column>
+            </el-table>
+            <label slot="reference" class="pr-10 text-mini">{{ formatPrice(item.thursday) }}</label>
+          </el-popover>
+        </el-col>
+        <el-col :span="2" align="end" class="br bb hr">
+          <el-popover placement="right" width="350" trigger="hover">
+            <el-table size="mini" :data="item.salesF">
+              <el-table-column width="70" property="year" label="Año"></el-table-column>
+              <el-table-column property="brand" label="Modelo"></el-table-column>
+              <el-table-column width="100" property="total" label="Total" align="end"></el-table-column>
+            </el-table>
+            <label slot="reference" class="pr-10 text-mini">{{ formatPrice(item.friday) }}</label>
+          </el-popover>
+        </el-col>
+
+        <el-col :span="2" align="end" class="br bb hr">
+          <label class="pr-10 text-mini">{{ formatPrice(item.totalWeek) }}</label>
+        </el-col>
+        <el-col :span="1" align="end" class="br bb hr">
+          <label class="pr-10 text-mini">{{ formatPrice(item.percentCommission) }}</label>
+        </el-col>
+        <el-col :span="2" align="end" class="br bb hr">
+          <label class="pr-10 text-mini">{{ formatPrice(item.commission) }}</label>
+        </el-col>
+        <el-col :span="2" align="end" class="br bb hr">
+          <label class="pr-10 text-mini">{{ formatPrice(item.sueldo) }}</label>
+        </el-col>
+        <el-col :span="2" align="end" class="br bb hr">
           <label class="pr-10 text-mini">{{ formatPrice(item.subtotal) }}</label>
         </el-col>
-        <el-col :span="3" class="br bb hr" align="end">
-          <el-input
-            v-show="item.editable"
-            @change="onChangeDiscount(item)"
-            size="mini"
-            v-model="item.discounts"
-            class="mycustom"
-          ></el-input>
-          <label v-show="!item.editable" class="pr-10 text-mini">{{ item.discounts }}</label>
+        <el-col :span="1" align="end" class="br bb hr">
+          <label class="pr-10 text-mini">{{ formatPrice(item.discounts) }}</label>
         </el-col>
-        <el-col :span="3" class="br bb hr" align="end">
-          <label class="pr-10 text-mini">${{ formatPrice(item.total) }}</label>
-        </el-col>
-        <el-col :span="2" class="br bb hr" align="center">
-          <el-button
-            v-show="!item.editable"
-            @click="item.editable=!item.editable"
-            icon="el-icon-edit"
-            type="text"
-            size="mini"
-          >Editar</el-button>
-          <el-button
-            v-show="item.editable"
-            icon="el-icon-check"
-            @click="item.editable=false"
-            type="text"
-            size="mini"
-          >Guardar</el-button>
+        <el-col :span="2" align="end" class="br bb hr">
+          <label class="pr-10 text-mini">{{ formatPrice(item.total) }}</label>
         </el-col>
       </el-row>
     </el-row>
