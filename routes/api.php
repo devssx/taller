@@ -70,3 +70,6 @@ Route::post('/cleaning', 'CleaningController@save');
 Route::delete('/cleaning/{id}', 'CleaningController@delete');
 
 Route::post('/payroll/comment', 'PayrollController@saveComment');
+Route::get('/payroll/comment', 'PayrollController@getComment');
+Route::post('/payroll/userComment', 'PayrollCommentController@saveComment');
+Route::get('/payroll/userComment', 'PayrollCommentController@getComment');

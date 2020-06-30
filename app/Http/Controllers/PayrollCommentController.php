@@ -17,6 +17,20 @@ class PayrollCommentController extends Controller
         //
     }
 
+    public function saveComment(Request $request)
+    {
+        $c = PayrollComment::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('user_id')]);
+        $c->comment = $request->get('comment');
+        $c->total = $request->get('total');
+        $c->save();
+    }
+
+    public function getComment(Request $request)
+    {
+        return PayrollComment::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('user_id')]);
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *

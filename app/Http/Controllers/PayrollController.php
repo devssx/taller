@@ -36,6 +36,11 @@ class PayrollController extends Controller
         $c->save();
     }
 
+    public function getComment(Request $request)
+    {
+        return Comment::firstOrCreate(['week' => $request->get('week')]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
