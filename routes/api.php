@@ -69,4 +69,4 @@ Route::get('/cleaning/searchWeek', 'CleaningController@searchWeek');
 Route::post('/cleaning', 'CleaningController@save');
 Route::delete('/cleaning/{id}', 'CleaningController@delete');
 
-Route::post('/payroll/comment', 'NominaController@saveComment');
+Route::post('/payroll/comment', 'PayrollController@saveComment');

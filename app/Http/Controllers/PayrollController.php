@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Nomina;
+use App\Payroll;
 use App\Comment;
 use Illuminate\Http\Request;
 
-class NominaController extends Controller
+class PayrollController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,6 +15,7 @@ class NominaController extends Controller
      */
     public function index()
     {
+        //
     }
 
     /**
@@ -49,10 +50,10 @@ class NominaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Nomina  $nomina
+     * @param  \App\Payroll  $payroll
      * @return \Illuminate\Http\Response
      */
-    public function show(Nomina $nomina)
+    public function show(Payroll $payroll)
     {
         //
     }
@@ -60,10 +61,10 @@ class NominaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Nomina  $nomina
+     * @param  \App\Payroll  $payroll
      * @return \Illuminate\Http\Response
      */
-    public function edit(Nomina $nomina)
+    public function edit(Payroll $payroll)
     {
         //
     }
@@ -72,10 +73,10 @@ class NominaController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Nomina  $nomina
+     * @param  \App\Payroll  $payroll
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Nomina $nomina)
+    public function update(Request $request, Payroll $payroll)
     {
         //
     }
@@ -83,10 +84,10 @@ class NominaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Nomina  $nomina
+     * @param  \App\Payroll  $payroll
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Nomina $nomina)
+    public function destroy(Payroll $payroll)
     {
         //
     }
