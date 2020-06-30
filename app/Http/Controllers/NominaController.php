@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Nomina;
+use App\Comment;
 use Illuminate\Http\Request;
 
 class NominaController extends Controller
@@ -14,7 +15,6 @@ class NominaController extends Controller
      */
     public function index()
     {
-        //
     }
 
     /**
@@ -25,6 +25,14 @@ class NominaController extends Controller
     public function create()
     {
         //
+    }
+
+    public function saveComment(Request $request)
+    {
+        $c = Comment::firstOrCreate(['week' => $request->get('week')]);
+        $c->comment = $request->get('comment');
+        $c->total = $request->get('total');
+        $c->save();
     }
 
     /**

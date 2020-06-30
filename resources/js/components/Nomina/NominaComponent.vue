@@ -73,9 +73,14 @@
         <h1 style="color:#909399">A/C Automotríz</h1>
       </el-col>
     </el-row>
+    <el-row>
+      <el-col :span="24" align="center">
+        <nomina-item :items="tableACData"></nomina-item>
+      </el-col>
+    </el-row>
 
     <!-- TABLA -->
-    <el-row class="br bl">
+    <el-row v-if="false" class="br bl">
       <el-col :span="24">
         <el-table border size="mini" :data="tableACData" style="width: 100%" v-loading="loading">
           <el-table-column
@@ -210,7 +215,7 @@
     <br />
 
     <!-- TABLA -->
-    <el-row class="br bl">
+    <el-row v-if="false" class="br bl">
       <el-col :span="24">
         <el-table border size="mini" :data="tableMecData" style="width: 100%" v-loading="loading">
           <el-table-column
@@ -337,9 +342,14 @@
         <h1 style="color:#909399">Auto Eléctrico Automotríz</h1>
       </el-col>
     </el-row>
+    <el-row>
+      <el-col :span="24" align="center">
+        <nomina-item :items="tableElecData"></nomina-item>
+      </el-col>
+    </el-row>
 
     <!-- TABLA -->
-    <el-row class="br bl">
+    <el-row v-if="false" class="br bl">
       <el-col :span="24">
         <el-table border size="mini" :data="tableElecData" style="width: 100%" v-loading="loading">
           <el-table-column
@@ -582,7 +592,7 @@ export default {
       let userSales = [];
       this.weekData.data.forEach(sale => {
         if (sale.service_type == serviceType && sale.user.name == user) {
-            console.log(sale);
+          console.log(sale);
           userSales.push(sale);
           switch (this.dayOfWeek(sale.created_at)) {
             case "Sábado": // sabado es menor a la fecha del dia lunes

@@ -16,11 +16,9 @@ class CreateNominasTable extends Migration
         Schema::create('nominas_global_comments', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('week');
-            $table->unsignedInteger('user_id');
             $table->string('comment');
             $table->decimal('total');
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users');
         });
 
         Schema::create('nominas', function (Blueprint $table) {

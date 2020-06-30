@@ -16,8 +16,19 @@
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
       </el-col>
       <el-col :span="4" align="end">
-        <el-button v-show="!editable" :disabled="!selectedDay" type="primary" @click="editable=true" icon="el-icon-edit">Editar</el-button>
-        <el-button v-show="editable" :disabled="!selectedDay" type="primary" icon="el-icon-ok">Guardar</el-button>
+        <el-button
+          v-show="isReadOnly"
+          :disabled="!selectedDay"
+          type="primary"
+          @click="isReadOnly=false"
+          icon="el-icon-edit"
+        >Editar</el-button>
+        <el-button
+          v-show="!isReadOnly"
+          @click="saveComment"
+          type="primary"
+          icon="el-icon-check"
+        >Guardar</el-button>
       </el-col>
     </el-row>
 
@@ -69,11 +80,16 @@
         </el-row>
         <el-row class="br bl bb row-header">
           <el-col :span="4" style="margin-top: 7px;">
-            <h4>Observaciones:</h4>
+            <h4>Comentarios:</h4>
           </el-col>
           <el-col :span="20" class="row-headerb">
-            <el-input v-show="editable" size="mini" v-model="comment" class="mycustom"></el-input>
-            <label v-show="!editable" class="pr-10 text-mini">{{ comment }}</label>
+            <el-input
+              type="textarea"
+              :readonly="isReadOnly"
+              :autosize="{ minRows: 2, maxRows: 4}"
+              placeholder="Comentarios"
+              v-model="comment"
+            ></el-input>
           </el-col>
         </el-row>
       </el-col>
@@ -130,7 +146,7 @@ export default {
     },
     getPayroll(user, cAc, cMec, cElec) {
       let emp = {
-        editable: false,
+        isReadOnly: false,
         employee: user,
         totalA: 0,
         totalB: 0,
@@ -180,6 +196,37 @@ export default {
       var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
       this.loadTable(`/api/sales/searchReceiptByWeek?start=${start}`);
     },
+    saveComment() {
+      const $this = this;
+      $this.loading = true;
+      $this.isReadOnly = true;
+      let week = `${this.toFixedFormat(this.selectedDay, "yyyyMMdd")}`;
+
+      axios
+        .post("/api/payroll/comment", {
+          week: week,
+          comment: $this.comment,
+          total: $this.total
+        })
+        .then(function(response) {
+          $this.$message({
+            message: "El registro fué editado correctamente.",
+            type: "success"
+          });
+
+          $this.loading = false;
+        })
+        .catch(error => {
+          if (error.response.data.errors) {
+            var errors = error.response.data.errors;
+            $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
+              confirmButtonText: "OK",
+              type: "error"
+            });
+          }
+          $this.loading = false;
+        });
+    },
     createChartData(data) {
       let chartData = [];
       let i = 0;
@@ -196,8 +243,8 @@ export default {
   data() {
     return {
       total: 0,
-      editable: false,
-      comment: "comentario",
+      isReadOnly: true,
+      comment: "",
       selectedDay: new Date(),
       loading: false,
       weekData: [],
