@@ -29,7 +29,10 @@
             </el-table>
             <label slot="reference" class="pr-10 text-mini inf">{{ formatPrice(item.saturday) }}</label>
           </el-popover>
-          <label v-show="item.salesA.length == 0" class="pr-10 text-mini">{{ formatPrice(item.saturday) }}</label>
+          <label
+            v-show="item.salesA.length == 0"
+            class="pr-10 text-mini"
+          >{{ formatPrice(item.saturday) }}</label>
         </el-col>
         <el-col :span="2" align="end" class="br bb hr">
           <el-popover v-show="item.salesB.length > 0" placement="right" width="350" trigger="click">
@@ -40,7 +43,10 @@
             </el-table>
             <label slot="reference" class="pr-10 text-mini inf">{{ formatPrice(item.monday) }}</label>
           </el-popover>
-          <label v-show="item.salesB.length == 0" class="pr-10 text-mini">{{ formatPrice(item.monday) }}</label>
+          <label
+            v-show="item.salesB.length == 0"
+            class="pr-10 text-mini"
+          >{{ formatPrice(item.monday) }}</label>
         </el-col>
         <el-col :span="2" align="end" class="br bb hr">
           <el-popover v-show="item.salesC.length > 0" placement="right" width="350" trigger="click">
@@ -51,7 +57,10 @@
             </el-table>
             <label slot="reference" class="pr-10 text-mini inf">{{ formatPrice(item.tuesday) }}</label>
           </el-popover>
-          <label v-show="item.salesC.length == 0" class="pr-10 text-mini">{{ formatPrice(item.tuesday) }}</label>
+          <label
+            v-show="item.salesC.length == 0"
+            class="pr-10 text-mini"
+          >{{ formatPrice(item.tuesday) }}</label>
         </el-col>
         <el-col :span="2" align="end" class="br bb hr">
           <el-popover v-show="item.salesD.length > 0" placement="right" width="350" trigger="click">
@@ -62,7 +71,10 @@
             </el-table>
             <label slot="reference" class="pr-10 text-mini inf">{{ formatPrice(item.wednesday) }}</label>
           </el-popover>
-          <label v-show="item.salesD.length == 0" class="pr-10 text-mini">{{ formatPrice(item.wednesday) }}</label>
+          <label
+            v-show="item.salesD.length == 0"
+            class="pr-10 text-mini"
+          >{{ formatPrice(item.wednesday) }}</label>
         </el-col>
         <el-col :span="2" align="end" class="br bb hr">
           <el-popover v-show="item.salesE.length > 0" placement="right" width="350" trigger="click">
@@ -73,7 +85,10 @@
             </el-table>
             <label slot="reference" class="pr-10 text-mini inf">{{ formatPrice(item.thursday) }}</label>
           </el-popover>
-          <label v-show="item.salesE.length == 0" class="pr-10 text-mini">{{ formatPrice(item.thursday) }}</label>
+          <label
+            v-show="item.salesE.length == 0"
+            class="pr-10 text-mini"
+          >{{ formatPrice(item.thursday) }}</label>
         </el-col>
         <el-col :span="2" align="end" class="br bb hr">
           <el-popover v-show="item.salesF.length > 0" placement="right" width="350" trigger="click">
@@ -84,26 +99,56 @@
             </el-table>
             <label slot="reference" class="pr-10 text-mini inf">{{ formatPrice(item.friday) }}</label>
           </el-popover>
-          <label v-show="item.salesF.length == 0" class="pr-10 text-mini">{{ formatPrice(item.friday) }}</label>
+          <label
+            v-show="item.salesF.length == 0"
+            class="pr-10 text-mini"
+          >{{ formatPrice(item.friday) }}</label>
         </el-col>
 
         <el-col :span="2" align="end" class="br bb hr">
           <label class="pr-10 text-mini">{{ formatPrice(item.totalWeek) }}</label>
         </el-col>
         <el-col :span="1" align="end" class="br bb hr">
-          <label class="pr-10 text-mini">{{ formatPrice(item.percentCommission) }}</label>
+          <!-- % Comision -->
+          <label
+            v-show="item.isReadOnly"
+            class="pr-10 text-mini"
+          >{{ formatPrice(item.percentCommission) }}</label>
+          <el-input
+            @change="onChangeComision(item)"
+            class="mycustom"
+            size="mini"
+            v-show="!item.isReadOnly"
+            v-model="item.percentCommission"
+          ></el-input>
         </el-col>
         <el-col :span="2" align="end" class="br bb hr">
           <label class="pr-10 text-mini">{{ formatPrice(item.commission) }}</label>
         </el-col>
         <el-col :span="2" align="end" class="br bb hr">
-          <label class="pr-10 text-mini">{{ formatPrice(item.sueldo) }}</label>
+          <!-- Salary -->
+          <label v-show="item.isReadOnly" class="pr-10 text-mini">{{ formatPrice(item.sueldo) }}</label>
+          <el-input
+            @change="onChangeSalary(item)"
+            class="mycustom"
+            size="mini"
+            v-show="!item.isReadOnly"
+            v-model="item.sueldo"
+          ></el-input>
         </el-col>
         <el-col :span="2" align="end" class="br bb hr">
           <label class="pr-10 text-mini">{{ formatPrice(item.subtotal) }}</label>
         </el-col>
         <el-col :span="1" align="end" class="br bb hr">
-          <label class="pr-10 text-mini">{{ formatPrice(item.discounts) }}</label>
+          <!-- Editable Discounts -->
+          <label v-show="item.isReadOnly" class="pr-10 text-mini">{{ formatPrice(item.discounts) }}</label>
+          <el-input
+            @change="onChangeDiscount(item)"
+            class="mycustom"
+            size="mini"
+            v-show="!item.isReadOnly"
+            v-model="item.discounts"
+          ></el-input>
         </el-col>
         <el-col :span="2" align="end" class="br bb hr">
           <label class="pr-10 text-mini">{{ formatPrice(item.total) }}</label>
@@ -120,17 +165,22 @@ export default {
   methods: {
     onChangeDiscount(item) {
       if (isNaN(item.discounts) || !item.discounts) item.discounts = 0;
-      item.total = item.subtotal - item.discounts;
+      this.computeTotal(item);
     },
-    changeBase(item, index) {
-      this.items[index].low_price = item.price;
-      this.items[index].mid_price = item.price;
-      this.items[index].high_price = item.price;
-      this.onChangePrice();
+    onChangeComision(item) {
+      if (isNaN(item.percentCommission) || !item.percentCommission)
+        item.percentCommission = 0;
+      this.computeTotal(item);
     },
-    onChangePrice() {
-      this.$forceUpdate();
-      this.$root.$refs.create.$forceUpdate();
+    onChangeSalary(item) {
+      if (isNaN(item.sueldo) || !item.sueldo) item.sueldo = 0;
+      this.computeTotal(item);
+    },
+    computeTotal(item) {
+      item.commission = parseFloat(item.totalWeek) * parseFloat(item.percentCommission);
+      item.subtotal = parseFloat(item.commission) + parseFloat(item.sueldo);
+      item.total = parseFloat(item.subtotal) - parseFloat(item.discounts);
+      this.$root.$emit("refreshTotal");
     }
   }
 };
@@ -167,7 +217,7 @@ export default {
 .mycustom .el-input__inner {
   border: 0;
   border-radius: 0;
-  background: #8cc5ff;
+  background: #efffcf;
   border-bottom: 1px solid #f0f0f0;
   text-align: right;
 }

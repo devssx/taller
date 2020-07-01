@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Payroll;
 use App\Comment;
 use Illuminate\Http\Request;
+use DateTime;
+use DateInterval;
 
 class PayrollController extends Controller
 {
@@ -39,6 +41,14 @@ class PayrollController extends Controller
     public function getComment(Request $request)
     {
         return Comment::firstOrCreate(['week' => $request->get('week')]);
+    }
+
+    public function getPayroll(Request $request)
+    {
+        $fecha = new DateTime($request->get('day'));
+        $fecha->sub(new DateInterval('P2D'));
+
+        return ['fech' => $fecha->format('Y-m-d')];
     }
 
     /**

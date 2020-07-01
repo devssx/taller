@@ -16,7 +16,7 @@
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
       </el-col>
       <el-col :span="4" align="end">
-        <!-- <el-button :disabled="!selectedDay" type="primary" icon="el-icon-edit">Modificar</el-button> -->
+        <el-button :disabled="!selectedDay" type="primary" icon="el-icon-edit">Modificar</el-button>
       </el-col>
     </el-row>
 
@@ -62,7 +62,13 @@
           <el-col :span="4" style="margin-top: 7px;">
             <h4>Observación:</h4>
           </el-col>
-          <el-col :span="20" class="row-headerb">{{comment}}</el-col>
+          <el-col :span="20" class="row-headerb">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 4}"
+              placeholder="Comentarios"
+            ></el-input>
+          </el-col>
         </el-row>
       </el-col>
     </el-row>
@@ -511,6 +517,7 @@
 export default {
   mounted: function() {
     this.$root.$on("refreshTable", this.refreshTable);
+    this.$root.$on("refreshTotal", this.refreshTotal);
   },
   methods: {
     handleSelect(key, keyPath) {
@@ -520,6 +527,9 @@ export default {
       this.tableACData = this.getEmployeeData(name, 1, 0.07, 1500.0);
       this.tableMecData = this.getEmployeeData(name, 2, 0.025, 0);
       this.tableElecData = this.getEmployeeData(name, 3, 0.025, 0);
+      this.refreshTotal();
+    },
+    refreshTotal() {
       this.computeTotal(
         this.tableACData[0],
         this.tableMecData[0],
@@ -585,7 +595,8 @@ export default {
         sueldo: sueldo,
         subtotal: 0,
         discounts: 0,
-        total: 0
+        total: 0,
+        isReadOnly: false
       };
 
       // Carga totales de recibos tipo serviceType del empleado
@@ -642,7 +653,6 @@ export default {
     onSearch() {
       var newDate = this.initDayOfWeekDate(this.selectedDay);
       this.prevDay = newDate;
-      console.log(newDate);
       var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
       this.loadTable(`/api/sales/searchReceiptByWeek?start=${start}`);
     },
@@ -654,12 +664,24 @@ export default {
       //this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
     },
     computeTotal(tableAc, tableMec, tableElec) {
-      this.salary = tableAc.sueldo + tableMec.sueldo + tableElec.sueldo;
+      this.salary =
+        parseFloat(tableAc.sueldo) +
+        parseFloat(tableMec.sueldo) +
+        parseFloat(tableElec.sueldo);
       this.comissions =
-        tableAc.commission + tableMec.commission + tableElec.commission;
+        parseFloat(tableAc.commission) +
+        parseFloat(tableMec.commission) +
+        parseFloat(tableElec.commission);
       this.discounts =
-        tableAc.discounts + tableMec.discounts + tableElec.discounts;
-      this.total = tableAc.total + tableMec.total + tableElec.total;
+        parseFloat(tableAc.discounts) +
+        parseFloat(tableMec.discounts) +
+        parseFloat(tableElec.discounts);
+      this.total =
+        parseFloat(tableAc.total) +
+        parseFloat(tableMec.total) +
+        parseFloat(tableElec.total);
+
+      this.total = this.total.toFixed(2);
     }
   },
   data() {
@@ -668,7 +690,6 @@ export default {
       discounts: 0,
       comissions: 0,
       salary: 0,
-      comment: "N/A",
       selectedEmployee: "N/A",
       activeIndex: "0",
       employees: [],
