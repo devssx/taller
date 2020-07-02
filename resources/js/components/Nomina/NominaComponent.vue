@@ -537,6 +537,23 @@ export default {
       this.tableACData[0].isReadOnly = readOnly;
       this.tableMecData[0].isReadOnly = readOnly;
       this.tableElecData[0].isReadOnly = readOnly;
+      if (readOnly) {
+        // save
+        /**
+         *   
+            comment
+            
+            week
+            user_id
+           
+            type
+            total_week
+            comission
+            discount
+            salary
+            total
+         */
+      }
     },
     handleSelect(key, keyPath) {
       this.activeIndex = key;
@@ -558,18 +575,6 @@ export default {
     eliminarRegistro(id) {},
     fixNumber(n) {
       return n < 10 ? "0" + n : n;
-    },
-    formatDate(date) {
-      let hours = date.getHours();
-      let minutes = date.getMinutes();
-      let ampm = hours >= 12 ? "pm" : "am";
-      hours = hours % 12;
-      hours = hours ? hours : 12;
-      minutes = minutes < 10 ? "0" + minutes : minutes + "";
-      return hours + ":" + minutes + " " + ampm;
-    },
-    fixDate(dt) {
-      return this.formatDate(new Date(dt));
     },
     loadTable(url) {
       const $this = this;

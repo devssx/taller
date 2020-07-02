@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Payroll;
+use App\PayrollComment;
 use App\Comment;
 use Illuminate\Http\Request;
 use DateTime;
@@ -49,6 +50,37 @@ class PayrollController extends Controller
         $fecha->sub(new DateInterval('P2D'));
 
         return ['fech' => $fecha->format('Ymd')];
+    }
+
+    public function saveWeek(Request $request)
+    {
+        // saves the comment
+        if ($request->has('comment')) {
+            $userComment =  PayrollComment::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('user_id')]);
+            $userComment->comment = $request->get('comment');
+            $userComment->save();
+        }
+
+        $payroll =  Payroll::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('user_id')]);
+        $payroll->type = $request->get('type');
+        $payroll->total_week = $request->get('total_week');
+        $payroll->comission = $request->get('typcomissione');
+        $payroll->discount = $request->get('discount');
+        $payroll->salary = $request->get('salary');
+        $payroll->total = $request->get('total');
+        $payroll->save();
+
+        //$table->unsignedInteger('week');
+        //$table->unsignedInteger('user_id');
+
+        /*
+        $table->integer('type');
+        $table->decimal('total_week');
+        $table->decimal('comission');
+        $table->decimal('discount');
+        $table->decimal('salary');
+        $table->decimal('total');
+        */
     }
 
     /**
