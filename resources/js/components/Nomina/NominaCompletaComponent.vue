@@ -88,7 +88,7 @@
               :readonly="isReadOnly"
               :autosize="{ minRows: 2, maxRows: 4}"
               placeholder="Comentarios"
-              v-model="comment"
+              v-model="comment.comment"
             ></el-input>
           </el-col>
         </el-row>
@@ -122,7 +122,8 @@ export default {
         $this.tableData = [];
         $this.total = 0;
 
-        $this.weekData = response.data;
+        $this.weekData = response.data.d;
+        $this.comment = response.data.c;
         $this.weekData.data.forEach(sale => {
           var name = sale.user.name;
           if ($this.employees.filter(e => e == name).length == 0)
@@ -205,7 +206,7 @@ export default {
       axios
         .post("/api/payroll/comment", {
           week: week,
-          comment: $this.comment,
+          comment: $this.comment.comment,
           total: $this.total
         })
         .then(function(response) {
@@ -244,7 +245,7 @@ export default {
     return {
       total: 0,
       isReadOnly: true,
-      comment: "",
+      comment: { comment: "" },
       selectedDay: new Date(),
       loading: false,
       weekData: [],

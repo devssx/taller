@@ -48,7 +48,7 @@ class PayrollController extends Controller
         $fecha = new DateTime($request->get('day'));
         $fecha->sub(new DateInterval('P2D'));
 
-        return ['fech' => $fecha->format('Y-m-d')];
+        return ['fech' => $fecha->format('Ymd')];
     }
 
     /**

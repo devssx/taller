@@ -16,7 +16,19 @@
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
       </el-col>
       <el-col :span="4" align="end">
-        <el-button :disabled="!selectedDay" type="primary" icon="el-icon-edit">Modificar</el-button>
+        <el-button
+          v-show="isReadOnly"
+          @click="setEditMode(false)"
+          :disabled="!selectedDay"
+          type="primary"
+          icon="el-icon-edit"
+        >Editar</el-button>
+        <el-button
+          v-show="!isReadOnly"
+          @click="setEditMode(true)"
+          type="primary"
+          icon="el-icon-check"
+        >Guardar</el-button>
       </el-col>
     </el-row>
 
@@ -86,7 +98,7 @@
     </el-row>
 
     <!-- TABLA -->
-    <el-row v-if="false" class="br bl">
+    <!-- <el-row v-if="false" class="br bl">
       <el-col :span="24">
         <el-table border size="mini" :data="tableACData" style="width: 100%" v-loading="loading">
           <el-table-column
@@ -198,14 +210,14 @@
             <template slot-scope="scope">{{ formatPrice(scope.row.total) }}</template>
           </el-table-column>
 
-          <!-- <el-table-column align="center" label="Modificar" width="147">
+          !-- <el-table-column align="center" label="Modificar" width="147">
             <template slot-scope="scope">
               <el-button type="text" size="mini">Editar</el-button>
             </template>
-          </el-table-column>-->
+          </el-table-column>--
         </el-table>
       </el-col>
-    </el-row>
+    </el-row>-->
 
     <br />
     <el-row class="br bt bl row-header">
@@ -221,7 +233,7 @@
     <br />
 
     <!-- TABLA -->
-    <el-row v-if="false" class="br bl">
+    <!-- <el-row v-if="false" class="br bl">
       <el-col :span="24">
         <el-table border size="mini" :data="tableMecData" style="width: 100%" v-loading="loading">
           <el-table-column
@@ -333,14 +345,14 @@
             <template slot-scope="scope">{{ formatPrice(scope.row.total) }}</template>
           </el-table-column>
 
-          <!-- <el-table-column align="center" label="Modificar" width="147">
+          -- <el-table-column align="center" label="Modificar" width="147">
             <template slot-scope="scope">
               <el-button type="text" size="mini">Editar</el-button>
             </template>
-          </el-table-column>-->
+          </el-table-column>--
         </el-table>
       </el-col>
-    </el-row>
+    </el-row>-->
 
     <br />
     <el-row class="br bt bl row-header">
@@ -355,7 +367,7 @@
     </el-row>
 
     <!-- TABLA -->
-    <el-row v-if="false" class="br bl">
+    <!-- <el-row v-if="false" class="br bl">
       <el-col :span="24">
         <el-table border size="mini" :data="tableElecData" style="width: 100%" v-loading="loading">
           <el-table-column
@@ -467,14 +479,14 @@
             <template slot-scope="scope">{{ formatPrice(scope.row.total) }}</template>
           </el-table-column>
 
-          <!-- <el-table-column align="center" label="Modificar" width="147">
+          !-- <el-table-column align="center" label="Modificar" width="147">
             <template slot-scope="scope">
               <el-button type="text" size="mini">Editar</el-button>
             </template>
-          </el-table-column>-->
+          </el-table-column>--
         </el-table>
       </el-col>
-    </el-row>
+    </el-row>-->
 
     <br />
     <!-- TOTALES -->
@@ -520,6 +532,12 @@ export default {
     this.$root.$on("refreshTotal", this.refreshTotal);
   },
   methods: {
+    setEditMode(readOnly) {
+      this.isReadOnly = readOnly;
+      this.tableACData[0].isReadOnly = readOnly;
+      this.tableMecData[0].isReadOnly = readOnly;
+      this.tableElecData[0].isReadOnly = readOnly;
+    },
     handleSelect(key, keyPath) {
       this.activeIndex = key;
       this.selectedEmployee = this.employees[key];
@@ -527,6 +545,7 @@ export default {
       this.tableACData = this.getEmployeeData(name, 1, 0.07, 1500.0);
       this.tableMecData = this.getEmployeeData(name, 2, 0.025, 0);
       this.tableElecData = this.getEmployeeData(name, 3, 0.025, 0);
+      this.isReadOnly = true;
       this.refreshTotal();
     },
     refreshTotal() {
@@ -556,7 +575,7 @@ export default {
       const $this = this;
       $this.loading = true;
       axios.get(url).then(function(response) {
-        $this.weekData = response.data;
+        $this.weekData = response.data.d;
         $this.loading = false;
 
         // (lista de empleados)
@@ -596,14 +615,13 @@ export default {
         subtotal: 0,
         discounts: 0,
         total: 0,
-        isReadOnly: false
+        isReadOnly: true
       };
 
       // Carga totales de recibos tipo serviceType del empleado
       let userSales = [];
       this.weekData.data.forEach(sale => {
         if (sale.service_type == serviceType && sale.user.name == user) {
-          console.log(sale);
           userSales.push(sale);
           switch (this.dayOfWeek(sale.created_at)) {
             case "Sábado": // sabado es menor a la fecha del dia lunes
@@ -656,13 +674,7 @@ export default {
       var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
       this.loadTable(`/api/sales/searchReceiptByWeek?start=${start}`);
     },
-    refreshTable() {
-      // TODO
-      //let currentDay = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
-      //let start = currentDay + " 00:00:00";
-      //let end = currentDay + " 23:59:59";
-      //this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
-    },
+    refreshTable() {},
     computeTotal(tableAc, tableMec, tableElec) {
       this.salary =
         parseFloat(tableAc.sueldo) +
@@ -686,6 +698,7 @@ export default {
   },
   data() {
     return {
+      isReadOnly: true,
       total: 0,
       discounts: 0,
       comissions: 0,

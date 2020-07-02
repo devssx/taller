@@ -10,6 +10,7 @@ use App\Models\SaleService;
 use Illuminate\Http\Request;
 use DateTime;
 use DateInterval;
+use App\Comment;
 
 class SalesController extends Controller
 {
@@ -98,25 +99,30 @@ class SalesController extends Controller
     public function searchReceiptByWeek(Request $request)
     {
         if ($request->has('start')) {
-            $end = new DateTime($request->get("start"));
-            $interval = new DateInterval('P6D'); // + 6 days
-            $end->add($interval);
 
-            return Sale::with('saleServices')->with('client')->with('user')->with(['car' => function ($query) {
+            $start = new DateTime($request->get('start')); // Lunes - 2 = Sabado
+            $start->sub(new DateInterval('P2D'));
+
+            $end = new DateTime($request->get('start'));
+            $end->add(new DateInterval('P6D'));
+
+            $result = Sale::with('saleServices')->with('client')->with('user')->with(['car' => function ($query) {
                 $query->distinct('id');
             }])->with(['services' => function ($query) {
                 $query->distinct('id');
             }])
-                ->where('done_on', '>=', $request->get('start'))
+                ->where('done_on', '>=', $start->format("Y-m-d H:i:s"))
                 ->where('done_on', '<=', $end->format("Y-m-d H:i:s"))
                 ->where('status', '=', Sale::TERMINADO)
                 ->paginate(10000);
+
+            $week = new DateTime($request->get('start'));
+            $comment = Comment::firstOrCreate(['week' => $week->format("Ymd")]);
+            return ['d' => $result, 'c' => $comment];
         }
 
         return [];
     }
-
-
 
     public function changeStatus(Request $request)
     {
