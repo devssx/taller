@@ -79,6 +79,7 @@
               type="textarea"
               :autosize="{ minRows: 2, maxRows: 4}"
               placeholder="Comentarios"
+              :readonly="isReadOnly"
               v-model="comment"
             ></el-input>
           </el-col>
@@ -533,12 +534,12 @@ export default {
     this.$root.$on("refreshTotal", this.refreshTotal);
   },
   methods: {
-    setEditMode(readOnly) {
+    setEditMode(readOnly, dontSave) {
       this.isReadOnly = readOnly;
       this.tableACData[0].isReadOnly = readOnly;
       this.tableMecData[0].isReadOnly = readOnly;
       this.tableElecData[0].isReadOnly = readOnly;
-      if (readOnly) {
+      if (!dontSave && readOnly) {
         this.saveWeek(
           this.userID,
           this.tableACData[0],
@@ -619,6 +620,7 @@ export default {
       this.tableMecData = this.getEmployeeData(name, 2, 0.025, 0);
       this.tableElecData = this.getEmployeeData(name, 3, 0.025, 0);
       this.isReadOnly = true;
+      this.setEditMode(true, true);
       this.refreshTotal();
     },
     refreshTotal() {
