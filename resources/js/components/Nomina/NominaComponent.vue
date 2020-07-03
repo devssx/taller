@@ -49,7 +49,7 @@
               >
                 <el-menu-item :index="i+''">
                   <i class="el-icon-user"></i>
-                  <span>{{employee}}</span>
+                  <span>{{employee.name}}</span>
                 </el-menu-item>
               </el-menu>
             </el-card>
@@ -79,6 +79,7 @@
               type="textarea"
               :autosize="{ minRows: 2, maxRows: 4}"
               placeholder="Comentarios"
+              v-model="comment"
             ></el-input>
           </el-col>
         </el-row>
@@ -538,27 +539,82 @@ export default {
       this.tableMecData[0].isReadOnly = readOnly;
       this.tableElecData[0].isReadOnly = readOnly;
       if (readOnly) {
-        // save
-        /**
-         *   
-            comment
-            
-            week
-            user_id
-           
-            type
-            total_week
-            comission
-            discount
-            salary
-            total
-         */
+        this.saveWeek(
+          this.userID,
+          this.tableACData[0],
+          this.tableMecData[0],
+          this.tableElecData[0]
+        );
+
+        let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
+        this.loadComments(`/api/payroll/userComments?week=${week}`);
       }
+    },
+    saveWeek(userID, weekAc, weekMec, weekEle) {
+      const $this = this;
+      $this.loading = true;
+
+      // weekID
+      let week = this.toFixedFormat($this.prevDay, "yyyyMMdd");
+
+      // save totals
+      axios
+        .post("/api/payroll/save", {
+          week: week,
+          userID: userID,
+          comment: $this.comment,
+          // AC
+          totalWeekAc: weekAc.totalWeek,
+          commissionAc: weekAc.percentCommission,
+          discountsAc: weekAc.discounts,
+          salaryAc: weekAc.sueldo,
+          totalAc: weekAc.total,
+          // Mecanico
+          totalWeekMec: weekMec.totalWeek,
+          commissionMec: weekMec.percentCommission,
+          discountsMec: weekMec.discounts,
+          salaryMec: weekMec.sueldo,
+          totalMec: weekMec.total,
+          // Electrico
+          totalWeekEle: weekEle.totalWeek,
+          commissionEle: weekEle.percentCommission,
+          discountsEle: weekEle.discounts,
+          salaryEle: weekEle.sueldo,
+          totalEle: weekEle.total
+        })
+        .then(function(response) {
+          $this.$message({
+            message: "El registro fué editado correctamente.",
+            type: "success"
+          });
+
+          $this.loading = false;
+        })
+        .catch(error => {
+          if (error.response.data.errors) {
+            var errors = error.response.data.errors;
+            $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
+              confirmButtonText: "OK",
+              type: "error"
+            });
+          }
+          $this.loading = false;
+        });
     },
     handleSelect(key, keyPath) {
       this.activeIndex = key;
-      this.selectedEmployee = this.employees[key];
-      let name = this.employees[key];
+      this.selectedEmployee = this.employees[key].name;
+      this.userID = this.employees[key].id;
+      let name = this.employees[key].name;
+
+      this.comment = "";
+      if (this.weekComments.length > 0) {
+        if (this.weekComments.filter(e => e.user_id == this.userID).length > 0)
+          this.comment = this.weekComments.filter(
+            e => e.user_id == this.userID
+          )[0].comment;
+      }
+
       this.tableACData = this.getEmployeeData(name, 1, 0.07, 1500.0);
       this.tableMecData = this.getEmployeeData(name, 2, 0.025, 0);
       this.tableElecData = this.getEmployeeData(name, 3, 0.025, 0);
@@ -590,12 +646,19 @@ export default {
         $this.tableElecData = [];
         $this.weekData.data.forEach(sale => {
           var name = sale.user.name;
-          if ($this.employees.filter(e => e == name).length == 0)
-            $this.employees.push(name);
+          if ($this.employees.filter(e => e.name == name).length == 0)
+            $this.employees.push(sale.user);
         });
 
         // select first
         if ($this.employees.length > 0) $this.handleSelect("0");
+      });
+    },
+    loadComments(url) {
+      const $this = this;
+      $this.weekComments = [];
+      axios.get(url).then(function(response) {
+        $this.weekComments = response.data;
       });
     },
     // Carga recibos tipo: 1: A/C, 2: Mecanica, 3: Electrico
@@ -677,6 +740,10 @@ export default {
       var newDate = this.initDayOfWeekDate(this.selectedDay);
       this.prevDay = newDate;
       var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
+
+      // weekID
+      let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
+      this.loadComments(`/api/payroll/userComments?week=${week}`);
       this.loadTable(`/api/sales/searchReceiptByWeek?start=${start}`);
     },
     refreshTable() {},
@@ -709,10 +776,13 @@ export default {
       comissions: 0,
       salary: 0,
       selectedEmployee: "N/A",
+      comment: "",
+      userID: -1,
       activeIndex: "0",
       employees: [],
       showDialog: false,
       weekData: [],
+      weekComments: [],
       selectedDay: new Date(),
       prevDay: new Date(),
       search: "",

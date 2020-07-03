@@ -15,7 +15,6 @@ class CreatePayrollCommentsTable extends Migration
     {
         Schema::create('payroll_comments', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
 
             $table->unsignedInteger('week');
             $table->unsignedInteger('user_id');

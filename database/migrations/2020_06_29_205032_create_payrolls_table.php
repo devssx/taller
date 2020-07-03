@@ -15,8 +15,7 @@ class CreatePayrollsTable extends Migration
     {
         Schema::create('payrolls', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
-
+            
             $table->unsignedInteger('week');
             $table->unsignedInteger('user_id');
            

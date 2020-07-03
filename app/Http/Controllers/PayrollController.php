@@ -46,41 +46,50 @@ class PayrollController extends Controller
 
     public function getPayroll(Request $request)
     {
-        $fecha = new DateTime($request->get('day'));
-        $fecha->sub(new DateInterval('P2D'));
-
-        return ['fech' => $fecha->format('Ymd')];
+        return Payroll::firstOrCreate(['week' => $request->get('week')])->get();
     }
 
     public function saveWeek(Request $request)
     {
         // saves the comment
         if ($request->has('comment')) {
-            $userComment =  PayrollComment::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('user_id')]);
+            $userComment =  PayrollComment::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('userID')]);
             $userComment->comment = $request->get('comment');
             $userComment->save();
         }
 
-        $payroll =  Payroll::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('user_id')]);
-        $payroll->type = $request->get('type');
-        $payroll->total_week = $request->get('total_week');
-        $payroll->comission = $request->get('typcomissione');
-        $payroll->discount = $request->get('discount');
-        $payroll->salary = $request->get('salary');
-        $payroll->total = $request->get('total');
-        $payroll->save();
+        // AC
+        if ($request->has('totalWeekAc')) {
+            $payroll =  Payroll::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('userID'), 'type' => '1']);
+            $payroll->total_week = $request->get('totalWeekAc');
+            $payroll->comission = $request->get('commissionAc');
+            $payroll->discount = $request->get('discountsAc');
+            $payroll->salary = $request->get('salaryAc');
+            $payroll->total = $request->get('totalAc');
+            $payroll->save();
+        }
 
-        //$table->unsignedInteger('week');
-        //$table->unsignedInteger('user_id');
+        // Mecanico
+        if ($request->has('totalWeekMec')) {
+            $payroll =  Payroll::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('userID'), 'type' => '2']);
+            $payroll->total_week = $request->get('totalWeekMec');
+            $payroll->comission = $request->get('commissionMec');
+            $payroll->discount = $request->get('discountsMec');
+            $payroll->salary = $request->get('salaryMec');
+            $payroll->total = $request->get('totalMec');
+            $payroll->save();
+        }
 
-        /*
-        $table->integer('type');
-        $table->decimal('total_week');
-        $table->decimal('comission');
-        $table->decimal('discount');
-        $table->decimal('salary');
-        $table->decimal('total');
-        */
+        // Electrico
+        if ($request->has('totalWeekEle')) {
+            $payroll =  Payroll::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('userID'), 'type' => '3']);
+            $payroll->total_week = $request->get('totalWeekEle');
+            $payroll->comission = $request->get('commissionEle');
+            $payroll->discount = $request->get('discountsEle');
+            $payroll->salary = $request->get('salaryEle');
+            $payroll->total = $request->get('totalEle');
+            $payroll->save();
+        }
     }
 
     /**

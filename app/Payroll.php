@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payroll extends Model
 {
-    //
+    public $fillable = ['week', 'user_id', 'type', 'total_week', 'comission', 'discount', 'salary', 'total'];
 }

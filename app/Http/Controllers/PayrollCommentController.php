@@ -17,17 +17,9 @@ class PayrollCommentController extends Controller
         //
     }
 
-    public function saveComment(Request $request)
+    public function getUserComments(Request $request)
     {
-        $c = PayrollComment::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('user_id')]);
-        $c->comment = $request->get('comment');
-        $c->total = $request->get('total');
-        $c->save();
-    }
-
-    public function getComment(Request $request)
-    {
-        return PayrollComment::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('user_id')]);
+        return PayrollComment::where(['week' => $request->get('week')])->get();
     }
 
 
