@@ -88,7 +88,7 @@ class CleaningController extends Controller
         if ($request->has('start')) {
 
             // week range
-            $start = intval($request->get('start'));
+            /*$start = intval($request->get('start'));
             $end = $start + 6;
 
             $data = DB::table('cleanings')
@@ -97,19 +97,19 @@ class CleaningController extends Controller
                 ->where('cleanings.day', '>=', $start)
                 ->where('cleanings.day', '<=', $end)
                 ->orderBy('cleanings.day', 'asc')
-                ->get();
+                ->get();*/
 
-            //$end = new DateTime($request->get("start"));
-            //$interval = new DateInterval('P6D'); // + 6 days
-            //$end->add($interval);
+            $end = new DateTime($request->get("start"));
+            $interval = new DateInterval('P6D'); // + 6 days
+            $end->add($interval);
 
-            // $data = DB::table('cleanings')
-            //     ->join('users', 'users.id', 'cleanings.user_id')
-            //     ->select('cleanings.*', 'users.name')
-            //     ->where('cleanings.start', '>=', $request->get('start'))
-            //     ->where('cleanings.start', '<=', $end->format("Y-m-d H:i:s"))
-            //     ->orderBy('cleanings.start', 'asc')
-            //     ->get();
+             $data = DB::table('cleanings')
+                 ->join('users', 'users.id', 'cleanings.user_id')
+                 ->select('cleanings.*', 'users.name')
+                 ->where('cleanings.start', '>=', $request->get('start'))
+                 ->where('cleanings.start', '<=', $end->format("Y-m-d H:i:s"))
+                 ->orderBy('cleanings.day', 'asc')
+                 ->get();
 
             return $data;
         }

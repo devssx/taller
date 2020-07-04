@@ -124,7 +124,7 @@ export default {
     },
     onSearch() {
       var newDate = this.initDayOfWeekDate(this.selectedDay);
-      var day = `${this.toFixedFormat(newDate, "yyyyMMdd")}`;
+      var day = `${this.toFixedFormat(newDate, "yyyy-MM-dd")}`;
       this.loadTable(`/api/cleaning/searchWeek?start=${day}`);
     },
     refreshTable(item) {
