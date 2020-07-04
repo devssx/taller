@@ -217,7 +217,7 @@ export default {
 .mycustom .el-input__inner {
   border: 0;
   border-radius: 0;
-  background: #efffcf;
+  background: #efcfff;
   border-bottom: 1px solid #f0f0f0;
   text-align: right;
 }

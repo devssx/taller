@@ -46,7 +46,7 @@ class PayrollController extends Controller
 
     public function getPayroll(Request $request)
     {
-        return Payroll::firstOrCreate(['week' => $request->get('week')])->get();
+        return Payroll::where(['week' => $request->get('week')])->get();
     }
 
     public function saveWeek(Request $request)

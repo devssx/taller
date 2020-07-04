@@ -19,7 +19,7 @@
         <el-button
           v-show="isReadOnly"
           @click="setEditMode(false)"
-          :disabled="!selectedDay"
+          :disabled="employees.length==0"
           type="primary"
           icon="el-icon-edit"
         >Editar</el-button>
@@ -548,6 +548,7 @@ export default {
         );
 
         let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
+        this.loadPayroll(`/api/payroll?week=${week}`);
         this.loadComments(`/api/payroll/userComments?week=${week}`);
       }
     },
@@ -616,9 +617,58 @@ export default {
           )[0].comment;
       }
 
-      this.tableACData = this.getEmployeeData(name, 1, 0.07, 1500.0);
-      this.tableMecData = this.getEmployeeData(name, 2, 0.025, 0);
-      this.tableElecData = this.getEmployeeData(name, 3, 0.025, 0);
+      // commission percentages
+      let com1 = 0.07;
+      let com2 = 0.025;
+      let com3 = 0.025;
+      let salary1 = 0.0;
+      let salary2 = 0.0;
+      let salary3 = 0.0;
+      let discount1 = 0.0;
+      let discount2 = 0.0;
+      let discount3 = 0.0;
+
+      // buscar week y user id
+      const myWeek = this.weekPayroll.filter(p => p.user_id == this.userID);
+      myWeek.forEach(dato => {
+        if (dato.type == "1") {
+          com1 = parseFloat(dato.comission);
+          salary1 = parseFloat(dato.salary);
+          discount1 = parseFloat(dato.discount);
+        }
+        if (dato.type == "2") {
+          com2 = parseFloat(dato.comission);
+          salary2 = parseFloat(dato.salary);
+          discount2 = parseFloat(dato.discount);
+        }
+        if (dato.type == "3") {
+          com3 = parseFloat(dato.comission);
+          salary3 = parseFloat(dato.salary);
+          discount3 = parseFloat(dato.discount);
+        }
+      });
+
+      this.tableACData = this.getEmployeeData(
+        name,
+        1,
+        com1,
+        salary1,
+        discount1
+      );
+      this.tableMecData = this.getEmployeeData(
+        name,
+        2,
+        com2,
+        salary2,
+        discount2
+      );
+      this.tableElecData = this.getEmployeeData(
+        name,
+        3,
+        com3,
+        salary3,
+        discount3
+      );
       this.isReadOnly = true;
       this.setEditMode(true, true);
       this.refreshTotal();
@@ -663,8 +713,15 @@ export default {
         $this.weekComments = response.data;
       });
     },
+    loadPayroll(url) {
+      const $this = this;
+      $this.weekPayroll = [];
+      axios.get(url).then(function(response) {
+        $this.weekPayroll = response.data;
+      });
+    },
     // Carga recibos tipo: 1: A/C, 2: Mecanica, 3: Electrico
-    getEmployeeData(user, serviceType, comision, sueldo) {
+    getEmployeeData(user, serviceType, comision, sueldo, discount) {
       let week = {
         salesA: [],
         salesB: [],
@@ -683,7 +740,7 @@ export default {
         commission: 0,
         sueldo: sueldo,
         subtotal: 0,
-        discounts: 0,
+        discounts: discount,
         total: 0,
         isReadOnly: true
       };
@@ -739,12 +796,15 @@ export default {
       return [week];
     },
     onSearch() {
+      this.selectedEmployee = "N/A";
+      this.comment = "";
       var newDate = this.initDayOfWeekDate(this.selectedDay);
       this.prevDay = newDate;
       var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
 
       // weekID
       let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
+      this.loadPayroll(`/api/payroll?week=${week}`);
       this.loadComments(`/api/payroll/userComments?week=${week}`);
       this.loadTable(`/api/sales/searchReceiptByWeek?start=${start}`);
     },
@@ -784,6 +844,7 @@ export default {
       employees: [],
       showDialog: false,
       weekData: [],
+      weekPayroll: [],
       weekComments: [],
       selectedDay: new Date(),
       prevDay: new Date(),

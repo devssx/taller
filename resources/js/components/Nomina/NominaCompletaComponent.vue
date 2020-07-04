@@ -18,7 +18,7 @@
       <el-col :span="4" align="end">
         <el-button
           v-show="isReadOnly"
-          :disabled="!selectedDay"
+          :disabled="employees.length==0"
           type="primary"
           @click="isReadOnly=false"
           icon="el-icon-edit"
