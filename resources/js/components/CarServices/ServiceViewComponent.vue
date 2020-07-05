@@ -370,6 +370,8 @@
                     v-model="service.warranty"
                     :readonly="service.isReadOnly"
                     :disabled="service.items.length == 0"
+                    maxlength="165"
+                    show-word-limit
                   ></el-input>
                 </el-col>
               </el-row>

@@ -5,6 +5,12 @@ import { Printd } from "printd";
 
 export default {
     methods: {
+        fixText(str, max) {
+            if (str.length > max)
+                return str.substring(0, max) + '...';
+            else
+                return str;
+        },
         getColor(index) {
             var palete = ['#409EFF', '#F56C6C', '#E6A23C', '#67C23A', '#909399',
                 '#FFA07A', '#FF7F50', '#FFDAB9', '#9ACD32', '#40E0D0',
@@ -304,8 +310,9 @@ export default {
 
             $this.context.fillText("1", 100, 350);
             $this.context.fillText("1", 100, 350 + 678);
+            // Concepto
             if (currentSale.concept) {
-                var concept = currentSale.concept.match(/.{1,60}/g);
+                var concept = currentSale.concept.match(/.{1,75}/g);
                 for (var x = 0; x < concept.length; x++) {
                     $this.context.fillText(concept[x].toUpperCase(), 160, 350 + x * 32);
                     $this.context.fillText(
@@ -328,17 +335,17 @@ export default {
 
             // Detalles
             if (currentSale.details) {
-                var details = currentSale.details.match(/.{1,60}/g);
+                var details = currentSale.details.match(/.{1,75}/g);
                 for (var x = 0; x < details.length; x++) {
                     $this.context.fillText(
                         details[x].toUpperCase(),
                         160,
-                        350 + 32 * concept.length + x * 32
+                        350 + 30 * concept.length + x * 32
                     );
                     $this.context.fillText(
                         details[x].toUpperCase(),
                         160,
-                        350 + 678 + 32 * concept.length + x * 32
+                        350 + 678 + 30 * concept.length + x * 32
                     );
                 }
             }
@@ -399,10 +406,25 @@ export default {
                 );
             }
 
+            // Garantia (Max 165 chars)
             if (currentSale.guaranty) {
-                $this.context.font = "24px Calibri";
-                $this.context.fillText(currentSale.guaranty, 170, 620);
-                $this.context.fillText(currentSale.guaranty, 170, 620 + 678);
+                $this.context.font = "10px Calibri";
+                //$this.context.fillText(currentSale.guaranty, 160, 620);
+                //$this.context.fillText(currentSale.guaranty, 160, 620 + 678);
+
+                var guaranty = currentSale.guaranty.match(/.{1,55}/g);
+                for (var x = 0; x < guaranty.length; x++) {
+                    $this.context.fillText(
+                        guaranty[x].toUpperCase(),
+                        165,
+                        612 + x * 14
+                    );
+                    $this.context.fillText(
+                        guaranty[x].toUpperCase(),
+                        165,
+                        612 + 678 + x * 14
+                    );
+                }
             }
 
             var img = document.createElement("img");
@@ -523,7 +545,7 @@ export default {
 
             // Descripcion
             if (currentSale.concept) {
-                var concept = currentSale.concept.match(/.{1,60}/g);
+                var concept = currentSale.concept.match(/.{1,75}/g);
                 for (var x = 0; x < concept.length; x++) {
                     $this.context.fillText(concept[x].toUpperCase(), 160, 420 + x * 32);
                 }
@@ -538,7 +560,7 @@ export default {
 
             // Descripcion (repetida)
             if (currentSale.details) {
-                var details = currentSale.details.match(/.{1,60}/g);
+                var details = currentSale.details.match(/.{1,50}/g);
                 for (var x = 0; x < details.length; x++) {
                     $this.context.fillText(
                         details[x].toUpperCase(),

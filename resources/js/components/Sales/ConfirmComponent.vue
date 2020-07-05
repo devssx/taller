@@ -41,13 +41,13 @@
             <el-input v-model="km"></el-input>
           </el-form-item>
           <el-form-item label="Concepto:">
-            <el-input v-model="concept"></el-input>
+            <el-input type="textarea" v-model="concept" maxlength="300" :rows="2"></el-input>
           </el-form-item>
           <el-form-item label="Detalle:">
-            <el-input type="textarea" :rows="3" v-model="details"></el-input>
+            <el-input type="textarea" v-model="details" maxlength="300" :rows="2"></el-input>
           </el-form-item>
           <el-form-item label="Garantía:">
-            <el-input v-model="guaranty"></el-input>
+            <el-input type="textarea" v-model="guaranty" maxlength="165" :rows="2"></el-input>
           </el-form-item>
           <el-form-item label="Total:">
             <el-input v-model="total"></el-input>

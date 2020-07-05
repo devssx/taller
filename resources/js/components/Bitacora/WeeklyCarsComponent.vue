@@ -50,7 +50,7 @@
             <template slot-scope="scope">{{ scope.row.user.name }}</template>
           </el-table-column>
           <el-table-column label="Diagnóstico" width="150">
-            <template slot-scope="scope">{{ scope.row.concept }}</template>
+            <template slot-scope="scope">{{ fixText(scope.row.concept, 16) }}</template>
           </el-table-column>
           <el-table-column label="Precio" header-align="right" align="right">
             <template slot-scope="scope">{{ scope.row.total }}</template>

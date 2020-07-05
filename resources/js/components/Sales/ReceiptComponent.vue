@@ -72,15 +72,32 @@
               <el-input style="width: 220px;" v-model="form.phonenumber"></el-input>
             </el-form-item>
             <el-form-item label="Concepto" prop="concept">
-              <el-input style="width: 220px;" v-model="form.concept"></el-input>
+              <el-input
+                style="width: 220px;"
+                type="textarea"
+                v-model="form.concept"
+                maxlength="300"
+                :rows="2"
+              ></el-input>
             </el-form-item>
-
             <div v-if="order.receiptMode">
               <el-form-item label="Garantía" prop="guaranty">
-                <el-input style="width: 220px;" v-model="form.guaranty"></el-input>
+                <el-input
+                  style="width: 220px;"
+                  type="textarea"
+                  v-model="form.guaranty"
+                  maxlength="165"
+                  :rows="2"
+                ></el-input>
               </el-form-item>
               <el-form-item label="Detalles" prop="details">
-                <el-input style="width: 220px;" v-model="form.details"></el-input>
+                <el-input
+                  style="width: 220px;"
+                  type="textarea"
+                  v-model="form.details"
+                  maxlength="300"
+                  :rows="2"
+                ></el-input>
               </el-form-item>
               <el-form-item label="Marca" prop="maker">
                 <el-input style="width: 220px;" v-model="form.maker"></el-input>
