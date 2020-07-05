@@ -70,7 +70,7 @@ export default {
       if (this.updatePrices) {
         for (var x = 0; x < this.items.length; x++) {
           if (this.items[x][price] != 0) {
-            this.items[x][price + "_price"] =
+              this.items[x][price + "_price"] =
               parseInt(this.items[x].price) +
               (this.items[x].price * item[price]) / 100;
             this.items[x][price] = item[price];

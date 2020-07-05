@@ -8,11 +8,7 @@
       class="br bl bt"
     >
       <el-col :span="1">
-        <el-tooltip
-          effect="dark"
-          content="Eliminar Artículo"
-          placement="right"
-        >
+        <el-tooltip effect="dark" content="Eliminar Artículo" placement="right">
           <button
             class="el-icon-close"
             @click="deleteItem(index)"
@@ -20,15 +16,11 @@
           ></button>
         </el-tooltip>
         <!-- Selector de imagen -->
-        <br>
+        <br />
         <image-dialog :item="item"></image-dialog>
       </el-col>
       <el-col :span="2">
-        <el-image
-          style="width:90%;"
-          v-if="itemImage(item)"
-          :src="itemImage(item)"
-        ></el-image>
+        <el-image style="width:90%;" v-if="itemImage(item)" :src="itemImage(item)"></el-image>
       </el-col>
       <el-col :span="4">
         <label class="el-form-item__label">{{ itemName(item) }}</label>
@@ -54,6 +46,7 @@
       <el-col :span="2">
         <el-input
           :readonly="isReadOnly"
+          :disabled="itemName(item)=='Mano de Obra'"
           size="mini"
           class="percentage"
           v-model="item.low"
@@ -61,16 +54,12 @@
         ></el-input>
       </el-col>
       <el-col :span="2">
-        <el-input
-          :readonly="isReadOnly"
-          size="mini"
-          class="price"
-          v-model="item.low_price"
-        ></el-input>
+        <el-input :readonly="isReadOnly" size="mini" class="price" v-model="item.low_price"></el-input>
       </el-col>
       <el-col :span="2">
         <el-input
           :readonly="isReadOnly"
+          :disabled="itemName(item)=='Mano de Obra'"
           size="mini"
           class="percentage"
           v-model="item.mid"
@@ -78,29 +67,20 @@
         ></el-input>
       </el-col>
       <el-col :span="2">
-        <el-input
-          :readonly="isReadOnly"
-          size="mini"
-          class="price"
-          v-model="item.mid_price"
-        ></el-input>
+        <el-input :readonly="isReadOnly" size="mini" class="price" v-model="item.mid_price"></el-input>
       </el-col>
       <el-col :span="2">
         <el-input
           size="mini"
           class="percentage"
           v-model="item.high"
+          :disabled="itemName(item)=='Mano de Obra'"
           :readonly="isReadOnly"
           @change="changePercentage('high', item, index)"
         ></el-input>
       </el-col>
       <el-col :span="2">
-        <el-input
-          :readonly="isReadOnly"
-          size="mini"
-          class="price"
-          v-model="item.high_price"
-        ></el-input>
+        <el-input :readonly="isReadOnly" size="mini" class="price" v-model="item.high_price"></el-input>
       </el-col>
     </el-row>
   </el-row>
@@ -154,12 +134,18 @@ export default {
       var high = this.items[index].high;
 
       if (this.items[index].price != 0) {
-        this.items[index].low_price =
-          parseInt(item.price) + (item.price * low) / 100;
-        this.items[index].mid_price =
-          parseInt(item.price) + (item.price * mid) / 100;
-        this.items[index].high_price =
-          parseInt(item.price) + (item.price * high) / 100;
+        if (this.itemName(item) == "Mano de Obra") {
+          this.items[index].low_price = parseInt(item.price);
+          this.items[index].mid_price = parseInt(item.price);
+          this.items[index].high_price = parseInt(item.price);
+        } else {
+          this.items[index].low_price =
+            parseInt(item.price) + (item.price * low) / 100;
+          this.items[index].mid_price =
+            parseInt(item.price) + (item.price * mid) / 100;
+          this.items[index].high_price =
+            parseInt(item.price) + (item.price * high) / 100;
+        }
       }
 
       this.onChangePrice();
@@ -168,16 +154,21 @@ export default {
       if (this.updatePrices || isGlobal) {
         for (var x = 0; x < this.items.length; x++) {
           if (this.items[x][price] != 0) {
-            this.items[x][price + "_price"] =
-              parseInt(this.items[x].price) +
-              (this.items[x].price * item[price]) / 100;
-            this.items[x][price] = item[price];
+            if (this.itemName(this.items[x]) == "Mano de Obra") {
+
+            } else {
+              this.items[x][price + "_price"] =
+                parseInt(this.items[x].price) +
+                (this.items[x].price * item[price]) / 100;
+              this.items[x][price] = item[price];
+            }
           }
         }
       } else {
         this.items[index][price + "_price"] =
           parseInt(item.price) + (item.price * item[price]) / 100;
       }
+
       this.onChangePrice();
     },
     onChangePrice() {
@@ -195,8 +186,8 @@ export default {
         return item.image;
       }
       return item.item.image;
-    },
-  },
+    }
+  }
 };
 </script>
 
