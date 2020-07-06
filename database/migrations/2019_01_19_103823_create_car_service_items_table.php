@@ -19,6 +19,8 @@ class CreateCarServiceItemsTable extends Migration
             $table->unsignedInteger('service_id');
             $table->unsignedInteger('item_id');
             $table->string('comment');
+            $table->float('usd_price')->default(0);
+            $table->string('image')->default('');
             $table->unsignedDecimal('price');
             $table->unsignedTinyInteger('low');
             $table->unsignedTinyInteger('mid');

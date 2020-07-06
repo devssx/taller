@@ -17,6 +17,8 @@ class CreateSalesTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('client_id');
             $table->decimal('total');
+            $table->integer('service_type')->default(0);
+            $table->date('next_service');
             $table->timestamps();
         });
     }

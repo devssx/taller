@@ -18,6 +18,8 @@ class CreateCarServicesTable extends Migration
             $table->unsignedInteger('car_id');
             $table->unsignedInteger('service_id');
             $table->string('comment');
+            $table->string('warranty');
+            $table->float('exchange_rate')->default(0);
             $table->string('price');
             $table->integer('low');
             $table->integer('mid');

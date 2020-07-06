@@ -15,18 +15,17 @@ class CreateCleaningsTable extends Migration
     {
         Schema::create('cleanings', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
-
+            $table->unsignedInteger('day');
             $table->unsignedInteger('user_id');
-            $table->timestamp('start', 0);
+            $table->datetime('start');
             $table->string('cleaning');
-            $table->timestamp('breakfast_start', 0);
-            $table->timestamp('breakfast_end', 0);   
-            $table->timestamp('lunch_start', 0);
-            $table->timestamp('lunch_end', 0);
+            $table->datetime('breakfast_start');
+            $table->datetime('breakfast_end');   
+            $table->datetime('lunch_start');
+            $table->datetime('lunch_end');
             $table->string('done');
             $table->string('comment');
-
+            $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
         });
     }
