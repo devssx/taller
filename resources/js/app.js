@@ -123,6 +123,7 @@ Vue.component('nomina-completa', require('./components/Nomina/NominaCompletaComp
 Vue.component('nomina-container', require('./components/Nomina/TabContainerComponent').default);
 Vue.component('ingresos-component', require('./components/Nomina/IngresosComponent').default);
 Vue.component('gastos-component', require('./components/Nomina/GastosComponent').default);
+Vue.component('ingresos-container', require('./components/Nomina/TabIngresosGastosComponent').default);
 Vue.component('ingresos-utilidad-component', require('./components/Nomina/IngresosUtilidadComponent').default);
 Vue.component('ingresos-tecnicos-component', require('./components/Nomina/IngresosDeTecnicosComponent').default);
 Vue.component('garantias-component', require('./components/Nomina/GarantiasAnualesComponent').default);

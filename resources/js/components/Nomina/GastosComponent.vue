@@ -146,9 +146,9 @@
 <script>
 export default {
   mounted: function() {
-    var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
-    this.loadTable("/api/cleaning/search?today=" + today);
-    this.$root.$on("refreshTable", this.refreshTable);
+    // var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
+    // this.loadTable("/api/cleaning/search?today=" + today);
+    // this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
     handleSelect(key, keyPath) {
@@ -234,17 +234,7 @@ export default {
       });
     },
     onSearch() {
-      var start = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 00:00:00`;
 
-      var end = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 23:59:59`;
-
-      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
     },
     addUserInfo() {
       this.$refs.newItem.insertNewRow(this.selectedDay);
@@ -263,7 +253,7 @@ export default {
       showDialog: false,
       selectedDay: new Date(),
       search: "",
-      loading: true,
+      loading: false,
       tableData: [],
       newUser: {
         user_id: 1,

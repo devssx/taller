@@ -67,7 +67,7 @@
                                 Gastos
                             </el-menu-item>
                             <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.income') }}')">
-                                Ingresos
+                                Ingresos Gastos
                             </el-menu-item>
                             <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.profit') }}')">
                                 Ingresos y Utilidad

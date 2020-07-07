@@ -13,7 +13,6 @@
           placeholder="Seleccionar Semana"
         ></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
-        <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
       </el-col>
       <el-col :span="4" align="end"></el-col>
     </el-row>
@@ -86,8 +85,8 @@
         <el-row class="br bl">
           <el-col :span="24">
             <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="No. Recibo"></el-table-column>
-              <el-table-column align="center" label="No. Factura"></el-table-column>
+              <el-table-column align="center" label="No. Recibo" width="100"></el-table-column>
+              <el-table-column align="center" label="No. Factura" width="100"></el-table-column>
               <el-table-column align="center" label="Efectivo"></el-table-column>
               <el-table-column align="right" label="Importe sin Iva"></el-table-column>
               <el-table-column align="right" label="Iva"></el-table-column>
@@ -126,13 +125,13 @@
         <el-row class="br bl">
           <el-col :span="24">
             <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="No. Recibo"></el-table-column>
-              <el-table-column align="center" label="No. Factura"></el-table-column>
-              <el-table-column align="center" label="Fecha de Pago"></el-table-column>
+              <el-table-column align="center" label="No. Recibo" width="100"></el-table-column>
+              <el-table-column align="center" label="No. Factura" width="100"></el-table-column>
+              <el-table-column align="center" label="Fecha"></el-table-column>
               <el-table-column align="right" label="Importe sin Iva"></el-table-column>
-              <el-table-column align="right" label="Iva"></el-table-column>
-              <el-table-column align="center" label="Total"></el-table-column>
-              <el-table-column align="center" label="Confirmación Pago" width="200"></el-table-column>
+              <el-table-column align="right" label="Iva" width="120"></el-table-column>
+              <el-table-column align="center" label="Total" width="120"></el-table-column>
+              <el-table-column align="center" label="Confirmación Pago" width="180"></el-table-column>
             </el-table>
           </el-col>
         </el-row>
@@ -144,52 +143,11 @@
 <script>
 export default {
   mounted: function() {
-    var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
-    this.loadTable("/api/cleaning/search?today=" + today);
-    this.$root.$on("refreshTable", this.refreshTable);
+    // var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
+    // this.loadTable("/api/cleaning/search?today=" + today);
+    // this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
-    handleSelect(key, keyPath) {
-      this.activeIndex = key;
-    },
-    eliminarRegistro(id) {
-      const $this = this;
-      $this
-        .$confirm(
-          "Esto eliminará permanentemente el registro. ¿Desea continuar?",
-          "Advertencia",
-          {
-            confirmButtonText: "Si",
-            cancelButtonText: "Cancelar",
-            type: "warning"
-          }
-        )
-        .then(() => {
-          $this.loading = true;
-          axios
-            .delete("/api/cleaning/" + id)
-            .then(function(response) {
-              $this.$message({
-                type: "success",
-                message: "Registro eliminado"
-              });
-
-              $this.tableData = $this.tableData.filter(item => item.id != id);
-              $this.loading = false;
-            })
-            .catch(error => {
-              $this.loading = false;
-              if (error.response.data.errors) {
-                var errors = error.response.data.errors;
-                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-                  confirmButtonText: "OK",
-                  type: "error"
-                });
-              }
-            });
-        })
-        .catch(() => {});
-    },
     fixNumber(n) {
       return n < 10 ? "0" + n : n;
     },
@@ -231,19 +189,7 @@ export default {
         $this.loading = false;
       });
     },
-    onSearch() {
-      var start = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 00:00:00`;
-
-      var end = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 23:59:59`;
-
-      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
-    },
+    onSearch() {},
     addUserInfo() {
       this.$refs.newItem.insertNewRow(this.selectedDay);
     },
@@ -256,25 +202,10 @@ export default {
   },
   data() {
     return {
-      activeIndex: 0,
-      employees: ["Salomon", "Juanito", "Julio", "Alma"],
-      showDialog: false,
       selectedDay: new Date(),
       search: "",
-      loading: true,
-      tableData: [],
-      newUser: {
-        user_id: 1,
-        start: "",
-        cleaning: "",
-        breakfast_start: "",
-        breakfast_end: "",
-        lunch_start: "",
-        lunch_end: "",
-        done: "No",
-        comment: "",
-        name: ""
-      }
+      loading: false,
+      tableData: []
     };
   }
 };
