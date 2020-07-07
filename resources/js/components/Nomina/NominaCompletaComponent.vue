@@ -56,6 +56,9 @@
           <el-table-column align="right" label="Subtotal" width="180" prop="subtotal">
             <template slot-scope="scope">{{ formatPrice(scope.row.subtotal) }}</template>
           </el-table-column>
+          <el-table-column align="right" label="Sueldo" width="180" prop="salary">
+            <template slot-scope="scope">{{ formatPrice(scope.row.salary) }}</template>
+          </el-table-column>
           <el-table-column align="right" label="Descuentos" width="180" prop="discounts">
             <template slot-scope="scope">{{ formatPrice(scope.row.discounts) }}</template>
           </el-table-column>
@@ -124,17 +127,46 @@ export default {
 
         $this.weekData = response.data.d;
         $this.comment = response.data.c;
+
         $this.weekData.data.forEach(sale => {
           var name = sale.user.name;
-          if ($this.employees.filter(e => e == name).length == 0)
-            $this.employees.push(name);
+          if ($this.employees.filter(e => e.name == name).length == 0)
+            $this.employees.push(sale.user);
         });
 
         // calcula totales de cada empleado
         if ($this.employees.length > 0) {
-          $this.employees.forEach(emp =>
-            $this.tableData.push($this.getPayroll(emp, 0.07, 0.025, 0.07))
-          );
+          $this.employees.forEach(emp => {
+            let com1 = 0.07;
+            let com2 = 0.025;
+            let com3 = 0.025;
+            let salary = 0.0;
+            let discounts = 0.0;
+
+            // buscar week y user id
+            const myWeek = $this.weekPayroll.filter(p => p.user_id == emp.id);
+            myWeek.forEach(dato => {
+              if (dato.type == "1") {
+                com1 = parseFloat(dato.comission);
+                salary += parseFloat(dato.salary);
+                discounts += parseFloat(dato.discount);
+              }
+              if (dato.type == "2") {
+                com2 = parseFloat(dato.comission);
+                salary += parseFloat(dato.salary);
+                discounts += parseFloat(dato.discount);
+              }
+              if (dato.type == "3") {
+                com3 = parseFloat(dato.comission);
+                salary += parseFloat(dato.salary);
+                discounts += parseFloat(dato.discount);
+              }
+            });
+
+            $this.tableData.push(
+              $this.getPayroll(emp.name, com1, com2, com3, salary, discounts)
+            );
+          });
         }
 
         // crear grafica
@@ -145,7 +177,15 @@ export default {
         $this.tableData.forEach(n => ($this.total += n.total));
       });
     },
-    getPayroll(user, cAc, cMec, cElec) {
+    loadPayroll(url, start) {
+      const $this = this;
+      $this.weekPayroll = [];
+      axios.get(url).then(function(response) {
+        $this.weekPayroll = response.data;
+        $this.loadTable(`/api/sales/searchReceiptByWeek?start=${start}`);
+      });
+    },
+    getPayroll(user, cAc, cMec, cElec, salary, discounts) {
       let emp = {
         isReadOnly: false,
         employee: user,
@@ -156,7 +196,8 @@ export default {
         comisionB: 0,
         comisionC: 0,
         subtotal: 0,
-        discounts: 0,
+        salary: salary,
+        discounts: discounts,
         total: 0
       };
 
@@ -184,18 +225,17 @@ export default {
       emp.comisionC = emp.totalC * cElec;
 
       // subtotal (suma de cada comision servicio)
-      emp.subtotal = emp.comisionA + emp.comisionB + emp.comisionC;
+      emp.subtotal = emp.comisionA + emp.comisionB + emp.comisionC + salary;
 
       // Total
       emp.total = emp.subtotal - emp.discounts;
       return emp;
     },
     onSearch() {
-      // from saturday
       var newDate = this.initDayOfWeekDate(this.selectedDay);
       this.prevDay = newDate;
-      var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
-      this.loadTable(`/api/sales/searchReceiptByWeek?start=${start}`);
+      var start = this.toFixedFormat(newDate, "yyyyMMdd");
+      this.loadPayroll(`/api/payroll?week=${start}`, start);
     },
     saveComment() {
       const $this = this;
@@ -250,7 +290,8 @@ export default {
       loading: false,
       weekData: [],
       employees: [],
-      tableData: []
+      tableData: [],
+      weekPayroll: []
     };
   }
 };

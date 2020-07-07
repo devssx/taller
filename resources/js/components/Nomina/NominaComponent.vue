@@ -718,6 +718,7 @@ export default {
       $this.weekPayroll = [];
       axios.get(url).then(function(response) {
         $this.weekPayroll = response.data;
+        
       });
     },
     // Carga recibos tipo: 1: A/C, 2: Mecanica, 3: Electrico
