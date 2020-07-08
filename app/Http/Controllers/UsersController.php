@@ -22,6 +22,11 @@ class UsersController extends Controller
     //
     public function get(Request $request)
     {
+        //api/users?role=Empleado%20Limpieza
+        // if ($request->has('role')) {
+        //     return User::role($request->get('role'))->get();
+        // }
+
         if ($request->has('all')) {
             if ($request->has('role')) {
                 return User::role($request->get('role'))->get();

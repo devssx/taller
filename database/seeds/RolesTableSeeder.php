@@ -28,6 +28,8 @@ class RolesTableSeeder extends Seeder
             'clientes' => ['listar', 'agregar', 'editar', 'borrar'],
             'usuarios' => ['listar', 'agregar', 'editar', 'borrar'],
             'roles' => ['listar', 'agregar', 'editar', 'borrar'],
+            'bitacora' => ['listar', 'agregar', 'editar', 'borrar'],
+            'limitado' => ['acceso'],
         ];
 
         foreach ($permissions as $key => $ps) {

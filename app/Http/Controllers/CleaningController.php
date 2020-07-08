@@ -53,6 +53,7 @@ class CleaningController extends Controller
             // crear registros si no existen:
             //$users = User::with('roles')->all();
             $users = User::with('roles')->get();
+            //$users = User::role('Limpieza')->get();
             foreach ($users as $u) {
                 if ($request->has('format')) {
                     $dateFormat = $request->get('format');
