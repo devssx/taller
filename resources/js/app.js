@@ -117,17 +117,20 @@ Vue.component('daily-cars', require('./components/Bitacora/DailyCarsComponent').
 Vue.component('weekly-cars', require('./components/Bitacora/weeklyCarsComponent').default);
 Vue.component('view-carservices', require('./components/CarServices/ServiceViewComponent').default);
 Vue.component('row-item', require('./components/CarServices/RowItemComponent').default);
+
 Vue.component('nomina-general', require('./components/Nomina/NominaComponent').default);
 Vue.component('nomina-item', require('./components/Nomina/NominaItemComponent').default);
 Vue.component('nomina-completa', require('./components/Nomina/NominaCompletaComponent').default);
 Vue.component('nomina-container', require('./components/Nomina/TabContainerComponent').default);
-Vue.component('ingresos-component', require('./components/Nomina/IngresosComponent').default);
-Vue.component('gastos-component', require('./components/Nomina/GastosComponent').default);
-Vue.component('ingresos-container', require('./components/Nomina/TabIngresosGastosComponent').default);
-Vue.component('ingresos-utilidad-component', require('./components/Nomina/IngresosUtilidadComponent').default);
-Vue.component('ingresos-tecnicos-component', require('./components/Nomina/IngresosDeTecnicosComponent').default);
-Vue.component('garantias-component', require('./components/Nomina/GarantiasAnualesComponent').default);
 
+Vue.component('ingresos-component', require('./components/Reports/IngresosComponent').default);
+Vue.component('gastos-component', require('./components/Reports/GastosComponent').default);
+Vue.component('ingresos-container', require('./components/Reports/TabIngresosComponent').default);
+
+Vue.component('utilidad-component', require('./components/Reports/IngresosUtilidadComponent').default);
+Vue.component('tecnicos-component', require('./components/Reports/IngresosDeTecnicosComponent').default);
+Vue.component('garantias-component', require('./components/Reports/GarantiasAnualesComponent').default);
+Vue.component('reports-container', require('./components/Reports/TabReportsComponent').default);
 
 // Salomon S.A. Tools
 Vue.component('file-upload', require('./components/Tools/UploadFile').default);
