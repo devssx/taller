@@ -12,6 +12,9 @@
           format="dd-MM-yyyy"
           placeholder="Seleccionar Día"
         ></el-date-picker>
+        <el-select width="150" v-model="workshopId" placeholder="Selecciona un taller">
+          <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
+        </el-select>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
         <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
       </el-col>
@@ -59,10 +62,31 @@
 <script>
 export default {
   mounted: function() {
+    this.loadMyUser();
+    this.loadWorkShops("/api/workshop");
     this.$root.$on("refreshTable", this.refreshTable);
-    this.onSearch();
   },
   methods: {
+    loadWorkShops(url) {
+      const $this = this;
+      $this.loading = true;
+      axios.get(url).then(function(response) {
+        $this.workshops = response.data;
+        $this.loading = false;
+
+        if ($this.me) $this.workshopId = $this.me.workshop_id;
+        else $this.workshopId = $this.workshops[0].id;
+        $this.onSearch();
+      });
+    },
+    loadMyUser() {
+      const $this = this;
+      $this.loading = true;
+      axios.get("/app").then(function(response) {
+        $this.me = response.data[0];
+        $this.loading = false;
+      });
+    },
     formatDate(date) {
       var hours = date.getHours();
       var minutes = date.getMinutes();
@@ -85,6 +109,18 @@ export default {
       });
     },
     onSearch() {
+      if (!this.workshopId) {
+        this.$alert(
+          "El taller seleccionado no es válido.",
+          "Taller no válido" + this.workshopId,
+          {
+            confirmButtonText: "OK",
+            type: "error"
+          }
+        );
+        return;
+      }
+
       if (this.dayName(this.selectedDay) == `Domingo`) {
         this.$alert("El día seleccionado no es válido.", "Día no válido", {
           confirmButtonText: "OK",
@@ -95,7 +131,9 @@ export default {
 
       var day = `${this.toFixedFormat(this.selectedDay, "yyyyMMdd")}`;
       var df = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
-      this.loadTable(`/api/cleaning/search?day=${day}&format=${df}`);
+      this.loadTable(
+        `/api/cleaning/search?day=${day}&format=${df}&workshop=${this.workshopId}`
+      );
     },
     refreshTable() {
       if (this.dayName(this.selectedDay) == `Domingo`) {
@@ -109,6 +147,9 @@ export default {
   },
   data() {
     return {
+      me: null,
+      workshops: [],
+      workshopId: "",
       showDialog: false,
       selectedDay: new Date(),
       search: "",

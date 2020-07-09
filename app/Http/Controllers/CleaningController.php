@@ -52,8 +52,8 @@ class CleaningController extends Controller
 
             // crear registros si no existen:
             //$users = User::with('roles')->all();
-            $users = User::with('roles')->get();
-            //$users = User::role('Limpieza')->get();
+            //$users = User::with('roles')->get();
+            $users = User::role('Limpieza')->get();
             foreach ($users as $u) {
                 if ($request->has('format')) {
                     $dateFormat = $request->get('format');
@@ -69,10 +69,12 @@ class CleaningController extends Controller
                 }
             }
 
+            $workshop = $request->has('workshop') ? $request->get('workshop') : '1';
             $data = DB::table('cleanings')
                 ->join('users', 'users.id', 'cleanings.user_id')
                 ->select('cleanings.*', 'users.name')
                 ->where('cleanings.day', '=', $request->get('day'))
+                ->where('users.workshop_id', '=', $workshop)
                 ->orderBy('users.name', 'asc')
                 ->get();
 
@@ -104,13 +106,15 @@ class CleaningController extends Controller
             $interval = new DateInterval('P6D'); // + 6 days
             $end->add($interval);
 
-             $data = DB::table('cleanings')
-                 ->join('users', 'users.id', 'cleanings.user_id')
-                 ->select('cleanings.*', 'users.name')
-                 ->where('cleanings.start', '>=', $request->get('start'))
-                 ->where('cleanings.start', '<=', $end->format("Y-m-d H:i:s"))
-                 ->orderBy('cleanings.day', 'asc')
-                 ->get();
+            $workshop = $request->has('workshop') ? $request->get('workshop') : '1';
+            $data = DB::table('cleanings')
+                ->join('users', 'users.id', 'cleanings.user_id')
+                ->select('cleanings.*', 'users.name')
+                ->where('cleanings.start', '>=', $request->get('start'))
+                ->where('cleanings.start', '<=', $end->format("Y-m-d H:i:s"))
+                ->where('users.workshop_id', '=', $workshop)
+                ->orderBy('cleanings.day', 'asc')
+                ->get();
 
             return $data;
         }
