@@ -52,3 +52,9 @@ COMMIT;
 -- tipo de servicio: A/C, Mecanico, Electrico
 ALTER TABLE `sales` ADD `service_type` INT NOT NULL DEFAULT '0' AFTER `method`;
 ALTER TABLE `sales` ADD `next_service` date DEFAULT NULL AFTER `last_service`;
+
+
+-- indicador taller
+ALTER TABLE `users` ADD `workshop_id` int(10) UNSIGNED NOT NULL DEFAULT 1 AFTER `id`;
+ALTER TABLE `users` ADD KEY `users_workshop_id_foreign` (`workshop_id`);
+ALTER TABLE `users` ADD CONSTRAINT `users_workshop_id_foreign` FOREIGN KEY (`workshop_id`) REFERENCES `work_shops` (`id`);

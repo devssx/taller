@@ -19,7 +19,10 @@ class CreateSalesTable extends Migration
             $table->decimal('total');
             $table->integer('service_type')->default(0);
             $table->date('next_service');
+            $table->unsignedInteger('workshop_id');
             $table->timestamps();
+            
+            $table->foreign('workshop_id')->references('id')->on('work_shops');
         });
     }
 

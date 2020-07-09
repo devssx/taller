@@ -37,6 +37,16 @@
                 >{{role.name}}</el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="Taller" prop="workshop_id">
+              <el-select v-model="user.workshop_id" placeholder="Selecciona un taller">
+                <el-option
+                  v-for="w in workshops"
+                  :key="w.id"
+                  :label="w.name"
+                  :value="w.id"
+                >{{w.name}}</el-option>
+              </el-select>
+            </el-form-item>
           </el-form>
         </el-col>
       </el-row>
@@ -49,7 +59,7 @@
 </template>
 <script>
 export default {
-  props: ["roles", "user"],
+  props: ["roles", "user", "workshops"],
   beforeUpdate: function() {
     if (!this.user.role) {
       this.user.role = 0;
@@ -89,6 +99,13 @@ export default {
             message: "Campo Rol es obligatorio",
             trigger: "change"
           }
+        ],
+        workshop_id: [
+          {
+            required: true,
+            message: "Campo Taller es obligatorio",
+            trigger: "change"
+          }
         ]
       }
     };
@@ -110,6 +127,7 @@ export default {
       }
     },
     changeRole(value) {
+      console.log(this.user);
       this.user.role = value;
       this.$forceUpdate();
     },
