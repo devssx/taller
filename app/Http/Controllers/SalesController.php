@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use DateTime;
 use DateInterval;
 use App\Comment;
+use App\WorkShop;
 
 class SalesController extends Controller
 {
@@ -26,6 +27,22 @@ class SalesController extends Controller
     public function index()
     {
         return view('sales.list');
+    }
+
+    public function daily()
+    {
+        $workshops = WorkShop::get();
+        return view('bitacora.cars.daily', [
+            'workshops' => $workshops
+        ]);
+    }
+
+    public function weekly()
+    {
+        $workshops = WorkShop::get();
+        return view('bitacora.cars.weekly', [
+            'workshops' => $workshops
+        ]);
     }
 
     public function create()
@@ -244,6 +261,11 @@ class SalesController extends Controller
         }
         if ($request->has('phonenumber')) {
             $sale->phonenumber = $request->get('phonenumber');
+        }
+
+        // taller
+        if ($request->has('workshop')) {
+            $sale->workshop_id = $request->get('workshop');
         }
 
         // Create a new client if id is not valid

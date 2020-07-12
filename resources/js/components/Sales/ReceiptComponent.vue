@@ -43,6 +43,12 @@
             class="query-form"
             ref="form"
           >
+            <el-form-item label="Taller" prop="workshop">
+              <el-select :disabled="true" v-model="form.workshop">
+                <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id"></el-option>
+              </el-select>
+            </el-form-item>
+
             <el-form-item label="Empleado" prop="user">
               <el-select
                 filterable
@@ -276,11 +282,13 @@ export default {
       image1Loaded: false,
       image2Loaded: false,
       method: 0,
+      workshops: [],
       service_type: 0,
       tax: 0,
       order: {},
       currentSale: false,
       form: {
+        workshop: "",
         client: "",
         user: "",
         phonenumber: "",
@@ -297,6 +305,13 @@ export default {
       clients: [],
       users: [],
       rules: {
+        workshop: [
+          {
+            required: true,
+            message: "Taller es obligatorio",
+            trigger: "change"
+          }
+        ],
         user: [
           {
             required: true,
@@ -311,6 +326,7 @@ export default {
   mounted() {
     var $this = this;
     this.$root.$on("refreshReceipt", this.refreshReceipt);
+    this.loadWorkShops("/api/workshop");
     if (localStorage.getItem("order")) {
       try {
         $this.order = JSON.parse(localStorage.getItem("order"));
@@ -374,6 +390,18 @@ export default {
     });
   },
   methods: {
+    loadWorkShops(url) {
+      const $this = this;
+      $this.loading = true;
+      axios.get(url).then(function(response) {
+        $this.workshops = response.data;
+        $this.loading = false;
+
+        if ($this.me) $this.form.workshop = $this.me.workshop_id;
+        else $this.form.workshop = $this.workshops[0].id;
+        $this.onSearch();
+      });
+    },
     getFolio(sale) {
       if (sale.status == 2) return "REC" + this.pad(sale.id, 5);
       else return "COT" + this.pad(sale.id, 5);
@@ -439,466 +467,6 @@ export default {
         this.createQuotation(this.currentSale, this.$refs["quotation"], canvas);
       }
     },
-    // Movido a commons.js
-    // buildQuotation(currentSale) {
-    //   // crea el recibo pdf
-    //   var $this = this;
-
-    //   $this.$refs["my-canvas"].width = $this.$refs["quotation"].width;
-    //   $this.$refs["my-canvas"].height = $this.$refs["quotation"].height - 109;
-    //   $this.context = $this.$refs["my-canvas"].getContext("2d");
-
-    //   $this.context.clearRect(
-    //     0,
-    //     0,
-    //     $this.$refs["my-canvas"].width,
-    //     $this.$refs["my-canvas"].height
-    //   );
-
-    //   $this.context.fillStyle = "#FFFFFF";
-    //   $this.context.fillRect(
-    //     0,
-    //     0,
-    //     $this.$refs["my-canvas"].width,
-    //     $this.$refs["my-canvas"].height
-    //   );
-    //   $this.context.drawImage(
-    //     $this.$refs["quotation"],
-    //     -30,
-    //     -30,
-    //     $this.$refs["quotation"].width,
-    //     $this.$refs["quotation"].height
-    //   );
-
-    //   $this.context.font = "24px Calibri";
-    //   $this.context.fillStyle = "red";
-    //   $this.context.fillText("COT" + $this.pad(currentSale.id, 5), 935, 132); // FOLIO
-
-    //   $this.context.fillStyle = "black";
-    //   $this.context.fillText(
-    //     new Date()
-    //       .toLocaleDateString("es-ES", {
-    //         year: "numeric",
-    //         month: "2-digit",
-    //         day: "2-digit"
-    //       })
-    //       .replace("/", "-")
-    //       .replace("/", "-"),
-    //     930,
-    //     190
-    //   );
-
-    //   $this.context.font = "16px Calibri";
-
-    //   // cliente
-    //   if (currentSale.client) {
-    //     $this.context.fillText(currentSale.client.name, 160, 305); // Cliente
-    //     $this.context.fillText(
-    //       currentSale.phonenumber
-    //         ? currentSale.phonenumber
-    //         : currentSale.client.phonenumber,
-    //       160,
-    //       330
-    //     );
-    //   } else if (currentSale.phonenumber) {
-    //     $this.context.fillText(currentSale.phonenumber, 160, 330); // tel
-    //   }
-
-    //   $this.context.fillText(currentSale.user.name, 160, 355); // tecnico
-
-    //   $this.context.fillText(
-    //     currentSale.maker ? currentSale.maker : currentSale.car[0].maker,
-    //     640,
-    //     305
-    //   );
-    //   $this.context.fillText(
-    //     currentSale.brand ? currentSale.brand : currentSale.car[0].brand,
-    //     640,
-    //     330
-    //   );
-    //   $this.context.fillText(
-    //     currentSale.year ? currentSale.year : currentSale.sale_services[0].year,
-    //     640,
-    //     355
-    //   );
-    //   $this.context.fillText(currentSale.color, 960, 305);
-    //   $this.context.fillText(currentSale.km, 960, 330);
-    //   $this.context.fillText(currentSale.next_service, 980, 355);
-
-    //   // $this.context.fillText("Negro Mate", 960, 305);
-    //   // $this.context.fillText("125,000", 960, 330);
-    //   // $this.context.fillText("25/04/2021", 980, 355);
-
-    //   currentSale.total = parseFloat(currentSale.total);
-
-    //   // Cantidad
-    //   $this.context.fillText("1", 90, 420);
-
-    //   // Descripcion
-    //   if (currentSale.concept) {
-    //     var concept = currentSale.concept.match(/.{1,60}/g);
-    //     for (var x = 0; x < concept.length; x++) {
-    //       $this.context.fillText(concept[x].toUpperCase(), 160, 420 + x * 32);
-    //     }
-    //   }
-
-    //   // Importe
-    //   $this.context.fillText(
-    //     "$" + $this.formatPrice(currentSale.total),
-    //     960,
-    //     420
-    //   );
-
-    //   // Descripcion (repetida)
-    //   if (currentSale.details) {
-    //     var details = currentSale.details.match(/.{1,60}/g);
-    //     for (var x = 0; x < details.length; x++) {
-    //       $this.context.fillText(
-    //         details[x].toUpperCase(),
-    //         160,
-    //         420 + 32 * concept.length + x * 32
-    //       );
-    //     }
-    //   }
-
-    //   // Lineas
-    //   for (var x = 0; x < 19; x++) {
-    //     $this.context.strokeStyle = "black";
-    //     $this.context.beginPath();
-    //     $this.context.moveTo(40, 430 + x * 31);
-    //     $this.context.lineTo(1100, 430 + x * 31);
-    //     $this.context.lineWidth = 1;
-    //     $this.context.stroke();
-    //   }
-
-    //   var y = 1040;
-    //   var h = 26;
-    //   // Subtotal
-    //   $this.context.fillText(
-    //     "$" + $this.formatPrice(currentSale.total),
-    //     960,
-    //     y
-    //   );
-    //   y += h;
-
-    //   // IVA
-    //   if (currentSale.tax) {
-    //     $this.context.fillText(
-    //       "$" + $this.formatPrice(currentSale.total * 0.08),
-    //       960,
-    //       y
-    //     );
-    //   } else {
-    //     $this.context.fillText("$0", 960, y);
-    //   }
-    //   y += h;
-
-    //   // Total
-    //   if (currentSale.tax) {
-    //     $this.context.fillText(
-    //       "$" + $this.formatPrice(currentSale.total + currentSale.total * 0.08),
-    //       960,
-    //       y
-    //     );
-    //   } else {
-    //     $this.context.fillText(
-    //       "$" + $this.formatPrice(currentSale.total),
-    //       960,
-    //       y
-    //     );
-    //   }
-    //   y += h;
-
-    //   // Garantia
-    //   if (currentSale.guaranty) {
-    //     //$this.context.font = "24px Calibri";
-    //     $this.context.fillText(currentSale.guaranty, 160, 1040);
-    //   }
-
-    //   // metodo de pago
-    //   if (currentSale.method) {
-    //     $this.context.fillText(currentSale.method, 620, 1040);
-    //   }
-
-    //   // validado por...
-    //   if (currentSale.validator) {
-    //     $this.context.fillText(currentSale.validator, 255, 1115);
-    //   }
-
-    //   // observaciones (56 char por linea)
-    //   if (currentSale.comments) {
-    //     var comment = currentSale.comments.match(/.{1,56}/g);
-    //     for (var i = 0; i < comment.length; i++) {
-    //       $this.context.fillText(
-    //         comment[i].toUpperCase().trim(),
-    //         645,
-    //         1115 + i * 18
-    //       );
-    //     }
-    //   }
-
-    //   var img = document.createElement("img");
-    //   img.src = $this.$refs["my-canvas"].toDataURL("image/jpeg");
-    //   img.width = $this.$refs["my-canvas"].width;
-    //   img.height = $this.$refs["my-canvas"].height;
-
-    //   const d = new Printd();
-    //   d.print(img);
-    // },
-    // buildReceipt() {
-    //   // const COTIZACION = 0;
-    //   // const PROCESO = 1;
-    //   // const TERMINADO = 2;
-    //   // const CANCELADO = 3;
-    //   if (this.currentSale.status != 2) {
-    //     this.buildQuotation(this.currentSale);
-    //     return;
-    //   }
-
-    //   var $this = this;
-    //   $this.$refs["my-canvas"].width = $this.$refs["receipt"].width;
-    //   $this.$refs["my-canvas"].height = $this.$refs["receipt"].height - 109;
-    //   $this.context = $this.$refs["my-canvas"].getContext("2d");
-
-    //   $this.context.clearRect(
-    //     0,
-    //     0,
-    //     $this.$refs["my-canvas"].width,
-    //     $this.$refs["my-canvas"].height
-    //   );
-
-    //   $this.context.fillStyle = "#FFFFFF";
-    //   $this.context.fillRect(
-    //     0,
-    //     0,
-    //     $this.$refs["my-canvas"].width,
-    //     $this.$refs["my-canvas"].height
-    //   );
-    //   $this.context.drawImage(
-    //     $this.$refs["receipt"],
-    //     -30,
-    //     -30,
-    //     $this.$refs["receipt"].width,
-    //     $this.$refs["receipt"].height
-    //   );
-
-    //   $this.context.font = "24px Calibri";
-    //   $this.context.fillStyle = "red";
-    //   $this.context.fillText(
-    //     "REC" + $this.pad($this.currentSale.id, 5),
-    //     920,
-    //     105
-    //   );
-    //   $this.context.fillText(
-    //     "REC" + $this.pad($this.currentSale.id, 5),
-    //     920,
-    //     105 + 678
-    //   );
-
-    //   $this.context.fillStyle = "black";
-    //   $this.context.fillText(
-    //     new Date()
-    //       .toLocaleDateString("es-ES", {
-    //         year: "numeric",
-    //         month: "2-digit",
-    //         day: "2-digit"
-    //       })
-    //       .replace("/", "-")
-    //       .replace("/", "-"),
-    //     920,
-    //     155
-    //   );
-    //   $this.context.fillText(
-    //     new Date()
-    //       .toLocaleDateString("es-ES", {
-    //         year: "numeric",
-    //         month: "2-digit",
-    //         day: "2-digit"
-    //       })
-    //       .replace("/", "-")
-    //       .replace("/", "-"),
-    //     920,
-    //     155 + 678
-    //   );
-
-    //   // Lineas
-    //   for (var x = 0; x < 8; x++) {
-    //     $this.context.strokeStyle = "black";
-    //     $this.context.beginPath();
-    //     $this.context.moveTo(40, 360 + x * 30);
-    //     $this.context.lineTo(1100, 360 + x * 30);
-    //     $this.context.moveTo(40, 360 + x * 30 + 678);
-    //     $this.context.lineTo(1100, 360 + x * 30 + 678);
-    //     $this.context.lineWidth = 1;
-    //     $this.context.stroke();
-    //   }
-
-    //   $this.context.font = "16px Calibri";
-    //   // MDP
-    //   if ($this.currentSale.method) {
-    //     $this.context.fillText(
-    //       $this.currentSale.method == 1 ? "Efectivo" : "Electrónico",
-    //       630,
-    //       615
-    //     );
-    //     $this.context.fillText(
-    //       $this.currentSale.method == 1 ? "Efectivo" : "Electrónico",
-    //       630,
-    //       615 + 678
-    //     );
-    //   }
-
-    //   if ($this.currentSale.client) {
-    //     $this.context.fillText($this.currentSale.client.name, 160, 240);
-    //     $this.context.fillText($this.currentSale.client.name, 160, 240 + 678);
-    //     $this.context.fillText(
-    //       $this.currentSale.phonenumber
-    //         ? $this.currentSale.phonenumber
-    //         : $this.currentSale.client.phonenumber,
-    //       160,
-    //       265
-    //     );
-    //     $this.context.fillText(
-    //       $this.currentSale.phonenumber
-    //         ? $this.currentSale.phonenumber
-    //         : $this.currentSale.client.phonenumber,
-    //       160,
-    //       265 + 678
-    //     );
-    //   } else if ($this.currentSale.phonenumber) {
-    //     $this.context.fillText($this.currentSale.phonenumber, 160, 265);
-    //     $this.context.fillText($this.currentSale.phonenumber, 160, 265 + 678);
-    //   }
-
-    //   $this.context.fillText($this.currentSale.user.name, 160, 290);
-    //   $this.context.fillText($this.currentSale.user.name, 160, 290 + 678);
-
-    //   $this.context.fillText($this.currentSale.maker, 662, 240);
-    //   $this.context.fillText($this.currentSale.maker, 662, 240 + 678);
-    //   $this.context.fillText($this.currentSale.brand, 662, 265);
-    //   $this.context.fillText($this.currentSale.brand, 662, 265 + 678);
-    //   $this.context.fillText($this.currentSale.year, 662, 290);
-    //   $this.context.fillText($this.currentSale.year, 662, 290 + 678);
-    //   $this.context.fillText($this.currentSale.color, 960, 240);
-    //   $this.context.fillText($this.currentSale.color, 960, 240 + 678);
-    //   $this.context.fillText($this.currentSale.km, 960, 265);
-    //   $this.context.fillText($this.currentSale.km, 960, 265 + 678);
-    //   $this.context.fillText($this.currentSale.next_service, 1010, 290);
-    //   $this.context.fillText($this.currentSale.next_service, 1010, 290 + 678);
-
-    //   $this.currentSale.total = parseFloat($this.currentSale.total);
-
-    //   $this.context.fillText("1", 100, 350);
-    //   $this.context.fillText("1", 100, 350 + 678);
-    //   if ($this.currentSale.concept) {
-    //     var concept = $this.currentSale.concept.match(/.{1,60}/g);
-    //     for (var x = 0; x < concept.length; x++) {
-    //       $this.context.fillText(concept[x].toUpperCase(), 160, 350 + x * 32);
-    //       $this.context.fillText(
-    //         concept[x].toUpperCase(),
-    //         160,
-    //         350 + 678 + x * 32
-    //       );
-    //     }
-    //   }
-    //   $this.context.fillText(
-    //     "$" + $this.formatPrice($this.currentSale.total),
-    //     950,
-    //     350
-    //   );
-    //   $this.context.fillText(
-    //     "$" + $this.formatPrice($this.currentSale.total),
-    //     950,
-    //     350 + 678
-    //   );
-
-    //   // Detalles
-    //   if ($this.currentSale.details) {
-    //     var details = $this.currentSale.details.match(/.{1,60}/g);
-    //     for (var x = 0; x < details.length; x++) {
-    //       $this.context.fillText(
-    //         details[x].toUpperCase(),
-    //         160,
-    //         350 + 32 * concept.length + x * 32
-    //       );
-    //       $this.context.fillText(
-    //         details[x].toUpperCase(),
-    //         160,
-    //         350 + 678 + 32 * concept.length + x * 32
-    //       );
-    //     }
-    //   }
-
-    //   $this.context.fillText(
-    //     "$" + $this.formatPrice($this.currentSale.total),
-    //     950,
-    //     615
-    //   );
-    //   $this.context.fillText(
-    //     "$" + $this.formatPrice($this.currentSale.total),
-    //     950,
-    //     615 + 678
-    //   );
-    //   if ($this.currentSale.tax) {
-    //     $this.context.fillText(
-    //       "$" + $this.formatPrice($this.currentSale.total * 0.08),
-    //       950,
-    //       640
-    //     );
-    //     $this.context.fillText(
-    //       "$" + $this.formatPrice($this.currentSale.total * 0.08),
-    //       950,
-    //       640 + 678
-    //     );
-    //   } else {
-    //     $this.context.fillText("$0", 950, 640);
-    //     $this.context.fillText("$0", 950, 640 + 678);
-    //   }
-
-    //   if ($this.currentSale.tax) {
-    //     $this.context.fillText(
-    //       "$" +
-    //         $this.formatPrice(
-    //           $this.currentSale.total + $this.currentSale.total * 0.08
-    //         ),
-    //       950,
-    //       668
-    //     );
-    //     $this.context.fillText(
-    //       "$" +
-    //         $this.formatPrice(
-    //           $this.currentSale.total + $this.currentSale.total * 0.08
-    //         ),
-    //       950,
-    //       668 + 678
-    //     );
-    //   } else {
-    //     $this.context.fillText(
-    //       "$" + $this.formatPrice($this.currentSale.total),
-    //       950,
-    //       668
-    //     );
-    //     $this.context.fillText(
-    //       "$" + $this.formatPrice($this.currentSale.total),
-    //       950,
-    //       668 + 678
-    //     );
-    //   }
-
-    //   if ($this.currentSale.guaranty) {
-    //     $this.context.font = "24px Calibri";
-    //     $this.context.fillText($this.currentSale.guaranty, 170, 620);
-    //     $this.context.fillText($this.currentSale.guaranty, 170, 620 + 678);
-    //   }
-
-    //   var img = document.createElement("img");
-    //   img.src = $this.$refs["my-canvas"].toDataURL("image/jpeg");
-    //   img.width = $this.$refs["my-canvas"].width;
-    //   img.height = $this.$refs["my-canvas"].height;
-
-    //   const d = new Printd();
-    //   d.print(img);
-    // },
     pad(number, size) {
       var s = String(number);
       while (s.length < (size || 2)) {
@@ -942,6 +510,7 @@ export default {
             $this.order.client = $this.form.client;
           }
 
+          $this.order.workshop = $this.form.workshop;
           $this.order.phonenumber = $this.form.phonenumber;
           $this.order.concept = $this.form.concept;
           $this.order.color = $this.form.color;

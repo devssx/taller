@@ -60,18 +60,18 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('bitacora')->group(function () {
         //Route::view('/cars', 'bitacora.index')->name('bitacora.cars');
         //Route::get('/cleaning', 'CleaningController@index')->name('sales'); 
-        Route::view('/dailycleaning', 'bitacora.cleaning.daily')->name('bitacora.dailycleaning');
-        Route::view('/weeklycleaning', 'bitacora.cleaning.weekly')->name('bitacora.weeklycleaning');
-        Route::view('/dailycars', 'bitacora.cars.daily')->name('bitacora.dailycars');
-        Route::view('/weeklycars', 'bitacora.cars.weekly')->name('bitacora.weeklycars');
-        Route::view('/nomina', 'bitacora.nomina.general')->name('bitacora.nominageneral');
-        Route::view('/nominadetalle', 'bitacora.nomina.detail')->name('bitacora.nominadetail');
+        Route::get('/dailycleaning', 'CleaningController@daily')->name('bitacora.dailycleaning');
+        Route::get('/weeklycleaning', 'CleaningController@weekly')->name('bitacora.weeklycleaning');
+        Route::get('/dailycars', 'SalesController@daily')->name('bitacora.dailycars');
+        Route::get('/weeklycars', 'SalesController@weekly')->name('bitacora.weeklycars');
         Route::view('/employeeincome', 'bitacora.iexpenses.employeeincome')->name('bitacora.employeeincome');
         Route::view('/expenses', 'bitacora.iexpenses.expenses')->name('bitacora.expenses');
         Route::view('/guarantee', 'bitacora.iexpenses.guarantee')->name('bitacora.guarantee');
         Route::view('/income', 'bitacora.iexpenses.income')->name('bitacora.income');
         Route::view('/profit', 'bitacora.iexpenses.profit')->name('bitacora.profit');
     });
+
+    Route::get('nomina/general', 'PayrollController@index')->name('nomina');
 
     Route::post('files/uploadItem', 'FileController@uploadItem')->name('upload.item');
     Route::post('files/uploadCar', 'FileController@uploadCar')->name('upload.car');

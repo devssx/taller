@@ -57,11 +57,8 @@
                             <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.weeklycleaning') }}')">
                                 Limpieza Semanal
                             </el-menu-item>
-                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.nominageneral') }}')">
-                                Nómina
-                            </el-menu-item>
                             {{-- <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.nominadetail') }}')">
-                                Nómina Completa Resumen
+                            Nómina Completa Resumen
                             </el-menu-item>
                             <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.expenses') }}')">
                                 Gastos
@@ -88,6 +85,11 @@
                                 Lista Ordenes de servicio
                             </el-menu-item>
                         </el-submenu>
+                        @endcan
+                        @can('listar bitacora')
+                        <el-menu-item index="nomina" v-on:click="goto('{{ route('nomina') }}')">
+                            Nómina
+                        </el-menu-item>
                         @endcan
                         @can('listar clientes')
                         <el-menu-item index="clients" v-on:click="goto('{{ route('clients.list') }}')">

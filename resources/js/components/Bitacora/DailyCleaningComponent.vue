@@ -61,24 +61,12 @@
 
 <script>
 export default {
+  props: ["workshops"],
   mounted: function() {
     this.loadMyUser();
-    this.loadWorkShops("/api/workshop");
     this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
-    loadWorkShops(url) {
-      const $this = this;
-      $this.loading = true;
-      axios.get(url).then(function(response) {
-        $this.workshops = response.data;
-        $this.loading = false;
-
-        if ($this.me) $this.workshopId = $this.me.workshop_id;
-        else $this.workshopId = $this.workshops[0].id;
-        $this.onSearch();
-      });
-    },
     loadMyUser() {
       const $this = this;
       $this.loading = true;
@@ -148,7 +136,6 @@ export default {
   data() {
     return {
       me: null,
-      workshops: [],
       workshopId: "",
       showDialog: false,
       selectedDay: new Date(),

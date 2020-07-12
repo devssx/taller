@@ -13,6 +13,9 @@
           format="Week WW"
           placeholder="Seleccionar Semana"
         ></el-date-picker>
+        <el-select width="150" v-model="workshopId" placeholder="Selecciona un taller">
+          <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
+        </el-select>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
       </el-col>
       <el-col :span="4" align="end">
@@ -529,6 +532,7 @@
 
 <script>
 export default {
+  props: ["workshops"],
   mounted: function() {
     this.$root.$on("refreshTable", this.refreshTable);
     this.$root.$on("refreshTotal", this.refreshTotal);
@@ -718,7 +722,6 @@ export default {
       $this.weekPayroll = [];
       axios.get(url).then(function(response) {
         $this.weekPayroll = response.data;
-        
       });
     },
     // Carga recibos tipo: 1: A/C, 2: Mecanica, 3: Electrico
@@ -833,6 +836,7 @@ export default {
   },
   data() {
     return {
+      workshopId: "",
       isReadOnly: true,
       total: 0,
       discounts: 0,

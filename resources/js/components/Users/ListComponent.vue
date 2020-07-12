@@ -44,21 +44,12 @@
 
 <script>
 export default {
-  props: ["roles"],
+  props: ["roles", "workshops"],
   mounted: function() {
     this.loadTable("/api/users");
-    this.loadWorkShops("api/workshop");
     this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
-    loadWorkShops(url) {
-      const $this = this;
-      $this.loading = true;
-      axios.get(url).then(function(response) {
-        $this.workshops = response.data;
-        $this.loading = false;
-      });
-    },
     loadTable(url) {
       var $this = this;
       $this.loading = true;
@@ -90,7 +81,6 @@ export default {
   },
   data() {
     return {
-      workshops: [],
       users: [],
       search: "",
       timeout: 0,

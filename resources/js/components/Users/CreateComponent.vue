@@ -62,13 +62,11 @@
 </template>
 <script>
 export default {
-  props: ["roles"],
+  props: ["roles", "workshops"],
   mounted: function() {
-    this.loadWorkShops("api/workshop");
   },
   data() {
     return {
-      workshops: [],
       dialogVisible: false,
       loading: false,
       labelPosition: "left",
@@ -124,14 +122,6 @@ export default {
     };
   },
   methods: {
-    loadWorkShops(url) {
-      const $this = this;
-      $this.loading = true;
-      axios.get(url).then(function(response) {
-        $this.workshops = response.data;
-        $this.loading = false;
-      });
-    },
     handleClose(done) {
       var $this = this;
       if ($this.user.name || $this.user.email || $this.user.password) {

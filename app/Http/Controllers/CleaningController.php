@@ -6,6 +6,7 @@ use App\Models\Cleaning;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\User;
+use App\WorkShop;
 use DateTime;
 use DateInterval;
 
@@ -19,6 +20,22 @@ class CleaningController extends Controller
     public function index()
     {
         return view('cars.index');
+    }
+
+    public function daily()
+    {
+        $workshops = WorkShop::get();
+        return view('bitacora.cleaning.daily', [
+            'workshops' => $workshops
+        ]);
+    }
+
+    public function weekly()
+    {
+        $workshops = WorkShop::get();
+        return view('bitacora.cleaning.weekly', [
+            'workshops' => $workshops
+        ]);
     }
 
     public function get(Request $request)

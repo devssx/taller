@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Payroll;
 use App\PayrollComment;
 use App\Comment;
+use App\WorkShop;
 use Illuminate\Http\Request;
 use DateTime;
 use DateInterval;
@@ -18,7 +19,10 @@ class PayrollController extends Controller
      */
     public function index()
     {
-        //
+        $workshops = WorkShop::get();
+        return view('bitacora.nomina.index', [
+            'workshops' => $workshops
+        ]);
     }
 
     /**

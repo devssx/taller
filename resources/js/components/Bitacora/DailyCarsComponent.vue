@@ -13,6 +13,9 @@
           format="dd-MM-yyyy"
           placeholder="Seleccionar Día"
         ></el-date-picker>
+        <el-select width="150" v-model="workshopId" placeholder="Selecciona un taller">
+          <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
+        </el-select>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
       </el-col>
       <el-col :span="4"></el-col>
@@ -123,6 +126,7 @@
 
 <script>
 export default {
+  props: ["workshops"],
   mounted: function() {
     this.$root.$on("refreshTable", this.refreshTable);
     this.searchSales(this.selectedDay);
@@ -198,6 +202,7 @@ export default {
   },
   data() {
     return {
+      workshopId: "",
       image1Loaded: false,
       image2Loaded: false,
       sales: [],
