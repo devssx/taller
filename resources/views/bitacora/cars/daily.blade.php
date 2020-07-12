@@ -8,7 +8,7 @@
     </el-row>
     <el-row type="flex">
         <el-col :span="24">
-            <daily-cars :workshops="{{ $workshops->toJson() }}"></daily-cars>
+            <daily-cars multi-workshop="{{ $multiWorkshop }}" :workshops="{{ $workshops->toJson() }}" :my-user="{{ $myUser->toJson() }}"></daily-cars>
         </el-col>
     </el-row>
 </el-main>

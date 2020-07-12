@@ -12,6 +12,7 @@ use DateTime;
 use DateInterval;
 use App\Comment;
 use App\WorkShop;
+use App\User;
 
 class SalesController extends Controller
 {
@@ -32,16 +33,22 @@ class SalesController extends Controller
     public function daily()
     {
         $workshops = WorkShop::get();
+        $myUser = User::where('id', auth()->id())->get();
         return view('bitacora.cars.daily', [
-            'workshops' => $workshops
+            'workshops' => $workshops,
+            'myUser' =>  $myUser,
+            'multiWorkshop' => auth()->user()->can('cambiar de taller')
         ]);
     }
 
     public function weekly()
     {
         $workshops = WorkShop::get();
+        $myUser = User::where('id', auth()->id())->get();
         return view('bitacora.cars.weekly', [
-            'workshops' => $workshops
+            'workshops' => $workshops,
+            'myUser' =>  $myUser,
+            'multiWorkshop' => auth()->user()->can('cambiar de taller')
         ]);
     }
 
@@ -77,6 +84,7 @@ class SalesController extends Controller
         }])->where('done_on', NULL)->orWhere('done_on', '>', date('Y-m-d 00:00:00', strtotime('-7 days')))->paginate(10);
     }
 
+    // Bitacora
     public function searchByDay(Request $request)
     {
         if ($request->has('start') && $request->has('end')) {
@@ -87,12 +95,14 @@ class SalesController extends Controller
             }])
                 ->where('created_at', '>=', $request->get('start'))
                 ->where('created_at', '<=', $request->get('end'))
+                ->where('workshop_id', '=', $request->get('workshop'))
                 ->paginate(10000);
         }
 
         return [];
     }
 
+    // Bitacora
     public function searchByWeek(Request $request)
     {
         if ($request->has('start')) {
@@ -107,12 +117,14 @@ class SalesController extends Controller
             }])
                 ->where('created_at', '>=', $request->get('start'))
                 ->where('created_at', '<=', $end->format("Y-m-d H:i:s"))
+                ->where('workshop_id', '=', $request->get('workshop'))
                 ->paginate(10000);
         }
 
         return [];
     }
 
+    // Payroll
     public function searchReceiptByWeek(Request $request)
     {
         if ($request->has('start')) {
@@ -131,6 +143,7 @@ class SalesController extends Controller
                 ->where('done_on', '>=', $start->format("Y-m-d H:i:s"))
                 ->where('done_on', '<=', $end->format("Y-m-d H:i:s"))
                 ->where('status', '=', Sale::TERMINADO)
+                ->where('workshop_id', '=', $request->get('workshop'))
                 ->paginate(10000);
 
             $week = new DateTime($request->get('start'));

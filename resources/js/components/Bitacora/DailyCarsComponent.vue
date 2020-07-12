@@ -13,7 +13,7 @@
           format="dd-MM-yyyy"
           placeholder="Seleccionar Día"
         ></el-date-picker>
-        <el-select width="150" v-model="workshopId" placeholder="Selecciona un taller">
+        <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
         </el-select>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
@@ -126,10 +126,15 @@
 
 <script>
 export default {
-  props: ["workshops"],
+  props: ["workshops", "myUser", "multiWorkshop"],
   mounted: function() {
     this.$root.$on("refreshTable", this.refreshTable);
-    this.searchSales(this.selectedDay);
+
+    // busca por default en el taller donde trabaja este empleado
+    if (this.myUser && this.myUser.length > 0) {
+      this.workshopId = this.myUser[0].workshop_id;
+      this.searchSales(this.selectedDay);
+    }
   },
   methods: {
     showReceipt(item) {
@@ -163,7 +168,17 @@ export default {
       this.prevDay = day;
       var start = `${this.toFixedFormat(day, "yyyy-MM-dd")} 00:00:00`;
       var end = `${this.toFixedFormat(day, "yyyy-MM-dd")} 23:59:59`;
-      this.loadTable(`/api/sales/searchByDay?start=${start}&end=${end}`);
+      if (!this.workshopId) {
+        this.$alert("Favor de un taller.", "Taller no válido", {
+          confirmButtonText: "OK",
+          type: "warning"
+        });
+        return;
+      }
+
+      this.loadTable(
+        `/api/sales/searchByDay?start=${start}&end=${end}&workshop=${this.workshopId}`
+      );
     },
     autorizo(item) {
       return item.status == 2 ? `Si` : `No`;
