@@ -58,3 +58,14 @@ ALTER TABLE `sales` ADD `next_service` date DEFAULT NULL AFTER `last_service`;
 ALTER TABLE `users` ADD `workshop_id` int(10) UNSIGNED NOT NULL DEFAULT 1 AFTER `id`;
 ALTER TABLE `users` ADD KEY `users_workshop_id_foreign` (`workshop_id`);
 ALTER TABLE `users` ADD CONSTRAINT `users_workshop_id_foreign` FOREIGN KEY (`workshop_id`) REFERENCES `work_shops` (`id`);
+
+
+-- indicador taller
+ALTER TABLE `payrolls` ADD `workshop_id` int(10) UNSIGNED NOT NULL DEFAULT 1 AFTER `id`;
+ALTER TABLE `payrolls` ADD KEY `payrolls_workshop_id_foreign` (`workshop_id`);
+ALTER TABLE `payrolls` ADD CONSTRAINT `payrolls_workshop_id_foreign` FOREIGN KEY (`workshop_id`) REFERENCES `work_shops` (`id`);
+
+-- indicador taller
+ALTER TABLE `payroll_comments` ADD `workshop_id` int(10) UNSIGNED NOT NULL DEFAULT 1 AFTER `id`;
+ALTER TABLE `payroll_comments` ADD KEY `payroll_comments_workshop_id_foreign` (`workshop_id`);
+ALTER TABLE `payroll_comments` ADD CONSTRAINT `payroll_comments_workshop_id_foreign` FOREIGN KEY (`workshop_id`) REFERENCES `work_shops` (`id`);

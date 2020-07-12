@@ -6,6 +6,7 @@ use App\Payroll;
 use App\PayrollComment;
 use App\Comment;
 use App\WorkShop;
+use App\User;
 use Illuminate\Http\Request;
 use DateTime;
 use DateInterval;
@@ -20,8 +21,12 @@ class PayrollController extends Controller
     public function index()
     {
         $workshops = WorkShop::get();
+        $myUser = User::where('id', auth()->id())->get();
+
         return view('bitacora.nomina.index', [
-            'workshops' => $workshops
+            'workshops' => $workshops,
+            'myUser' =>  $myUser,
+            'multiWorkshop' => auth()->user()->can('cambiar de taller')
         ]);
     }
 
@@ -37,7 +42,7 @@ class PayrollController extends Controller
 
     public function saveComment(Request $request)
     {
-        $c = Comment::firstOrCreate(['week' => $request->get('week')]);
+        $c = Comment::firstOrCreate(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')]);
         $c->comment = $request->get('comment');
         $c->total = $request->get('total');
         $c->save();
@@ -45,26 +50,26 @@ class PayrollController extends Controller
 
     public function getComment(Request $request)
     {
-        return Comment::firstOrCreate(['week' => $request->get('week')]);
+        return Comment::firstOrCreate(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')]);
     }
 
     public function getPayroll(Request $request)
     {
-        return Payroll::where(['week' => $request->get('week')])->get();
+        return Payroll::where(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')])->get();
     }
 
     public function saveWeek(Request $request)
     {
         // saves the comment
         if ($request->has('comment')) {
-            $userComment =  PayrollComment::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('userID')]);
+            $userComment =  PayrollComment::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('userID'), 'workshop_id' => $request->get('workshop')]);
             $userComment->comment = $request->get('comment');
             $userComment->save();
         }
 
         // AC
         if ($request->has('totalWeekAc')) {
-            $payroll =  Payroll::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('userID'), 'type' => '1']);
+            $payroll =  Payroll::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('userID'), 'workshop_id' => $request->get('workshop'), 'type' => '1']);
             $payroll->total_week = $request->get('totalWeekAc');
             $payroll->comission = $request->get('commissionAc');
             $payroll->discount = $request->get('discountsAc');
@@ -75,7 +80,7 @@ class PayrollController extends Controller
 
         // Mecanico
         if ($request->has('totalWeekMec')) {
-            $payroll =  Payroll::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('userID'), 'type' => '2']);
+            $payroll =  Payroll::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('userID'), 'workshop_id' => $request->get('workshop'), 'type' => '2']);
             $payroll->total_week = $request->get('totalWeekMec');
             $payroll->comission = $request->get('commissionMec');
             $payroll->discount = $request->get('discountsMec');
@@ -86,7 +91,7 @@ class PayrollController extends Controller
 
         // Electrico
         if ($request->has('totalWeekEle')) {
-            $payroll =  Payroll::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('userID'), 'type' => '3']);
+            $payroll =  Payroll::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('userID'), 'workshop_id' => $request->get('workshop'), 'type' => '3']);
             $payroll->total_week = $request->get('totalWeekEle');
             $payroll->comission = $request->get('commissionEle');
             $payroll->discount = $request->get('discountsEle');

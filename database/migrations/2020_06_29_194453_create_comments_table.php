@@ -16,10 +16,11 @@ class CreateCommentsTable extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-
+            $table->unsignedInteger('workshop_id');
             $table->unsignedInteger('week');
             $table->string('comment');
             $table->decimal('total'); 
+            $table->foreign('workshop_id')->references('id')->on('workshops');
         });
     }
 

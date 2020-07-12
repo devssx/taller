@@ -13,7 +13,7 @@
           format="Week WW"
           placeholder="Seleccionar Semana"
         ></el-date-picker>
-        <el-select width="150" v-model="workshopId" placeholder="Selecciona un taller">
+        <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
         </el-select>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
@@ -532,10 +532,15 @@
 
 <script>
 export default {
-  props: ["workshops"],
+  props: ["workshops", "myUser", "multiWorkshop"],
   mounted: function() {
     this.$root.$on("refreshTable", this.refreshTable);
     this.$root.$on("refreshTotal", this.refreshTotal);
+
+    // busca por default en el taller donde trabaja este empleado
+    if (this.myUser && this.myUser.length > 0) {
+      this.workshopId = this.myUser[0].workshop_id;
+    }
   },
   methods: {
     setEditMode(readOnly, dontSave) {
@@ -551,9 +556,21 @@ export default {
           this.tableElecData[0]
         );
 
+        if (!this.workshopId) {
+          this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
+            confirmButtonText: "OK",
+            type: "warning"
+          });
+          return;
+        }
+
         let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
-        this.loadPayroll(`/api/payroll?week=${week}`);
-        this.loadComments(`/api/payroll/userComments?week=${week}`);
+        this.loadPayroll(
+          `/api/payroll?week=${week}&workshop=${this.workshopId}`
+        );
+        this.loadComments(
+          `/api/payroll/userComments?week=${week}&workshop=${this.workshopId}`
+        );
       }
     },
     saveWeek(userID, weekAc, weekMec, weekEle) {
@@ -563,10 +580,19 @@ export default {
       // weekID
       let week = this.toFixedFormat($this.prevDay, "yyyyMMdd");
 
+      if (!this.workshopId) {
+        this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
+          confirmButtonText: "OK",
+          type: "warning"
+        });
+        return;
+      }
+
       // save totals
       axios
         .post("/api/payroll/save", {
           week: week,
+          workshop: $this.workshopId,
           userID: userID,
           comment: $this.comment,
           // AC
@@ -806,11 +832,23 @@ export default {
       this.prevDay = newDate;
       var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
 
+      if (!this.workshopId) {
+        this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
+          confirmButtonText: "OK",
+          type: "warning"
+        });
+        return;
+      }
+
       // weekID
       let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
-      this.loadPayroll(`/api/payroll?week=${week}`);
-      this.loadComments(`/api/payroll/userComments?week=${week}`);
-      this.loadTable(`/api/sales/searchReceiptByWeek?start=${start}`);
+      this.loadPayroll(`/api/payroll?week=${week}&workshop=${this.workshopId}`);
+      this.loadComments(
+        `/api/payroll/userComments?week=${week}&workshop=${this.workshopId}`
+      );
+      this.loadTable(
+        `/api/sales/searchReceiptByWeek?start=${start}&workshop=${this.workshopId}`
+      );
     },
     refreshTable() {},
     computeTotal(tableAc, tableMec, tableElec) {

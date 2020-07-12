@@ -19,7 +19,7 @@ class PayrollCommentController extends Controller
 
     public function getUserComments(Request $request)
     {
-        return PayrollComment::where(['week' => $request->get('week')])->get();
+        return PayrollComment::where(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')])->get();
     }
 
 

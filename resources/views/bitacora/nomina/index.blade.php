@@ -8,7 +8,7 @@
     </el-row>
     <el-row type="flex">
         <el-col :span="24">
-            <nomina-container :workshops="{{ $workshops->toJson() }}"></nomina-container>
+            <nomina-container multi-workshop="{{ $multiWorkshop }}" :workshops="{{ $workshops->toJson() }}" :my-user="{{ $myUser->toJson() }}"></nomina-container>
         </el-col>
     </el-row>
 </el-main>

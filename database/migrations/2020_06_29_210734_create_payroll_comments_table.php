@@ -18,9 +18,11 @@ class CreatePayrollCommentsTable extends Migration
 
             $table->unsignedInteger('week');
             $table->unsignedInteger('user_id');
+            $table->unsignedInteger('workshop_id');
             $table->string('comment');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('workshop_id')->references('id')->on('workshops');
         });
     }
 

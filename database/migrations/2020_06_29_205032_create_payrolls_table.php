@@ -18,7 +18,7 @@ class CreatePayrollsTable extends Migration
             
             $table->unsignedInteger('week');
             $table->unsignedInteger('user_id');
-           
+            $table->unsignedInteger('workshop_id');
             $table->integer('type');
             $table->decimal('total_week');
             $table->decimal('comission');
@@ -28,6 +28,7 @@ class CreatePayrollsTable extends Migration
 
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('workshop_id')->references('id')->on('workshops');
         });
     }
 
