@@ -25,16 +25,24 @@ class CleaningController extends Controller
     public function daily()
     {
         $workshops = WorkShop::get();
+        $myUser = User::where('id', auth()->id())->get();
+
         return view('bitacora.cleaning.daily', [
-            'workshops' => $workshops
+            'workshops' => $workshops,
+            'myUser' =>  $myUser,
+            'multiWorkshop' => auth()->user()->can('cambiar de taller')
         ]);
     }
 
     public function weekly()
     {
         $workshops = WorkShop::get();
+        $myUser = User::where('id', auth()->id())->get();
+
         return view('bitacora.cleaning.weekly', [
-            'workshops' => $workshops
+            'workshops' => $workshops,
+            'myUser' =>  $myUser,
+            'multiWorkshop' => auth()->user()->can('cambiar de taller')
         ]);
     }
 

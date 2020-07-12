@@ -12,7 +12,7 @@
           format="dd-MM-yyyy"
           placeholder="Seleccionar Día"
         ></el-date-picker>
-        <el-select width="150" v-model="workshopId" placeholder="Selecciona un taller">
+        <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
         </el-select>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
@@ -61,20 +61,17 @@
 
 <script>
 export default {
-  props: ["workshops"],
+  props: ["workshops", "myUser", "multiWorkshop"],
   mounted: function() {
-    this.loadMyUser();
     this.$root.$on("refreshTable", this.refreshTable);
+
+    // busca por default en el taller donde trabaja este empleado
+    if (this.myUser && this.myUser.length > 0) {
+      this.workshopId = this.myUser[0].workshop_id;
+      this.onSearch();
+    }
   },
   methods: {
-    loadMyUser() {
-      const $this = this;
-      $this.loading = true;
-      axios.get("/app").then(function(response) {
-        $this.me = response.data[0];
-        $this.loading = false;
-      });
-    },
     formatDate(date) {
       var hours = date.getHours();
       var minutes = date.getMinutes();
@@ -100,7 +97,7 @@ export default {
       if (!this.workshopId) {
         this.$alert(
           "El taller seleccionado no es válido.",
-          "Taller no válido" + this.workshopId,
+          "Taller no válido",
           {
             confirmButtonText: "OK",
             type: "error"
@@ -130,17 +127,18 @@ export default {
 
       var day = `${this.toFixedFormat(this.selectedDay, "yyyyMMdd")}`;
       var df = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
-      this.loadTable(`/api/cleaning/search?day=${day}&format=${df}`);
+      this.loadTable(
+        `/api/cleaning/search?day=${day}&format=${df}&workshop=${this.workshopId}`
+      );
     }
   },
   data() {
     return {
-      me: null,
       workshopId: "",
       showDialog: false,
       selectedDay: new Date(),
       search: "",
-      loading: true,
+      loading: false,
       tableData: [],
       newUser: {
         user_id: 1,

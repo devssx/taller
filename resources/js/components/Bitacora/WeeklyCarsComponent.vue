@@ -171,7 +171,7 @@ export default {
       this.prevDay = day;
       var start = `${this.toFixedFormat(day, "yyyy-MM-dd")} 00:00:00`;
       if (!this.workshopId) {
-        this.$alert("Favor de un taller.", "Taller no válido", {
+        this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
           confirmButtonText: "OK",
           type: "warning"
         });

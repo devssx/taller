@@ -8,7 +8,7 @@
     </el-row>
     <el-row type="flex">
         <el-col :span="24">
-            <weekly-cleaning :workshops="{{ $workshops->toJson() }}"></weekly-cleaning>
+            <weekly-cleaning multi-workshop="{{ $multiWorkshop }}" :workshops="{{ $workshops->toJson() }}" :my-user="{{ $myUser->toJson() }}"></weekly-cleaning>
         </el-col>
     </el-row>
 </el-main>
