@@ -720,6 +720,12 @@ export default {
       axios.get(url).then(function(response) {
         $this.weekData = response.data.d;
         $this.loading = false;
+        
+        // reset
+        $this.salary = 0;
+        $this.comissions = 0;
+        $this.discounts = 0;
+        $this.total = 0;
 
         // (lista de empleados)
         $this.employees = [];
