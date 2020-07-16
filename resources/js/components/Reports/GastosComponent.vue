@@ -33,13 +33,13 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end">$0.00</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px;">$0.00</el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end">$0.00</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px;">$0.00</el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end">$0.00</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px;">$0.00</el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
@@ -48,7 +48,7 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end">$0.00</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px;">$0.00</el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
@@ -57,7 +57,7 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end">$0.00</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px;">$0.00</el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
@@ -66,7 +66,7 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end">$0.00</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px;">$0.00</el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
@@ -75,7 +75,7 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end">$0.00</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px;">$0.00</el-col>
         </el-row>
       </el-col>
 
@@ -165,38 +165,31 @@ export default {
         $this.loading = false;
       });
     },
-    onSearch() {},
-    addUserInfo() {
-      this.$refs.newItem.insertNewRow(this.selectedDay);
-    },
-    refreshTable() {
-      var currentDay = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
-      var start = currentDay + " 00:00:00";
-      var end = currentDay + " 23:59:59";
-      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
+    onSearch() {
+      var newDate = this.initDayOfWeekDate(this.selectedDay);
+      this.prevDay = newDate;
+      var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
+
+      if (!this.workshopId) {
+        this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
+          confirmButtonText: "OK",
+          type: "warning"
+        });
+        return;
+      }
+
+      this.loadTable(
+        `/api/sales/searchReceiptByWeek?start=${start}&workshop=${this.workshopId}`
+      );
     }
   },
   data() {
     return {
       workshopId: 0,
       activeIndex: 0,
-      showDialog: false,
       selectedDay: new Date(),
-      search: "",
       loading: false,
-      tableData: [],
-      newUser: {
-        user_id: 1,
-        start: "",
-        cleaning: "",
-        breakfast_start: "",
-        breakfast_end: "",
-        lunch_start: "",
-        lunch_end: "",
-        done: "No",
-        comment: "",
-        name: ""
-      }
+      tableData: []
     };
   }
 };
