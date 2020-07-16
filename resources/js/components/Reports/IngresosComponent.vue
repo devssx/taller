@@ -8,10 +8,14 @@
       <el-col :span="18">
         <el-date-picker
           v-model="selectedDay"
-          type="date"
-          format="dd-MM-yyyy"
+          firstDayOfWeek="6"
+          type="week"
+          format="Week WW"
           placeholder="Seleccionar Semana"
         ></el-date-picker>
+        <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
+          <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
+        </el-select>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
       </el-col>
       <el-col :span="4" align="end"></el-col>
@@ -28,7 +32,7 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end">$0.00</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px;">${{ formatPrice(totalSinIva) }}</el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
@@ -37,7 +41,7 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end">$0.00</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px;">${{ formatPrice(totalEfeIva) }}</el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
@@ -46,7 +50,7 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end">$0.00</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px;">$0.00</el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
@@ -55,10 +59,10 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end">$0.00</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px;">${{ formatPrice(totalCreIva) }}</el-col>
         </el-row>
       </el-col>
-      <!-- Columna 2 -->
+      <!-- EFECTIVO -->
       <el-col :span="6" :offset="1">
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
@@ -67,16 +71,18 @@
         </el-row>
         <el-row class="br bl">
           <el-col :span="24">
-            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="No. Recibo"></el-table-column>
-              <el-table-column align="center" label="Total"></el-table-column>
+            <el-table size="mini" :data="dataEfectivo" style="width: 100%" v-loading="loading">
+              <el-table-column align="center" label="No. Recibo" prop="folio"></el-table-column>
+              <el-table-column align="center" label="Total" prop="total">
+                <template slot-scope="scope">{{ formatPrice(scope.row.total) }}</template>
+              </el-table-column>
             </el-table>
           </el-col>
         </el-row>
       </el-col>
       <!-- Columna 3 -->
       <el-col :span="13" :offset="1">
-        <!-- Tabla 1 -->
+        <!-- EFECTIVO + IVA -->
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
             <h1 style="color:#909399">Ingresos facturados Efectivo</h1>
@@ -84,13 +90,19 @@
         </el-row>
         <el-row class="br bl">
           <el-col :span="24">
-            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="No. Recibo" width="100"></el-table-column>
-              <el-table-column align="center" label="No. Factura" width="100"></el-table-column>
-              <el-table-column align="center" label="Efectivo"></el-table-column>
-              <el-table-column align="right" label="Importe sin Iva"></el-table-column>
-              <el-table-column align="right" label="Iva"></el-table-column>
-              <el-table-column align="center" label="Total"></el-table-column>
+            <el-table size="mini" :data="dataIvaEfectivo" style="width: 100%" v-loading="loading">
+              <el-table-column align="center" label="No. Recibo" width="100" prop="folio"></el-table-column>
+              <el-table-column align="center" label="No. Factura" width="100" prop="factura"></el-table-column>
+              <el-table-column align="center" label="Efectivo" prop="efectivo"></el-table-column>
+              <el-table-column align="right" label="Importe sin Iva" prop="importe">
+                <template slot-scope="scope">{{ formatPrice(scope.row.importe) }}</template>
+              </el-table-column>
+              <el-table-column align="right" label="Iva" prop="iva">
+                <template slot-scope="scope">{{ formatPrice(scope.row.iva) }}</template>
+              </el-table-column>
+              <el-table-column align="center" label="Total" prop="total">
+                <template slot-scope="scope">{{ formatPrice(scope.row.total) }}</template>
+              </el-table-column>
             </el-table>
           </el-col>
         </el-row>
@@ -100,18 +112,29 @@
           <el-col :span="24" align="center">
             <h1
               style="color:#909399"
-            >Ingresos facturados T. Debito / T. Crédito / Transferencia / Cheque</h1>
+            >Ingresos facturados T. Débito / T. Crédito / Transferencia / Cheque</h1>
           </el-col>
         </el-row>
         <el-row class="br bl">
           <el-col :span="24">
-            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="No. Recibo"></el-table-column>
-              <el-table-column align="center" label="No. Factura"></el-table-column>
-              <el-table-column align="center" label="Fecha de Pago"></el-table-column>
-              <el-table-column align="right" label="Importe sin Iva"></el-table-column>
-              <el-table-column align="right" label="Iva"></el-table-column>
-              <el-table-column align="center" label="Total"></el-table-column>
+            <el-table
+              size="mini"
+              :data="dataIvaDebitoCreditoCheque"
+              style="width: 100%"
+              v-loading="loading"
+            >
+              <el-table-column align="center" label="No. Recibo" prop="folio"></el-table-column>
+              <el-table-column align="center" label="No. Factura" prop="factura"></el-table-column>
+              <el-table-column align="center" label="Fecha de Pago" prop="fecha"></el-table-column>
+              <el-table-column align="right" label="Importe sin Iva" prop="importe">
+                <template slot-scope="scope">{{ formatPrice(scope.row.importe) }}</template>
+              </el-table-column>
+              <el-table-column align="right" label="Iva" prop="iva">
+                <template slot-scope="scope">{{ formatPrice(scope.row.iva) }}</template>
+              </el-table-column>
+              <el-table-column align="center" label="Total" prop="total">
+                <template slot-scope="scope">{{ formatPrice(scope.row.total) }}</template>
+              </el-table-column>
             </el-table>
           </el-col>
         </el-row>
@@ -124,14 +147,20 @@
         </el-row>
         <el-row class="br bl">
           <el-col :span="24">
-            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="No. Recibo" width="100"></el-table-column>
-              <el-table-column align="center" label="No. Factura" width="100"></el-table-column>
-              <el-table-column align="center" label="Fecha"></el-table-column>
-              <el-table-column align="right" label="Importe sin Iva"></el-table-column>
-              <el-table-column align="right" label="Iva" width="120"></el-table-column>
-              <el-table-column align="center" label="Total" width="120"></el-table-column>
-              <el-table-column align="center" label="Confirmación Pago" width="180"></el-table-column>
+            <el-table size="mini" :data="dataIvaCredito" style="width: 100%" v-loading="loading">
+              <el-table-column align="center" label="No. Recibo" prop="folio"></el-table-column>
+              <el-table-column align="center" label="No. Factura" prop="factura"></el-table-column>
+              <el-table-column align="center" label="Fecha de Pago" prop="fecha"></el-table-column>
+              <el-table-column align="right" label="Importe sin Iva" prop="importe">
+                <template slot-scope="scope">{{ formatPrice(scope.row.importe) }}</template>
+              </el-table-column>
+              <el-table-column align="right" label="Iva" prop="iva">
+                <template slot-scope="scope">{{ formatPrice(scope.row.iva) }}</template>
+              </el-table-column>
+              <el-table-column align="center" label="Total" prop="total">
+                <template slot-scope="scope">{{ formatPrice(scope.row.total) }}</template>
+              </el-table-column>
+              <el-table-column align="center" label="Confirmación de Pago" prop="pago"></el-table-column>
             </el-table>
           </el-col>
         </el-row>
@@ -142,70 +171,162 @@
 
 <script>
 export default {
+  props: ["workshops", "myUser", "multiWorkshop"],
   mounted: function() {
-    // var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
-    // this.loadTable("/api/cleaning/search?today=" + today);
-    // this.$root.$on("refreshTable", this.refreshTable);
+    // busca por default en el taller donde trabaja este empleado
+    if (this.myUser && this.myUser.length > 0) {
+      this.workshopId = this.myUser[0].workshop_id;
+    }
   },
   methods: {
-    fixNumber(n) {
-      return n < 10 ? "0" + n : n;
-    },
-    toFixedFormat(dt, format) {
-      // 2020-05-15 15:00:00
-      if (!dt) dt = new Date();
-      var yyyy = dt.getFullYear();
-      var MM = this.fixNumber(dt.getMonth() + 1);
-      var dd = this.fixNumber(dt.getDate());
-
-      var hh = this.fixNumber(dt.getHours());
-      var mm = this.fixNumber(dt.getMinutes());
-      var ss = this.fixNumber(dt.getSeconds());
-
-      switch (format) {
-        case "yyyy-MM-dd":
-          return `${yyyy}-${MM}-${dd}`;
-      }
-
-      return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
-    },
-    formatDate(date) {
-      var hours = date.getHours();
-      var minutes = date.getMinutes();
-      var ampm = hours >= 12 ? "pm" : "am";
-      hours = hours % 12;
-      hours = hours ? hours : 12;
-      minutes = minutes < 10 ? "0" + minutes : minutes + "";
-      return hours + ":" + minutes + " " + ampm;
-    },
-    fixDate(dt) {
-      return this.formatDate(new Date(dt));
-    },
     loadTable(url) {
-      var $this = this;
+      const $this = this;
       $this.loading = true;
       axios.get(url).then(function(response) {
-        $this.tableData = response.data;
+        $this.weekData = response.data.d;
         $this.loading = false;
+
+        // reset
+        $this.totalSinIva = 0;
+        $this.totalEfeIva = 0;
+        $this.totalCreIva = 0;
+        $this.dataEfectivo = [];
+        $this.dataIvaEfectivo = [];
+        $this.dataIvaDebitoCreditoCheque = [];
+        $this.dataIvaCredito = [];
+
+        // sales
+        $this.weekData.data.forEach(sale => {
+          $this.evaluateSale(sale);
+        });
       });
     },
-    onSearch() {},
-    addUserInfo() {
-      this.$refs.newItem.insertNewRow(this.selectedDay);
+    evaluateSale(sale) {
+      // 1 Efectivo
+      // *2 Tarjeta de Crédito
+      // *3 Tarjeta de Débito
+      // *4 Cheque
+      // *5 Transferencia
+      // 6 Crédito
+
+      if (sale.tax == 1) {
+        let folio = "REC" + this.pad(sale.id, 5);
+        let importe = parseFloat(sale.total);
+        let iva = importe * 0.08;
+        let total = importe + iva;
+
+        switch (sale.method) {
+          case 2:
+          case 3:
+          case 4:
+          case 5:
+            // debito/credito
+            this.totalEfeIva += total;
+            this.dataIvaDebitoCreditoCheque.push({
+              folio: folio,
+              factura: "N/A",
+              fecha: "N/A",
+              importe: importe,
+              iva: iva,
+              total: total
+            });
+            break;
+          case 6:
+            // credito
+            this.totalCreIva += total;
+            this.dataIvaCredito.push({
+              folio: folio,
+              factura: "N/A",
+              efectivo: "N/A",
+              importe: importe,
+              iva: iva,
+              total: total,
+              pago: "NO"
+            });
+            break;
+          default:
+            // efectivo
+            this.totalEfeIva += total;
+            this.dataIvaEfectivo.push({
+              folio: folio,
+              factura: "N/A",
+              efectivo: "EFECTIVO",
+              importe: importe,
+              iva: iva,
+              total: total
+            });
+            break;
+        }
+      } else {
+        let folio = "REC" + this.pad(sale.id, 5);
+        switch (sale.method) {
+          case 2:
+          case 3:
+          case 4:
+          case 5:
+            // debito/credito (Warn: NO IVA!)
+            this.totalEfeIva += parseFloat(sale.total);
+            this.dataIvaDebitoCreditoCheque.push({
+              folio: folio,
+              factura: "N/A",
+              fecha: "N/A",
+              importe: sale.total,
+              iva: iva,
+              total: sale.total
+            });
+            break;
+          case 6:
+            // credito (Warn: NO IVA!)
+            this.totalCreIva += parseFloat(sale.total);
+            this.dataIvaCredito.push({
+              folio: folio,
+              factura: "N/A",
+              efectivo: "N/A",
+              importe: sale.total,
+              iva: 0,
+              total: sale.total,
+              pago: "NO"
+            });
+            break;
+          default:
+            this.dataEfectivo.push({ folio: folio, total: sale.total });
+            this.totalSinIva += parseFloat(sale.total);
+            break;
+        }
+      }
     },
-    refreshTable() {
-      var currentDay = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
-      var start = currentDay + " 00:00:00";
-      var end = currentDay + " 23:59:59";
-      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
+    onSearch() {
+      var newDate = this.initDayOfWeekDate(this.selectedDay);
+      this.prevDay = newDate;
+      var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
+
+      if (!this.workshopId) {
+        this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
+          confirmButtonText: "OK",
+          type: "warning"
+        });
+        return;
+      }
+
+      this.loadTable(
+        `/api/sales/searchReceiptByWeek?start=${start}&workshop=${this.workshopId}`
+      );
     }
   },
   data() {
     return {
+      totalSinIva: 0,
+      totalEfeIva: 0,
+      totalCreIva: 0,
+      workshopId: 1,
+      prevDay: null,
       selectedDay: new Date(),
       search: "",
       loading: false,
-      tableData: []
+      dataEfectivo: [],
+      dataIvaEfectivo: [],
+      dataIvaDebitoCreditoCheque: [],
+      dataIvaCredito: []
     };
   }
 };

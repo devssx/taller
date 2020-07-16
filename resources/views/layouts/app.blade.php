@@ -42,7 +42,7 @@
                         {{-- <el-menu-item index="dashboard" v-on:click="goto('{{ route('dashboard') }}')" v-if="">
                         Reporte de Ventas
                         </el-menu-item> --}}
-                        @can('listar ordenes')
+                        @can('listar bitacora')
                         <el-submenu index="bitacora">
                             <template slot="title">Bitácora</template>
                             <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.dailycars') }}')">
@@ -57,25 +57,9 @@
                             <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.weeklycleaning') }}')">
                                 Limpieza Semanal
                             </el-menu-item>
-                            {{-- <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.nominadetail') }}')">
-                            Nómina Completa Resumen
-                            </el-menu-item>
-                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.expenses') }}')">
-                                Gastos
-                            </el-menu-item>
-                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.income') }}')">
-                                Ingresos Gastos
-                            </el-menu-item>
-                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.profit') }}')">
-                                Ingresos y Utilidad
-                            </el-menu-item>
-                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.employeeincome') }}')">
-                                Ingresos del Empleado
-                            </el-menu-item>
-                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.guarantee') }}')">
-                                Garantías del Año
-                            </el-menu-item> --}}
                         </el-submenu>
+                        @endcan
+                        @can('listar ordenes')
                         <el-submenu index="sales">
                             <template slot="title">Ordenes de Servicio</template>
                             <el-menu-item index="sales" v-on:click="goto('{{ route('sales') }}')">
@@ -86,6 +70,15 @@
                             </el-menu-item>
                         </el-submenu>
                         @endcan
+
+                        {{-- <el-menu-item index="gastos" v-on:click="goto('{{ route('expenses') }}')">
+                            Ingresos y Gastos
+                        </el-menu-item>
+
+                        <el-menu-item index="reports" v-on:click="goto('{{ route('reports') }}')">
+                            Reportes
+                        </el-menu-item> --}}
+
                         @can('listar bitacora')
                         <el-menu-item index="nomina" v-on:click="goto('{{ route('nomina') }}')">
                             Nómina

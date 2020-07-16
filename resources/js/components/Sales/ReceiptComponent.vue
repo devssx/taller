@@ -326,6 +326,7 @@ export default {
   mounted() {
     var $this = this;
     this.$root.$on("refreshReceipt", this.refreshReceipt);
+    this.loadUser("/app");
     this.loadWorkShops("/api/workshop");
     if (localStorage.getItem("order")) {
       try {
@@ -390,6 +391,14 @@ export default {
     });
   },
   methods: {
+    loadUser(url) {
+      const $this = this;
+      $this.loading = true;
+      axios.get(url).then(function(response) {
+        $this.me = response.data[0];
+        $this.loading = false;
+      });
+    },
     loadWorkShops(url) {
       const $this = this;
       $this.loading = true;
@@ -399,7 +408,6 @@ export default {
 
         if ($this.me) $this.form.workshop = $this.me.workshop_id;
         else $this.form.workshop = $this.workshops[0].id;
-        $this.onSearch();
       });
     },
     getFolio(sale) {

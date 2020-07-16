@@ -41,6 +41,18 @@ class SalesController extends Controller
         ]);
     }
 
+    // Ingresos y Gastos
+    public function expenses()
+    {
+        $workshops = WorkShop::get();
+        $myUser = User::where('id', auth()->id())->get();
+        return view('bitacora.expenses.index', [
+            'workshops' => $workshops,
+            'myUser' =>  $myUser,
+            'multiWorkshop' => auth()->user()->can('cambiar de taller')
+        ]);
+    }
+
     public function weekly()
     {
         $workshops = WorkShop::get();

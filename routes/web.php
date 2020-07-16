@@ -64,12 +64,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/weeklycleaning', 'CleaningController@weekly')->name('bitacora.weeklycleaning');
         Route::get('/dailycars', 'SalesController@daily')->name('bitacora.dailycars');
         Route::get('/weeklycars', 'SalesController@weekly')->name('bitacora.weeklycars');
-        Route::view('/employeeincome', 'bitacora.iexpenses.employeeincome')->name('bitacora.employeeincome');
-        Route::view('/expenses', 'bitacora.iexpenses.expenses')->name('bitacora.expenses');
-        Route::view('/guarantee', 'bitacora.iexpenses.guarantee')->name('bitacora.guarantee');
-        Route::view('/income', 'bitacora.iexpenses.income')->name('bitacora.income');
-        Route::view('/profit', 'bitacora.iexpenses.profit')->name('bitacora.profit');
     });
+
+    Route::get('gastos/expenses', 'SalesController@expenses')->name('expenses');
+    Route::view('reports/guarantee', 'bitacora.guarantee.index')->name('reports');
 
     Route::get('nomina/general', 'PayrollController@index')->name('nomina');
 
