@@ -17,9 +17,11 @@
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
         </el-select>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
-        <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
       </el-col>
-      <el-col :span="4" align="end"></el-col>
+      <el-col :span="4" aling="end">
+        <el-button type="primary" icon="el-icon-plus" @click="addNew">Nuevo</el-button>
+        <expenses-edit :selectedItem="newExpense" :hideButton="true" ref="newItem"></expenses-edit>
+      </el-col>
     </el-row>
 
     <br />
@@ -90,8 +92,13 @@
         <el-row class="br bl">
           <el-col :span="24">
             <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="Concepto"></el-table-column>
-              <el-table-column align="center" label="Total" width="200"></el-table-column>
+              <el-table-column label="Concepto" prop="concept"></el-table-column>
+              <el-table-column align="right" label="Total" width="200" prop="total"></el-table-column>
+              <el-table-column label="Opciones" header-align="center" align="center" width="120">
+                <template slot-scope="scope">
+                  <expenses-edit :selectedItem="tableData[scope.$index]"></expenses-edit>
+                </template>
+              </el-table-column>
             </el-table>
           </el-col>
         </el-row>
@@ -105,10 +112,15 @@
         <el-row class="br bl">
           <el-col :span="24">
             <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="Concepto"></el-table-column>
-              <el-table-column align="right" label="Importe"></el-table-column>
-              <el-table-column align="right" label="Iva"></el-table-column>
-              <el-table-column align="center" label="Total" width="200"></el-table-column>
+              <el-table-column label="Concepto" prop="concept"></el-table-column>
+              <el-table-column align="right" label="Importe" prop="amount"></el-table-column>
+              <el-table-column align="right" label="Iva" prop="iva"></el-table-column>
+              <el-table-column align="right" label="Total" width="200" prop="total"></el-table-column>
+              <el-table-column label="Opciones" header-align="center" align="center" width="120">
+                <template slot-scope="scope">
+                  <expenses-edit :selectedItem="tableData[scope.$index]"></expenses-edit>
+                </template>
+              </el-table-column>
             </el-table>
           </el-col>
         </el-row>
@@ -121,10 +133,15 @@
         <el-row class="br bl">
           <el-col :span="24">
             <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="Concepto"></el-table-column>
-              <el-table-column align="right" label="Importe"></el-table-column>
-              <el-table-column align="right" label="Iva"></el-table-column>
-              <el-table-column align="center" label="Total" width="200"></el-table-column>
+              <el-table-column label="Concepto" prop="concept"></el-table-column>
+              <el-table-column align="right" label="Importe" prop="amount"></el-table-column>
+              <el-table-column align="right" label="Iva" prop="iva"></el-table-column>
+              <el-table-column align="right" label="Total" width="200" prop="total"></el-table-column>
+              <el-table-column label="Opciones" header-align="center" align="center" width="120">
+                <template slot-scope="scope">
+                  <expenses-edit :selectedItem="tableData[scope.$index]"></expenses-edit>
+                </template>
+              </el-table-column>
             </el-table>
           </el-col>
         </el-row>
@@ -137,8 +154,13 @@
         <el-row class="br bl">
           <el-col :span="24">
             <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="Nómina total"></el-table-column>
-              <el-table-column align="center" label="Total" width="200"></el-table-column>
+              <el-table-column label="Nómina total" prop="concept"></el-table-column>
+              <el-table-column align="right" label="Total" width="200" prop="total"></el-table-column>
+              <el-table-column label="Opciones" header-align="center" align="center" width="120">
+                <template slot-scope="scope">
+                  <expenses-edit :selectedItem="tableData[scope.$index]"></expenses-edit>
+                </template>
+              </el-table-column>
             </el-table>
           </el-col>
         </el-row>
@@ -157,6 +179,9 @@ export default {
     }
   },
   methods: {
+    addNew() {
+      this.$refs.newItem.dialogVisible = true;
+    },
     loadTable(url) {
       var $this = this;
       $this.loading = true;
@@ -178,9 +203,9 @@ export default {
         return;
       }
 
-      this.loadTable(
-        `/api/sales/searchReceiptByWeek?start=${start}&workshop=${this.workshopId}`
-      );
+      let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
+      this.loadTable(`/api/expenses?week=${week}&workshop=${this.workshopId}`);
+      console.log(week);
     }
   },
   data() {
@@ -189,7 +214,14 @@ export default {
       activeIndex: 0,
       selectedDay: new Date(),
       loading: false,
-      tableData: []
+      tableData: [],
+      newExpense: {
+        type: 1,
+        concept: "",
+        amount: 0,
+        iva: 0,
+        total: 0
+      }
     };
   }
 };

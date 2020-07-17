@@ -71,11 +71,11 @@
                         </el-submenu>
                         @endcan
 
-                        {{-- <el-menu-item index="gastos" v-on:click="goto('{{ route('expenses') }}')">
+                         {{-- <el-menu-item index="gastos" v-on:click="goto('{{ route('expenses') }}')">
                             Ingresos y Gastos
                         </el-menu-item>
 
-                        <el-menu-item index="reports" v-on:click="goto('{{ route('reports') }}')">
+                        {{-- <el-menu-item index="reports" v-on:click="goto('{{ route('reports') }}')">
                             Reportes
                         </el-menu-item> --}}
 

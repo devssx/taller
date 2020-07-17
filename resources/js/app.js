@@ -132,6 +132,8 @@ Vue.component('tecnicos-component', require('./components/Reports/IngresosDeTecn
 Vue.component('garantias-component', require('./components/Reports/GarantiasAnualesComponent').default);
 Vue.component('reports-container', require('./components/Reports/TabReportsComponent').default);
 
+Vue.component('expenses-edit', require('./components/Reports/GastosEditComponent').default);
+
 // Salomon S.A. Tools
 Vue.component('file-upload', require('./components/Tools/UploadFile').default);
 Vue.component('image-dialog', require('./components/Tools/ImageDialog').default);
