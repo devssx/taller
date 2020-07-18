@@ -18,9 +18,14 @@
         </el-select>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
       </el-col>
-      <el-col :span="4" aling="end">
+      <el-col :span="4" align="end">
         <el-button type="primary" icon="el-icon-plus" @click="addNew">Nuevo</el-button>
-        <expenses-edit :selectedItem="newExpense" :hideButton="true" ref="newItem"></expenses-edit>
+        <expenses-edit
+          :workshop="workshopId"
+          :selectedItem="newExpense"
+          :hideButton="true"
+          ref="newItem"
+        ></expenses-edit>
       </el-col>
     </el-row>
 
@@ -50,7 +55,11 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end" style="padding-right: 5px;">$0.00</el-col>
+          <el-col
+            :span="24"
+            align="end"
+            style="padding-right: 5px;"
+          >${{ formatPrice(ingresosSinIva) }}</el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
@@ -59,7 +68,7 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end" style="padding-right: 5px;">$0.00</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px;">${{ formatPrice(totalSinIva) }}</el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
@@ -68,7 +77,11 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end" style="padding-right: 5px;">$0.00</el-col>
+          <el-col
+            :span="24"
+            align="end"
+            style="padding-right: 5px;"
+          >${{ formatPrice(utilidadSinIva) }}</el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
@@ -77,7 +90,11 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end" style="padding-right: 5px;">$0.00</el-col>
+          <el-col
+            :span="24"
+            align="end"
+            style="padding-right: 5px;"
+          >${{ formatPrice(totalCreditos) }}</el-col>
         </el-row>
       </el-col>
 
@@ -91,12 +108,12 @@
         </el-row>
         <el-row class="br bl">
           <el-col :span="24">
-            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table size="mini" border :data="tableData1" style="width: 100%" v-loading="loading">
               <el-table-column label="Concepto" prop="concept"></el-table-column>
               <el-table-column align="right" label="Total" width="200" prop="total"></el-table-column>
               <el-table-column label="Opciones" header-align="center" align="center" width="120">
                 <template slot-scope="scope">
-                  <expenses-edit :selectedItem="tableData[scope.$index]"></expenses-edit>
+                  <expenses-edit :workshop="workshopId" :selectedItem="tableData1[scope.$index]"></expenses-edit>
                 </template>
               </el-table-column>
             </el-table>
@@ -111,14 +128,14 @@
         </el-row>
         <el-row class="br bl">
           <el-col :span="24">
-            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table size="mini" border :data="tableData2" style="width: 100%" v-loading="loading">
               <el-table-column label="Concepto" prop="concept"></el-table-column>
               <el-table-column align="right" label="Importe" prop="amount"></el-table-column>
               <el-table-column align="right" label="Iva" prop="iva"></el-table-column>
               <el-table-column align="right" label="Total" width="200" prop="total"></el-table-column>
               <el-table-column label="Opciones" header-align="center" align="center" width="120">
                 <template slot-scope="scope">
-                  <expenses-edit :selectedItem="tableData[scope.$index]"></expenses-edit>
+                  <expenses-edit :workshop="workshopId" :selectedItem="tableData2[scope.$index]"></expenses-edit>
                 </template>
               </el-table-column>
             </el-table>
@@ -132,14 +149,14 @@
         </el-row>
         <el-row class="br bl">
           <el-col :span="24">
-            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table size="mini" border :data="tableData3" style="width: 100%" v-loading="loading">
               <el-table-column label="Concepto" prop="concept"></el-table-column>
               <el-table-column align="right" label="Importe" prop="amount"></el-table-column>
               <el-table-column align="right" label="Iva" prop="iva"></el-table-column>
               <el-table-column align="right" label="Total" width="200" prop="total"></el-table-column>
               <el-table-column label="Opciones" header-align="center" align="center" width="120">
                 <template slot-scope="scope">
-                  <expenses-edit :selectedItem="tableData[scope.$index]"></expenses-edit>
+                  <expenses-edit :workshop="workshopId" :selectedItem="tableData3[scope.$index]"></expenses-edit>
                 </template>
               </el-table-column>
             </el-table>
@@ -153,12 +170,12 @@
         </el-row>
         <el-row class="br bl">
           <el-col :span="24">
-            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table size="mini" border :data="tableData4" style="width: 100%" v-loading="loading">
               <el-table-column label="Nómina total" prop="concept"></el-table-column>
               <el-table-column align="right" label="Total" width="200" prop="total"></el-table-column>
               <el-table-column label="Opciones" header-align="center" align="center" width="120">
                 <template slot-scope="scope">
-                  <expenses-edit :selectedItem="tableData[scope.$index]"></expenses-edit>
+                  <expenses-edit :workshop="workshopId" :selectedItem="tableData4[scope.$index]"></expenses-edit>
                 </template>
               </el-table-column>
             </el-table>
@@ -173,20 +190,39 @@
 export default {
   props: ["workshops", "myUser", "multiWorkshop"],
   mounted: function() {
+    this.$root.$on("refreshExpenses", this.onSearch);
+
     // busca por default en el taller donde trabaja este empleado
     if (this.myUser && this.myUser.length > 0) {
       this.workshopId = this.myUser[0].workshop_id;
     }
+
+    this.prevDay = this.initDayOfWeekDate(this.selectedDay);
+    let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
+    this.newExpense.week = week;
   },
   methods: {
     addNew() {
+      let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
+      this.newExpense.workshop = this.workshopId;
+      this.newExpense.week = week;
+      this.newExpense.type = 1;
+      this.newExpense.concept = "";
+      this.newExpense.amount = 0;
+      this.newExpense.iva = 0;
+      this.newExpense.total = 0;
+
       this.$refs.newItem.dialogVisible = true;
     },
     loadTable(url) {
       var $this = this;
       $this.loading = true;
       axios.get(url).then(function(response) {
-        $this.tableData = response.data;
+        $this.tableData1 = response.data.filter(d => d.type == 1);
+        $this.tableData2 = response.data.filter(d => d.type == 2);
+        $this.tableData3 = response.data.filter(d => d.type == 3);
+        $this.tableData4 = response.data.filter(d => d.type == 4);
+        $this.calculaTotales();
         $this.loading = false;
       });
     },
@@ -204,18 +240,37 @@ export default {
       }
 
       let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
+      this.newExpense.week = week;
       this.loadTable(`/api/expenses?week=${week}&workshop=${this.workshopId}`);
-      console.log(week);
+    },
+    calculaTotales() {
+      this.totalSinIva = 0;
+      this.totalCreditos = 0;
+      
+      this.tableData1.forEach(d => (this.totalSinIva += parseFloat(d.total)));
+      this.tableData2.forEach(d => (this.totalSinIva += parseFloat(d.amount)));
+      this.tableData3.forEach(d => (this.totalCreditos += parseFloat(d.amount)));
+      this.tableData4.forEach(d => (this.totalSinIva += parseFloat(d.total)));
     }
   },
   data() {
     return {
+      ingresosSinIva: 0,
+      totalSinIva: 0,
+      utilidadSinIva: 0,
+      totalCreditos: 0,
+
       workshopId: 0,
       activeIndex: 0,
       selectedDay: new Date(),
       loading: false,
-      tableData: [],
+      tableData1: [],
+      tableData2: [],
+      tableData3: [],
+      tableData4: [],
       newExpense: {
+        week: 0,
+        workshop: 0,
         type: 1,
         concept: "",
         amount: 0,

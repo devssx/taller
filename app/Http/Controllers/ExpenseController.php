@@ -23,6 +23,31 @@ class ExpenseController extends Controller
         return Expense::where(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')])->get();
     }
 
+    public function save(Request $request)
+    {
+        if ($request->has('id')) {
+            $c = Expense::firstOrCreate(['id' => $request->get('id')]);
+            $c->week = $request->get('week');
+            $c->type = $request->get('type');
+            $c->workshop_id = $request->get('workshop');
+            $c->concept = $request->get('concept');
+            $c->amount = $request->get('amount');
+            $c->iva = $request->get('iva');
+            $c->total = $request->get('total');
+            $c->save();
+        } else {
+            $c = new Expense();
+            $c->week = $request->get('week');
+            $c->type = $request->get('type');
+            $c->workshop_id = $request->get('workshop');
+            $c->concept = $request->get('concept');
+            $c->amount = $request->get('amount');
+            $c->iva = $request->get('iva');
+            $c->total = $request->get('total');
+            $c->save();
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *
