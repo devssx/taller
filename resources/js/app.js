@@ -133,6 +133,7 @@ Vue.component('garantias-component', require('./components/Reports/GarantiasAnua
 Vue.component('reports-container', require('./components/Reports/TabReportsComponent').default);
 
 Vue.component('expenses-edit', require('./components/Reports/GastosEditComponent').default);
+Vue.component('guarantee-edit', require('./components/Reports/GarantiasEditComponent').default);
 
 // Salomon S.A. Tools
 Vue.component('file-upload', require('./components/Tools/UploadFile').default);

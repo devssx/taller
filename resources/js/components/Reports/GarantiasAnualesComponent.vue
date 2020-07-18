@@ -6,16 +6,13 @@
         <h1 style="margin-top: 8px;">Año</h1>
       </el-col>
       <el-col :span="18">
-        <el-date-picker
-          v-model="selectedDay"
-          type="date"
-          format="dd-MM-yyyy"
-          placeholder="Seleccionar Semana"
-        ></el-date-picker>
+        <el-date-picker v-model="selectedYear" type="year" placeholder="Seleccionar Año"></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
-        <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
       </el-col>
-      <el-col :span="4" align="end"></el-col>
+      <el-col :span="4" align="end">
+        <el-button type="primary" icon="el-icon-plus" @click="addNew">Nueva</el-button>
+        <guarantee-edit :workshop="workshopId" :selectedItem="newItem" :hideButton="true"></guarantee-edit>
+      </el-col>
     </el-row>
 
     <br />
@@ -32,13 +29,27 @@
         <el-row class="br bl">
           <el-col :span="24">
             <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="No" width="120"></el-table-column>
-              <el-table-column align="center" label="Fecha en que se realizó el trabajo"></el-table-column>
-              <el-table-column align="center" label="Fecha en que volvió el trabajo"></el-table-column>
-              <el-table-column align="center" label="No. Recibo" width="120"></el-table-column>
-              <el-table-column align="center" label="Técnico"></el-table-column>
-              <el-table-column align="center" label="Se Solucionó"></el-table-column>
-              <el-table-column align="center" label="Motivo de Garantía / Comentario" width="400"></el-table-column>
+              <el-table-column align="center" label="No" width="120" prop="id">
+                <template slot-scope="scope">{{pad(scope.row.id,5)}}</template>
+              </el-table-column>
+              <el-table-column align="center" label="Fecha trabajo" prop="done_on"></el-table-column>
+              <el-table-column align="center" label="Fecha retrabajo" prop="new_date"></el-table-column>
+              <el-table-column align="center" label="No. Recibo" width="120" prop="sale_id">
+                <template slot-scope="scope">REC{{pad(scope.row.sale_id,5)}}</template>
+              </el-table-column>
+              <el-table-column align="center" label="Técnico" prop="employee"></el-table-column>
+              <el-table-column align="center" label="Se Solucionó" prop="solution"></el-table-column>
+              <el-table-column
+                align="center"
+                label="Motivo de Garantía / Comentario"
+                width="400"
+                prop="comment"
+              ></el-table-column>
+              <el-table-column label="Opciones" header-align="center" align="center" width="120">
+                <template slot-scope="scope">
+                  <guarantee-edit :workshop="workshopId" :selectedItem="scope.row"></guarantee-edit>
+                </template>
+              </el-table-column>
             </el-table>
           </el-col>
         </el-row>
@@ -53,7 +64,7 @@
             <h4>Total de Garantías recibidas en el año:</h4>
           </el-col>
           <el-col :span="8" class="row-headerb" align="end">
-            <h4>$0.00</h4>
+            <h4>${{formatPrice(total)}}</h4>
           </el-col>
         </el-row>
       </el-col>
@@ -65,15 +76,12 @@
 <script>
 export default {
   mounted: function() {
-    var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
-    this.loadTable("/api/cleaning/search?today=" + today);
+    let year = this.selectedYear.getFullYear();
+    this.loadTable(`/api/guarantee?year=${year}&workshop=${this.workshopId}`);
     this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
-    handleSelect(key, keyPath) {
-      this.activeIndex = key;
-    },
-    eliminarRegistro(id) {
+    addNew() {
       const $this = this;
       $this
         .$confirm(
@@ -111,90 +119,59 @@ export default {
         })
         .catch(() => {});
     },
-    fixNumber(n) {
-      return n < 10 ? "0" + n : n;
-    },
-    toFixedFormat(dt, format) {
-      // 2020-05-15 15:00:00
-      if (!dt) dt = new Date();
-      var yyyy = dt.getFullYear();
-      var MM = this.fixNumber(dt.getMonth() + 1);
-      var dd = this.fixNumber(dt.getDate());
-
-      var hh = this.fixNumber(dt.getHours());
-      var mm = this.fixNumber(dt.getMinutes());
-      var ss = this.fixNumber(dt.getSeconds());
-
-      switch (format) {
-        case "yyyy-MM-dd":
-          return `${yyyy}-${MM}-${dd}`;
-      }
-
-      return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
-    },
-    formatDate(date) {
-      var hours = date.getHours();
-      var minutes = date.getMinutes();
-      var ampm = hours >= 12 ? "pm" : "am";
-      hours = hours % 12;
-      hours = hours ? hours : 12;
-      minutes = minutes < 10 ? "0" + minutes : minutes + "";
-      return hours + ":" + minutes + " " + ampm;
-    },
-    fixDate(dt) {
-      return this.formatDate(new Date(dt));
-    },
     loadTable(url) {
       var $this = this;
       $this.loading = true;
       axios.get(url).then(function(response) {
         $this.tableData = response.data;
         $this.loading = false;
+
+        $this.total = 0;
+        $this.tableData.forEach(s => ($this.total += parseFloat(s.total)));
       });
     },
     onSearch() {
-      var start = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 00:00:00`;
+      if (!this.selectedYear) {
+        this.$alert("Favor de seleccionar el año.", "Año no válido", {
+          confirmButtonText: "OK",
+          type: "warning"
+        });
+        return;
+      }
 
-      var end = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 23:59:59`;
+      if (!this.workshopId) {
+        this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
+          confirmButtonText: "OK",
+          type: "warning"
+        });
+        return;
+      }
 
-      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
-    },
-    addUserInfo() {
-      this.$refs.newItem.insertNewRow(this.selectedDay);
+      this.loadTable(
+        `/api/guarantee?year=${this.selectedYear}&workshop=${this.workshopId}`
+      );
     },
     refreshTable() {
-      var currentDay = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
-      var start = currentDay + " 00:00:00";
-      var end = currentDay + " 23:59:59";
-      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
+      //this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
     }
   },
   data() {
     return {
-      activeIndex: 0,
-      employees: ["Salomon", "Juanito", "Julio", "Alma"],
+      total: 0,
+      workshopId: 1,
       showDialog: false,
-      selectedDay: new Date(),
+      selectedYear: new Date(),
       search: "",
       loading: true,
       tableData: [],
-      newUser: {
-        user_id: 1,
-        start: "",
-        cleaning: "",
-        breakfast_start: "",
-        breakfast_end: "",
-        lunch_start: "",
-        lunch_end: "",
-        done: "No",
-        comment: "",
-        name: ""
+      newItem: {
+        workshop_id: "",
+        sale_id: "",
+        year: "",
+        employee: "",
+        new_date: new Date(),
+        solution: "",
+        comment: ""
       }
     };
   }

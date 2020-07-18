@@ -78,3 +78,5 @@ Route::get('/workshop', 'WorkShopController@index');
 
 Route::get('/expenses', 'ExpenseController@searchWeek');
 Route::post('/expenses', 'ExpenseController@save');
+
+Route::get('/guarantee', 'GuaranteeController@index');
