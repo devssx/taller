@@ -51,8 +51,15 @@
                 placeholder="Seleccionar Día"
               ></el-date-picker>
             </el-form-item>
-            <el-form-item label="Empleado" prop="employee">
-              <el-input v-model="selectedItem.employee"></el-input>
+            <el-form-item label="Empleado">
+              <el-select v-model="selectedItem.employee" placeholder="Empleado" style="width:100%">
+                <el-option
+                  v-for="user in users"
+                  :key="user.id"
+                  :label="user.name"
+                  :value="user.name"
+                ></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="Comentario" prop="comment">
               <el-input v-model="selectedItem.comment"></el-input>
@@ -70,7 +77,13 @@
 <script>
 export default {
   props: ["selectedItem", "hideButton", "workshop"],
-  mounted: function() {},
+  mounted: function() {
+    var $this = this;
+
+    axios.get("/api/users?all=1&role=Empleado").then(function(response) {
+      $this.users = response.data;
+    });
+  },
   data() {
     return {
       options: [
@@ -83,7 +96,7 @@ export default {
           label: "No"
         }
       ],
-
+      users: [],
       dialogVisible: false,
       loading: false,
       labelPosition: "left"
