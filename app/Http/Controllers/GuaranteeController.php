@@ -5,9 +5,23 @@ namespace App\Http\Controllers;
 use App\Guarantee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\WorkShop;
+use App\User;
 
 class GuaranteeController extends Controller
 {
+    // Ingresos y Gastos
+    public function guarantee()
+    {
+        $workshops = WorkShop::get();
+        $myUser = User::where('id', auth()->id())->get();
+        return view('bitacora.guarantee.index', [
+            'workshops' => $workshops,
+            'myUser' =>  $myUser,
+            'multiWorkshop' => auth()->user()->can('cambiar de taller')
+        ]);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +33,7 @@ class GuaranteeController extends Controller
 
         return DB::table('guarantees')
             ->join('sales', 'sales.id', 'guarantees.sale_id')
-            ->select('guarantees.*', 'sales.*')
+            ->select('guarantees.*', 'sales.total', 'sales.total')
             ->where(['guarantees.year' => $request->get('year'), 'guarantees.workshop_id' => $request->get('workshop')])
             ->orderBy('guarantees.new_date', 'asc')
             ->get();
@@ -40,6 +54,7 @@ class GuaranteeController extends Controller
             $c = new Guarantee();
             $c->year = $request->get('year');
             $c->workshop_id = $request->get('workshop');
+            $c->sale_id = $request->get('sale_id');
             $c->comment = $request->get('comment');
             $c->employee = $request->get('employee');
             $c->solution = $request->get('solution');

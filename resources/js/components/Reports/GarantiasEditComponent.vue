@@ -103,37 +103,16 @@ export default {
       // ASIGNACION
       var $this = this;
 
-      if ($this.selectedItem.type == 0) {
-        this.$alert(
-          "Favor de seleccionar un tipo de gasto.",
-          "Tipo no válido",
-          {
-            confirmButtonText: "OK",
-            type: "warning"
-          }
-        );
-        return;
-      }
+      //this.selectedItem.sale_id = 1;
 
-      if (!$this.selectedItem.concept) {
-        this.$alert("Favor de ingresar concepto.", "Concepto no válido", {
-          confirmButtonText: "OK",
-          type: "warning"
-        });
-        return;
-      }
-
-      if (!$this.selectedItem.workshop) {
-        $this.selectedItem.workshop = $this.workshop;
-      }
-
+      console.log($this.selectedItem);
       this.dialogVisible = false;
       this.loading = false;
       $this.$refs.currentForm.validate(valid => {
         if (valid) {
           $this.loading = true;
           axios
-            .post("/api/expenses", $this.selectedItem)
+            .post("/api/guarantee", $this.selectedItem)
             .then(function(response) {
               $this.$message({
                 message: "El registro fué editado correctamente.",

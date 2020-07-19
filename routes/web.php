@@ -67,7 +67,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::get('gastos/expenses', 'SalesController@expenses')->name('expenses');
-    Route::view('reports/guarantee', 'bitacora.guarantee.index')->name('reports');
+    Route::get('reports/guarantee', 'GuaranteeController@guarantee')->name('reports');
 
     Route::get('nomina/general', 'PayrollController@index')->name('nomina');
 

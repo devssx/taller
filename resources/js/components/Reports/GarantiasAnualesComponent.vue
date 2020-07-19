@@ -8,10 +8,18 @@
       <el-col :span="18">
         <el-date-picker v-model="selectedYear" type="year" placeholder="Seleccionar Año"></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
+        <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
+          <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
+        </el-select>
       </el-col>
       <el-col :span="4" align="end">
         <el-button type="primary" icon="el-icon-plus" @click="addNew">Nueva</el-button>
-        <guarantee-edit :workshop="workshopId" :selectedItem="newItem" :hideButton="true"></guarantee-edit>
+        <guarantee-edit
+          :workshop="workshopId"
+          :selectedItem="newItem"
+          :hideButton="true"
+          ref="newGuarantee"
+        ></guarantee-edit>
       </el-col>
     </el-row>
 
@@ -75,49 +83,29 @@
 
 <script>
 export default {
+  props: ["workshops", "myUser", "multiWorkshop"],
   mounted: function() {
+    // busca por default en el taller donde trabaja este empleado
+    if (this.myUser && this.myUser.length > 0) {
+      this.workshopId = this.myUser[0].workshop_id;
+    }
+
     let year = this.selectedYear.getFullYear();
     this.loadTable(`/api/guarantee?year=${year}&workshop=${this.workshopId}`);
     this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
     addNew() {
-      const $this = this;
-      $this
-        .$confirm(
-          "Esto eliminará permanentemente el registro. ¿Desea continuar?",
-          "Advertencia",
-          {
-            confirmButtonText: "Si",
-            cancelButtonText: "Cancelar",
-            type: "warning"
-          }
-        )
-        .then(() => {
-          $this.loading = true;
-          axios
-            .delete("/api/cleaning/" + id)
-            .then(function(response) {
-              $this.$message({
-                type: "success",
-                message: "Registro eliminado"
-              });
+      let year = this.selectedYear.getFullYear();
+      this.newItem.workshop = this.workshopId;
+      this.newItem.year = year;
+      this.newItem.sale_id = "";
+      this.newItem.employee = "";
+      this.newItem.new_date = new Date();
+      this.newItem.solution = "";
+      this.newItem.comment = "";
 
-              $this.tableData = $this.tableData.filter(item => item.id != id);
-              $this.loading = false;
-            })
-            .catch(error => {
-              $this.loading = false;
-              if (error.response.data.errors) {
-                var errors = error.response.data.errors;
-                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-                  confirmButtonText: "OK",
-                  type: "error"
-                });
-              }
-            });
-        })
-        .catch(() => {});
+      this.$refs.newGuarantee.dialogVisible = true;
     },
     loadTable(url) {
       var $this = this;
@@ -147,8 +135,9 @@ export default {
         return;
       }
 
+      let year = this.selectedYear.getFullYear();
       this.loadTable(
-        `/api/guarantee?year=${this.selectedYear}&workshop=${this.workshopId}`
+        `/api/guarantee?year=${year}&workshop=${this.workshopId}`
       );
     },
     refreshTable() {
