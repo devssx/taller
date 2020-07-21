@@ -7,7 +7,7 @@
       size="small"
       type="text"
     >Editar</el-button>
-    <el-dialog
+    <el-dialog style="text-align:left"
       title="Editar Información"
       :visible.sync="dialogVisible"
       width="30%"

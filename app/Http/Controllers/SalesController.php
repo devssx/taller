@@ -8,6 +8,7 @@ use App\Models\CarServiceItem;
 use App\Models\Sale;
 use App\Models\SaleService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use DateTime;
 use DateInterval;
 use App\Comment;
@@ -67,6 +68,43 @@ class SalesController extends Controller
     public function create()
     {
         return view('sales.create');
+    }
+
+    function searchReceiptByClient(Request $request)
+    {
+        $sales = DB::table('sales')
+            ->join('clients', 'clients.id', 'sales.client_id')
+            ->select('sales.*', 'clients.name')
+            ->where('done_on', '>', date('Y-m-d 00:00:00', strtotime('-10 months')))
+            ->where('sales.status',  2)
+            ->where('sales.workshop_id',  $request->get('workshop'))
+            ->get();
+
+        $result = [];
+        $search = strtolower($request->get('search'));
+
+        foreach ($sales as $sale) {
+            $name = strtolower($sale->name);
+            if (strpos($name, $search) === false) {
+                // No Contiene
+            } else {
+                array_push($result, $sale);
+            }
+        }
+
+        return $result;
+    }
+
+    function searchReceiptById(Request $request)
+    {
+        return DB::table('sales')
+            ->join('clients', 'clients.id', 'sales.client_id')
+            ->select('sales.*', 'clients.name')
+            ->where('done_on', '>', date('Y-m-d 00:00:00', strtotime('-10 months')))
+            ->where('sales.status',  2)
+            ->where('sales.workshop_id',  $request->get('workshop'))
+            ->where('sales.id',  $request->get('id'))
+            ->get();
     }
 
     public function receipt($id = 0)

@@ -136,12 +136,11 @@ export default {
       }
 
       let year = this.selectedYear.getFullYear();
-      this.loadTable(
-        `/api/guarantee?year=${year}&workshop=${this.workshopId}`
-      );
+      this.loadTable(`/api/guarantee?year=${year}&workshop=${this.workshopId}`);
     },
     refreshTable() {
-      //this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
+      let year = this.selectedYear.getFullYear();
+      this.loadTable(`/api/guarantee?year=${year}&workshop=${this.workshopId}`);
     }
   },
   data() {
