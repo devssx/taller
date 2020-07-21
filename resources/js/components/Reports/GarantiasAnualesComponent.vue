@@ -92,7 +92,7 @@ export default {
 
     let year = this.selectedYear.getFullYear();
     this.loadTable(`/api/guarantee?year=${year}&workshop=${this.workshopId}`);
-    this.$root.$on("refreshTable", this.refreshTable);
+    this.$root.$on("refreshGuarantee", this.refreshTable);
   },
   methods: {
     addNew() {

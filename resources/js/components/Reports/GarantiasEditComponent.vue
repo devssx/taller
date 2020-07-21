@@ -173,9 +173,6 @@ export default {
       // ASIGNACION
       var $this = this;
 
-      //this.selectedItem.sale_id = 1;
-
-      console.log($this.selectedItem);
       this.dialogVisible = false;
       this.loading = false;
       $this.$refs.currentForm.validate(valid => {
@@ -189,7 +186,7 @@ export default {
                 type: "success"
               });
 
-              $this.$root.$emit("refreshExpenses");
+              $this.$root.$emit("refreshGuarantee");
               $this.cancel();
             })
             .catch(error => {
