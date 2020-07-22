@@ -49,14 +49,12 @@
     <BR />
     <el-row>
       <el-col :span="8">
-        <bar-chart></bar-chart>
+        <bar-chart ref="myChartMensual" :chartData="[]"></bar-chart>
       </el-col>
       <el-col :span="8">
-        <bar-chart></bar-chart>
+        <bar-chart ref="myChartAnual" :chartData="[]"></bar-chart>
       </el-col>
-      <el-col :span="8">
-        <bar-chart></bar-chart>
-      </el-col>
+      <el-col :span="8"></el-col>
     </el-row>
   </el-row>
 </template>
@@ -154,8 +152,31 @@ export default {
           }
         });
 
+        $this.createCharts($this.tableData);
         $this.loading = false;
       });
+    },
+    createCharts(data) {
+      let i = 0;
+      let chartAnual = [];
+      let chartMensual = [];
+
+      data.forEach(e => {
+        chartAnual.push({
+          name: e.name,
+          value: e.total,
+          color: this.getColor(i)
+        });
+
+        chartMensual.push({
+          name: e.name,
+          value: e.total / 12,
+          color: this.getColor(i++)
+        });
+      });
+
+      this.$refs.myChartAnual.setData(chartAnual);
+      this.$refs.myChartMensual.setData(chartMensual);
     },
     onSearch() {
       this.loadTable(`/api/payroll/select?workshop=1&year=2020`);
