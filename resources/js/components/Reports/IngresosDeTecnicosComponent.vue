@@ -6,51 +6,46 @@
         <h1 style="margin-top: 8px;">Semana</h1>
       </el-col>
       <el-col :span="18">
-        <el-date-picker
-          v-model="selectedDay"
-          type="date"
-          format="dd-MM-yyyy"
-          placeholder="Seleccionar Semana"
-        ></el-date-picker>
+        <el-date-picker v-model="selectedYear" type="year" placeholder="Seleccionar Año"></el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
-        <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
       </el-col>
       <el-col :span="4" align="end"></el-col>
     </el-row>
-
     <br />
     <!-- TOTALES -->
     <el-row>
-      <!-- Columna 2 -->
       <el-col :span="24">
-        <!-- Tabla 1 -->
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
             <h1 style="color:#909399">Ingreso bruto por técnico mensual y anual</h1>
           </el-col>
         </el-row>
-        <el-row class="br bl">
-          <el-col :span="24">
-            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="NOMBRE" width="300"></el-table-column>
-              <el-table-column align="center" label="ENERO"></el-table-column>
-              <el-table-column align="center" label="FEBRERO"></el-table-column>
-              <el-table-column align="center" label="MARZO"></el-table-column>
-              <el-table-column align="center" label="ABRIL"></el-table-column>
-              <el-table-column align="center" label="MAYO"></el-table-column>
-              <el-table-column align="center" label="JUNIO"></el-table-column>
-              <el-table-column align="center" label="JULIO"></el-table-column>
-              <el-table-column align="center" label="AGOSTO"></el-table-column>
-              <el-table-column align="center" label="SEPTIEMBRE"></el-table-column>
-              <el-table-column align="center" label="OCTUBRE"></el-table-column>
-              <el-table-column align="center" label="NOVIEMBRE"></el-table-column>
-              <el-table-column align="center" label="DICIEMBRE"></el-table-column>
-              <el-table-column align="center" label="TOTAL"></el-table-column>
-            </el-table>
-          </el-col>
-        </el-row>
       </el-col>
     </el-row>
+
+    <el-row class="br bl">
+      <el-col :span="24">
+        <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+          <el-table-column align="left" label="NOMBRE" width="200" prop="name"></el-table-column>
+          <el-table-column align="center" label="ENERO" prop="jan"></el-table-column>
+          <el-table-column align="center" label="FEBRERO" prop="feb"></el-table-column>
+          <el-table-column align="center" label="MARZO" prop="mar"></el-table-column>
+          <el-table-column align="center" label="ABRIL" prop="apr"></el-table-column>
+          <el-table-column align="center" label="MAYO" prop="may"></el-table-column>
+          <el-table-column align="center" label="JUNIO" prop="jun"></el-table-column>
+          <el-table-column align="center" label="JULIO" prop="jul"></el-table-column>
+          <el-table-column align="center" label="AGOSTO" prop="aug"></el-table-column>
+          <el-table-column align="center" label="SEPT" prop="sep"></el-table-column>
+          <el-table-column align="center" label="OCT" prop="oct"></el-table-column>
+          <el-table-column align="center" label="NOV" prop="nov"></el-table-column>
+          <el-table-column align="center" label="DICIEMBRE" prop="dec"></el-table-column>
+          <el-table-column align="center" label="TOTAL" prop="total">
+            <template slot-scope="scope">${{formatPrice(scope.row.total)}}</template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+
     <BR />
     <el-row>
       <el-col :span="8">
@@ -68,138 +63,112 @@
 
 <script>
 export default {
+  props: ["workshops", "myUser", "multiWorkshop"],
   mounted: function() {
-    var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
-    this.loadTable("/api/cleaning/search?today=" + today);
-    this.$root.$on("refreshTable", this.refreshTable);
+    this.loadUsers("/api/users");
   },
   methods: {
+    loadUsers(url) {
+      var $this = this;
+      $this.loading = true;
+      axios.get(url).then(function(response) {
+        $this.users = response.data.data;
+        $this.loading = false;
+      });
+    },
     handleSelect(key, keyPath) {
       this.activeIndex = key;
-    },
-    eliminarRegistro(id) {
-      const $this = this;
-      $this
-        .$confirm(
-          "Esto eliminará permanentemente el registro. ¿Desea continuar?",
-          "Advertencia",
-          {
-            confirmButtonText: "Si",
-            cancelButtonText: "Cancelar",
-            type: "warning"
-          }
-        )
-        .then(() => {
-          $this.loading = true;
-          axios
-            .delete("/api/cleaning/" + id)
-            .then(function(response) {
-              $this.$message({
-                type: "success",
-                message: "Registro eliminado"
-              });
-
-              $this.tableData = $this.tableData.filter(item => item.id != id);
-              $this.loading = false;
-            })
-            .catch(error => {
-              $this.loading = false;
-              if (error.response.data.errors) {
-                var errors = error.response.data.errors;
-                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-                  confirmButtonText: "OK",
-                  type: "error"
-                });
-              }
-            });
-        })
-        .catch(() => {});
-    },
-    fixNumber(n) {
-      return n < 10 ? "0" + n : n;
-    },
-    toFixedFormat(dt, format) {
-      // 2020-05-15 15:00:00
-      if (!dt) dt = new Date();
-      var yyyy = dt.getFullYear();
-      var MM = this.fixNumber(dt.getMonth() + 1);
-      var dd = this.fixNumber(dt.getDate());
-
-      var hh = this.fixNumber(dt.getHours());
-      var mm = this.fixNumber(dt.getMinutes());
-      var ss = this.fixNumber(dt.getSeconds());
-
-      switch (format) {
-        case "yyyy-MM-dd":
-          return `${yyyy}-${MM}-${dd}`;
-      }
-
-      return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
-    },
-    formatDate(date) {
-      var hours = date.getHours();
-      var minutes = date.getMinutes();
-      var ampm = hours >= 12 ? "pm" : "am";
-      hours = hours % 12;
-      hours = hours ? hours : 12;
-      minutes = minutes < 10 ? "0" + minutes : minutes + "";
-      return hours + ":" + minutes + " " + ampm;
-    },
-    fixDate(dt) {
-      return this.formatDate(new Date(dt));
     },
     loadTable(url) {
       var $this = this;
       $this.loading = true;
       axios.get(url).then(function(response) {
-        $this.tableData = response.data;
+        $this.tableData = [];
+        response.data.forEach(n => {
+          // new
+          if ($this.tableData.filter(u => u.user == n.user_id).length == 0) {
+            let tecnico = "Desconocido";
+            var tecnicos = $this.users.filter(emp => emp.id == n.user_id);
+            if (tecnicos.length > 0) tecnico = tecnicos[0].name;
+
+            var newUser = {
+              user: n.user_id,
+              name: tecnico,
+              jan: 0,
+              feb: 0,
+              mar: 0,
+              apr: 0,
+              may: 0,
+              jun: 0,
+              jul: 0,
+              aug: 0,
+              sep: 0,
+              oct: 0,
+              nov: 0,
+              dec: 0,
+              total: 0
+            };
+            $this.tableData.push(newUser);
+          }
+
+          var user = $this.tableData.filter(u => u.user == n.user_id)[0];
+          user.total += parseFloat(n.total);
+
+          switch ($this.getMonthOfDate(n.week)) {
+            case "01":
+              user.jan += parseFloat(n.total);
+              break;
+            case "02":
+              user.feb += parseFloat(n.total);
+              break;
+            case "03":
+              user.mar += parseFloat(n.total);
+              break;
+            case "04":
+              user.apr += parseFloat(n.total);
+              break;
+            case "05":
+              user.may += parseFloat(n.total);
+              break;
+            case "06":
+              user.jun += parseFloat(n.total);
+              break;
+            case "07":
+              user.jul += parseFloat(n.total);
+              break;
+            case "08":
+              user.aug += parseFloat(n.total);
+              break;
+            case "09":
+              user.sep += parseFloat(n.total);
+              break;
+            case "10":
+              user.oct += parseFloat(n.total);
+              break;
+            case "11":
+              user.nov += parseFloat(n.total);
+              break;
+            case "12":
+              user.dec += parseFloat(n.total);
+              break;
+          }
+        });
+
         $this.loading = false;
       });
     },
     onSearch() {
-      var start = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 00:00:00`;
-
-      var end = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 23:59:59`;
-
-      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
-    },
-    addUserInfo() {
-      this.$refs.newItem.insertNewRow(this.selectedDay);
-    },
-    refreshTable() {
-      var currentDay = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
-      var start = currentDay + " 00:00:00";
-      var end = currentDay + " 23:59:59";
-      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
+      this.loadTable(`/api/payroll/select?workshop=1&year=2020`);
     }
   },
   data() {
     return {
       activeIndex: 0,
-      employees: ["Salomon", "Juanito", "Julio", "Alma"],
-      showDialog: false,
-      selectedDay: new Date(),
+      selectedYear: new Date(),
       search: "",
       loading: true,
       tableData: [],
-      newUser: {
-        user_id: 1,
-        start: "",
-        cleaning: "",
-        breakfast_start: "",
-        breakfast_end: "",
-        lunch_start: "",
-        lunch_end: "",
-        done: "No",
-        comment: "",
-        name: ""
-      }
+      users: []
     };
   }
 };

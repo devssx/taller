@@ -74,6 +74,7 @@ Route::delete('/cleaning/{id}', 'CleaningController@delete');
 Route::post('/payroll/comment', 'PayrollController@saveComment');
 Route::post('/payroll/save', 'PayrollController@saveWeek');
 Route::get('/payroll/comment', 'PayrollController@getComment');
+Route::get('/payroll/select', 'PayrollController@SelectPayrollByYear');
 Route::get('/payroll', 'PayrollController@getPayroll');
 Route::get('/payroll/userComments', 'PayrollCommentController@getUserComments');
 Route::get('/workshop', 'WorkShopController@index');

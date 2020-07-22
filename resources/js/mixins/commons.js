@@ -135,6 +135,9 @@ export default {
                 today.setDate(today.getDate() - today.getDay() + 1);
             return today;
         },
+        getMonthOfDate(fullDate) {
+            return fullDate.toString().substring(4, 6);
+        },
         pad(number, size) {
             var s = String(number);
             while (s.length < (size || 2)) {

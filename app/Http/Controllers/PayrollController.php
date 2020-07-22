@@ -40,6 +40,22 @@ class PayrollController extends Controller
         //
     }
 
+    public function SelectPayrollByYear(Request $request)
+    {
+        if ($request->has('year')) {
+            $start = $request->get('year') . '0101';
+            $end = $request->get('year') . '1231';
+
+            return Payroll::where(['workshop_id' => $request->get('workshop')])
+            ->where('week', '>=', $start)
+            ->where('week', '<=', $end)
+            ->orderBy('week')
+            ->get();
+        }
+
+        return [];
+    }
+
     public function saveComment(Request $request)
     {
         $c = Comment::firstOrCreate(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')]);
