@@ -11,6 +11,7 @@
           firstDayOfWeek="3"
           type="week"
           format="Week WW"
+          :picker-options="pickerOptions"
           placeholder="Seleccionar Semana"
         ></el-date-picker>
         <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
@@ -256,7 +257,7 @@ export default {
       return emp;
     },
     onSearch() {
-      var newDate = this.initDayOfWeekDate(this.selectedDay);
+      var newDate = this.initDayOfWeekDate(this.selectedDay, 2);
       this.prevDay = newDate;
       var start = this.toFixedFormat(newDate, "yyyyMMdd");
 
@@ -328,6 +329,12 @@ export default {
   },
   data() {
     return {
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        },
+        firstDayOfWeek: 6
+      },
       total: 0,
       workshopId: "",
       isReadOnly: true,

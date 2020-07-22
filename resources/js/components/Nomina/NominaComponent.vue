@@ -8,7 +8,7 @@
       <el-col :span="18">
         <el-date-picker
           v-model="selectedDay"
-          firstDayOfWeek="6"
+          :picker-options="pickerOptions"
           type="week"
           format="Week WW"
           placeholder="Seleccionar Semana"
@@ -720,7 +720,7 @@ export default {
       axios.get(url).then(function(response) {
         $this.weekData = response.data.d;
         $this.loading = false;
-        
+
         // reset
         $this.salary = 0;
         $this.comissions = 0;
@@ -834,7 +834,8 @@ export default {
     onSearch() {
       this.selectedEmployee = "N/A";
       this.comment = "";
-      var newDate = this.initDayOfWeekDate(this.selectedDay);
+      var newDate = this.initDayOfWeekDate(this.selectedDay, 2);
+      console.log(newDate);
       this.prevDay = newDate;
       var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
 
@@ -880,6 +881,13 @@ export default {
   },
   data() {
     return {
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        },
+        firstDayOfWeek: 6
+      },
+
       workshopId: "",
       isReadOnly: true,
       total: 0,

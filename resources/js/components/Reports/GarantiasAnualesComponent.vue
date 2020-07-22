@@ -7,10 +7,10 @@
       </el-col>
       <el-col :span="18">
         <el-date-picker v-model="selectedYear" type="year" placeholder="Seleccionar Año"></el-date-picker>
-        <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
         <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
         </el-select>
+        <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
       </el-col>
       <el-col :span="4" align="end">
         <el-button type="primary" icon="el-icon-plus" @click="addNew">Nueva</el-button>

@@ -7,6 +7,9 @@
       </el-col>
       <el-col :span="18">
         <el-date-picker v-model="selectedYear" type="year" placeholder="Seleccionar Año"></el-date-picker>
+        <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
+          <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
+        </el-select>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
       </el-col>
       <el-col :span="4" align="end"></el-col>
@@ -64,6 +67,10 @@ export default {
   props: ["workshops", "myUser", "multiWorkshop"],
   mounted: function() {
     this.loadUsers("/api/users");
+
+    if (this.myUser && this.myUser.length > 0) {
+      this.workshopId = this.myUser[0].workshop_id;
+    }
   },
   methods: {
     loadUsers(url) {
@@ -179,11 +186,19 @@ export default {
       this.$refs.myChartMensual.setData(chartMensual);
     },
     onSearch() {
+      if (!this.workshopId) {
+        this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
+          confirmButtonText: "OK",
+          type: "warning"
+        });
+        return;
+      }
       this.loadTable(`/api/payroll/select?workshop=1&year=2020`);
     }
   },
   data() {
     return {
+      workshopId: "",
       activeIndex: 0,
       selectedYear: new Date(),
       search: "",
