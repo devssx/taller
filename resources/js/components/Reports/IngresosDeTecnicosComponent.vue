@@ -71,13 +71,6 @@ export default {
     if (this.myUser && this.myUser.length > 0) {
       this.workshopId = this.myUser[0].workshop_id;
     }
-    
-    if (this.workshopId) {
-      let year = this.selectedYear.getFullYear();
-      this.loadTable(
-        `/api/payroll/select?workshop=${this.workshopId}&year=${year}`
-      );
-    }
   },
   methods: {
     loadUsers(url) {

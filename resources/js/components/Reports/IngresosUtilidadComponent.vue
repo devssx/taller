@@ -12,8 +12,10 @@
           format="dd-MM-yyyy"
           placeholder="Seleccionar Semana"
         ></el-date-picker>
+        <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
+          <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
+        </el-select>
         <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
-        <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
       </el-col>
       <el-col :span="4" align="end"></el-col>
     </el-row>
@@ -153,140 +155,34 @@
 
 <script>
 export default {
-  mounted: function() {
-    var today = this.toFixedFormat(new Date(), "yyyy-MM-dd") + " 00:00:00";
-    this.loadTable("/api/cleaning/search?today=" + today);
-    this.$root.$on("refreshTable", this.refreshTable);
+  props: ["workshops", "myUser", "multiWorkshop"],
+  mounted: function () {
+    if (this.myUser && this.myUser.length > 0) {
+      this.workshopId = this.myUser[0].workshop_id;
+    }
   },
   methods: {
-    handleSelect(key, keyPath) {
-      this.activeIndex = key;
-    },
-    eliminarRegistro(id) {
-      const $this = this;
-      $this
-        .$confirm(
-          "Esto eliminará permanentemente el registro. ¿Desea continuar?",
-          "Advertencia",
-          {
-            confirmButtonText: "Si",
-            cancelButtonText: "Cancelar",
-            type: "warning"
-          }
-        )
-        .then(() => {
-          $this.loading = true;
-          axios
-            .delete("/api/cleaning/" + id)
-            .then(function(response) {
-              $this.$message({
-                type: "success",
-                message: "Registro eliminado"
-              });
-
-              $this.tableData = $this.tableData.filter(item => item.id != id);
-              $this.loading = false;
-            })
-            .catch(error => {
-              $this.loading = false;
-              if (error.response.data.errors) {
-                var errors = error.response.data.errors;
-                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-                  confirmButtonText: "OK",
-                  type: "error"
-                });
-              }
-            });
-        })
-        .catch(() => {});
-    },
-    fixNumber(n) {
-      return n < 10 ? "0" + n : n;
-    },
-    toFixedFormat(dt, format) {
-      // 2020-05-15 15:00:00
-      if (!dt) dt = new Date();
-      var yyyy = dt.getFullYear();
-      var MM = this.fixNumber(dt.getMonth() + 1);
-      var dd = this.fixNumber(dt.getDate());
-
-      var hh = this.fixNumber(dt.getHours());
-      var mm = this.fixNumber(dt.getMinutes());
-      var ss = this.fixNumber(dt.getSeconds());
-
-      switch (format) {
-        case "yyyy-MM-dd":
-          return `${yyyy}-${MM}-${dd}`;
-      }
-
-      return `${yyyy}-${MM}-${dd} ${hh}:${mm}:${ss}`;
-    },
-    formatDate(date) {
-      var hours = date.getHours();
-      var minutes = date.getMinutes();
-      var ampm = hours >= 12 ? "pm" : "am";
-      hours = hours % 12;
-      hours = hours ? hours : 12;
-      minutes = minutes < 10 ? "0" + minutes : minutes + "";
-      return hours + ":" + minutes + " " + ampm;
-    },
-    fixDate(dt) {
-      return this.formatDate(new Date(dt));
-    },
     loadTable(url) {
       var $this = this;
       $this.loading = true;
-      axios.get(url).then(function(response) {
+      axios.get(url).then(function (response) {
         $this.tableData = response.data;
         $this.loading = false;
       });
     },
-    onSearch() {
-      var start = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 00:00:00`;
-
-      var end = `${this.toFixedFormat(
-        this.selectedDay,
-        "yyyy-MM-dd"
-      )} 23:59:59`;
-
-      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
-    },
-    addUserInfo() {
-      this.$refs.newItem.insertNewRow(this.selectedDay);
-    },
-    refreshTable() {
-      var currentDay = this.toFixedFormat(this.selectedDay, "yyyy-MM-dd");
-      var start = currentDay + " 00:00:00";
-      var end = currentDay + " 23:59:59";
-      this.loadTable(`/api/cleaning/search?start=${start}&end=${end}`);
-    }
+    onSearch() {},
+    refreshTable() {},
   },
   data() {
     return {
-      activeIndex: 0,
-      employees: ["Salomon", "Juanito", "Julio", "Alma"],
+      workshopId: "",
       showDialog: false,
       selectedDay: new Date(),
       search: "",
       loading: true,
       tableData: [],
-      newUser: {
-        user_id: 1,
-        start: "",
-        cleaning: "",
-        breakfast_start: "",
-        breakfast_end: "",
-        lunch_start: "",
-        lunch_end: "",
-        done: "No",
-        comment: "",
-        name: ""
-      }
     };
-  }
+  },
 };
 </script>
 <style>
