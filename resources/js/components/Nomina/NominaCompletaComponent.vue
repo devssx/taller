@@ -148,8 +148,8 @@ export default {
         if ($this.employees.length > 0) {
           $this.employees.forEach(emp => {
             let com1 = 0.07;
-            let com2 = 0.025;
-            let com3 = 0.025;
+            let com2 = 0.07;
+            let com3 = 0.07;
             let salary = 0.0;
             let discounts = 0.0;
 

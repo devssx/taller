@@ -25,7 +25,7 @@
     <!-- TOTALES -->
     <el-row>
       <!-- Columna 1 -->
-      <el-col :span="3">
+      <el-col :span="3">                  
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
             <h1 style="color:#909399">Ingresos sin Iva</h1>

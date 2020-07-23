@@ -65,18 +65,25 @@
 <script>
 export default {
   props: ["workshops", "myUser", "multiWorkshop"],
-  mounted: function() {
+  mounted: function () {
     this.loadUsers("/api/users");
 
     if (this.myUser && this.myUser.length > 0) {
       this.workshopId = this.myUser[0].workshop_id;
+    }
+    
+    if (this.workshopId) {
+      let year = this.selectedYear.getFullYear();
+      this.loadTable(
+        `/api/payroll/select?workshop=${this.workshopId}&year=${year}`
+      );
     }
   },
   methods: {
     loadUsers(url) {
       var $this = this;
       $this.loading = true;
-      axios.get(url).then(function(response) {
+      axios.get(url).then(function (response) {
         $this.users = response.data.data;
         $this.loading = false;
       });
@@ -87,13 +94,13 @@ export default {
     loadTable(url) {
       var $this = this;
       $this.loading = true;
-      axios.get(url).then(function(response) {
+      axios.get(url).then(function (response) {
         $this.tableData = [];
-        response.data.forEach(n => {
+        response.data.forEach((n) => {
           // new
-          if ($this.tableData.filter(u => u.user == n.user_id).length == 0) {
+          if ($this.tableData.filter((u) => u.user == n.user_id).length == 0) {
             let tecnico = "Desconocido";
-            var tecnicos = $this.users.filter(emp => emp.id == n.user_id);
+            var tecnicos = $this.users.filter((emp) => emp.id == n.user_id);
             if (tecnicos.length > 0) tecnico = tecnicos[0].name;
 
             var newUser = {
@@ -111,12 +118,12 @@ export default {
               oct: 0,
               nov: 0,
               dec: 0,
-              total: 0
+              total: 0,
             };
             $this.tableData.push(newUser);
           }
 
-          var user = $this.tableData.filter(u => u.user == n.user_id)[0];
+          var user = $this.tableData.filter((u) => u.user == n.user_id)[0];
           user.total += parseFloat(n.total);
 
           switch ($this.getMonthOfDate(n.week)) {
@@ -168,17 +175,17 @@ export default {
       let chartAnual = [];
       let chartMensual = [];
 
-      data.forEach(e => {
+      data.forEach((e) => {
         chartAnual.push({
           name: e.name,
           value: e.total,
-          color: this.getColor(i)
+          color: this.getColor(i),
         });
 
         chartMensual.push({
           name: e.name,
           value: e.total / 12,
-          color: this.getColor(i++)
+          color: this.getColor(i++),
         });
       });
 
@@ -189,12 +196,16 @@ export default {
       if (!this.workshopId) {
         this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
           confirmButtonText: "OK",
-          type: "warning"
+          type: "warning",
         });
         return;
       }
-      this.loadTable(`/api/payroll/select?workshop=1&year=2020`);
-    }
+
+      let year = this.selectedYear.getFullYear();
+      this.loadTable(
+        `/api/payroll/select?workshop=${this.workshopId}&year=${year}`
+      );
+    },
   },
   data() {
     return {
@@ -204,9 +215,9 @@ export default {
       search: "",
       loading: true,
       tableData: [],
-      users: []
+      users: [],
     };
-  }
+  },
 };
 </script>
 <style>

@@ -649,8 +649,8 @@ export default {
 
       // commission percentages
       let com1 = 0.07;
-      let com2 = 0.025;
-      let com3 = 0.025;
+      let com2 = 0.07;
+      let com3 = 0.07;
       let salary1 = 0.0;
       let salary2 = 0.0;
       let salary3 = 0.0;
