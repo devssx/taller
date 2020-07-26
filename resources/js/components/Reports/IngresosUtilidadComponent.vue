@@ -3,15 +3,10 @@
     <br />
     <el-row class="br bl bt bb row-header">
       <el-col :span="2">
-        <h1 style="margin-top: 8px;">Semana</h1>
+        <h1 style="margin-top: 8px;">Año</h1>
       </el-col>
       <el-col :span="18">
-        <el-date-picker
-          v-model="selectedDay"
-          type="date"
-          format="dd-MM-yyyy"
-          placeholder="Seleccionar Semana"
-        ></el-date-picker>
+        <el-date-picker v-model="selectedYear" type="year" placeholder="Seleccionar Año"></el-date-picker>
         <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
         </el-select>
@@ -160,6 +155,8 @@ export default {
     if (this.myUser && this.myUser.length > 0) {
       this.workshopId = this.myUser[0].workshop_id;
     }
+
+    console.log(this.getWeekOfDate(new Date()));
   },
   methods: {
     loadTable(url) {
@@ -177,9 +174,9 @@ export default {
     return {
       workshopId: "",
       showDialog: false,
-      selectedDay: new Date(),
+      selectedYear: new Date(),
       search: "",
-      loading: true,
+      loading: false,
       tableData: [],
     };
   },
