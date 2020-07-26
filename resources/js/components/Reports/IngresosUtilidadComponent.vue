@@ -40,30 +40,32 @@
           </el-col>
         </el-row>
         <el-row class="br bl">
-          <el-col :span="24">
-            <el-table :data="tableData" style="width: 100%" v-loading="loading">
+          <el-col :span="8">
+            <el-table :data="incomeWeeklyData" style="width: 100%" v-loading="loading">
               <el-table-column label="Semanal" align="center">
-                <el-table-column align="center" label="Fecha" width="150">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
-                </el-table-column>
-                <el-table-column align="center" label="Monto">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
+                <el-table-column label="Fecha" prop="fecha"></el-table-column>
+                <el-table-column align="right" label="Monto" prop="monto">
+                  <template slot-scope="scope">{{ formatPrice(scope.row.monto) }}</template>
                 </el-table-column>
               </el-table-column>
+            </el-table>
+          </el-col>
+          <el-col :span="8">
+            <el-table :data="incomeMontlyData" style="width: 100%" v-loading="loading">
               <el-table-column label="Mensual" align="center">
-                <el-table-column align="center" label="Fecha" width="150">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
-                </el-table-column>
-                <el-table-column align="center" label="Monto">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
+                <el-table-column label="Fecha" prop="fecha"></el-table-column>
+                <el-table-column align="right" label="Monto" prop="monto">
+                  <template slot-scope="scope">{{ formatPrice(scope.row.monto) }}</template>
                 </el-table-column>
               </el-table-column>
+            </el-table>
+          </el-col>
+          <el-col :span="8">
+            <el-table :data="incomeYearlyData" border style="width: 100%" v-loading="loading">
               <el-table-column label="Anual" align="center">
-                <el-table-column align="center" label="Fecha" width="150">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
-                </el-table-column>
-                <el-table-column align="center" label="Monto">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
+                <el-table-column label="Fecha" prop="fecha"></el-table-column>
+                <el-table-column align="right" label="Monto" prop="monto">
+                  <template slot-scope="scope">{{ formatPrice(scope.row.monto) }}</template>
                 </el-table-column>
               </el-table-column>
             </el-table>
@@ -77,7 +79,7 @@
           </el-col>
         </el-row>
         <el-row class="br bl">
-          <el-col :span="24">
+          <el-col :span="8">
             <el-table :data="tableData" style="width: 100%" v-loading="loading">
               <el-table-column label="Semanal" align="center">
                 <el-table-column align="center" label="Fecha" width="150">
@@ -87,6 +89,10 @@
                   <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
                 </el-table-column>
               </el-table-column>
+            </el-table>
+          </el-col>
+          <el-col :span="8">
+            <el-table :data="tableData" style="width: 100%" v-loading="loading">
               <el-table-column label="Mensual" align="center">
                 <el-table-column align="center" label="Fecha" width="150">
                   <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
@@ -95,6 +101,10 @@
                   <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
                 </el-table-column>
               </el-table-column>
+            </el-table>
+          </el-col>
+          <el-col :span="8">
+            <el-table :data="tableData" style="width: 100%" v-loading="loading">
               <el-table-column label="Anual" align="center">
                 <el-table-column align="center" label="Fecha" width="150">
                   <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
@@ -114,7 +124,7 @@
           </el-col>
         </el-row>
         <el-row class="br bl">
-          <el-col :span="24">
+          <el-col :span="8">
             <el-table :data="tableData" style="width: 100%" v-loading="loading">
               <el-table-column label="Semanal" align="center">
                 <el-table-column align="center" label="Fecha" width="150">
@@ -124,6 +134,10 @@
                   <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
                 </el-table-column>
               </el-table-column>
+            </el-table>
+          </el-col>
+          <el-col :span="8">
+            <el-table :data="tableData" style="width: 100%" v-loading="loading">
               <el-table-column label="Mensual" align="center">
                 <el-table-column align="center" label="Fecha" width="150">
                   <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
@@ -132,6 +146,10 @@
                   <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
                 </el-table-column>
               </el-table-column>
+            </el-table>
+          </el-col>
+          <el-col :span="8">
+            <el-table :data="tableData" style="width: 100%" v-loading="loading">
               <el-table-column label="Anual" align="center">
                 <el-table-column align="center" label="Fecha" width="150">
                   <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
@@ -157,13 +175,21 @@ export default {
     }
 
     console.log(this.getWeekOfDate(new Date()));
+    this.loadTable(
+      `http://127.0.0.1:8000/api/report/income?workshop=1&start=2020-01-01&end=2020-12-31`
+    );
   },
   methods: {
     loadTable(url) {
       var $this = this;
       $this.loading = true;
+      $this.incomeYearlyData = [];
+
       axios.get(url).then(function (response) {
-        $this.tableData = response.data;
+        var totalAnual = 0.0;
+        response.data.forEach((s) => (totalAnual += parseFloat(s.total)));
+        $this.incomeYearlyData.push({ fecha: 2020, monto: totalAnual });
+
         $this.loading = false;
       });
     },
@@ -178,6 +204,9 @@ export default {
       search: "",
       loading: false,
       tableData: [],
+      incomeWeeklyData: [],
+      incomeMontlyData: [],
+      incomeYearlyData: [],
     };
   },
 };

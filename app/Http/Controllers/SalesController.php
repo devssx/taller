@@ -107,6 +107,17 @@ class SalesController extends Controller
             ->get();
     }
 
+    // ingresos
+    function searchBetween(Request $request)
+    {
+        return DB::table('sales')
+            ->where('done_on', '>=', $request->get('start'))
+            ->where('done_on', '<=', $request->get('end'))
+            ->where('sales.status',  2)
+            ->where('sales.workshop_id',  $request->get('workshop'))
+            ->get();
+    }
+
     public function receipt($id = 0)
     {
         if (!empty($id)) {

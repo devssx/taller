@@ -84,3 +84,5 @@ Route::post('/expenses', 'ExpenseController@save');
 
 Route::get('/guarantee', 'GuaranteeController@index');
 Route::post('/guarantee', 'GuaranteeController@save');
+
+Route::get('/report/income', 'SalesController@searchBetween');
