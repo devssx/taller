@@ -21,7 +21,8 @@ export default {
                 '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680',
                 '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
                 '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3',
-                '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
+                '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF',
+                '#FF991A', '#CCCC1A', '#AA69B4', '#E6661A', '#5D8000'];
             return palete[index];
         },
         saveObject(obj, name) {
@@ -125,6 +126,22 @@ export default {
                     return "Viernes";
                 case 6:
                     return "Sábado";
+            }
+        },
+        monthName(date) {
+            switch (date.getMonth()) {
+                case 0: return "Enero";
+                case 1: return "Febrero";
+                case 2: return "Marzo";
+                case 3: return "Abril";
+                case 4: return "Mayo";
+                case 5: return "Junio";
+                case 6: return "Julio";
+                case 7: return "Agosto";
+                case 8: return "Septiembre";
+                case 9: return "Octubre";
+                case 10: return "Noviembre";
+                case 11: return "Diciembre";
             }
         },
         initDayOfWeekDate(day, offset) {

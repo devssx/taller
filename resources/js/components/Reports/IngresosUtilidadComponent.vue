@@ -21,19 +21,18 @@
       <!-- Columna 1 -->
       <el-col :span="8">
         <el-row class="br bb bl">
-          <bar-chart></bar-chart>
+          <bar-chart ref="chartIngresos" :chartData="[]"></bar-chart>
         </el-row>
         <el-row class="br bb bl">
-          <bar-chart></bar-chart>
+          <bar-chart ref="chartGastos" :chartData="[]"></bar-chart>
         </el-row>
         <el-row class="br bb bl">
-          <bar-chart></bar-chart>
+          <bar-chart ref="chartUtilidad" :chartData="[]"></bar-chart>
         </el-row>
       </el-col>
 
-      <!-- Columna 2 -->
       <el-col :span="15" :offset="1">
-        <!-- Tabla 1 -->
+        <!-- Tabla Ingresos -->
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
             <h1 style="color:#909399">Ingresos sin IVA</h1>
@@ -41,9 +40,9 @@
         </el-row>
         <el-row class="br bl">
           <el-col :span="8">
-            <el-table :data="incomeWeeklyData" style="width: 100%" v-loading="loading">
+            <el-table size="mini" :data="incomeWeeklyData" style="width: 100%" v-loading="loading">
               <el-table-column label="Semanal" align="center">
-                <el-table-column label="Fecha" prop="fecha"></el-table-column>
+                <el-table-column label="Semana" prop="fecha" align="center"></el-table-column>
                 <el-table-column align="right" label="Monto" prop="monto">
                   <template slot-scope="scope">{{ formatPrice(scope.row.monto) }}</template>
                 </el-table-column>
@@ -51,9 +50,9 @@
             </el-table>
           </el-col>
           <el-col :span="8">
-            <el-table :data="incomeMontlyData" style="width: 100%" v-loading="loading">
+            <el-table size="mini" :data="incomeMonthlyData" style="width: 100%" v-loading="loading">
               <el-table-column label="Mensual" align="center">
-                <el-table-column label="Fecha" prop="fecha"></el-table-column>
+                <el-table-column label="Mes" prop="fecha" align="center"></el-table-column>
                 <el-table-column align="right" label="Monto" prop="monto">
                   <template slot-scope="scope">{{ formatPrice(scope.row.monto) }}</template>
                 </el-table-column>
@@ -61,9 +60,15 @@
             </el-table>
           </el-col>
           <el-col :span="8">
-            <el-table :data="incomeYearlyData" border style="width: 100%" v-loading="loading">
+            <el-table
+              size="mini"
+              :data="incomeYearlyData"
+              border
+              style="width: 100%"
+              v-loading="loading"
+            >
               <el-table-column label="Anual" align="center">
-                <el-table-column label="Fecha" prop="fecha"></el-table-column>
+                <el-table-column label="Año" prop="fecha" align="center"></el-table-column>
                 <el-table-column align="right" label="Monto" prop="monto">
                   <template slot-scope="scope">{{ formatPrice(scope.row.monto) }}</template>
                 </el-table-column>
@@ -72,7 +77,7 @@
           </el-col>
         </el-row>
         <br />
-        <!-- Tabla 2 -->
+        <!-- Tabla Gastos -->
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
             <h1 style="color:#909399">Gastos sin IVA</h1>
@@ -80,37 +85,31 @@
         </el-row>
         <el-row class="br bl">
           <el-col :span="8">
-            <el-table :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
               <el-table-column label="Semanal" align="center">
-                <el-table-column align="center" label="Fecha" width="150">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
-                </el-table-column>
-                <el-table-column align="center" label="Monto">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
+                <el-table-column label="Semana" prop="fecha" align="center"></el-table-column>
+                <el-table-column align="right" label="Monto" prop="monto">
+                  <template slot-scope="scope">{{ formatPrice(scope.row.monto) }}</template>
                 </el-table-column>
               </el-table-column>
             </el-table>
           </el-col>
           <el-col :span="8">
-            <el-table :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
               <el-table-column label="Mensual" align="center">
-                <el-table-column align="center" label="Fecha" width="150">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
-                </el-table-column>
-                <el-table-column align="center" label="Monto">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
+                <el-table-column label="Mes" prop="fecha" align="center"></el-table-column>
+                <el-table-column align="right" label="Monto" prop="monto">
+                  <template slot-scope="scope">{{ formatPrice(scope.row.monto) }}</template>
                 </el-table-column>
               </el-table-column>
             </el-table>
           </el-col>
           <el-col :span="8">
-            <el-table :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
               <el-table-column label="Anual" align="center">
-                <el-table-column align="center" label="Fecha" width="150">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
-                </el-table-column>
-                <el-table-column align="center" label="Monto">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
+                <el-table-column label="Año" prop="fecha" align="center"></el-table-column>
+                <el-table-column align="right" label="Monto" prop="monto">
+                  <template slot-scope="scope">{{ formatPrice(scope.row.monto) }}</template>
                 </el-table-column>
               </el-table-column>
             </el-table>
@@ -125,37 +124,31 @@
         </el-row>
         <el-row class="br bl">
           <el-col :span="8">
-            <el-table :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
               <el-table-column label="Semanal" align="center">
-                <el-table-column align="center" label="Fecha" width="150">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
-                </el-table-column>
-                <el-table-column align="center" label="Monto">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
+                <el-table-column label="Semana" prop="fecha" align="center"></el-table-column>
+                <el-table-column align="right" label="Monto" prop="monto">
+                  <template slot-scope="scope">{{ formatPrice(scope.row.monto) }}</template>
                 </el-table-column>
               </el-table-column>
             </el-table>
           </el-col>
           <el-col :span="8">
-            <el-table :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
               <el-table-column label="Mensual" align="center">
-                <el-table-column align="center" label="Fecha" width="150">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
-                </el-table-column>
-                <el-table-column align="center" label="Monto">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
+                <el-table-column label="Mes" prop="fecha" align="center"></el-table-column>
+                <el-table-column align="right" label="Monto" prop="monto">
+                  <template slot-scope="scope">{{ formatPrice(scope.row.monto) }}</template>
                 </el-table-column>
               </el-table-column>
             </el-table>
           </el-col>
           <el-col :span="8">
-            <el-table :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
               <el-table-column label="Anual" align="center">
-                <el-table-column align="center" label="Fecha" width="150">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_start) }}</template>
-                </el-table-column>
-                <el-table-column align="center" label="Monto">
-                  <template slot-scope="scope">{{ fixDate(scope.row.lunch_end) }}</template>
+                <el-table-column label="Año" prop="fecha" align="center"></el-table-column>
+                <el-table-column align="right" label="Monto" prop="monto">
+                  <template slot-scope="scope">{{ formatPrice(scope.row.monto) }}</template>
                 </el-table-column>
               </el-table-column>
             </el-table>
@@ -174,24 +167,74 @@ export default {
       this.workshopId = this.myUser[0].workshop_id;
     }
 
-    console.log(this.getWeekOfDate(new Date()));
     this.loadTable(
-      `http://127.0.0.1:8000/api/report/income?workshop=1&start=2020-01-01&end=2020-12-31`
+      `http://127.0.0.1:8000/api/report/income?workshop=1&start=2020-01-01&end=2020-12-31`,
+      2020
     );
   },
   methods: {
-    loadTable(url) {
+    loadTable(url, year) {
       var $this = this;
       $this.loading = true;
+      $this.incomeWeeklyData = [];
+      $this.incomeMonthlyData = [];
       $this.incomeYearlyData = [];
 
       axios.get(url).then(function (response) {
-        var totalAnual = 0.0;
-        response.data.forEach((s) => (totalAnual += parseFloat(s.total)));
-        $this.incomeYearlyData.push({ fecha: 2020, monto: totalAnual });
-
+        $this.parseIncome(response.data, year);
         $this.loading = false;
       });
+    },
+    parseIncome(data, year) {
+      var totalAnual = 0.0;
+
+      // Iterar Informacion
+      data.forEach((s) => {
+        // Recibo Pagado
+        var monto = parseFloat(s.total);
+
+        // Semanal
+        var week = this.getWeekOfDate(new Date(s.done_on));
+        var ws = this.incomeWeeklyData.filter((w) => w.fecha == week);
+        if (ws.length > 0) {
+          ws[0].monto += monto;
+        } else {
+          this.incomeWeeklyData.push({ fecha: week, monto: monto });
+        }
+
+        // Mensual
+        var month = this.monthName(new Date(s.done_on));
+        var ms = this.incomeMonthlyData.filter((m) => m.fecha == month);
+        if (ms.length > 0) {
+          ms[0].monto += monto;
+        } else {
+          this.incomeMonthlyData.push({ fecha: month, monto: monto });
+        }
+
+        // Anual
+        totalAnual += monto;
+      });
+
+      // tabla anual
+      this.incomeYearlyData.push({ fecha: year, monto: totalAnual });
+
+      // Crear Graficas
+      var ingresos = this.createChartData(this.incomeWeeklyData);
+      this.$refs.chartIngresos.setData(ingresos);
+      this.$refs.chartGastos.setData(ingresos);
+      this.$refs.chartUtilidad.setData(ingresos);
+    },
+    createChartData(data) {
+      let chartData = [];
+      let i = 0;
+      data.forEach((e) =>
+        chartData.push({
+          name: e.fecha,
+          value: e.monto,
+          color: this.getColor(i++),
+        })
+      );
+      return chartData;
     },
     onSearch() {},
     refreshTable() {},
@@ -205,7 +248,7 @@ export default {
       loading: false,
       tableData: [],
       incomeWeeklyData: [],
-      incomeMontlyData: [],
+      incomeMonthlyData: [],
       incomeYearlyData: [],
     };
   },
