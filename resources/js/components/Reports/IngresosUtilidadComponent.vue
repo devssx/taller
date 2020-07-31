@@ -40,7 +40,13 @@
         </el-row>
         <el-row class="br bl">
           <el-col :span="8">
-            <el-table size="mini" :data="incomeWeeklyData" style="width: 100%" v-loading="loading">
+            <el-table
+              size="mini"
+              height="370"
+              :data="incomeWeeklyData"
+              style="width: 100%"
+              v-loading="loading"
+            >
               <el-table-column label="Semanal" align="center">
                 <el-table-column label="Semana" prop="fecha" align="center"></el-table-column>
                 <el-table-column align="right" label="Monto" prop="monto">
@@ -50,7 +56,13 @@
             </el-table>
           </el-col>
           <el-col :span="8">
-            <el-table size="mini" :data="incomeMonthlyData" style="width: 100%" v-loading="loading">
+            <el-table
+              size="mini"
+              height="370"
+              :data="incomeMonthlyData"
+              style="width: 100%"
+              v-loading="loading"
+            >
               <el-table-column label="Mensual" align="center">
                 <el-table-column label="Mes" prop="fecha" align="center"></el-table-column>
                 <el-table-column align="right" label="Monto" prop="monto">
@@ -62,6 +74,7 @@
           <el-col :span="8">
             <el-table
               size="mini"
+              height="370"
               :data="incomeYearlyData"
               border
               style="width: 100%"
@@ -85,7 +98,13 @@
         </el-row>
         <el-row class="br bl">
           <el-col :span="8">
-            <el-table size="mini" :data="expenseWeeklyData" style="width: 100%" v-loading="loading">
+            <el-table
+              size="mini"
+              height="370"
+              :data="expenseWeeklyData"
+              style="width: 100%"
+              v-loading="loading"
+            >
               <el-table-column label="Semanal" align="center">
                 <el-table-column label="Semana" prop="fecha" align="center"></el-table-column>
                 <el-table-column align="right" label="Monto" prop="monto">
@@ -97,6 +116,7 @@
           <el-col :span="8">
             <el-table
               size="mini"
+              height="370"
               :data="expenseMonthlyData"
               style="width: 100%"
               v-loading="loading"
@@ -110,7 +130,13 @@
             </el-table>
           </el-col>
           <el-col :span="8">
-            <el-table size="mini" :data="expenseYearlyData" style="width: 100%" v-loading="loading">
+            <el-table
+              height="370"
+              size="mini"
+              :data="expenseYearlyData"
+              style="width: 100%"
+              v-loading="loading"
+            >
               <el-table-column label="Anual" align="center">
                 <el-table-column label="Año" prop="fecha" align="center"></el-table-column>
                 <el-table-column align="right" label="Monto" prop="monto">
@@ -121,7 +147,7 @@
           </el-col>
         </el-row>
         <br />
-        <!-- Tabla 3 -->
+        <!-- Tabla Utilidad -->
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
             <h1 style="color:#909399">Utilidad sin IVA</h1>
@@ -129,7 +155,13 @@
         </el-row>
         <el-row class="br bl">
           <el-col :span="8">
-            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table
+              height="370"
+              size="mini"
+              :data="utilidadWeeklyData"
+              style="width: 100%"
+              v-loading="loading"
+            >
               <el-table-column label="Semanal" align="center">
                 <el-table-column label="Semana" prop="fecha" align="center"></el-table-column>
                 <el-table-column align="right" label="Monto" prop="monto">
@@ -139,7 +171,13 @@
             </el-table>
           </el-col>
           <el-col :span="8">
-            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table
+              size="mini"
+              height="370"
+              :data="utilidadMonthlyData"
+              style="width: 100%"
+              v-loading="loading"
+            >
               <el-table-column label="Mensual" align="center">
                 <el-table-column label="Mes" prop="fecha" align="center"></el-table-column>
                 <el-table-column align="right" label="Monto" prop="monto">
@@ -149,7 +187,13 @@
             </el-table>
           </el-col>
           <el-col :span="8">
-            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table
+              size="mini"
+              height="370"
+              :data="utilidadYearlyData"
+              style="width: 100%"
+              v-loading="loading"
+            >
               <el-table-column label="Anual" align="center">
                 <el-table-column label="Año" prop="fecha" align="center"></el-table-column>
                 <el-table-column align="right" label="Monto" prop="monto">
@@ -239,6 +283,8 @@ export default {
       // Crear Graficas
       var ingresos = this.createChartData(this.incomeWeeklyData);
       this.$refs.chartIngresos.setData(ingresos);
+
+      this.calcularUtilidad(year);
     },
     parseExpenses(data, year) {
       var totalAnual = 0.0;
@@ -275,6 +321,74 @@ export default {
       // Crear Graficas
       var expenses = this.createChartData(this.expenseWeeklyData);
       this.$refs.chartGastos.setData(expenses);
+
+      this.calcularUtilidad(year);
+    },
+    calcularUtilidad(year) {
+      // Clear
+      this.utilidadYearlyData = [];
+      this.utilidadMonthlyData = [];
+      this.utilidadYearlyData = [];
+
+      var ingresos = this.incomeYearlyData;
+      var gastos = this.expenseYearlyData;
+      if (ingresos.length > 0 && gastos.length > 0) {
+        // >> Semanal >>
+        for (let week = 0; week <= 52; week++) {
+          let wIncome = 0.0;
+          let wExpense = 0.0;
+
+          // busca ingreso de la semana
+          var incomes = this.incomeWeeklyData.filter((m) => m.fecha == week);
+          if (incomes.length > 0) {
+            wIncome = incomes[0].monto;
+          }
+
+          // busca gasto de la semana
+          var expenses = this.expenseWeeklyData.filter((m) => m.fecha == week);
+          if (expenses.length > 0) {
+            wExpense = expenses[0].monto;
+          }
+
+          // Utilidad de la semana
+          let wUtilida = wIncome - wExpense;
+          this.utilidadWeeklyData.push({ fecha: week, monto: wUtilida });
+        }
+
+        // >> Mensual >>
+        for (let i = 0; i < 12; i++) {
+          let month = this.monthNameByIndex(i);
+
+          let mIncome = 0.0;
+          let mExpense = 0.0;
+
+          // busca ingreso del mes
+          var incomes = this.incomeMonthlyData.filter((m) => m.fecha == month);
+          if (incomes.length > 0) {
+            mIncome = incomes[0].monto;
+          }
+
+          // busca gasto del mes
+          var expenses = this.expenseMonthlyData.filter(
+            (m) => m.fecha == month
+          );
+          if (expenses.length > 0) {
+            mExpense = expenses[0].monto;
+          }
+
+          // Utilidad del Mes
+          let mUtilida = mIncome - mExpense;
+          this.utilidadMonthlyData.push({ fecha: month, monto: mUtilida });
+        }
+
+        // >> Anual >>
+        var utilidad = ingresos[0].monto - gastos[0].monto;
+        this.utilidadYearlyData.push({ fecha: year, monto: utilidad });
+
+        // Crear Graficas
+        var utilidadData = this.createChartData(this.utilidadWeeklyData);
+        this.$refs.chartUtilidad.setData(utilidadData);
+      }
     },
     createChartData(data) {
       let chartData = [];
@@ -306,6 +420,10 @@ export default {
       expenseWeeklyData: [],
       expenseMonthlyData: [],
       expenseYearlyData: [],
+
+      utilidadWeeklyData: [],
+      utilidadMonthlyData: [],
+      utilidadYearlyData: [],
     };
   },
 };
