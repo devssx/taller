@@ -23,6 +23,22 @@ class ExpenseController extends Controller
         return Expense::where(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')])->get();
     }
 
+    public function SelectExpensesByYear(Request $request)
+    {
+        if ($request->has('year')) {
+            $start = $request->get('year') . '0101';
+            $end = $request->get('year') . '1231';
+
+            return Expense::where(['workshop_id' => $request->get('workshop')])
+                ->where('week', '>=', $start)
+                ->where('week', '<=', $end)
+                ->orderBy('week')
+                ->get();
+        }
+
+        return [];
+    }
+
     public function save(Request $request)
     {
         if ($request->has('id')) {

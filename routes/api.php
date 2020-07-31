@@ -79,6 +79,7 @@ Route::get('/payroll', 'PayrollController@getPayroll');
 Route::get('/payroll/userComments', 'PayrollCommentController@getUserComments');
 Route::get('/workshop', 'WorkShopController@index');
 
+Route::get('/report/expenses', 'ExpenseController@SelectExpensesByYear');
 Route::get('/expenses', 'ExpenseController@searchWeek');
 Route::post('/expenses', 'ExpenseController@save');
 

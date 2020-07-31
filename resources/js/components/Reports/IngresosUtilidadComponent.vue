@@ -85,7 +85,7 @@
         </el-row>
         <el-row class="br bl">
           <el-col :span="8">
-            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table size="mini" :data="expenseWeeklyData" style="width: 100%" v-loading="loading">
               <el-table-column label="Semanal" align="center">
                 <el-table-column label="Semana" prop="fecha" align="center"></el-table-column>
                 <el-table-column align="right" label="Monto" prop="monto">
@@ -95,7 +95,12 @@
             </el-table>
           </el-col>
           <el-col :span="8">
-            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table
+              size="mini"
+              :data="expenseMonthlyData"
+              style="width: 100%"
+              v-loading="loading"
+            >
               <el-table-column label="Mensual" align="center">
                 <el-table-column label="Mes" prop="fecha" align="center"></el-table-column>
                 <el-table-column align="right" label="Monto" prop="monto">
@@ -105,7 +110,7 @@
             </el-table>
           </el-col>
           <el-col :span="8">
-            <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
+            <el-table size="mini" :data="expenseYearlyData" style="width: 100%" v-loading="loading">
               <el-table-column label="Anual" align="center">
                 <el-table-column label="Año" prop="fecha" align="center"></el-table-column>
                 <el-table-column align="right" label="Monto" prop="monto">
@@ -167,13 +172,14 @@ export default {
       this.workshopId = this.myUser[0].workshop_id;
     }
 
-    this.loadTable(
-      `http://127.0.0.1:8000/api/report/income?workshop=1&start=2020-01-01&end=2020-12-31`,
+    this.loadTableIncome(
+      `/api/report/income?workshop=1&start=2020-01-01&end=2020-12-31`,
       2020
     );
+    this.loadTableExpense(`/api/report/expenses?year=2020&workshop=2`, 2020);
   },
   methods: {
-    loadTable(url, year) {
+    loadTableIncome(url, year) {
       var $this = this;
       $this.loading = true;
       $this.incomeWeeklyData = [];
@@ -182,6 +188,18 @@ export default {
 
       axios.get(url).then(function (response) {
         $this.parseIncome(response.data, year);
+        $this.loading = false;
+      });
+    },
+    loadTableExpense(url, year) {
+      var $this = this;
+      $this.loading = true;
+      $this.expenseWeeklyData = [];
+      $this.expenseMonthlyData = [];
+      $this.expenseYearlyData = [];
+
+      axios.get(url).then(function (response) {
+        $this.parseExpenses(response.data, year);
         $this.loading = false;
       });
     },
@@ -221,8 +239,42 @@ export default {
       // Crear Graficas
       var ingresos = this.createChartData(this.incomeWeeklyData);
       this.$refs.chartIngresos.setData(ingresos);
-      this.$refs.chartGastos.setData(ingresos);
-      this.$refs.chartUtilidad.setData(ingresos);
+    },
+    parseExpenses(data, year) {
+      var totalAnual = 0.0;
+
+      // Iterar Informacion
+      data.forEach((e) => {
+        // Monto sin IVA
+        var monto = parseFloat(e.total) - parseFloat(e.iva);
+        // Semanal
+        var week = this.getWeekOfDate(new Date(e.created_at));
+        var ws = this.expenseWeeklyData.filter((w) => w.fecha == week);
+        if (ws.length > 0) {
+          ws[0].monto += monto;
+        } else {
+          this.expenseWeeklyData.push({ fecha: week, monto: monto });
+        }
+
+        // Mensual
+        var month = this.monthName(new Date(e.created_at));
+        var ms = this.expenseMonthlyData.filter((m) => m.fecha == month);
+        if (ms.length > 0) {
+          ms[0].monto += monto;
+        } else {
+          this.expenseMonthlyData.push({ fecha: month, monto: monto });
+        }
+
+        // Anual
+        totalAnual += monto;
+      });
+
+      // tabla anual
+      this.expenseYearlyData.push({ fecha: year, monto: totalAnual });
+
+      // Crear Graficas
+      var expenses = this.createChartData(this.expenseWeeklyData);
+      this.$refs.chartGastos.setData(expenses);
     },
     createChartData(data) {
       let chartData = [];
@@ -250,6 +302,10 @@ export default {
       incomeWeeklyData: [],
       incomeMonthlyData: [],
       incomeYearlyData: [],
+
+      expenseWeeklyData: [],
+      expenseMonthlyData: [],
+      expenseYearlyData: [],
     };
   },
 };
