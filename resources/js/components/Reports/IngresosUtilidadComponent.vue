@@ -20,11 +20,26 @@
     <el-row>
       <!-- Columna 1 -->
       <el-col :span="8">
+        <el-row class="br bt bl row-header">
+          <el-col align="center">
+            <h1 style="color:#909399">Ingresos</h1>
+          </el-col>
+        </el-row>
         <el-row class="br bb bl">
           <bar-chart ref="chartIngresos" :chartData="[]"></bar-chart>
         </el-row>
+        <el-row class="br bt bl row-header">
+          <el-col align="center">
+            <h1 style="color:#909399">Gastos</h1>
+          </el-col>
+        </el-row>
         <el-row class="br bb bl">
           <bar-chart ref="chartGastos" :chartData="[]"></bar-chart>
+        </el-row>
+        <el-row class="br bt bl row-header">
+          <el-col align="center">
+            <h1 style="color:#909399">Utilidad</h1>
+          </el-col>
         </el-row>
         <el-row class="br bb bl">
           <bar-chart ref="chartUtilidad" :chartData="[]"></bar-chart>
