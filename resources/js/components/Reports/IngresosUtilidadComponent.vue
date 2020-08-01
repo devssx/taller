@@ -215,12 +215,6 @@ export default {
     if (this.myUser && this.myUser.length > 0) {
       this.workshopId = this.myUser[0].workshop_id;
     }
-
-    this.loadTableIncome(
-      `/api/report/income?workshop=1&start=2020-01-01&end=2020-12-31`,
-      2020
-    );
-    this.loadTableExpense(`/api/report/expenses?year=2020&workshop=2`, 2020);
   },
   methods: {
     loadTableIncome(url, year) {
@@ -402,7 +396,21 @@ export default {
       );
       return chartData;
     },
-    onSearch() {},
+    onSearch() {
+      if (!this.workshopId) {
+        this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
+          confirmButtonText: "OK",
+          type: "warning",
+        });
+        return;
+      }
+
+      let year = this.selectedYear.getFullYear();
+      let income = `/api/report/income?workshop=${this.workshopId}&start=${year}-01-01&end=${year}-12-31`;
+      let expense = `/api/report/expenses?workshop=${this.workshopId}&year=${year}`;
+      this.loadTableIncome(income, year);
+      this.loadTableExpense(expense, year);
+    },
     refreshTable() {},
   },
   data() {
