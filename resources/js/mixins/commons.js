@@ -161,11 +161,16 @@ export default {
             }
         },
         initDayOfWeekDate(day, offset) {
-            var today = day || new Date();
+            var today = new Date(day);
             if (offset)
                 today.setDate(today.getDate() - (today.getDay() + offset) + 1);
             else
                 today.setDate(today.getDate() - today.getDay() + 1);
+            return today;
+        },
+        endPeriodo(day) {
+            var today = new Date(day);
+            today.setDate(today.getDate() + 6);
             return today;
         },
         getMonthOfDate(fullDate) {

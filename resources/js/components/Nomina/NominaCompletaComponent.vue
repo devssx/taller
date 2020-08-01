@@ -330,9 +330,9 @@ export default {
   data() {
     return {
       pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        },
+        // disabledDate(time) {
+        //   return time.getTime() > Date.now();
+        // },
         firstDayOfWeek: 6
       },
       total: 0,

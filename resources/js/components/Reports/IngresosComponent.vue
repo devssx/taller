@@ -296,7 +296,7 @@ export default {
       }
     },
     onSearch() {
-      var newDate = this.initDayOfWeekDate(this.selectedDay);
+      var newDate = this.initDayOfWeekDate(this.selectedDay, 2);
       this.prevDay = newDate;
       var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
 

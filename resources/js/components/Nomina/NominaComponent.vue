@@ -786,7 +786,7 @@ export default {
       this.weekData.data.forEach(sale => {
         if (sale.service_type == serviceType && sale.user.name == user) {
           userSales.push(sale);
-          switch (this.dayOfWeek(sale.created_at)) {
+          switch (this.dayOfWeek(sale.done_on)) {
             case "Sábado": // sabado es menor a la fecha del dia lunes
               week.saturday += parseFloat(sale.total);
               week.salesA.push(sale);
@@ -835,7 +835,13 @@ export default {
       this.selectedEmployee = "N/A";
       this.comment = "";
       var newDate = this.initDayOfWeekDate(this.selectedDay, 2);
-      console.log(newDate);
+     
+      console.log('Periodos >>');
+      console.log('INI ' + newDate);
+      console.log('FIN ' + this.endPeriodo(newDate));
+      console.log('WK. ' + this.getWeekOfDate(this.endPeriodo(newDate)));
+
+
       this.prevDay = newDate;
       var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
 
@@ -882,9 +888,9 @@ export default {
   data() {
     return {
       pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        },
+        // disabledDate(time) {
+        //   return time.getTime() > Date.now();
+        // },
         firstDayOfWeek: 6
       },
 

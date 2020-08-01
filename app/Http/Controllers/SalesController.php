@@ -190,8 +190,8 @@ class SalesController extends Controller
     {
         if ($request->has('start')) {
 
-            $start = new DateTime($request->get('start')); // Lunes - 2 = Sabado
-            $start->sub(new DateInterval('P2D'));
+            $start = new DateTime($request->get('start'));
+            // $start->sub(new DateInterval('P2D'));
 
             $end = new DateTime($request->get('start'));
             $end->add(new DateInterval('P6D'));
