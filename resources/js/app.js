@@ -132,6 +132,7 @@ Vue.component('tecnicos-component', require('./components/Reports/IngresosDeTecn
 Vue.component('garantias-component', require('./components/Reports/GarantiasAnualesComponent').default);
 Vue.component('reports-container', require('./components/Reports/TabReportsComponent').default);
 
+Vue.component('income-edit', require('./components/Reports/IngresosEditComponent').default);
 Vue.component('expenses-edit', require('./components/Reports/GastosEditComponent').default);
 Vue.component('guarantee-edit', require('./components/Reports/GarantiasEditComponent').default);
 

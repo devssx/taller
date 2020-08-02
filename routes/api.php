@@ -31,11 +31,14 @@ Route::delete('/clients/{id}', 'ClientsController@delete');
 Route::get('/sales/searchByDay', 'SalesController@searchByDay');
 Route::get('/sales/searchByWeek', 'SalesController@searchByWeek');
 Route::get('/sales/searchReceiptByWeek', 'SalesController@searchReceiptByWeek');
+Route::get('/sales/searchReceiptByWeekAndCredits', 'SalesController@searchReceiptByWeekAndCredits');
 Route::get('/sales', 'SalesController@get');
 Route::get('/sales/search', 'SalesController@searchReceiptByClient');
 Route::get('/sales/searchById', 'SalesController@searchReceiptById');
 Route::post('/sales', 'SalesController@save');
 Route::post('/sales/status', 'SalesController@changeStatus');
+Route::post('/sales/editIncome', 'SalesController@editIncome');
+
 
 Route::get('/items', 'ItemsController@get');
 Route::post('/items', 'ItemsController@save');

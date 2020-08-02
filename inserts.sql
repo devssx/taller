@@ -74,3 +74,7 @@ ALTER TABLE `payroll_comments` ADD CONSTRAINT `payroll_comments_workshop_id_fore
 ALTER TABLE `sales` ADD `workshop_id` int(10) UNSIGNED NOT NULL DEFAULT 1 AFTER `id`;
 ALTER TABLE `sales` ADD KEY `sales_workshop_id_foreign` (`workshop_id`);
 ALTER TABLE `sales` ADD CONSTRAINT `sales_workshop_id_foreign` FOREIGN KEY (`workshop_id`) REFERENCES `work_shops` (`id`);
+
+
+ALTER TABLE `sales` ADD `bill` varchar(255) DEFAULT NULL AFTER `method`;
+ALTER TABLE `sales` ADD `paid_date` date DEFAULT NULL AFTER `bill`;

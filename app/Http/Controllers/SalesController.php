@@ -205,7 +205,7 @@ class SalesController extends Controller
                 ->where('done_on', '<=', $end->format("Y-m-d H:i:s"))
                 ->where('status', '=', Sale::TERMINADO)
                 ->where('workshop_id', '=', $request->get('workshop'))
-                ->paginate(10000);
+                ->paginate(1000000);
 
             $week = new DateTime($request->get('start'));
             $comment = Comment::firstOrCreate(['week' => $week->format("Ymd")]);
@@ -214,6 +214,67 @@ class SalesController extends Controller
 
         return [];
     }
+
+    // Carga con todos los recibos pendientes de pago
+    public function searchReceiptByWeekAndCredits(Request $request)
+    {
+        if ($request->has('start')) {
+
+            $start = new DateTime($request->get('start'));
+            // $start->sub(new DateInterval('P2D'));
+
+            $end = new DateTime($request->get('start'));
+            $end->add(new DateInterval('P6D'));
+
+            $result = Sale::with('saleServices')->with('client')->with('user')->with(['car' => function ($query) {
+                $query->distinct('id');
+            }])->with(['services' => function ($query) {
+                $query->distinct('id');
+            }])
+                ->where('done_on', '>=', $start->format("Y-m-d H:i:s"))
+                ->where('done_on', '<=', $end->format("Y-m-d H:i:s"))
+                ->where('status', '=', Sale::TERMINADO)
+                ->where('workshop_id', '=', $request->get('workshop'))
+                ->orWhere('method', '=', 6)->where('workshop_id', '=', $request->get('workshop'))
+                ->paginate(1000000);
+
+            $week = new DateTime($request->get('start'));
+            $comment = Comment::firstOrCreate(['week' => $week->format("Ymd")]);
+            return ['d' => $result, 'c' => $comment];
+        }
+
+        return [];
+    }
+
+    // edita No Facatura y Fecha de pago
+    public function editIncome(Request $request)
+    {
+        if ($request->has('id')) {
+            $sale = Sale::find($request->get('id'));
+            if ($request->has('bill')) {
+                $sale->bill = $request->get('bill');
+            }
+
+            if ($request->has('paid_date')) {
+                $sale->paid_date = $request->get('paid_date');
+            }
+
+            if ($request->has('method')) {
+                $sale->method = $request->get('method');
+            }
+
+            $sale->save();
+            return response()->json([
+                "success" => true,
+                "sale" => $sale
+            ]);
+        }
+
+        return response()->json([
+            "success" => true
+        ]);
+    }
+
 
     public function changeStatus(Request $request)
     {
