@@ -290,7 +290,7 @@ export default {
       this.incomeYearlyData.push({ fecha: year, monto: totalAnual });
 
       // Crear Graficas
-      var ingresos = this.createChartData(this.incomeWeeklyData);
+      var ingresos = this.createChartData(this.incomeMonthlyData);
       this.$refs.chartIngresos.setData(ingresos);
 
       this.calcularUtilidad(year);
@@ -328,7 +328,7 @@ export default {
       this.expenseYearlyData.push({ fecha: year, monto: totalAnual });
 
       // Crear Graficas
-      var expenses = this.createChartData(this.expenseWeeklyData);
+      var expenses = this.createChartData(this.expenseMonthlyData);
       this.$refs.chartGastos.setData(expenses);
 
       this.calcularUtilidad(year);
@@ -395,7 +395,7 @@ export default {
         this.utilidadYearlyData.push({ fecha: year, monto: utilidad });
 
         // Crear Graficas
-        var utilidadData = this.createChartData(this.utilidadWeeklyData);
+        var utilidadData = this.createChartData(this.utilidadMonthlyData);
         this.$refs.chartUtilidad.setData(utilidadData);
       }
     },

@@ -69,7 +69,20 @@
       <el-col :span="12">
         <el-row class="br bt bl bb row-header">
           <el-col :span="16" style="margin-top: 7px;">
-            <h4>Total de Garantías recibidas en el año:</h4>
+            <h4>Cantidad de garantías recibidas en el año:</h4>
+          </el-col>
+          <el-col :span="8" class="row-headerb" align="end">
+            <h4>{{cantidad}}</h4>
+          </el-col>
+        </el-row>
+      </el-col>
+      <el-col :span="16"></el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="12">
+        <el-row class="br bt bl bb row-header">
+          <el-col :span="16" style="margin-top: 7px;">
+            <h4>Importe total de garantías recibidas en el año:</h4>
           </el-col>
           <el-col :span="8" class="row-headerb" align="end">
             <h4>${{formatPrice(total)}}</h4>
@@ -84,7 +97,7 @@
 <script>
 export default {
   props: ["workshops", "myUser", "multiWorkshop"],
-  mounted: function() {
+  mounted: function () {
     // busca por default en el taller donde trabaja este empleado
     if (this.myUser && this.myUser.length > 0) {
       this.workshopId = this.myUser[0].workshop_id;
@@ -110,19 +123,21 @@ export default {
     loadTable(url) {
       var $this = this;
       $this.loading = true;
-      axios.get(url).then(function(response) {
+      axios.get(url).then(function (response) {
         $this.tableData = response.data;
         $this.loading = false;
 
         $this.total = 0;
-        $this.tableData.forEach(s => ($this.total += parseFloat(s.total)));
+        $this.cantidad = $this.tableData.length;
+        
+        $this.tableData.forEach((s) => ($this.total += parseFloat(s.total)));
       });
     },
     onSearch() {
       if (!this.selectedYear) {
         this.$alert("Favor de seleccionar el año.", "Año no válido", {
           confirmButtonText: "OK",
-          type: "warning"
+          type: "warning",
         });
         return;
       }
@@ -130,7 +145,7 @@ export default {
       if (!this.workshopId) {
         this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
           confirmButtonText: "OK",
-          type: "warning"
+          type: "warning",
         });
         return;
       }
@@ -141,7 +156,7 @@ export default {
     refreshTable() {
       let year = this.selectedYear.getFullYear();
       this.loadTable(`/api/guarantee?year=${year}&workshop=${this.workshopId}`);
-    }
+    },
   },
   data() {
     return {
@@ -159,10 +174,10 @@ export default {
         employee: "",
         new_date: new Date(),
         solution: "",
-        comment: ""
-      }
+        comment: "",
+      },
     };
-  }
+  },
 };
 </script>
 <style>
