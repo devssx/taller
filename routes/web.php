@@ -69,7 +69,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('gastos/expenses', 'SalesController@expenses')->name('expenses');
     Route::get('reports/guarantee', 'GuaranteeController@guarantee')->name('reports');
 
-    Route::get('nomina/general', 'PayrollController@index')->name('nomina');
+    Route::get('/payroll', 'PayrollController@index')->name('payroll');
 
     Route::post('files/uploadItem', 'FileController@uploadItem')->name('upload.item');
     Route::post('files/uploadCar', 'FileController@uploadCar')->name('upload.car');

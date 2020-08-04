@@ -79,7 +79,7 @@
                         </el-menu-item> --}}
                         @endcan
                         @can('listar bitacora')
-                        <el-menu-item index="nomina" v-on:click="goto('{{ route('nomina') }}')">
+                        <el-menu-item index="payroll" v-on:click="goto('{{ route('payroll') }}')">
                             Nómina
                         </el-menu-item>
                         @endcan
