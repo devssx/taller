@@ -14,7 +14,7 @@
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
-   // Route::get('/', 'DashboardController@index')->name('dashboard');
+    // Route::get('/', 'DashboardController@index')->name('dashboard');
     Route::get('/', 'SalesController@create')->name('sales'); // Default
 
     Route::middleware(['checkrole'])->prefix('cars')->group(function () {
@@ -56,23 +56,25 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/edit/{id}', 'CarServicesController@edit')->name('carservices.edit');
     });
 
-
+    // Bitacora
     Route::prefix('bitacora')->group(function () {
-        //Route::view('/cars', 'bitacora.index')->name('bitacora.cars');
-        //Route::get('/cleaning', 'CleaningController@index')->name('sales'); 
         Route::get('/dailycleaning', 'CleaningController@daily')->name('bitacora.dailycleaning');
         Route::get('/weeklycleaning', 'CleaningController@weekly')->name('bitacora.weeklycleaning');
         Route::get('/dailycars', 'SalesController@daily')->name('bitacora.dailycars');
         Route::get('/weeklycars', 'SalesController@weekly')->name('bitacora.weeklycars');
     });
 
-    Route::get('gastos/expenses', 'SalesController@expenses')->name('expenses');
-    Route::get('reports/guarantee', 'GuaranteeController@guarantee')->name('reports');
-
+    // Nomina
     Route::get('/payroll', 'PayrollController@index')->name('payroll');
 
+    // Gastos / Ingresos
+    Route::get('/expenses', 'SalesController@expenses')->name('expenses');
+
+    // Reportes
+    Route::get('/reports', 'GuaranteeController@guarantee')->name('reports');
+
+    // Tools
     Route::post('files/uploadItem', 'FileController@uploadItem')->name('upload.item');
     Route::post('files/uploadCar', 'FileController@uploadCar')->name('upload.car');
-
     Route::apiResource('/app', 'AppController');
 });

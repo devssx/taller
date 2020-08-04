@@ -71,13 +71,23 @@
                         </el-submenu>
                         @endcan
                         @can('listar reporte')
-                        {{-- <el-menu-item index="gastos" v-on:click="goto('{{ route('expenses') }}')">
+                        <el-menu-item index="expenses" v-on:click="goto('{{ route('expenses') }}')">
                             Ingresos y Gastos
                         </el-menu-item>
                         <el-menu-item index="reports" v-on:click="goto('{{ route('reports') }}')">
                             Reportes
-                        </el-menu-item> --}}
+                        </el-menu-item>
                         @endcan
+
+                        @can('listar nomina')
+                        @endcan
+                        @can('listar reporte')
+                        @endcan
+                        @can('listar gastos')
+                        @endcan
+                        @can('listar ingresos')
+                        @endcan
+
                         @can('listar bitacora')
                         <el-menu-item index="payroll" v-on:click="goto('{{ route('payroll') }}')">
                             Nómina

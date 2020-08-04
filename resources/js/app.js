@@ -124,17 +124,19 @@ Vue.component('payroll-item', require('./components/Payroll/PayrollItemComponent
 Vue.component('payroll-full', require('./components/Payroll/FullPayrollComponent').default);
 Vue.component('payroll-container', require('./components/Payroll/TabContainerComponent').default);
 
-Vue.component('ingresos-component', require('./components/Reports/IngresosComponent').default);
-Vue.component('gastos-component', require('./components/Reports/GastosComponent').default);
-Vue.component('ingresos-container', require('./components/Reports/TabIngresosComponent').default);
+// Gatos / Ingresos
+Vue.component('expense-component', require('./components/Expenses/IncomeComponent').default);
+Vue.component('expense-edit', require('./components/Expenses/ExpenseEditComponent').default);
+Vue.component('income-component', require('./components/Expenses/ExpenseComponent').default);
+Vue.component('income-edit', require('./components/Expenses/IncomeEditComponent').default);
+Vue.component('expense-container', require('./components/Expenses/TabContainerComponent').default);
+
 
 Vue.component('utilidad-component', require('./components/Reports/IngresosUtilidadComponent').default);
 Vue.component('tecnicos-component', require('./components/Reports/IngresosDeTecnicosComponent').default);
 Vue.component('garantias-component', require('./components/Reports/GarantiasAnualesComponent').default);
 Vue.component('reports-container', require('./components/Reports/TabReportsComponent').default);
 
-Vue.component('income-edit', require('./components/Reports/IngresosEditComponent').default);
-Vue.component('expenses-edit', require('./components/Reports/GastosEditComponent').default);
 Vue.component('guarantee-edit', require('./components/Reports/GarantiasEditComponent').default);
 
 // Salomon S.A. Tools

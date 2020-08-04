@@ -47,7 +47,7 @@ class SalesController extends Controller
     {
         $workshops = WorkShop::get();
         $myUser = User::where('id', auth()->id())->get();
-        return view('bitacora.expenses.index', [
+        return view('expenses.index', [
             'workshops' => $workshops,
             'myUser' =>  $myUser,
             'multiWorkshop' => auth()->user()->can('cambiar de taller')
