@@ -76,7 +76,7 @@ class SalesController extends Controller
             ->join('clients', 'clients.id', 'sales.client_id')
             ->select('sales.*', 'clients.name')
             ->where('done_on', '>', date('Y-m-d 00:00:00', strtotime('-10 months')))
-            ->where('sales.status',  2)
+            ->where('sales.status',  Sale::TERMINADO)
             ->where('sales.workshop_id',  $request->get('workshop'))
             ->get();
 
@@ -101,7 +101,7 @@ class SalesController extends Controller
             ->join('clients', 'clients.id', 'sales.client_id')
             ->select('sales.*', 'clients.name')
             ->where('done_on', '>', date('Y-m-d 00:00:00', strtotime('-10 months')))
-            ->where('sales.status',  2)
+            ->where('sales.status',  Sale::TERMINADO)
             ->where('sales.workshop_id',  $request->get('workshop'))
             ->where('sales.id',  $request->get('id'))
             ->get();
@@ -113,7 +113,7 @@ class SalesController extends Controller
         return DB::table('sales')
             ->where('done_on', '>=', $request->get('start'))
             ->where('done_on', '<=', $request->get('end'))
-            ->where('sales.status',  2)
+            ->where('sales.status',  Sale::TERMINADO)
             ->where('sales.workshop_id',  $request->get('workshop'))
             ->get();
     }

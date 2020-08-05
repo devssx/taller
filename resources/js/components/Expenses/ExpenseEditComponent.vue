@@ -80,10 +80,6 @@ export default {
         {
           value: 3,
           label: "Gastos a crédito facturados"
-        },
-        {
-          value: 4,
-          label: "Empleados"
         }
       ],
 

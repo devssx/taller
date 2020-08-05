@@ -8,7 +8,7 @@
       <el-col :span="18">
         <el-date-picker
           v-model="selectedDay"
-          firstDayOfWeek="6"
+          :picker-options="pickerOptions"
           type="week"
           format="Week WW"
           placeholder="Seleccionar Semana"
@@ -170,14 +170,18 @@
         </el-row>
         <el-row class="br bl">
           <el-col :span="24">
-            <el-table size="mini" border :data="tableData4" style="width: 100%" v-loading="loading">
+            <el-table
+              size="mini"
+              border
+              :data="dataPayroll"
+              style="width: 100%"
+              v-loading="loading"
+            >
               <el-table-column label="Nómina total" prop="concept"></el-table-column>
+              <el-table-column label="Semana" prop="week" align="center"></el-table-column>
+              <el-table-column label="Inicio" prop="start" align="center"></el-table-column>
+              <el-table-column label="Fin" prop="end" align="center"></el-table-column>
               <el-table-column align="right" label="Total" width="200" prop="total"></el-table-column>
-              <el-table-column label="Opciones" header-align="center" align="center" width="120">
-                <template slot-scope="scope">
-                  <expense-edit :workshop="workshopId" :selectedItem="tableData4[scope.$index]"></expense-edit>
-                </template>
-              </el-table-column>
             </el-table>
           </el-col>
         </el-row>
@@ -189,7 +193,7 @@
 <script>
 export default {
   props: ["workshops", "myUser", "multiWorkshop"],
-  mounted: function() {
+  mounted: function () {
     this.$root.$on("refreshExpenses", this.onSearch);
 
     // busca por default en el taller donde trabaja este empleado
@@ -197,7 +201,7 @@ export default {
       this.workshopId = this.myUser[0].workshop_id;
     }
 
-    this.prevDay = this.initDayOfWeekDate(this.selectedDay);
+    this.prevDay = this.initDayOfWeekDate(this.selectedDay, 2);
     let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
     this.newExpense.week = week;
   },
@@ -214,44 +218,83 @@ export default {
 
       this.$refs.newItem.dialogVisible = true;
     },
-    loadTable(url) {
+    loadPayroll(url, newDate) {
       var $this = this;
       $this.loading = true;
-      axios.get(url).then(function(response) {
-        $this.tableData1 = response.data.filter(d => d.type == 1);
-        $this.tableData2 = response.data.filter(d => d.type == 2);
-        $this.tableData3 = response.data.filter(d => d.type == 3);
-        $this.tableData4 = response.data.filter(d => d.type == 4);
+      axios.get(url).then(function (response) {
+        $this.dataPayroll = [];
+
+        if (response.data.length > 0) {
+          let nominaSemanal = 0;
+          response.data.forEach((n) => (nominaSemanal += parseFloat(n.total)));
+          
+          let end = $this.endPeriodo(newDate);
+          $this.dataPayroll.push({
+            concept: "Nómina Semanal",
+            start: $this.toFixedFormat(newDate, "yyyy-MM-dd"),
+            end: $this.toFixedFormat(end, "yyyy-MM-dd"),
+            week: $this.getWeekOfDate(end),
+            total: nominaSemanal,
+          });
+        }
+
         $this.calculaTotales();
         $this.loading = false;
       });
     },
+    loadTable(url, week, workshop, newDate) {
+      var $this = this;
+      $this.loading = true;
+      axios.get(url).then(function (response) {
+        $this.tableData1 = response.data.filter((d) => d.type == 1);
+        $this.tableData2 = response.data.filter((d) => d.type == 2);
+        $this.tableData3 = response.data.filter((d) => d.type == 3);
+
+        // carga nomina de la semana
+        $this.loadPayroll(
+          `/api/payroll?workshop=${workshop}&week=${week}`,
+          newDate
+        );
+      });
+    },
     onSearch() {
-      var newDate = this.initDayOfWeekDate(this.selectedDay);
+      var newDate = this.initDayOfWeekDate(this.selectedDay, 2);
       this.prevDay = newDate;
       var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
 
       if (!this.workshopId) {
         this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
           confirmButtonText: "OK",
-          type: "warning"
+          type: "warning",
         });
         return;
       }
 
       let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
       this.newExpense.week = week;
-      this.loadTable(`/api/expenses?week=${week}&workshop=${this.workshopId}`);
+      this.loadTable(
+        `/api/expenses?week=${week}&workshop=${this.workshopId}`,
+        week,
+        this.workshopId,
+        newDate
+      );
     },
     calculaTotales() {
       this.totalSinIva = 0;
       this.totalCreditos = 0;
-      
-      this.tableData1.forEach(d => (this.totalSinIva += parseFloat(d.total)));
-      this.tableData2.forEach(d => (this.totalSinIva += parseFloat(d.amount)));
-      this.tableData3.forEach(d => (this.totalCreditos += parseFloat(d.amount)));
-      this.tableData4.forEach(d => (this.totalSinIva += parseFloat(d.total)));
-    }
+
+      this.tableData1.forEach((d) => (this.totalSinIva += parseFloat(d.total)));
+      this.tableData2.forEach(
+        (d) => (this.totalSinIva += parseFloat(d.amount))
+      );
+      this.tableData3.forEach(
+        (d) => (this.totalCreditos += parseFloat(d.amount))
+      );
+
+      this.dataPayroll.forEach(
+        (d) => (this.totalSinIva += parseFloat(d.total))
+      );
+    },
   },
   data() {
     return {
@@ -267,7 +310,10 @@ export default {
       tableData1: [],
       tableData2: [],
       tableData3: [],
-      tableData4: [],
+      dataPayroll: [],
+      pickerOptions: {
+        firstDayOfWeek: 6,
+      },
       newExpense: {
         week: 0,
         workshop: 0,
@@ -275,10 +321,10 @@ export default {
         concept: "",
         amount: 0,
         iva: 0,
-        total: 0
-      }
+        total: 0,
+      },
     };
-  }
+  },
 };
 </script>
 <style>
