@@ -40,13 +40,17 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end" style="padding-right: 5px;">$0.00</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px;">${{formatPrice(saldo) }}</el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end" style="padding-right: 5px;">$0.00</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px;">${{formatPrice(totalSinIva) }}</el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end" style="padding-right: 5px;">$0.00</el-col>
+          <el-col
+            :span="24"
+            align="end"
+            style="padding-right: 5px;"
+          >${{formatPrice(saldo-totalSinIva) }}</el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
@@ -81,7 +85,7 @@
             :span="24"
             align="end"
             style="padding-right: 5px;"
-          >${{ formatPrice(utilidadSinIva) }}</el-col>
+          >${{ formatPrice(ingresosSinIva - totalSinIva) }}</el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
@@ -227,7 +231,7 @@ export default {
         if (response.data.length > 0) {
           let nominaSemanal = 0;
           response.data.forEach((n) => (nominaSemanal += parseFloat(n.total)));
-          
+
           let end = $this.endPeriodo(newDate);
           $this.dataPayroll.push({
             concept: "Nómina Semanal",
@@ -242,7 +246,7 @@ export default {
         $this.loading = false;
       });
     },
-    loadTable(url, week, workshop, newDate) {
+    loadTable(url, week, workshop, newDate, start) {
       var $this = this;
       $this.loading = true;
       axios.get(url).then(function (response) {
@@ -255,12 +259,39 @@ export default {
           `/api/payroll?workshop=${workshop}&week=${week}`,
           newDate
         );
+
+        // carga ingresos de la semana
+        $this.loadIncome(
+          `/api/sales/searchReceiptByWeekAndCredits?start=${start}&workshop=${workshop}`
+        );
+      });
+    },
+    loadIncome(url) {
+      const $this = this;
+      $this.loading = true;
+
+      $this.ingresosSinIva = 0;
+      $this.totalCreditos = 0;
+
+      axios.get(url).then(function (response) {
+        $this.weekData = response.data.d;
+        $this.loading = false;
+        // sales
+        $this.weekData.data.forEach((sale) => {
+          let importe = parseFloat(sale.total);
+
+          if (sale.method == 6) {
+            $this.totalCreditos += parseFloat(sale.total);
+          } else {
+            $this.ingresosSinIva += importe;
+          }
+        });
       });
     },
     onSearch() {
       var newDate = this.initDayOfWeekDate(this.selectedDay, 2);
-      this.prevDay = newDate;
       var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
+      this.prevDay = newDate;
 
       if (!this.workshopId) {
         this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
@@ -272,36 +303,40 @@ export default {
 
       let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
       this.newExpense.week = week;
+
+      console.log(`/api/expenses?week=${week}&workshop=${this.workshopId}`);
       this.loadTable(
         `/api/expenses?week=${week}&workshop=${this.workshopId}`,
         week,
         this.workshopId,
-        newDate
+        newDate,
+        start
       );
     },
     calculaTotales() {
       this.totalSinIva = 0;
-      this.totalCreditos = 0;
 
-      this.tableData1.forEach((d) => (this.totalSinIva += parseFloat(d.total)));
-      this.tableData2.forEach(
-        (d) => (this.totalSinIva += parseFloat(d.amount))
-      );
-      this.tableData3.forEach(
-        (d) => (this.totalCreditos += parseFloat(d.amount))
-      );
+      this.tableData1.forEach((d) => {
+        this.totalSinIva += parseFloat(d.total);
+      });
+      this.tableData2.forEach((d) => {
+        this.totalSinIva += parseFloat(d.amount);
+      });
+      this.tableData3.forEach((d) => {
+        this.totalSinIva += parseFloat(d.amount);
+      });
 
-      this.dataPayroll.forEach(
-        (d) => (this.totalSinIva += parseFloat(d.total))
-      );
+      this.dataPayroll.forEach((d) => {
+        this.totalSinIva += parseFloat(d.total);
+      });
     },
   },
   data() {
     return {
       ingresosSinIva: 0,
       totalSinIva: 0,
-      utilidadSinIva: 0,
       totalCreditos: 0,
+      saldo: 10000,
 
       workshopId: 0,
       activeIndex: 0,
