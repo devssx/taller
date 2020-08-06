@@ -23,7 +23,7 @@ class PayrollController extends Controller
         $workshops = WorkShop::get();
         $myUser = User::where('id', auth()->id())->get();
 
-        return view('payroll.index', [
+        return view('ayroll.index', [
             'workshops' => $workshops,
             'myUser' =>  $myUser,
             'multiWorkshop' => auth()->user()->can('cambiar de taller')
