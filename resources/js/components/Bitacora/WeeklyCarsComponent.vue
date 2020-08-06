@@ -130,13 +130,13 @@
 <script>
 export default {
   props: ["workshops", "myUser", "multiWorkshop"],
-  mounted: function() {
+  mounted: function () {
     this.$root.$on("refreshTable", this.refreshTable);
 
     // busca por default en el taller donde trabaja este empleado
     if (this.myUser && this.myUser.length > 0) {
       this.workshopId = this.myUser[0].workshop_id;
-      this.searchSales(this.selectedDay);
+      this.searchSales();
     }
   },
   methods: {
@@ -167,14 +167,20 @@ export default {
 
       this.searchSales(this.selectedDay);
     },
-    searchSales(day) {
-      this.prevDay = day;
-      var start = `${this.toFixedFormat(day, "yyyy-MM-dd")} 00:00:00`;
+    searchSales() {
+      var newDate = this.initDayOfWeekDate(this.selectedDay);
+      var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")}`;
+      this.prevDay = start;
+
       if (!this.workshopId) {
-        this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
-          confirmButtonText: "OK",
-          type: "warning"
-        });
+        this.$alert(
+          "El taller seleccionado no es válido.",
+          "Taller no válido",
+          {
+            confirmButtonText: "OK",
+            type: "error",
+          }
+        );
         return;
       }
 
@@ -188,16 +194,16 @@ export default {
     autorizados() {
       var total = 0.0;
       if (this.sales.data) {
-        var selection = this.sales.data.filter(i => i.status == 2);
-        selection.forEach(s => (total += parseFloat(s.total)));
+        var selection = this.sales.data.filter((i) => i.status == 2);
+        selection.forEach((s) => (total += parseFloat(s.total)));
       }
       return total;
     },
     noAutorizados() {
       var total = 0.0;
       if (this.sales.data) {
-        var selection = this.sales.data.filter(i => i.status != 2);
-        selection.forEach(s => (total += parseFloat(s.total)));
+        var selection = this.sales.data.filter((i) => i.status != 2);
+        selection.forEach((s) => (total += parseFloat(s.total)));
       }
       return total;
     },
@@ -207,7 +213,7 @@ export default {
     loadTable(url) {
       var $this = this;
       $this.loading = true;
-      axios.get(url).then(function(response) {
+      axios.get(url).then(function (response) {
         $this.sales = response.data;
         $this.oldSales = JSON.parse(JSON.stringify(response.data));
         $this.loading = false;
@@ -215,7 +221,7 @@ export default {
     },
     refreshTable() {
       this.searchSales(this.prevDay);
-    }
+    },
   },
   data() {
     return {
@@ -226,11 +232,11 @@ export default {
       oldSales: [],
       loading: false,
       page: 1,
-      selectedDay: this.initDayOfWeekDate(),
-      prevDay: this.initDayOfWeekDate(),
-      search: ""
+      selectedDay: new Date(),
+      prevDay: new Date(),
+      search: "",
     };
-  }
+  },
 };
 </script>
 <style>
