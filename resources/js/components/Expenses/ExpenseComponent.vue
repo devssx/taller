@@ -52,6 +52,11 @@
             style="padding-right: 5px;"
           >${{formatPrice(saldo-totalSinIva) }}</el-col>
         </el-row>
+        <el-row>
+          <el-col :span="24" align="end">
+            <el-button icon="el-icon-coin" size="mini" type="text" @click="addNew">Asingar Fondo</el-button>
+          </el-col>
+        </el-row>
         <br />
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
@@ -215,7 +220,7 @@ export default {
       let thisWeek = this.initDayOfWeekDate(new Date(), 2);
       let sWeek = this.toFixedFormat(selectedWeek, "yyyyMMdd");
       let cWeek = this.toFixedFormat(thisWeek, "yyyyMMdd");
-      
+
       // no dejar poner gastos en el futuro o pasado
       if (sWeek != cWeek) {
         this.$alert(
