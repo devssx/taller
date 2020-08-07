@@ -76,7 +76,7 @@
                         </el-menu-item>
                         <el-menu-item index="reports" v-on:click="goto('{{ route('reports') }}')">
                             Reportes
-                        </el-menu-item>  --}}
+                        </el-menu-item> --}}
                         @endcan
 
                         @can('listar nomina')

@@ -32,7 +32,11 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end" style="padding-right: 5px;">${{ formatPrice(totalSinIva) }}</el-col>
+          <el-col
+            :span="24"
+            align="end"
+            style="padding-right: 5px;"
+          >${{ formatPrice(ingresosSinIva) }}</el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
@@ -41,7 +45,11 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end" style="padding-right: 5px;">${{ formatPrice(totalEfeIva) }}</el-col>
+          <el-col
+            :span="24"
+            align="end"
+            style="padding-right: 5px;"
+          >${{ formatPrice(ingresosConIva) }}</el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
@@ -192,8 +200,8 @@
 export default {
   props: ["workshops", "myUser", "multiWorkshop"],
   mounted: function () {
-    this.$root.$on("refreshIncome", this.onSearch);   
-     
+    this.$root.$on("refreshIncome", this.onSearch);
+
     // busca por default en el taller donde trabaja este empleado
     if (this.myUser && this.myUser.length > 0) {
       this.workshopId = this.myUser[0].workshop_id;
@@ -208,6 +216,7 @@ export default {
         $this.loading = false;
 
         // reset
+        $this.ingresosSinIva = 0;
         $this.totalSinIva = 0;
         $this.totalEfeIva = 0;
         $this.totalCreIva = 0;
@@ -218,12 +227,27 @@ export default {
         $this.dataIvaCredito = [];
 
         // sales
+        var errors = [];
         $this.weekData.data.forEach((sale) => {
-          $this.evaluateSale(sale);
+          $this.evaluateSale(sale, errors);
         });
+
+        if (errors.length > 0) {
+          var ingresos = "";
+          errors.forEach((ing) => (ingresos += ing + " "));
+          $this.$alert(
+            `Algunos ingresos no tienen IVA. Favor de revisar los recibos: ${ingresos}`,
+            "Ingresos sin IVA",
+            {
+              confirmButtonText: "OK",
+              type: "warning",
+            }
+          );
+          return;
+        }
       });
     },
-    evaluateSale(sale) {
+    evaluateSale(sale, errors) {
       // 1 Efectivo
       // *2 Tarjeta de Crédito
       // *3 Tarjeta de Débito
@@ -240,6 +264,12 @@ export default {
 
         // total de iva
         this.totalIvaIngresos += iva;
+
+        // sin contar creditos
+        if (sale.method != 6) {
+          this.ingresosSinIva += importe;
+          this.ingresosConIva += total;
+        }
 
         switch (sale.method) {
           case 2:
@@ -286,6 +316,14 @@ export default {
       } else {
         // Sin Iva
         let folio = "REC" + this.pad(sale.id, 5);
+
+        // Sin contar creditos
+        if (sale.method != 6) {
+          let importe = parseFloat(sale.total);
+          this.ingresosSinIva += importe;
+          this.ingresosConIva += importe;
+        }
+
         switch (sale.method) {
           case 2:
           case 3:
@@ -302,6 +340,7 @@ export default {
               total: sale.total,
             });
             console.warn(`Recibo sin iva ${folio}`);
+            errors.push(folio);
             break;
           case 6:
             // credito (Warn: NO IVA!)
@@ -316,6 +355,7 @@ export default {
               pago: "NO",
             });
             console.warn(`Recibo sin iva ${folio}`);
+            errors.push(folio);
             break;
           default:
             this.dataEfectivo.push({ folio: folio, total: sale.total });
@@ -325,6 +365,14 @@ export default {
       }
     },
     onSearch() {
+      if (!this.selectedDay) {
+        this.$alert("Favor de seleccionar una semana.", "Semana no válida", {
+          confirmButtonText: "OK",
+          type: "warning",
+        });
+        return;
+      }
+
       var newDate = this.initDayOfWeekDate(this.selectedDay, 2);
       this.prevDay = newDate;
       var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
@@ -344,6 +392,8 @@ export default {
   },
   data() {
     return {
+      ingresosSinIva: 0,
+      ingresosConIva: 0,
       totalSinIva: 0,
       totalEfeIva: 0,
       totalCreIva: 0,

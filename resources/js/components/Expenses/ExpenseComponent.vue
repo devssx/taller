@@ -211,6 +211,24 @@ export default {
   },
   methods: {
     addNew() {
+      let selectedWeek = this.initDayOfWeekDate(this.selectedDay, 2);
+      let thisWeek = this.initDayOfWeekDate(new Date(), 2);
+      let sWeek = this.toFixedFormat(selectedWeek, "yyyyMMdd");
+      let cWeek = this.toFixedFormat(thisWeek, "yyyyMMdd");
+      
+      // no dejar poner gastos en el futuro o pasado
+      if (sWeek != cWeek) {
+        this.$alert(
+          "Favor de seleccionar la semana actual",
+          "Semana no válida",
+          {
+            confirmButtonText: "OK",
+            type: "warning",
+          }
+        );
+        return;
+      }
+
       let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
       this.newExpense.workshop = this.workshopId;
       this.newExpense.week = week;
@@ -219,7 +237,6 @@ export default {
       this.newExpense.amount = 0;
       this.newExpense.iva = 0;
       this.newExpense.total = 0;
-
       this.$refs.newItem.dialogVisible = true;
     },
     loadPayroll(url, newDate) {
@@ -281,7 +298,7 @@ export default {
           let importe = parseFloat(sale.total);
 
           if (sale.method == 6) {
-            $this.totalCreditos += parseFloat(sale.total);
+            $this.totalCreditos += importe;
           } else {
             $this.ingresosSinIva += importe;
           }
@@ -289,9 +306,13 @@ export default {
       });
     },
     onSearch() {
-      var newDate = this.initDayOfWeekDate(this.selectedDay, 2);
-      var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
-      this.prevDay = newDate;
+      if (!this.selectedDay) {
+        this.$alert("Favor de seleccionar una semana.", "Semana no válida", {
+          confirmButtonText: "OK",
+          type: "warning",
+        });
+        return;
+      }
 
       if (!this.workshopId) {
         this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
@@ -301,10 +322,13 @@ export default {
         return;
       }
 
+      var newDate = this.initDayOfWeekDate(this.selectedDay, 2);
+      var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
+      this.prevDay = newDate;
+
       let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
       this.newExpense.week = week;
 
-      console.log(`/api/expenses?week=${week}&workshop=${this.workshopId}`);
       this.loadTable(
         `/api/expenses?week=${week}&workshop=${this.workshopId}`,
         week,
