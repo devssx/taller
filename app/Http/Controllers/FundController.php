@@ -19,7 +19,8 @@ class FundController extends Controller
 
     public function getWeekFunds(Request $request)
     {
-        return Fund::firstOrCreate(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')]);
+        return Fund::where(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')])->get();
+        // return Fund::firstOrCreate(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')]);
     }
 
     public function saveFunds(Request $request)

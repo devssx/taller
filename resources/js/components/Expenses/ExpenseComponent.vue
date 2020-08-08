@@ -23,6 +23,8 @@
         <expense-edit
           :workshop="workshopId"
           :selectedItem="newExpense"
+          :funds="funds"
+          :expense="totalSinIva"
           :hideButton="true"
           ref="newItem"
         ></expense-edit>
@@ -40,7 +42,7 @@
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end" style="padding-right: 5px;">${{formatPrice(saldo) }}</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px;">${{formatPrice(funds) }}</el-col>
         </el-row>
         <el-row class="br bb bl">
           <el-col :span="24" align="end" style="padding-right: 5px;">${{formatPrice(totalSinIva) }}</el-col>
@@ -50,11 +52,11 @@
             :span="24"
             align="end"
             style="padding-right: 5px;"
-          >${{formatPrice(saldo-totalSinIva) }}</el-col>
+          >${{formatPrice(funds-totalSinIva) }}</el-col>
         </el-row>
         <el-row>
           <el-col :span="24" align="end">
-            <fund-edit :workshop="workshopId" :week="selectedDay"></fund-edit>
+            <fund-edit :workshop="workshopId" :week="selectedDay" v-show="addFunds"></fund-edit>
           </el-col>
         </el-row>
         <br />
@@ -213,8 +215,24 @@ export default {
     this.prevDay = this.initDayOfWeekDate(this.selectedDay, 2);
     let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
     this.newExpense.week = week;
+    this.getFunds(`/api/funds?week=${week}&workshop=${this.workshopId}`);
   },
   methods: {
+    getFunds(url) {
+      var $this = this;
+      $this.loading = true;
+      axios.get(url).then(function (response) {
+        if (response.data.length > 0) {
+          $this.addFunds = false;
+          $this.funds = parseFloat(response.data[0].amount);
+        } else {
+          $this.addFunds = true;
+        }
+
+        $this.loading = false;
+        $this.onSearch();
+      });
+    },
     addNew() {
       let selectedWeek = this.initDayOfWeekDate(this.selectedDay, 2);
       let thisWeek = this.initDayOfWeekDate(new Date(), 2);
@@ -365,7 +383,8 @@ export default {
       ingresosSinIva: 0,
       totalSinIva: 0,
       totalCreditos: 0,
-      saldo: 10000,
+      addFunds: false,
+      funds: 10000,
 
       workshopId: 0,
       activeIndex: 0,

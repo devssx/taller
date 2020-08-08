@@ -20,6 +20,9 @@ class RolesTableSeeder extends Seeder
 
         $permissions = [
             'reporte' => ['listar'],
+            'gastos' => ['listar'],
+            'ingresos' => ['listar'],
+            'nomina' => ['listar'],
             'ordenes' => ['listar', 'agregar', 'editar', 'borrar'],
             'carros_servicios' => ['listar', 'agregar', 'editar', 'borrar'],
             'servicios' => ['listar', 'agregar', 'editar', 'borrar'],

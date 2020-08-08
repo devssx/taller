@@ -7,7 +7,8 @@
       size="small"
       type="text"
     >Editar</el-button>
-    <el-dialog style="text-align:left"
+    <el-dialog
+      style="text-align:left"
       title="Editar Información"
       :visible.sync="dialogVisible"
       width="30%"
@@ -64,28 +65,28 @@
 </template>
 <script>
 export default {
-  props: ["selectedItem", "hideButton", "workshop"],
-  mounted: function() {},
+  props: ["selectedItem", "hideButton", "workshop", "funds", "expense"],
+  mounted: function () {},
   data() {
     return {
       options: [
         {
           value: 1,
-          label: "Gastos no facturados"
+          label: "Gastos no facturados",
         },
         {
           value: 2,
-          label: "Gastos en efectivo facturados"
+          label: "Gastos en efectivo facturados",
         },
         {
           value: 3,
-          label: "Gastos a crédito facturados"
-        }
+          label: "Gastos a crédito facturados",
+        },
       ],
 
       dialogVisible: false,
       loading: false,
-      labelPosition: "left"
+      labelPosition: "left",
     };
   },
   methods: {
@@ -108,7 +109,7 @@ export default {
           "Tipo no válido",
           {
             confirmButtonText: "OK",
-            type: "warning"
+            type: "warning",
           }
         );
         return;
@@ -117,7 +118,7 @@ export default {
       if (!$this.selectedItem.concept) {
         this.$alert("Favor de ingresar concepto.", "Concepto no válido", {
           confirmButtonText: "OK",
-          type: "warning"
+          type: "warning",
         });
         return;
       }
@@ -126,7 +127,7 @@ export default {
         if (isNaN($this.selectedItem.iva) || $this.selectedItem.iva == 0) {
           this.$alert("Iva no puede ser 0.", "Iva no válido", {
             confirmButtonText: "OK",
-            type: "warning"
+            type: "warning",
           });
           return;
         }
@@ -137,7 +138,7 @@ export default {
         ) {
           this.$alert("Importe no puede ser 0.", "Importe no válido", {
             confirmButtonText: "OK",
-            type: "warning"
+            type: "warning",
           });
           return;
         }
@@ -146,10 +147,14 @@ export default {
           parseFloat($this.selectedItem.amount) +
           parseFloat($this.selectedItem.iva);
         if (parseFloat($this.selectedItem.total) != total) {
-          this.$alert("El importe total no coincide con la suma Importe + Iva", "Total Incorrecto.", {
-            confirmButtonText: "OK",
-            type: "warning"
-          });
+          this.$alert(
+            "El importe total no coincide con la suma Importe + Iva",
+            "Total Incorrecto.",
+            {
+              confirmButtonText: "OK",
+              type: "warning",
+            }
+          );
           return;
         }
       } else {
@@ -160,7 +165,7 @@ export default {
       if (isNaN($this.selectedItem.total) || $this.selectedItem.total == 0) {
         this.$alert("Total no puede ser 0.", "Total no válido", {
           confirmButtonText: "OK",
-          type: "warning"
+          type: "warning",
         });
         return;
       }
@@ -169,28 +174,37 @@ export default {
         $this.selectedItem.workshop = $this.workshop;
       }
 
+      let balance = $this.funds - $this.expense;
+      if ($this.selectedItem.amount > balance) {
+        this.$alert("Importe supera los fondos.", "Importe no válido", {
+          confirmButtonText: "OK",
+          type: "warning",
+        });
+        return;
+      }
+
       this.dialogVisible = false;
       this.loading = false;
-      $this.$refs.currentForm.validate(valid => {
+      $this.$refs.currentForm.validate((valid) => {
         if (valid) {
           $this.loading = true;
           axios
             .post("/api/expenses", $this.selectedItem)
-            .then(function(response) {
+            .then(function (response) {
               $this.$message({
                 message: "El registro fué editado correctamente.",
-                type: "success"
+                type: "success",
               });
 
               $this.$root.$emit("refreshExpenses");
               $this.cancel();
             })
-            .catch(error => {
+            .catch((error) => {
               if (error.response.data.errors) {
                 var errors = error.response.data.errors;
                 $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
                   confirmButtonText: "OK",
-                  type: "error"
+                  type: "error",
                 });
               }
               $this.loading = false;
@@ -199,7 +213,7 @@ export default {
           return false;
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>

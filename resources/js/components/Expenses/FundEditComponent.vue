@@ -2,7 +2,6 @@
   <span>
     <el-button
       icon="el-icon-coin"
-      v-show="!hideButton"
       @click="dialogVisible = true"
       size="small"
       type="text"

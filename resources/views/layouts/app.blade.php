@@ -81,8 +81,6 @@
 
                         @can('listar nomina')
                         @endcan
-                        @can('listar reporte')
-                        @endcan
                         @can('listar gastos')
                         @endcan
                         @can('listar ingresos')
