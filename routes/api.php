@@ -90,3 +90,6 @@ Route::get('/guarantee', 'GuaranteeController@index');
 Route::post('/guarantee', 'GuaranteeController@save');
 
 Route::get('/report/income', 'SalesController@searchBetween');
+
+Route::get('/funds', 'FundController@getWeekFunds');
+Route::post('/funds', 'FundController@saveFunds');

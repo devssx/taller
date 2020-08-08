@@ -127,6 +127,7 @@ Vue.component('payroll-container', require('./components/Payroll/TabContainerCom
 // Gatos / Ingresos
 Vue.component('expense-component', require('./components/Expenses/ExpenseComponent').default);
 Vue.component('expense-edit', require('./components/Expenses/ExpenseEditComponent').default);
+Vue.component('fund-edit', require('./components/Expenses/FundEditComponent').default);
 Vue.component('income-component', require('./components/Expenses/IncomeComponent').default);
 Vue.component('income-edit', require('./components/Expenses/IncomeEditComponent').default);
 Vue.component('expense-container', require('./components/Expenses/TabContainerComponent').default);

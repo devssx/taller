@@ -54,7 +54,7 @@
         </el-row>
         <el-row>
           <el-col :span="24" align="end">
-            <el-button icon="el-icon-coin" size="mini" type="text" @click="addNew">Asingar Fondo</el-button>
+            <fund-edit :workshop="workshopId" :week="selectedDay"></fund-edit>
           </el-col>
         </el-row>
         <br />
