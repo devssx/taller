@@ -32,9 +32,7 @@
           <template slot-scope="scope">{{ scope.row.client ? scope.row.client.name : '' }}</template>
         </el-table-column>
         <el-table-column label="Tipo">
-          <template slot-scope="scope">
-            {{status[scope.row.status]}}
-          </template>
+          <template slot-scope="scope">{{status[scope.row.status]}}</template>
         </el-table-column>
         <el-table-column label="Total">
           <template slot-scope="scope">${{ formatPrice(scope.row.total) }}</template>
@@ -97,7 +95,7 @@
 import { Printd } from "printd";
 
 export default {
-  mounted: function() {
+  mounted: function () {
     this.loadTable("/api/sales");
 
     this.$root.$on("refreshTable", this.refreshTable);
@@ -109,7 +107,7 @@ export default {
     loadTable(url) {
       var $this = this;
       $this.loading = true;
-      axios.get(url).then(function(response) {
+      axios.get(url).then(function (response) {
         $this.sales = response.data;
         $this.oldSales = JSON.parse(JSON.stringify(response.data));
         $this.loading = false;
@@ -128,8 +126,25 @@ export default {
       this.handleChangeStatus(index);
     },
     cancelOrder(sale, index) {
-      sale.status = 3;
-      this.handleChangeStatus(index);
+      this.$prompt(
+        "Ingrese la contraseña continuar.",
+        "Alerta: Acción no permitida",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          inputType: "password",
+          inputValue: "",
+        }
+      )
+        .then(({ value }) => {
+          if (value == "Innova01") {
+            sale.status = 3;
+            this.handleChangeStatus(index);
+          } else {
+            this.$message.error("Contraseña incorrecta.");
+          }
+        })
+        .catch(() => {});
     },
     handleChangeStatus(index) {
       var $this = this;
@@ -151,27 +166,27 @@ export default {
           message: message,
           showCancelButton: true,
           confirmButtonText: "Si",
-          cancelButtonText: "No"
+          cancelButtonText: "No",
         })
         .then(() => {
           axios
             .post("api/sales/status", {
               id: $this.sales.data[index].id,
-              status: $this.sales.data[index].status
+              status: $this.sales.data[index].status,
             })
-            .then(function(response) {
+            .then(function (response) {
               $this.oldSales = JSON.parse(JSON.stringify($this.sales));
             });
           $this.$message({
             type: "success",
-            message: "Cambio de estatus exitoso"
+            message: "Cambio de estatus exitoso",
           });
         })
-        .catch(_ => {
+        .catch((_) => {
           $this.sales = JSON.parse(JSON.stringify($this.oldSales));
         });
     },
-    goto: function(link) {
+    goto: function (link) {
       window.location.href = link;
     },
     pad(number, size) {
@@ -394,9 +409,9 @@ export default {
       oldSales: [],
       status: ["Cotización", "En Proceso", "Recibo", "Cancelado"],
       loading: true,
-      page: 1
+      page: 1,
     };
-  }
+  },
 };
 </script>
 <style lang="scss">
