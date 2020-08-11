@@ -14,7 +14,7 @@
     </el-row>
     <el-row type="flex">
         <el-col :span="24">
-            <list-sales></list-sales>
+            <list-sales multi-workshop="{{ $multiWorkshop }}" :workshops="{{ $workshops->toJson() }}" :my-user="{{ $myUser->toJson() }}"></list-sales>
             {{-- <bitacora-cars></list-cars> --}}
             {{-- <daily-cars></daily-cars>
             <weekly-cars></weekly-cars> --}}

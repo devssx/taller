@@ -28,7 +28,13 @@ class SalesController extends Controller
 
     public function index()
     {
-        return view('sales.list');
+        $workshops = WorkShop::get();
+        $myUser = User::where('id', auth()->id())->get();
+        return view('sales.list', [
+            'workshops' => $workshops,
+            'myUser' =>  $myUser,
+            'multiWorkshop' => auth()->user()->can('cambiar de taller')
+        ]);
     }
 
     public function daily()
@@ -136,13 +142,15 @@ class SalesController extends Controller
         return view('sales.receipt');
     }
 
-    public function get()
+    public function get(Request $request)
     {
         return Sale::with('saleServices')->with('client')->with('user')->with(['car' => function ($query) {
             $query->distinct('id');
         }])->with(['services' => function ($query) {
             $query->distinct('id');
-        }])->where('done_on', NULL)->orWhere('done_on', '>', date('Y-m-d 00:00:00', strtotime('-7 days')))->paginate(10);
+        }])        
+        ->where('done_on', NULL)->orWhere('done_on', '>', date('Y-m-d 00:00:00', strtotime('-7 days')))
+        ->where('workshop_id', '=', $request->get('workshop'))->paginate(10);
     }
 
     // Bitacora

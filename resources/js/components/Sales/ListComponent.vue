@@ -95,14 +95,19 @@
 import { Printd } from "printd";
 
 export default {
+  props: ["workshops", "myUser"],
   mounted: function () {
-    this.loadTable("/api/sales");
-
     this.$root.$on("refreshTable", this.refreshTable);
+
+    // busca por default en el taller donde trabaja este empleado
+    if (this.myUser && this.myUser.length > 0) {
+      this.workshopId = this.myUser[0].workshop_id;
+      this.loadTable(`/api/sales?workshop=${this.workshopId}`);
+    }
   },
   methods: {
     refreshTable() {
-      this.loadTable("/api/sales?page=" + this.page);
+      this.loadTable(`/api/sales?workshop=${this.workshopId}&page=` + this.page);
     },
     loadTable(url) {
       var $this = this;
@@ -405,6 +410,7 @@ export default {
   },
   data() {
     return {
+      workshopId: 0,
       sales: [],
       oldSales: [],
       status: ["Cotización", "En Proceso", "Recibo", "Cancelado"],
