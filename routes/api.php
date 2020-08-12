@@ -93,3 +93,6 @@ Route::get('/report/income', 'SalesController@searchBetween');
 
 Route::get('/funds', 'FundController@getWeekFunds');
 Route::post('/funds', 'FundController@saveFunds');
+
+Route::get('/passmanager', 'PasswordManagerController@getPassword');
+Route::post('/passmanager', 'PasswordManagerController@savePassword');

@@ -6,11 +6,9 @@
         <el-col :span="19">
             <h2>Ordenes de Servicio</h2>
         </el-col>
-        {{-- <el-col :span="5" style="text-align:right;">
-            <el-button type="primary" icon="el-icon-circle-plus" v-on:click="goto('{{ route('sales.create') }}')">
-                Crear Orden de Servicio
-            </el-button>
-        </el-col> --}}
+        <el-col :span="5" style="text-align:right;">
+            <edit-password :workshops="{{ $workshops->toJson() }}" :my-user="{{ $myUser->toJson() }}"></edit-password>
+        </el-col>
     </el-row>
     <el-row type="flex">
         <el-col :span="24">

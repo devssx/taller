@@ -1,6 +1,6 @@
 <template>
   <el-row>
-    <el-col :span="24">
+    <el-col :span="24">      
       <el-table
         v-loading="loading"
         :data="sales.data"
@@ -107,7 +107,9 @@ export default {
   },
   methods: {
     refreshTable() {
-      this.loadTable(`/api/sales?workshop=${this.workshopId}&page=` + this.page);
+      this.loadTable(
+        `/api/sales?workshop=${this.workshopId}&page=` + this.page
+      );
     },
     loadTable(url) {
       var $this = this;

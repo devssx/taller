@@ -139,6 +139,9 @@ Vue.component('guarantee-component', require('./components/Reports/GuaranteeComp
 Vue.component('guarantee-edit', require('./components/Reports/GuaranteeEditComponent').default);
 Vue.component('report-container', require('./components/Reports/TabContainerComponent').default);
 
+// Sales
+Vue.component('edit-password', require('./components/Sales/EditPasswordComponent').default);
+
 
 // Salomon S.A. Tools
 Vue.component('file-upload', require('./components/Tools/UploadFile').default);
