@@ -1,6 +1,6 @@
 <template>
   <el-tabs type="card" v-model="activeName" @tab-click="handleClick">
-    <el-tab-pane label="Ingresos" name="first">
+    <el-tab-pane v-if="showIncome" label="Ingresos" name="first">
       <income-component :workshops="workshops" :myUser="myUser" :multiWorkshop="multiWorkshop"></income-component>
     </el-tab-pane>
     <el-tab-pane label="Gastos" name="second">
@@ -10,10 +10,10 @@
 </template>
 <script>
 export default {
-  props: ["workshops", "myUser", "multiWorkshop"],
+  props: ["workshops", "myUser", "multiWorkshop", "showIncome"],
   data() {
     return {
-      activeName: "first",
+      activeName: this.showIncome ? "first" : "second",
     };
   },
   methods: {

@@ -1,6 +1,6 @@
 <template>
   <el-row>
-    <el-col :span="24">      
+    <el-col :span="24">
       <el-table
         v-loading="loading"
         :data="sales.data"
@@ -133,6 +133,7 @@ export default {
       this.handleChangeStatus(index);
     },
     cancelOrder(sale, index) {
+      const $this = this;
       this.$prompt(
         "Ingrese la contraseña continuar.",
         "Alerta: Acción no permitida",
@@ -144,12 +145,28 @@ export default {
         }
       )
         .then(({ value }) => {
-          if (value == "Innova01") {
-            sale.status = 3;
-            this.handleChangeStatus(index);
-          } else {
-            this.$message.error("Contraseña incorrecta.");
-          }
+          axios
+            .get(
+              `/api/passmanager?name=global&workshop=${this.workshopId}&password=${value}`
+            )
+            .then(function (response) {
+              if (response.data == 1) {
+                sale.status = 3;
+                $this.handleChangeStatus(index);
+              } else {
+                $this.$message.error("Contraseña incorrecta.");
+              }
+            })
+            .catch((error) => {
+              if (error.response.data.errors) {
+                var errors = error.response.data.errors;
+                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
+                  confirmButtonText: "OK",
+                  type: "error",
+                });
+              }
+              $this.loading = false;
+            });
         })
         .catch(() => {});
     },

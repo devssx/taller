@@ -32,6 +32,7 @@ class RolesTableSeeder extends Seeder
             'usuarios' => ['listar', 'agregar', 'editar', 'borrar'],
             'roles' => ['listar', 'agregar', 'editar', 'borrar'],
             'bitacora' => ['listar', 'agregar', 'editar', 'borrar'],
+            'contraseña' => ['crear'],
             'taller' => ['cambiar de'],
             'limitado' => ['acceso'],
         ];

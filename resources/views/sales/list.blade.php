@@ -7,7 +7,9 @@
             <h2>Ordenes de Servicio</h2>
         </el-col>
         <el-col :span="5" style="text-align:right;">
+            @can('crear contraseña')
             <edit-password :workshops="{{ $workshops->toJson() }}" :my-user="{{ $myUser->toJson() }}"></edit-password>
+            @endcan
         </el-col>
     </el-row>
     <el-row type="flex">

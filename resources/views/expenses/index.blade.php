@@ -8,7 +8,7 @@
     </el-row>
     <el-row type="flex">
         <el-col :span="24">
-            <expense-container multi-workshop="{{ $multiWorkshop }}" :workshops="{{ $workshops->toJson() }}" :my-user="{{ $myUser->toJson() }}"></expense-container>
+            <expense-container show-income="{{true}}" multi-workshop="{{ $multiWorkshop }}" :workshops="{{ $workshops->toJson() }}" :my-user="{{ $myUser->toJson() }}"></expense-container>
         </el-col>
     </el-row>
 </el-main>
