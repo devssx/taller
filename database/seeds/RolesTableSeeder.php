@@ -19,10 +19,6 @@ class RolesTableSeeder extends Seeder
         $role->save();
 
         $permissions = [
-            'reporte' => ['listar'],
-            'gastos' => ['listar'],
-            'ingresos' => ['listar'],
-            'nomina' => ['listar'],
             'ordenes' => ['listar', 'agregar', 'editar', 'borrar'],
             'carros_servicios' => ['listar', 'agregar', 'editar', 'borrar'],
             'servicios' => ['listar', 'agregar', 'editar', 'borrar'],
@@ -32,6 +28,10 @@ class RolesTableSeeder extends Seeder
             'usuarios' => ['listar', 'agregar', 'editar', 'borrar'],
             'roles' => ['listar', 'agregar', 'editar', 'borrar'],
             'bitacora' => ['listar', 'agregar', 'editar', 'borrar'],
+            'reporte' => ['listar'],
+            'gastos' => ['listar'],
+            'ingresos' => ['listar'],
+            'nomina' => ['listar'],
             'contraseña' => ['crear'],
             'taller' => ['cambiar de'],
             'limitado' => ['acceso'],
