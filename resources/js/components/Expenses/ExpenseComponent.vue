@@ -384,7 +384,7 @@ export default {
       totalSinIva: 0,
       totalCreditos: 0,
       addFunds: false,
-      funds: 10000,
+      funds: 0,
 
       workshopId: 0,
       activeIndex: 0,
