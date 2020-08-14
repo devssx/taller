@@ -13,10 +13,11 @@ class RolesTableSeeder extends Seeder
      */
     public function run()
     {
-        //
+        /*
         $role = new Role();
         $role->name = 'Administrador';
         $role->save();
+        */
 
         $permissions = [
             'ordenes' => ['listar', 'agregar', 'editar', 'borrar'],
@@ -27,7 +28,7 @@ class RolesTableSeeder extends Seeder
             'clientes' => ['listar', 'agregar', 'editar', 'borrar'],
             'usuarios' => ['listar', 'agregar', 'editar', 'borrar'],
             'roles' => ['listar', 'agregar', 'editar', 'borrar'],
-            'bitacora' => ['listar', 'agregar', 'editar', 'borrar'],
+            'bitacora' => ['listar'],
             'reporte' => ['listar'],
             'gastos' => ['listar'],
             'ingresos' => ['listar'],

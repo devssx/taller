@@ -15,6 +15,7 @@
             <list-roles :permissions="{{ $permissions->toJson()}}"></list-roles>
             @endcan
             @cannot('listar roles')
+            <br>
             <el-alert title="Acceso no autorizado." type="error" closable="false" show-icon>
             </el-alert>
             @endcan

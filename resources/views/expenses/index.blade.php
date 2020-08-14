@@ -8,7 +8,12 @@
     </el-row>
     <el-row type="flex">
         <el-col :span="24">
+            @can('listar ingresos')
             <expense-container show-income="{{true}}" multi-workshop="{{ $multiWorkshop }}" :workshops="{{ $workshops->toJson() }}" :my-user="{{ $myUser->toJson() }}"></expense-container>
+            @endcan
+            @cannot('listar ingresos')
+            <expense-container show-income="{{false}}" multi-workshop="{{ $multiWorkshop }}" :workshops="{{ $workshops->toJson() }}" :my-user="{{ $myUser->toJson() }}"></expense-container>
+            @endcan
         </el-col>
     </el-row>
 </el-main>

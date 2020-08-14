@@ -100,7 +100,7 @@
                         </el-menu-item>
                         @endcan
 
-                        {{-- Nuevo Menu --}}
+                        @if(Gate::check('listar servicios') || Gate::check('listar carros') || Gate::check('listar articulos'))
                         <el-submenu index="mantenimiento">
                             <template slot="title">Mantenimiento</template>
                             @can('listar servicios')
@@ -109,12 +109,6 @@
                                 <span>Servicios</span>
                             </el-menu-item>
                             @endcan
-                            {{-- @can('listar carros_servicios')
-                            <el-menu-item index="carservices" v-on:click="goto('{{ route('carservices.list') }}')">
-                            <i class="el-icon-truck"></i>
-                            <span>Carros y Servicios</span>
-                            </el-menu-item>
-                            @endcan --}}
                             @can('listar carros')
                             <el-menu-item index="cars" v-on:click="goto('{{ route('cars.list') }}')">
                                 <i class="el-icon-truck"></i>
@@ -127,6 +121,7 @@
                             </el-menu-item>
                             @endcan
                         </el-submenu>
+                        @endif
                     </el-menu>
                 </el-col>
             </el-row>

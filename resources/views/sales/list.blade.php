@@ -14,7 +14,14 @@
     </el-row>
     <el-row type="flex">
         <el-col :span="24">
+            @can('listar ordenes')
             <list-sales multi-workshop="{{ $multiWorkshop }}" :workshops="{{ $workshops->toJson() }}" :my-user="{{ $myUser->toJson() }}"></list-sales>
+            @endcan
+            @cannot('listar ordenes')
+            <br>
+            <el-alert title="Acceso no autorizado." type="error" closable="false" show-icon>
+            </el-alert>
+            @endcan
             {{-- <bitacora-cars></list-cars> --}}
             {{-- <daily-cars></daily-cars>
             <weekly-cars></weekly-cars> --}}
