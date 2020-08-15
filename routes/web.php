@@ -58,10 +58,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Bitacora
     Route::prefix('bitacora')->group(function () {
-        Route::get('/dailycleaning', 'CleaningController@daily')->name('bitacora.dailycleaning');
-        Route::get('/weeklycleaning', 'CleaningController@weekly')->name('bitacora.weeklycleaning');
-        Route::get('/dailycars', 'SalesController@daily')->name('bitacora.dailycars');
-        Route::get('/weeklycars', 'SalesController@weekly')->name('bitacora.weeklycars');
+        Route::get('/cars', 'SalesController@bitacoraCars')->name('bitacora.cars');
+        Route::get('/cleaning', 'CleaningController@bitacoraCleanings')->name('bitacora.cleaning');
     });
 
     // Nomina

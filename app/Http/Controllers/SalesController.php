@@ -37,11 +37,11 @@ class SalesController extends Controller
         ]);
     }
 
-    public function daily()
+    public function bitacoraCars()
     {
         $workshops = WorkShop::get();
         $myUser = User::where('id', auth()->id())->get();
-        return view('bitacora.cars.daily', [
+        return view('bitacora.cars.index', [
             'workshops' => $workshops,
             'myUser' =>  $myUser,
             'multiWorkshop' => auth()->user()->can('cambiar de taller')
@@ -54,17 +54,6 @@ class SalesController extends Controller
         $workshops = WorkShop::get();
         $myUser = User::where('id', auth()->id())->get();
         return view('expenses.index', [
-            'workshops' => $workshops,
-            'myUser' =>  $myUser,
-            'multiWorkshop' => auth()->user()->can('cambiar de taller')
-        ]);
-    }
-
-    public function weekly()
-    {
-        $workshops = WorkShop::get();
-        $myUser = User::where('id', auth()->id())->get();
-        return view('bitacora.cars.weekly', [
             'workshops' => $workshops,
             'myUser' =>  $myUser,
             'multiWorkshop' => auth()->user()->can('cambiar de taller')

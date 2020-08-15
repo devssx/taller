@@ -45,17 +45,11 @@
                         @can('listar bitacora')
                         <el-submenu index="bitacora">
                             <template slot="title">Bitácora</template>
-                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.dailycars') }}')">
-                                Registro de carros del día
+                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.cars') }}')">
+                                Registro de carros
                             </el-menu-item>
-                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.weeklycars') }}')">
-                                Registro de carros de la semana
-                            </el-menu-item>
-                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.dailycleaning') }}')">
-                                Limpieza Diaria
-                            </el-menu-item>
-                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.weeklycleaning') }}')">
-                                Limpieza Semanal
+                            <el-menu-item index="bitacora" v-on:click="goto('{{ route('bitacora.cleaning') }}')">
+                                Limpieza
                             </el-menu-item>
                         </el-submenu>
                         @endcan

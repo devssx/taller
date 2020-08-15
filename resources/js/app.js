@@ -110,13 +110,15 @@ Vue.component('dashboard-users', require('./components/Dashboard/UsersComponent'
 Vue.component('quick-receipt', require('./components/Dashboard/QuickReceipt').default);
 
 // 2020
-Vue.component('daily-cleaning', require('./components/Bitacora/DailyCleaningComponent').default);
-Vue.component('weekly-cleaning', require('./components/Bitacora/weeklyCleaningComponent').default);
-Vue.component('dc-edit', require('./components/Bitacora/DailyCleaningEditComponent').default);
-Vue.component('daily-cars', require('./components/Bitacora/DailyCarsComponent').default);
-Vue.component('weekly-cars', require('./components/Bitacora/weeklyCarsComponent').default);
+Vue.component('daily-cleaning', require('./components/Bitacora/Cleanings/DailyCleaningComponent').default);
+Vue.component('weekly-cleaning', require('./components/Bitacora/Cleanings/weeklyCleaningComponent').default);
+Vue.component('dc-edit', require('./components/Bitacora/Cleanings/DailyCleaningEditComponent').default);
+Vue.component('daily-cars', require('./components/Bitacora/Cars/DailyCarsComponent').default);
+Vue.component('weekly-cars', require('./components/Bitacora/Cars/weeklyCarsComponent').default);
 Vue.component('view-carservices', require('./components/CarServices/ServiceViewComponent').default);
 Vue.component('row-item', require('./components/CarServices/RowItemComponent').default);
+Vue.component('tabs-cleaning', require('./components/Bitacora/Cleanings/ContainerComponent').default);
+Vue.component('tabs-cars', require('./components/Bitacora/cars/ContainerComponent').default);
 
 // Nomina
 Vue.component('payroll-general', require('./components/Payroll/PayrollComponent').default);
