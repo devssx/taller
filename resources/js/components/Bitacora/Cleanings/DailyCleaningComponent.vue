@@ -15,7 +15,7 @@
         <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
         </el-select>
-        <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
+        <el-button type="primary" icon="el-icon-search" @click="onSearch" :disabled="!selectedDay"></el-button>
         <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
       </el-col>
       <el-col :span="4"></el-col>
@@ -107,7 +107,7 @@ export default {
       }
 
       if (this.dayName(this.selectedDay) == `Domingo`) {
-        this.$alert("El día seleccionado no es válido.", "Día no válido", {
+        this.$alert("El día domingo no es válido.", "Día no válido", {
           confirmButtonText: "OK",
           type: "error"
         });

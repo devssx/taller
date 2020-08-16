@@ -38,8 +38,9 @@
                     <el-menu class="el-menu-demo" mode="horizontal"
                         default-active="{{ explode(".", Route::current()->getName())[0] }}">
                         {{-- <el-menu-item style="padding-top: 10px;">
-                            <quick-receipt></quick-receipt>  </el-menu-item> --}}
-                        {{-- <el-menu-item index="dashboard" v-on:click="goto('{{ route('dashboard') }}')" v-if="">
+                            <quick-receipt></quick-receipt>
+                        </el-menu-item>
+                        <el-menu-item index="dashboard" v-on:click="goto('{{ route('dashboard') }}')" v-if="">
                         Reporte de Ventas
                         </el-menu-item> --}}
                         @can('listar bitacora')
@@ -75,10 +76,9 @@
                         </el-menu-item>
                         @endcan
                         @can('listar reporte')
-                        {{-- 
                         <el-menu-item index="reports" v-on:click="goto('{{ route('reports') }}')">
-                        Reportes
-                        </el-menu-item> --}}
+                            Reportes
+                        </el-menu-item>
                         @endcan
                         @can('listar clientes')
                         <el-menu-item index="clients" v-on:click="goto('{{ route('clients.list') }}')">
@@ -93,7 +93,6 @@
                             Roles
                         </el-menu-item>
                         @endcan
-
                         @if(Gate::check('listar servicios') || Gate::check('listar carros') || Gate::check('listar articulos'))
                         <el-submenu index="mantenimiento">
                             <template slot="title">Mantenimiento</template>
