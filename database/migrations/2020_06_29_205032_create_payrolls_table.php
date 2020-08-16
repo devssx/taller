@@ -17,6 +17,10 @@ class CreatePayrollsTable extends Migration
             $table->increments('id');
             
             $table->unsignedInteger('week');
+            $table->unsignedInteger('number');
+            $table->datetime('start');
+            $table->datetime('end');
+            $table->unsignedInteger('week');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('workshop_id');
             $table->integer('type');

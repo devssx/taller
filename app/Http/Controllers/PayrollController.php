@@ -83,7 +83,7 @@ class PayrollController extends Controller
             $userComment->save();
         }
 
-        // AC
+        // AC (1)
         if ($request->has('totalWeekAc')) {
             $payroll =  Payroll::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('userID'), 'workshop_id' => $request->get('workshop'), 'type' => '1']);
             $payroll->total_week = $request->get('totalWeekAc');
@@ -91,10 +91,14 @@ class PayrollController extends Controller
             $payroll->discount = $request->get('discountsAc');
             $payroll->salary = $request->get('salaryAc');
             $payroll->total = $request->get('totalAc');
+
+            $payroll->number = $request->get('number');
+            $payroll->start = $request->get('start');
+            $payroll->end = $request->get('end');
             $payroll->save();
         }
 
-        // Mecanico
+        // Mecanico (2)
         if ($request->has('totalWeekMec')) {
             $payroll =  Payroll::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('userID'), 'workshop_id' => $request->get('workshop'), 'type' => '2']);
             $payroll->total_week = $request->get('totalWeekMec');
@@ -102,10 +106,14 @@ class PayrollController extends Controller
             $payroll->discount = $request->get('discountsMec');
             $payroll->salary = $request->get('salaryMec');
             $payroll->total = $request->get('totalMec');
+
+            $payroll->number = $request->get('number');
+            $payroll->start = $request->get('start');
+            $payroll->end = $request->get('end');
             $payroll->save();
         }
 
-        // Electrico
+        // Electrico (3)
         if ($request->has('totalWeekEle')) {
             $payroll =  Payroll::firstOrCreate(['week' => $request->get('week'), 'user_id' => $request->get('userID'), 'workshop_id' => $request->get('workshop'), 'type' => '3']);
             $payroll->total_week = $request->get('totalWeekEle');
@@ -113,6 +121,10 @@ class PayrollController extends Controller
             $payroll->discount = $request->get('discountsEle');
             $payroll->salary = $request->get('salaryEle');
             $payroll->total = $request->get('totalEle');
+
+            $payroll->number = $request->get('number');
+            $payroll->start = $request->get('start');
+            $payroll->end = $request->get('end');
             $payroll->save();
         }
     }

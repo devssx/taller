@@ -19,8 +19,8 @@ class CreateExpensesTable extends Migration
             $table->unsignedInteger('week');
             $table->integer('type')->default(0);
             $table->string('concept');
-            $table->string('amount')->default(0);
-            $table->string('iva')->default(0);
+            $table->decimal('amount')->default(0);
+            $table->decimal('iva')->default(0);
             $table->decimal('total');
             $table->timestamps();
             
