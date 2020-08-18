@@ -70,7 +70,7 @@
                             Ingresos y Gastos
                         </el-menu-item>
                         @endcan
-                        @can('listar reporte')
+                        @can('listar nomina')
                         <el-menu-item index="payroll" v-on:click="goto('{{ route('payroll') }}')">
                             Nómina
                         </el-menu-item>

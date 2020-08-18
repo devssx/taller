@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Expense;
 use Illuminate\Http\Request;
+use App\Payroll;
 
 class ExpenseController extends Controller
 {
@@ -29,15 +30,24 @@ class ExpenseController extends Controller
             $start = $request->get('year') . '0101';
             $end = $request->get('year') . '1231';
 
-            return Expense::where(['workshop_id' => $request->get('workshop')])
+            $expense = Expense::where(['workshop_id' => $request->get('workshop')])
                 ->where('week', '>=', $start)
                 ->where('week', '<=', $end)
                 ->orderBy('week')
                 ->get();
+
+            $payroll = Payroll::where(['workshop_id' => $request->get('workshop')])
+                ->where('week', '>=', $start)
+                ->where('week', '<=', $end)
+                ->orderBy('week')
+                ->get();
+
+            return ['expense' => $expense, 'payroll' => $payroll];
         }
 
-        return [];
+        return ['expense' => [], 'payroll' => []];
     }
+
 
     public function save(Request $request)
     {

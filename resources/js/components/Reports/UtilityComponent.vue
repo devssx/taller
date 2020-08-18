@@ -252,7 +252,8 @@ export default {
       $this.expenseYearlyData = [];
 
       axios.get(url).then(function (response) {
-        $this.parseExpenses(response.data, year);
+        console.log(response);
+        $this.parseExpenses(response.data.expense, response.data.payroll, year);
         $this.loading = false;
       });
     },
@@ -295,11 +296,11 @@ export default {
 
       this.calcularUtilidad(year);
     },
-    parseExpenses(data, year) {
+    parseExpenses(expense, payroll, year) {
       var totalAnual = 0.0;
 
-      // Iterar Informacion
-      data.forEach((e) => {
+      // ITERAR GASTOS
+      expense.forEach((e) => {
         // Monto sin IVA
         var monto = parseFloat(e.total) - parseFloat(e.iva);
         // Semanal
@@ -314,6 +315,34 @@ export default {
         // Mensual
         var month = this.monthName(new Date(e.created_at));
         var ms = this.expenseMonthlyData.filter((m) => m.fecha == month);
+        if (ms.length > 0) {
+          ms[0].monto += monto;
+        } else {
+          this.expenseMonthlyData.push({ fecha: month, monto: monto });
+        }
+
+        // Anual
+        totalAnual += monto;
+      });
+
+      // ITERAR NOMINA
+      payroll.forEach((p) => {
+
+        // Monto sin IVA
+        let monto = parseFloat(p.total);
+        
+        // Semanal
+        let week = parseInt(p.number);
+        let ws = this.expenseWeeklyData.filter((w) => w.fecha == week);
+        if (ws.length > 0) {
+          ws[0].monto += monto;
+        } else {
+          this.expenseWeeklyData.push({ fecha: week, monto: monto });
+        }
+
+        // Mensual
+        let month = this.monthName(new Date(p.start));
+        let ms = this.expenseMonthlyData.filter((m) => m.fecha == month);
         if (ms.length > 0) {
           ms[0].monto += monto;
         } else {
