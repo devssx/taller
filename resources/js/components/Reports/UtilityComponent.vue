@@ -239,6 +239,17 @@ export default {
       $this.incomeMonthlyData = [];
       $this.incomeYearlyData = [];
 
+      // inicializa Gastos Semana
+      for (let i = 1; i < 53; i++) {
+        $this.incomeWeeklyData.push({ fecha: i, monto: 0 });
+      }
+
+      // inicializa Gastos Meses
+      for (let i = 0; i < 12; i++) {
+        let month = $this.monthNameByIndex(i);
+        $this.incomeMonthlyData.push({ fecha: month, monto: 0 });
+      }
+
       axios.get(url).then(function (response) {
         $this.parseIncome(response.data, year);
         $this.loading = false;
@@ -251,8 +262,18 @@ export default {
       $this.expenseMonthlyData = [];
       $this.expenseYearlyData = [];
 
+      // inicializa Gastos Semana
+      for (let i = 1; i < 53; i++) {
+        $this.expenseWeeklyData.push({ fecha: i, monto: 0 });
+      }
+
+      // inicializa Gastos Meses
+      for (let i = 0; i < 12; i++) {
+        let month = $this.monthNameByIndex(i);
+        $this.expenseMonthlyData.push({ fecha: month, monto: 0 });
+      }
+
       axios.get(url).then(function (response) {
-        console.log(response);
         $this.parseExpenses(response.data.expense, response.data.payroll, year);
         $this.loading = false;
       });
@@ -325,12 +346,11 @@ export default {
         totalAnual += monto;
       });
 
-      // ITERAR NOMINA
+      // ITERAR NOMINA (tambien son gastos)
       payroll.forEach((p) => {
-
         // Monto sin IVA
         let monto = parseFloat(p.total);
-        
+
         // Semanal
         let week = parseInt(p.number);
         let ws = this.expenseWeeklyData.filter((w) => w.fecha == week);
@@ -372,7 +392,7 @@ export default {
       var gastos = this.expenseYearlyData;
       if (ingresos.length > 0 && gastos.length > 0) {
         // >> Semanal >>
-        for (let week = 0; week <= 52; week++) {
+        for (let week = 1; week <= 52; week++) {
           let wIncome = 0.0;
           let wExpense = 0.0;
 

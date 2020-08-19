@@ -849,10 +849,10 @@ export default {
       this.comment = "";
       var newDate = this.initDayOfWeekDate(this.selectedDay, 2);
 
-      console.log("Periodos >>");
-      console.log("INI " + newDate);
-      console.log("FIN " + this.endPeriodo(newDate));
-      console.log("WK. " + this.getWeekOfDate(this.endPeriodo(newDate)));
+      //console.log("Periodos >>");
+      //console.log("INI " + newDate);
+      //console.log("FIN " + this.endPeriodo(newDate));
+      //console.log("WK. " + this.getWeekOfDate(this.endPeriodo(newDate)));
 
       this.prevDay = newDate;
       var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;

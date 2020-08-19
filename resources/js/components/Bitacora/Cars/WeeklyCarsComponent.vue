@@ -1,6 +1,6 @@
 <template>
   <el-row>
-    <confirm-sales></confirm-sales>
+    <confirm-sales ref="weeklySaleEdit"></confirm-sales>
     <br />
     <el-row class="br bl bt bb row-header">
       <el-col :span="2">
@@ -155,10 +155,12 @@ export default {
     },
     convertToReceipt(item) {
       // convierte cotizacion a recibo
-      this.$root.$emit("changeStatus", item, 2);
+      // this.$root.$emit("changeStatus", item, 2);
+      this.$refs.weeklySaleEdit.changeStatus(item, 2);
     },
     editItem(item) {
-      this.$root.$emit("confirmSale", item, true);
+      //this.$root.$emit("confirmSale", item, true);
+      this.$refs.weeklySaleEdit.openDialog(item, true);
     },
     onSearch() {
       if (!this.selectedDay) {

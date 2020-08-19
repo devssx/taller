@@ -127,7 +127,6 @@ export default {
       }
     },
     changeRole(value) {
-      console.log(this.user);
       this.user.role = value;
       this.$forceUpdate();
     },
