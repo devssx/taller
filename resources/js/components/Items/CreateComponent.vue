@@ -140,7 +140,7 @@ export default {
     save() {
       var $this = this;
       $this.$refs.itemForm.validate(valid => {
-        console.log($this.selectedFile);
+        //console.log($this.selectedFile);
         if (valid) {
           $this.loading = true;
 
@@ -153,7 +153,7 @@ export default {
                 $this.saveItem();
               },
               error => {
-                console.log(error);
+                //console.log(error);
                 $this.$notify({
                   title: "Error!",
                   message:

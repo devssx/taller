@@ -181,7 +181,7 @@ export default {
     save() {
       var $this = this;
       $this.$refs.carForm.validate(valid => {
-        console.log($this.selectedFile);
+        //console.log($this.selectedFile);
         if (valid) {
           $this.loading = true;
 
