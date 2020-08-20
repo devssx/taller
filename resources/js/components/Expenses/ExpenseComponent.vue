@@ -319,9 +319,11 @@ export default {
         // sales
         $this.weekData.data.forEach((sale) => {
           let importe = parseFloat(sale.total);
+          let iva = importe * 0.08;
+          let total = importe + iva;
 
           if (sale.method == 6) {
-            $this.totalCreditos += importe;
+            $this.totalCreditos += total;
           } else {
             $this.ingresosSinIva += importe;
           }
