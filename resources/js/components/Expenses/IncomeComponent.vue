@@ -217,6 +217,7 @@ export default {
 
         // reset
         $this.ingresosSinIva = 0;
+        $this.ingresosConIva = 0;
         $this.totalSinIva = 0;
         $this.totalEfeIva = 0;
         $this.totalCreIva = 0;
