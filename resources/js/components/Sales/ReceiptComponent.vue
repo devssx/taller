@@ -86,7 +86,7 @@
                 :rows="2"
               ></el-input>
             </el-form-item>
-            <div v-if="order.receiptMode">
+            <div>
               <el-form-item label="Garantía" prop="guaranty">
                 <el-input
                   style="width: 220px;"
@@ -300,7 +300,7 @@ export default {
         year: "",
         color: "",
         next_service: "",
-        km: ""
+        km: "",
       },
       clients: [],
       users: [],
@@ -309,18 +309,18 @@ export default {
           {
             required: true,
             message: "Taller es obligatorio",
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         user: [
           {
             required: true,
             message: "Empleado es obligatorio",
-            trigger: "change"
-          }
-        ]
+            trigger: "change",
+          },
+        ],
       },
-      context: ""
+      context: "",
     };
   },
   mounted() {
@@ -332,14 +332,14 @@ export default {
       try {
         $this.order = JSON.parse(localStorage.getItem("order"));
 
-        if ($this.order.receiptMode) {
-          $this.form.maker = $this.order.car.maker;
-          $this.form.brand = $this.order.car.brand;
-          $this.form.year = $this.order.year;
+        //if ($this.order.receiptMode) {
+        $this.form.maker = $this.order.car.maker;
+        $this.form.brand = $this.order.car.brand;
+        $this.form.year = $this.order.year;
 
-          var services = $this.order.services.filter(s => s.warranty);
-          $this.form.guaranty = services.length > 0 ? services[0].warranty : "";
-        }
+        var services = $this.order.services.filter((s) => s.warranty);
+        $this.form.guaranty = services.length > 0 ? services[0].warranty : "";
+        //}
       } catch (e) {
         localStorage.removeItem("order");
       }
@@ -355,14 +355,14 @@ export default {
             items.push({
               id: $this.currentSale.sale_services[x].item_id,
               name: $this.currentSale.sale_services[x].item.name,
-              low_price: $this.currentSale.sale_services[x].price
+              low_price: $this.currentSale.sale_services[x].price,
             });
           }
         }
         services.push({
           id: $this.currentSale.services[i].id,
           label: $this.currentSale.services[i].name,
-          items: items
+          items: items,
         });
       }
 
@@ -370,11 +370,11 @@ export default {
         brand: $this.currentSale.car[0].brand,
         price: "low",
         services: services,
-        year: $this.currentSale.sale_services[0].year
+        year: $this.currentSale.sale_services[0].year,
       };
     }
 
-    axios.get("/api/clients?all=1").then(function(response) {
+    axios.get("/api/clients?all=1").then(function (response) {
       $this.clients = response.data;
       if ($this.currentSale) {
         if ($this.currentSale.client) {
@@ -383,7 +383,7 @@ export default {
       }
     });
 
-    axios.get("/api/users?all=1&role=Empleado").then(function(response) {
+    axios.get("/api/users?all=1&role=Empleado").then(function (response) {
       $this.users = response.data;
       if ($this.currentSale) {
         $this.form.user = $this.currentSale.user.id;
@@ -394,7 +394,7 @@ export default {
     loadUser(url) {
       const $this = this;
       $this.loading = true;
-      axios.get(url).then(function(response) {
+      axios.get(url).then(function (response) {
         $this.me = response.data[0];
         $this.loading = false;
       });
@@ -402,7 +402,7 @@ export default {
     loadWorkShops(url) {
       const $this = this;
       $this.loading = true;
-      axios.get(url).then(function(response) {
+      axios.get(url).then(function (response) {
         $this.workshops = response.data;
         $this.loading = false;
 
@@ -511,7 +511,7 @@ export default {
     },
     save() {
       var $this = this;
-      $this.$refs.form.validate(valid => {
+      $this.$refs.form.validate((valid) => {
         if (valid) {
           $this.order.user = $this.form.user;
           if ($this.form.client) {
@@ -544,7 +544,7 @@ export default {
                 "Cliente no válido",
                 {
                   confirmButtonText: "OK",
-                  type: "warning"
+                  type: "warning",
                 }
               );
               return;
@@ -556,7 +556,7 @@ export default {
                 "Empleado no válido",
                 {
                   confirmButtonText: "OK",
-                  type: "warning"
+                  type: "warning",
                 }
               );
               return;
@@ -568,7 +568,7 @@ export default {
                 "Tipo de Servicio",
                 {
                   confirmButtonText: "OK",
-                  type: "warning"
+                  type: "warning",
                 }
               );
               return;
@@ -577,30 +577,30 @@ export default {
 
           axios
             .post("/api/sales", $this.order)
-            .then(function(response) {
+            .then(function (response) {
               $this.$notify({
                 title: "¡Exito!",
                 message: "La Orden de Servicio fue agregada correctamente",
-                type: "success"
+                type: "success",
               });
-              setTimeout(function() {
+              setTimeout(function () {
                 localStorage.removeItem("order");
                 window.location.href = "/sales";
               }, 1500);
             })
-            .catch(error => {
+            .catch((error) => {
               if (error.response.data.errors) {
                 var errors = error.response.data.errors;
                 $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
                   confirmButtonText: "OK",
-                  type: "error"
+                  type: "error",
                 });
               }
               $this.loading = false;
             });
         }
       });
-    }
+    },
   },
   computed: {
     total() {
@@ -637,8 +637,8 @@ export default {
       }
 
       return total;
-    }
-  }
+    },
+  },
 };
 </script>
 
