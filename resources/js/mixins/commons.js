@@ -207,6 +207,28 @@ export default {
             }
             return s;
         },
+        checkPassword(workshopId, callback) {
+            this.$prompt(
+                "Ingrese la contraseña continuar.",
+                "Alerta: Acción no permitida",
+                {
+                    confirmButtonText: "OK",
+                    cancelButtonText: "Cancel",
+                    inputType: "password",
+                    inputValue: "",
+                }
+            ).then(({ value }) => {
+                axios.get(`/api/passmanager?name=global&workshop=${workshopId}&password=${value}`).then(function (response) {
+                    if (response.data == 1) {
+                        callback('success');
+                    } else {
+                        callback('Contraseña incorrecta.');
+                    }
+                }).catch((error) => {
+                    callback('Error en el Servidor');
+                });
+            }).catch(() => { });
+        },
         createReceipt(currentSale, receiptImg, myCanvas) {
             var $this = this;
             myCanvas.width = receiptImg.width;

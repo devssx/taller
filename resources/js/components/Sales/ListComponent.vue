@@ -134,41 +134,15 @@ export default {
     },
     cancelOrder(sale, index) {
       const $this = this;
-      this.$prompt(
-        "Ingrese la contraseña continuar.",
-        "Alerta: Acción no permitida",
-        {
-          confirmButtonText: "OK",
-          cancelButtonText: "Cancel",
-          inputType: "password",
-          inputValue: "",
+
+      this.checkPassword(this.workshopId, (result) => {
+        if (result == "success") {
+          sale.status = 3;
+          $this.handleChangeStatus(index);
+        } else {
+          $this.$message.error(result);
         }
-      )
-        .then(({ value }) => {
-          axios
-            .get(
-              `/api/passmanager?name=global&workshop=${this.workshopId}&password=${value}`
-            )
-            .then(function (response) {
-              if (response.data == 1) {
-                sale.status = 3;
-                $this.handleChangeStatus(index);
-              } else {
-                $this.$message.error("Contraseña incorrecta.");
-              }
-            })
-            .catch((error) => {
-              if (error.response.data.errors) {
-                var errors = error.response.data.errors;
-                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-                  confirmButtonText: "OK",
-                  type: "error",
-                });
-              }
-              $this.loading = false;
-            });
-        })
-        .catch(() => {});
+      });
     },
     handleChangeStatus(index) {
       var $this = this;
