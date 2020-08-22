@@ -191,7 +191,7 @@ class SalesController extends Controller
             // $start->sub(new DateInterval('P2D'));
 
             $end = new DateTime($request->get('start'));
-            $end->add(new DateInterval('P6D'));
+            $end->add(new DateInterval('P7D'));
 
             $result = Sale::with('saleServices')->with('client')->with('user')->with(['car' => function ($query) {
                 $query->distinct('id');
