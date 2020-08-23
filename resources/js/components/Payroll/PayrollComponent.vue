@@ -534,7 +534,6 @@
 export default {
   props: ["workshops", "myUser", "multiWorkshop"],
   mounted: function () {
-    this.$root.$on("refreshTable", this.refreshTable);
     this.$root.$on("refreshTotal", this.refreshTotal);
 
     // busca por default en el taller donde trabaja este empleado
@@ -632,6 +631,7 @@ export default {
           });
 
           $this.loading = false;
+          $this.onSearch();
         })
         .catch((error) => {
           if (error.response.data.errors) {
@@ -848,12 +848,6 @@ export default {
       this.selectedEmployee = "N/A";
       this.comment = "";
       var newDate = this.initDayOfWeekDate(this.selectedDay, 2);
-
-      //console.log("Periodos >>");
-      //console.log("INI " + newDate);
-      //console.log("FIN " + this.endPeriodo(newDate));
-      //console.log("WK. " + this.getWeekOfDate(this.endPeriodo(newDate)));
-
       this.prevDay = newDate;
       var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
 
@@ -875,7 +869,6 @@ export default {
         `/api/sales/searchReceiptByWeek?start=${start}&workshop=${this.workshopId}`
       );
     },
-    refreshTable() {},
     computeTotal(tableAc, tableMec, tableElec) {
       this.salary =
         parseFloat(tableAc.sueldo) +
