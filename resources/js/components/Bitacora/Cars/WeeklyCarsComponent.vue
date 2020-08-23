@@ -136,7 +136,6 @@ export default {
     // busca por default en el taller donde trabaja este empleado
     if (this.myUser && this.myUser.length > 0) {
       this.workshopId = this.myUser[0].workshop_id;
-      this.searchSales();
     }
   },
   methods: {
@@ -167,24 +166,11 @@ export default {
         return;
       }
 
-      this.searchSales(this.selectedDay);
+      this.searchSales();
     },
     searchSales() {
-      var newDate = this.initDayOfWeekDate(this.selectedDay);
-      var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")}`;
-      this.prevDay = start;
-
-      if (!this.workshopId) {
-        this.$alert(
-          "El taller seleccionado no es válido.",
-          "Taller no válido",
-          {
-            confirmButtonText: "OK",
-            type: "error",
-          }
-        );
-        return;
-      }
+      var newDate = this.initDayOfWeekDate(this.selectedDay, 2);
+      var start = this.toFixedFormat(newDate, "yyyyMMdd");
 
       this.loadTable(
         `/api/sales/searchByWeek?start=${start}&workshop=${this.workshopId}`
@@ -222,7 +208,7 @@ export default {
       });
     },
     refreshTable() {
-      this.searchSales(this.prevDay);
+      this.searchSales();
     },
   },
   data() {
@@ -234,8 +220,7 @@ export default {
       oldSales: [],
       loading: false,
       page: 1,
-      selectedDay: new Date(),
-      prevDay: new Date(),
+      selectedDay: null,
       search: "",
     };
   },
