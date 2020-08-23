@@ -47,10 +47,10 @@ class PayrollController extends Controller
             $end = $request->get('year') . '1231';
 
             return Payroll::where(['workshop_id' => $request->get('workshop')])
-            ->where('week', '>=', $start)
-            ->where('week', '<=', $end)
-            ->orderBy('week')
-            ->get();
+                ->where('week', '>=', $start)
+                ->where('week', '<=', $end)
+                ->orderBy('week')
+                ->get();
         }
 
         return [];
@@ -71,7 +71,16 @@ class PayrollController extends Controller
 
     public function getPayroll(Request $request)
     {
-        return Payroll::where(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')])->get();
+        $comments = PayrollComment::where(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')])->get();
+        $payroll = Payroll::where(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')])->get();
+
+        $sales = [];
+        if ($request->has('start')) {
+            $salesController = new SalesController();
+            $sales = $salesController->searchReceiptByWeek($request);
+        }
+
+        return ['comments' => $comments, 'payroll' => $payroll, 'sales' => $sales];
     }
 
     public function saveWeek(Request $request)

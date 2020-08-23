@@ -565,10 +565,8 @@ export default {
 
         let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
         this.loadPayroll(
-          `/api/payroll?week=${week}&workshop=${this.workshopId}`
-        );
-        this.loadComments(
-          `/api/payroll/userComments?week=${week}&workshop=${this.workshopId}`
+          `/api/payroll?week=${week}&workshop=${this.workshopId}`,
+          false
         );
       }
     },
@@ -600,7 +598,7 @@ export default {
           number: weekNumb,
           start: startFormat,
           end: endFormat,
-          
+
           week: week,
           workshop: $this.workshopId,
           userID: userID,
@@ -727,46 +725,43 @@ export default {
     fixNumber(n) {
       return n < 10 ? "0" + n : n;
     },
-    loadTable(url) {
+    setSales(data) {
       const $this = this;
-      $this.loading = true;
-      axios.get(url).then(function (response) {
-        $this.weekData = response.data.d;
-        $this.loading = false;
+      $this.weekData = data.d;
 
-        // reset
-        $this.salary = 0;
-        $this.comissions = 0;
-        $this.discounts = 0;
-        $this.total = 0;
+      // reset
+      $this.salary = 0;
+      $this.comissions = 0;
+      $this.discounts = 0;
+      $this.total = 0;
 
-        // (lista de empleados)
-        $this.employees = [];
-        $this.tableACData = [];
-        $this.tableMecData = [];
-        $this.tableElecData = [];
-        $this.weekData.data.forEach((sale) => {
-          var name = sale.user.name;
-          if ($this.employees.filter((e) => e.name == name).length == 0)
-            $this.employees.push(sale.user);
-        });
-
-        // select first
-        if ($this.employees.length > 0) $this.handleSelect("0");
+      // (lista de empleados)
+      $this.employees = [];
+      $this.tableACData = [];
+      $this.tableMecData = [];
+      $this.tableElecData = [];
+      $this.weekData.data.forEach((sale) => {
+        var name = sale.user.name;
+        if ($this.employees.filter((e) => e.name == name).length == 0)
+          $this.employees.push(sale.user);
       });
+
+      // select first
+      if ($this.employees.length > 0) $this.handleSelect("0");
     },
-    loadComments(url) {
-      const $this = this;
-      $this.weekComments = [];
-      axios.get(url).then(function (response) {
-        $this.weekComments = response.data;
-      });
-    },
-    loadPayroll(url) {
+    loadPayroll(url, loadSales) {
       const $this = this;
       $this.weekPayroll = [];
+      $this.weekComments = [];
+
       axios.get(url).then(function (response) {
-        $this.weekPayroll = response.data;
+        $this.weekPayroll = response.data.payroll;
+        $this.weekComments = response.data.comments;
+
+        if (loadSales) {
+          let sales = response.data.sales;
+          $this.setSales(sales);
+        }
       });
     },
     // Carga recibos tipo: 1: A/C, 2: Mecanica, 3: Electrico
@@ -861,12 +856,9 @@ export default {
 
       // weekID
       let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
-      this.loadPayroll(`/api/payroll?week=${week}&workshop=${this.workshopId}`);
-      this.loadComments(
-        `/api/payroll/userComments?week=${week}&workshop=${this.workshopId}`
-      );
-      this.loadTable(
-        `/api/sales/searchReceiptByWeek?start=${start}&workshop=${this.workshopId}`
+      this.loadPayroll(
+        `/api/payroll?week=${week}&workshop=${this.workshopId}&start=${start}`,
+        true
       );
     },
     computeTotal(tableAc, tableMec, tableElec) {

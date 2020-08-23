@@ -124,90 +124,73 @@ export default {
     }
   },
   methods: {
-    loadTable(url) {
+    setSales(data) {
       const $this = this;
-      $this.loading = true;
-      axios.get(url).then(function (response) {
-        $this.loading = false;
 
-        // reset
-        $this.employees = [];
-        $this.tableData = [];
-        $this.total = 0;
+      // reset
+      $this.employees = [];
+      $this.tableData = [];
+      $this.total = 0;
 
-        $this.weekData = response.data.d;
-        $this.comment = response.data.c;
+      $this.weekData = data.d;
+      $this.comment = data.c;
 
-        $this.weekData.data.forEach((sale) => {
-          var name = sale.user.name;
-          if ($this.employees.filter((e) => e.name == name).length == 0)
-            $this.employees.push(sale.user);
-        });
-
-        // calcula totales de cada empleado
-        if ($this.employees.length > 0) {
-          $this.employees.forEach((emp) => {
-            let com1 = 0.07;
-            let com2 = 0.07;
-            let com3 = 0.07;
-            let salary = 0.0;
-            let discounts = 0.0;
-
-            // buscar week y user id
-            const myWeek = $this.weekPayroll.filter((p) => p.user_id == emp.id);
-            myWeek.forEach((dato) => {
-              if (dato.type == "1") {
-                com1 = parseFloat(dato.comission);
-                salary += parseFloat(dato.salary);
-                discounts += parseFloat(dato.discount);
-              }
-              if (dato.type == "2") {
-                com2 = parseFloat(dato.comission);
-                salary += parseFloat(dato.salary);
-                discounts += parseFloat(dato.discount);
-              }
-              if (dato.type == "3") {
-                com3 = parseFloat(dato.comission);
-                salary += parseFloat(dato.salary);
-                discounts += parseFloat(dato.discount);
-              }
-            });
-
-            $this.tableData.push(
-              $this.getPayroll(emp.name, com1, com2, com3, salary, discounts)
-            );
-          });
-        }
-
-        // crear grafica
-        var chart = $this.createChartData($this.tableData);
-        $this.$refs.myChart.setData(chart);
-
-        // nomina total
-        $this.tableData.forEach((n) => ($this.total += n.total));
+      $this.weekData.data.forEach((sale) => {
+        var name = sale.user.name;
+        if ($this.employees.filter((e) => e.name == name).length == 0)
+          $this.employees.push(sale.user);
       });
+
+      // calcula totales de cada empleado
+      if ($this.employees.length > 0) {
+        $this.employees.forEach((emp) => {
+          let com1 = 0.07;
+          let com2 = 0.07;
+          let com3 = 0.07;
+          let salary = 0.0;
+          let discounts = 0.0;
+
+          // buscar week y user id
+          const myWeek = $this.weekPayroll.filter((p) => p.user_id == emp.id);
+          myWeek.forEach((dato) => {
+            if (dato.type == "1") {
+              com1 = parseFloat(dato.comission);
+              salary += parseFloat(dato.salary);
+              discounts += parseFloat(dato.discount);
+            }
+            if (dato.type == "2") {
+              com2 = parseFloat(dato.comission);
+              salary += parseFloat(dato.salary);
+              discounts += parseFloat(dato.discount);
+            }
+            if (dato.type == "3") {
+              com3 = parseFloat(dato.comission);
+              salary += parseFloat(dato.salary);
+              discounts += parseFloat(dato.discount);
+            }
+          });
+
+          $this.tableData.push(
+            $this.getPayroll(emp.name, com1, com2, com3, salary, discounts)
+          );
+        });
+      }
+
+      // crear grafica
+      var chart = $this.createChartData($this.tableData);
+      $this.$refs.myChart.setData(chart);
+
+      // nomina total
+      $this.tableData.forEach((n) => ($this.total += n.total));
     },
-    loadPayroll(url, start) {
+    loadPayroll(url) {
       const $this = this;
       $this.weekPayroll = [];
+
       axios.get(url).then(function (response) {
-        $this.weekPayroll = response.data;
-
-        if (!$this.workshopId) {
-          $this.$alert(
-            "El taller seleccionado no es válido.",
-            "Taller no válido",
-            {
-              confirmButtonText: "OK",
-              type: "error",
-            }
-          );
-          return;
-        }
-
-        $this.loadTable(
-          `/api/sales/searchReceiptByWeek?start=${start}&workshop=${$this.workshopId}`
-        );
+        $this.weekPayroll = response.data.payroll;
+        let sales = response.data.sales;
+        $this.setSales(sales);
       });
     },
     getPayroll(user, cAc, cMec, cElec, salary, discounts) {
@@ -261,17 +244,8 @@ export default {
       this.prevDay = newDate;
       var start = this.toFixedFormat(newDate, "yyyyMMdd");
 
-      if (!this.workshopId) {
-        this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
-          confirmButtonText: "OK",
-          type: "warning",
-        });
-        return;
-      }
-
       this.loadPayroll(
-        `/api/payroll?week=${start}&workshop=${this.workshopId}`,
-        start
+        `/api/payroll?week=${start}&workshop=${this.workshopId}&start=${start}`
       );
     },
     saveComment() {
