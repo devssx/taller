@@ -215,27 +215,16 @@ export default {
     if (this.myUser && this.myUser.length > 0) {
       this.workshopId = this.myUser[0].workshop_id;
     }
-
-    // this.prevDay = this.initDayOfWeekDate(this.selectedDay, 2);
-    // let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
-    // this.newExpense.week = week;
-    // this.getFunds(`/api/funds?week=${week}&workshop=${this.workshopId}`);
   },
   methods: {
-    getFunds(url) {
-      var $this = this;
-      $this.loading = true;
-      axios.get(url).then(function (response) {
-        if (response.data.length > 0) {
-          $this.addFunds = false;
-          $this.funds = parseFloat(response.data[0].amount);
-        } else {
-          $this.addFunds = true;
-        }
-
-        $this.loading = false;
-        $this.onSearch();
-      });
+    setFunds(data) {
+      if (data.length > 0) {
+        this.addFunds = false;
+        this.funds = parseFloat(data[0].amount);
+      } else {
+        this.funds = 0;
+        this.addFunds = true;
+      }
     },
     addNew() {
       let selectedWeek = this.initDayOfWeekDate(this.selectedDay, 2);
@@ -266,72 +255,65 @@ export default {
       this.newExpense.total = 0;
       this.$refs.newItem.dialogVisible = true;
     },
-    loadPayroll(url, newDate) {
+    setPayroll(data, newDate) {
       var $this = this;
-      $this.loading = true;
-      axios.get(url).then(function (response) {
-        $this.dataPayroll = [];
+      $this.dataPayroll = [];
 
-        if (response.data.length > 0) {
-          let nominaSemanal = 0;
-          response.data.forEach((n) => (nominaSemanal += parseFloat(n.total)));
+      if (data.length > 0) {
+        let nominaSemanal = 0;
+        data.forEach((n) => (nominaSemanal += parseFloat(n.total)));
 
-          let end = $this.endPeriodo(newDate);
-          $this.dataPayroll.push({
-            concept: "Nómina Semanal",
-            start: $this.toFixedFormat(newDate, "yyyy-MM-dd"),
-            end: $this.toFixedFormat(end, "yyyy-MM-dd"),
-            week: $this.getWeekOfDate(end),
-            total: nominaSemanal,
-          });
-        }
+        let end = $this.endPeriodo(newDate);
+        $this.dataPayroll.push({
+          concept: "Nómina Semanal",
+          start: $this.toFixedFormat(newDate, "yyyy-MM-dd"),
+          end: $this.toFixedFormat(end, "yyyy-MM-dd"),
+          week: $this.getWeekOfDate(end),
+          total: nominaSemanal,
+        });
+      }
 
-        $this.calculaTotales();
-        $this.loading = false;
-      });
+      $this.calculaTotales();
     },
-    loadTable(url, week, workshop, newDate, start) {
+    loadTable(url, newDate) {
       var $this = this;
       $this.loading = true;
       axios.get(url).then(function (response) {
-        $this.tableData1 = response.data.filter((d) => d.type == 1);
-        $this.tableData2 = response.data.filter((d) => d.type == 2);
-        $this.tableData3 = response.data.filter((d) => d.type == 3);
+        let expenses = response.data.expenses;
+        let funds = response.data.funds;
+        let payroll = response.data.payroll;
+        let income = response.data.income;
+
+        $this.tableData1 = expenses.filter((d) => d.type == 1);
+        $this.tableData2 = expenses.filter((d) => d.type == 2);
+        $this.tableData3 = expenses.filter((d) => d.type == 3);
+        $this.setFunds(funds);
 
         // carga nomina de la semana
-        $this.loadPayroll(
-          `/api/payroll?workshop=${workshop}&week=${week}`,
-          newDate
-        );
+        $this.setPayroll(payroll, newDate);
 
-        // carga ingresos de la semana
-        $this.loadIncome(
-          `/api/sales/searchReceiptByWeekAndCredits?start=${start}&workshop=${workshop}`
-        );
+        // Ingresos
+        $this.setIncome(income);
+        $this.loading = false;
       });
     },
-    loadIncome(url) {
+    setIncome(data) {
       const $this = this;
-      $this.loading = true;
-
       $this.ingresosSinIva = 0;
       $this.totalCreditos = 0;
+      $this.weekData = data.d;
 
-      axios.get(url).then(function (response) {
-        $this.weekData = response.data.d;
-        $this.loading = false;
-        // sales
-        $this.weekData.data.forEach((sale) => {
-          let importe = parseFloat(sale.total);
-          let iva = importe * 0.08;
-          let total = importe + iva;
+      // sales
+      $this.weekData.data.forEach((sale) => {
+        let importe = parseFloat(sale.total);
+        let iva = importe * 0.08;
+        let total = importe + iva;
 
-          if (sale.method == 6) {
-            $this.totalCreditos += importe;
-          } else {
-            $this.ingresosSinIva += importe;
-          }
-        });
+        if (sale.method == 6) {
+          $this.totalCreditos += importe;
+        } else {
+          $this.ingresosSinIva += importe;
+        }
       });
     },
     onSearch() {
@@ -359,11 +341,8 @@ export default {
       this.newExpense.week = week;
 
       this.loadTable(
-        `/api/expenses?week=${week}&workshop=${this.workshopId}`,
-        week,
-        this.workshopId,
-        newDate,
-        start
+        `/api/expenses?week=${week}&workshop=${this.workshopId}&start=${start}`,
+        newDate
       );
     },
     calculaTotales() {

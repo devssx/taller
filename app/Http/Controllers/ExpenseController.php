@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Expense;
 use Illuminate\Http\Request;
 use App\Payroll;
+use App\Fund;
 
 class ExpenseController extends Controller
 {
@@ -21,7 +22,13 @@ class ExpenseController extends Controller
 
     public function searchWeek(Request $request)
     {
-        return Expense::where(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')])->get();
+        $funds = Fund::where(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')])->get();
+        $expenses = Expense::where(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')])->get();
+        $payroll = Payroll::where(['week' => $request->get('week'), 'workshop_id' => $request->get('workshop')])->get();
+        
+        $sales = new SalesController();
+        $income = $sales->searchReceiptByWeekAndCredits($request);
+        return ['funds' => $funds, 'expenses' => $expenses, 'payroll' => $payroll, 'income' => $income];
     }
 
     public function SelectExpensesByYear(Request $request)
