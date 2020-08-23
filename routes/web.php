@@ -69,7 +69,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/expenses', 'SalesController@expenses')->name('expenses');
 
     // Reportes
-    Route::get('/reports', 'GuaranteeController@guarantee')->name('reports');
+    Route::get('/reports', 'GuaranteeController@reports')->name('reports');
+    Route::get('/guarantee', 'GuaranteeController@guarantee')->name('guarantee');
 
     // Tools
     Route::post('files/uploadItem', 'FileController@uploadItem')->name('upload.item');

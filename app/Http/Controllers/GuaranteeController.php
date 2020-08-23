@@ -11,7 +11,7 @@ use App\User;
 class GuaranteeController extends Controller
 {
     // Ingresos y Gastos
-    public function guarantee()
+    public function reports()
     {
         $workshops = WorkShop::get();
         $myUser = User::where('id', auth()->id())->get();
@@ -21,6 +21,18 @@ class GuaranteeController extends Controller
             'multiWorkshop' => auth()->user()->can('cambiar de taller')
         ]);
     }
+
+        // Garantias
+        public function guarantee()
+        {
+            $workshops = WorkShop::get();
+            $myUser = User::where('id', auth()->id())->get();
+            return view('guarantee.index', [
+                'workshops' => $workshops,
+                'myUser' =>  $myUser,
+                'multiWorkshop' => auth()->user()->can('cambiar de taller')
+            ]);
+        }
 
     /**
      * Display a listing of the resource.

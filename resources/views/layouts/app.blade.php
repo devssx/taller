@@ -80,6 +80,11 @@
                             Reportes
                         </el-menu-item>
                         @endcan
+                        @can('listar bitacora')
+                        <el-menu-item index="guarantee" v-on:click="goto('{{ route('guarantee') }}')">
+                            Garantías
+                        </el-menu-item>
+                        @endcan
                         @can('listar clientes')
                         <el-menu-item index="clients" v-on:click="goto('{{ route('clients.list') }}')">
                             Clientes

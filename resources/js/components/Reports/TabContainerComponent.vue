@@ -6,9 +6,9 @@
     <el-tab-pane label="Ingresos Por Técnicos" name="second">
       <employee-component :workshops="workshops" :myUser="myUser" :multiWorkshop="multiWorkshop"></employee-component>
     </el-tab-pane>
-    <el-tab-pane label="Garantías" name="third">
+    <!-- <el-tab-pane label="Garantías" name="third">
       <guarantee-component :workshops="workshops" :myUser="myUser" :multiWorkshop="multiWorkshop"></guarantee-component>
-    </el-tab-pane>
+    </el-tab-pane> -->
   </el-tabs>
 </template>
 <script>
