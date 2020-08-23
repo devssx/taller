@@ -39,9 +39,9 @@
                         default-active="{{ explode(".", Route::current()->getName())[0] }}">
                         {{-- <el-menu-item style="padding-top: 10px;">
                             <quick-receipt></quick-receipt>
-                        </el-menu-item>
-                        <el-menu-item index="dashboard" v-on:click="goto('{{ route('dashboard') }}')" v-if="">
-                        Reporte de Ventas
+                        </el-menu-item> --}}
+                        {{-- <el-menu-item index="dashboard" v-on:click="goto('{{ route('dashboard') }}')" v-if="">
+                            Reporte de Ventas
                         </el-menu-item> --}}
                         @can('listar bitacora')
                         <el-submenu index="bitacora">
@@ -93,7 +93,8 @@
                             Roles
                         </el-menu-item>
                         @endcan
-                        @if(Gate::check('listar servicios') || Gate::check('listar carros') || Gate::check('listar articulos'))
+                        @if(Gate::check('listar servicios') || Gate::check('listar carros') || Gate::check('listar
+                        articulos'))
                         <el-submenu index="mantenimiento">
                             <template slot="title">Mantenimiento</template>
                             @can('listar servicios')

@@ -92,7 +92,7 @@
           <el-col :span="20" class="row-headerb">
             <el-input
               type="textarea"
-              :readonly="isReadOnly"
+              :disabled="isReadOnly"
               :autosize="{ minRows: 2, maxRows: 4}"
               placeholder="Comentarios"
               v-model="comment.comment"
@@ -115,7 +115,7 @@
 <script>
 export default {
   props: ["workshops", "myUser", "multiWorkshop"],
-  mounted: function() {
+  mounted: function () {
     // this.$root.$on("refreshTable", this.refreshTable);
 
     // busca por default en el taller donde trabaja este empleado
@@ -127,7 +127,7 @@ export default {
     loadTable(url) {
       const $this = this;
       $this.loading = true;
-      axios.get(url).then(function(response) {
+      axios.get(url).then(function (response) {
         $this.loading = false;
 
         // reset
@@ -138,15 +138,15 @@ export default {
         $this.weekData = response.data.d;
         $this.comment = response.data.c;
 
-        $this.weekData.data.forEach(sale => {
+        $this.weekData.data.forEach((sale) => {
           var name = sale.user.name;
-          if ($this.employees.filter(e => e.name == name).length == 0)
+          if ($this.employees.filter((e) => e.name == name).length == 0)
             $this.employees.push(sale.user);
         });
 
         // calcula totales de cada empleado
         if ($this.employees.length > 0) {
-          $this.employees.forEach(emp => {
+          $this.employees.forEach((emp) => {
             let com1 = 0.07;
             let com2 = 0.07;
             let com3 = 0.07;
@@ -154,8 +154,8 @@ export default {
             let discounts = 0.0;
 
             // buscar week y user id
-            const myWeek = $this.weekPayroll.filter(p => p.user_id == emp.id);
-            myWeek.forEach(dato => {
+            const myWeek = $this.weekPayroll.filter((p) => p.user_id == emp.id);
+            myWeek.forEach((dato) => {
               if (dato.type == "1") {
                 com1 = parseFloat(dato.comission);
                 salary += parseFloat(dato.salary);
@@ -184,13 +184,13 @@ export default {
         $this.$refs.myChart.setData(chart);
 
         // nomina total
-        $this.tableData.forEach(n => ($this.total += n.total));
+        $this.tableData.forEach((n) => ($this.total += n.total));
       });
     },
     loadPayroll(url, start) {
       const $this = this;
       $this.weekPayroll = [];
-      axios.get(url).then(function(response) {
+      axios.get(url).then(function (response) {
         $this.weekPayroll = response.data;
 
         if (!$this.workshopId) {
@@ -199,7 +199,7 @@ export default {
             "Taller no válido",
             {
               confirmButtonText: "OK",
-              type: "error"
+              type: "error",
             }
           );
           return;
@@ -223,11 +223,11 @@ export default {
         subtotal: 0,
         salary: salary,
         discounts: discounts,
-        total: 0
+        total: 0,
       };
 
       // Carga totales de recibos tipo AC del empleado
-      this.weekData.data.forEach(sale => {
+      this.weekData.data.forEach((sale) => {
         if (sale.user.name == user) {
           switch (sale.service_type) {
             case 3: // Servicio Electrico
@@ -264,7 +264,7 @@ export default {
       if (!this.workshopId) {
         this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
           confirmButtonText: "OK",
-          type: "warning"
+          type: "warning",
         });
         return;
       }
@@ -278,12 +278,14 @@ export default {
       const $this = this;
       $this.loading = true;
       $this.isReadOnly = true;
-      let week = `${this.toFixedFormat(this.selectedDay, "yyyyMMdd")}`;
+
+      var newDate = this.initDayOfWeekDate(this.selectedDay, 2);
+      let week = `${this.toFixedFormat(newDate, "yyyyMMdd")}`;
 
       if (!this.workshopId) {
         this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
           confirmButtonText: "OK",
-          type: "warning"
+          type: "warning",
         });
         return;
       }
@@ -293,22 +295,22 @@ export default {
           week: week,
           workshop: $this.workshopId,
           comment: $this.comment.comment,
-          total: $this.total
+          total: $this.total,
         })
-        .then(function(response) {
+        .then(function (response) {
           $this.$message({
             message: "El registro fué editado correctamente.",
-            type: "success"
+            type: "success",
           });
 
           $this.loading = false;
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response.data.errors) {
             var errors = error.response.data.errors;
             $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
               confirmButtonText: "OK",
-              type: "error"
+              type: "error",
             });
           }
           $this.loading = false;
@@ -317,15 +319,15 @@ export default {
     createChartData(data) {
       let chartData = [];
       let i = 0;
-      data.forEach(e =>
+      data.forEach((e) =>
         chartData.push({
           name: e.employee,
           value: e.total,
-          color: this.getColor(i++)
+          color: this.getColor(i++),
         })
       );
       return chartData;
-    }
+    },
   },
   data() {
     return {
@@ -333,20 +335,20 @@ export default {
         // disabledDate(time) {
         //   return time.getTime() > Date.now();
         // },
-        firstDayOfWeek: 6
+        firstDayOfWeek: 6,
       },
       total: 0,
       workshopId: "",
       isReadOnly: true,
       comment: { comment: "" },
-      selectedDay: new Date(),
+      selectedDay: null,
       loading: false,
       weekData: [],
       employees: [],
       tableData: [],
-      weekPayroll: []
+      weekPayroll: [],
     };
-  }
+  },
 };
 </script>
 <style>

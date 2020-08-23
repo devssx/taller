@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Comment extends Model
 {
-    public $fillable = ['week', 'comment', 'total'];
+    public $fillable = ['week', 'workshop_id', 'comment', 'total'];
 }

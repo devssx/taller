@@ -137,9 +137,9 @@ class SalesController extends Controller
             $query->distinct('id');
         }])->with(['services' => function ($query) {
             $query->distinct('id');
-        }])        
-        ->where('done_on', NULL)->orWhere('done_on', '>', date('Y-m-d 00:00:00', strtotime('-7 days')))
-        ->where('workshop_id', '=', $request->get('workshop'))->paginate(10);
+        }])
+            ->where('done_on', NULL)->orWhere('done_on', '>', date('Y-m-d 00:00:00', strtotime('-7 days')))
+            ->where('workshop_id', '=', $request->get('workshop'))->paginate(10);
     }
 
     // Bitacora
@@ -205,7 +205,7 @@ class SalesController extends Controller
                 ->paginate(1000000);
 
             $week = new DateTime($request->get('start'));
-            $comment = Comment::firstOrCreate(['week' => $week->format("Ymd")]);
+            $comment = Comment::firstOrCreate(['week' => $week->format("Ymd"), 'workshop_id' => $request->get('workshop')]);
             return ['d' => $result, 'c' => $comment];
         }
 

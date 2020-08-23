@@ -16,7 +16,7 @@
         <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
         </el-select>
-        <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
+        <el-button type="primary" icon="el-icon-search" @click="onSearch" :disabled="!selectedDay"></el-button>
       </el-col>
       <el-col :span="4" align="end"></el-col>
     </el-row>
@@ -263,13 +263,13 @@ export default {
         let iva = importe * 0.08;
         let total = importe + iva;
 
-        // total de iva
-        this.totalIvaIngresos += iva;
-
         // sin contar creditos
         if (sale.method != 6) {
           this.ingresosSinIva += importe;
           this.ingresosConIva += total;
+
+          // total de iva
+          this.totalIvaIngresos += iva;
         }
 
         switch (sale.method) {
@@ -290,7 +290,7 @@ export default {
             break;
           case 6:
             // credito
-            this.totalCreIva += total;
+            this.totalCreIva += importe;
             this.dataIvaCredito.push({
               folio: folio,
               factura: sale.bill,
@@ -401,7 +401,7 @@ export default {
       totalIvaIngresos: 0,
       workshopId: 1,
       prevDay: null,
-      selectedDay: new Date(),
+      selectedDay: null,
       search: "",
       loading: false,
       dataEfectivo: [],

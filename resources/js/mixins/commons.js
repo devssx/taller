@@ -229,6 +229,13 @@ export default {
                 });
             }).catch(() => { });
         },
+        confirmar(message, callback) {
+            this.$confirm(message, 'Warning', {
+                confirmButtonText: 'Aceptar',
+                cancelButtonText: 'Cancelar',
+                type: 'warning'
+            }).then(() => callback()).catch(() => { });
+        },
         createReceipt(currentSale, receiptImg, myCanvas) {
             var $this = this;
             myCanvas.width = receiptImg.width;

@@ -16,10 +16,10 @@
         <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
         </el-select>
-        <el-button type="primary" icon="el-icon-search" @click="onSearch"></el-button>
+        <el-button type="primary" icon="el-icon-search" @click="onSearch" :disabled="!selectedDay"></el-button>
       </el-col>
       <el-col :span="4" align="end">
-        <el-button type="primary" icon="el-icon-plus" @click="addNew">Nuevo</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="addNew" :disabled="!selectedDay">Nuevo</el-button>
         <expense-edit
           :workshop="workshopId"
           :selectedItem="newExpense"
@@ -45,14 +45,18 @@
           <el-col :span="24" align="end" style="padding-right: 5px;">${{formatPrice(funds) }}</el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end" style="padding-right: 5px;">${{formatPrice(totalSinIva) }}</el-col>
+          <el-col
+            :span="24"
+            align="end"
+            style="padding-right: 5px;"
+          >${{formatPrice(totalSinIva-totalPayroll) }}</el-col>
         </el-row>
         <el-row class="br bb bl">
           <el-col
             :span="24"
             align="end"
             style="padding-right: 5px;"
-          >${{formatPrice(funds-totalSinIva) }}</el-col>
+          >${{formatPrice(funds-(totalSinIva-totalPayroll)) }}</el-col>
         </el-row>
         <el-row>
           <el-col :span="24" align="end">
@@ -212,10 +216,10 @@ export default {
       this.workshopId = this.myUser[0].workshop_id;
     }
 
-    this.prevDay = this.initDayOfWeekDate(this.selectedDay, 2);
-    let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
-    this.newExpense.week = week;
-    this.getFunds(`/api/funds?week=${week}&workshop=${this.workshopId}`);
+    // this.prevDay = this.initDayOfWeekDate(this.selectedDay, 2);
+    // let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
+    // this.newExpense.week = week;
+    // this.getFunds(`/api/funds?week=${week}&workshop=${this.workshopId}`);
   },
   methods: {
     getFunds(url) {
@@ -323,7 +327,7 @@ export default {
           let total = importe + iva;
 
           if (sale.method == 6) {
-            $this.totalCreditos += total;
+            $this.totalCreditos += importe;
           } else {
             $this.ingresosSinIva += importe;
           }
@@ -364,6 +368,7 @@ export default {
     },
     calculaTotales() {
       this.totalSinIva = 0;
+      this.totalPayroll = 0;
 
       this.tableData1.forEach((d) => {
         this.totalSinIva += parseFloat(d.total);
@@ -377,11 +382,13 @@ export default {
 
       this.dataPayroll.forEach((d) => {
         this.totalSinIva += parseFloat(d.total);
+        this.totalPayroll += parseFloat(d.total);
       });
     },
   },
   data() {
     return {
+      totalPayroll: 0,
       ingresosSinIva: 0,
       totalSinIva: 0,
       totalCreditos: 0,
@@ -390,7 +397,7 @@ export default {
 
       workshopId: 0,
       activeIndex: 0,
-      selectedDay: new Date(),
+      selectedDay: null,
       loading: false,
       tableData1: [],
       tableData2: [],

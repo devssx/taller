@@ -921,8 +921,8 @@ export default {
       weekData: [],
       weekPayroll: [],
       weekComments: [],
-      selectedDay: new Date(),
-      prevDay: new Date(),
+      selectedDay: null,
+      prevDay: null,
       search: "",
       loading: false,
       tableACData: [], // Servicio A/C
