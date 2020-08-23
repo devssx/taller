@@ -9,6 +9,7 @@
       <el-col :span="18">
         <el-date-picker
           v-model="selectedDay"
+          :picker-options="pickerOptions"
           type="week"
           format="Week WW"
           placeholder="Seleccionar Semana"
@@ -222,6 +223,9 @@ export default {
       page: 1,
       selectedDay: null,
       search: "",
+      pickerOptions: {
+        firstDayOfWeek: 6,
+      },
     };
   },
 };
