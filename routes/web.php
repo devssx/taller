@@ -36,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', 'SalesController@index')->name('sales.list');
         Route::get('/create', 'SalesController@create')->name('sales.create');
         Route::get('/receipt/{id?}', 'SalesController@receipt')->name('sales.receipt');
+        Route::get('/copy/{id?}', 'SalesController@copy')->name('sales.copy');
     });
 
     Route::prefix('clients')->group(function () {

@@ -131,8 +131,11 @@
             <el-row>
               <el-col :span="24">
                 <el-row class="row-item">
-                  <el-col>
+                  <el-col :span="12">
                     <h3>Detalle General:</h3>
+                  </el-col>
+                  <el-col :span="12" align="end">
+                    <el-button size="mini" type="text">Editar Precios</el-button>
                   </el-col>
                 </el-row>
                 <el-row class="row-item">
@@ -166,8 +169,11 @@
                       v-bind:key="index"
                       class="row-item"
                     >
-                      <el-col :span="6" :offset="4">{{ itemName (item) }}</el-col>
-                      <el-col :span="4">{{ hiddenFormatPrice(itemPrice(item, service)) }}</el-col>
+                      <el-col :span="6" :offset="4">{{ item.name }}</el-col>
+                      <el-col v-if="false" :span="4">{{ hiddenFormatPrice(item.low_price) }}</el-col>
+                      <el-col :span="4">
+                        <el-input size="mini" v-model="item.low_price"></el-input>
+                      </el-col>
                     </el-row>
                     <el-row class="row-item" v-if="total != sumServiceTotal()">
                       <el-col :span="6" :offset="4">Otro</el-col>
@@ -220,7 +226,7 @@ export default {
   props: ["sale"],
   data() {
     return {
-      showPrices: false,
+      showPrices: true,
       image1Loaded: false,
       image2Loaded: false,
       method: 0,
@@ -345,13 +351,6 @@ export default {
         this.currentSale.client = newClient.id;
         this.currentSale.phonenumber = newClient.phonenumber;
       }
-    },
-    itemPrice(item, service) {
-      // normal
-      if (this.order.price) return item[this.order.price + "_price"];
-
-      // multi price (low, mid, high)
-      return item[service.selectedPrice + "_price"];
     },
     itemName(item) {
       if (item.name) {

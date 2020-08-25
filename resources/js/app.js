@@ -65,6 +65,7 @@ Vue.component('create-pop-sales', require('./components/Sales/CreatePopUpCompone
 Vue.component('create-sales', require('./components/Sales/CreateComponent').default);
 Vue.component('select-service', require('./components/Sales/SelectServiceComponent').default);
 Vue.component('receipt-sales', require('./components/Sales/ReceiptComponent').default);
+Vue.component('receipt-copy', require('./components/Sales/ReceiptCopyComponent').default);
 Vue.component('confirm-sales', require('./components/Sales/ConfirmComponent').default);
 
 Vue.component('create-items', require('./components/Items/CreateComponent').default);

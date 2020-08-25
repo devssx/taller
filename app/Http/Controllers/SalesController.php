@@ -131,6 +131,25 @@ class SalesController extends Controller
         return view('sales.receipt');
     }
 
+    
+    public function copy($id = 0)
+    {
+        if (!empty($id)) {
+            $sale = Sale::with('saleServices')->with('saleServices.item')->with('client')->with('user')
+                ->with(['car' => function ($query) {
+                    $query->distinct('id');
+                }])->with(['services' => function ($query) {
+                    $query->distinct('id');
+                }])->find($id);
+
+            return view('sales.copy', [
+                'sale' => $sale,
+            ]);
+        }
+
+        return view('sales.copy');
+    }
+
     public function get(Request $request)
     {
         return Sale::with('saleServices')->with('client')->with('user')->with(['car' => function ($query) {
