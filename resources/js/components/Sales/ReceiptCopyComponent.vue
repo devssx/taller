@@ -134,9 +134,6 @@
                   <el-col :span="12">
                     <h3>Detalle General:</h3>
                   </el-col>
-                  <el-col :span="12" align="end">
-                    <el-button size="mini" type="text">Editar Precios</el-button>
-                  </el-col>
                 </el-row>
                 <el-row class="row-item">
                   <el-col :span="6" :offset="4">Cliente:</el-col>
@@ -172,7 +169,13 @@
                       <el-col :span="6" :offset="4">{{ item.name }}</el-col>
                       <el-col v-if="false" :span="4">{{ hiddenFormatPrice(item.low_price) }}</el-col>
                       <el-col :span="4">
-                        <el-input size="mini" v-model="item.low_price"></el-input>
+                        <el-input
+                          v-if="showPrices"
+                          class="mycustom"
+                          size="mini"
+                          v-model="item.low_price"
+                          @change="onChangePrice(item)"
+                        ></el-input>
                       </el-col>
                     </el-row>
                     <el-row class="row-item" v-if="total != sumServiceTotal()">
@@ -190,10 +193,10 @@
               </el-col>
             </el-row>
             <el-row>
-              <el-col :span="2">
+              <el-col :span="10">
                 <h4>Total</h4>
               </el-col>
-              <el-col :span="3" :offset="8">${{ formatPrice(total) }}</el-col>
+              <el-col :span="4" align="end">${{ formatPrice(total) }}</el-col>
               <el-col>
                 <div style="float: right;">
                   <el-button
@@ -201,7 +204,6 @@
                     size="mini"
                     type="text"
                   >{{ textBtnInfo() }}</el-button>
-                  <el-button @click="showPrices=!showPrices" size="mini" type="text">Editar Precios</el-button>
                 </div>
               </el-col>
             </el-row>
@@ -211,7 +213,7 @@
       <el-row type="flex" justify="end">
         <el-col :span="5" style="text-align:right;">
           <br />
-          <el-button type="secondary" @click="back()">Regresar</el-button>
+          <!-- <el-button type="secondary" @click="back()">Regresar</el-button> -->
           <el-button type="primary" @click="save()">Guardar</el-button>
         </el-col>
       </el-row>
@@ -322,6 +324,11 @@ export default {
     });
   },
   methods: {
+    onChangePrice(item) {
+      if (isNaN(item.low_price) || !item.low_price)
+        item.low_price = 0;
+      this.computeTotal(item);
+    },
     loadUser(url) {
       const $this = this;
       $this.loading = true;
@@ -405,6 +412,9 @@ export default {
             }
           }
         }
+
+        // igualar total
+        this.currentSale.total = total;
       }
 
       return total;
@@ -460,35 +470,7 @@ export default {
         return 0;
       }
 
-      if (this.currentSale) {
-        return parseFloat(this.currentSale.total);
-      }
-
-      var total = 0;
-      const order = this.order;
-
-      for (var i in order.services) {
-        var serviceSelectedPrice = order.services[i].selectedPrice;
-
-        for (var x in order.services[i].items) {
-          // individual price
-          if (serviceSelectedPrice) {
-            if (order.services[i].items[x][serviceSelectedPrice + "_price"]) {
-              total += parseFloat(
-                order.services[i].items[x][serviceSelectedPrice + "_price"]
-              );
-            }
-          } else {
-            if (order.services[i].items[x][order.price + "_price"]) {
-              total += parseFloat(
-                order.services[i].items[x][order.price + "_price"]
-              );
-            }
-          }
-        }
-      }
-
-      return total;
+      return parseFloat(this.currentSale.total);
     },
   },
 };
@@ -504,5 +486,16 @@ export default {
 }
 .el-form-item {
   margin-bottom: 4px;
+}
+.mycustom {
+  border: 0;
+}
+
+.mycustom .el-input__inner {
+  border: 0;
+  border-radius: 0;
+  background: #efcfff;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: right;
 }
 </style>
