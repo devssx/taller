@@ -31,6 +31,7 @@
             </el-form-item>
             <el-form-item label="Cliente" prop="client">
               <el-select
+                @change="onChangeClient"
                 filterable
                 placeholder="Selecciona un Cliente"
                 v-model="currentSale.client"
@@ -55,50 +56,48 @@
                 :rows="2"
               ></el-input>
             </el-form-item>
-            <div>
-              <el-form-item label="Garantía" prop="guaranty">
-                <el-input
-                  style="width: 220px;"
-                  type="textarea"
-                  v-model="currentSale.guaranty"
-                  maxlength="165"
-                  :rows="2"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="Detalles" prop="details">
-                <el-input
-                  style="width: 220px;"
-                  type="textarea"
-                  v-model="currentSale.details"
-                  maxlength="300"
-                  :rows="2"
-                ></el-input>
-              </el-form-item>
-              <el-form-item label="Marca" prop="maker">
-                <el-input style="width: 220px;" v-model="currentSale.maker"></el-input>
-              </el-form-item>
-              <el-form-item label="Modelo" prop="brand">
-                <el-input style="width: 220px;" v-model="currentSale.brand"></el-input>
-              </el-form-item>
-              <el-form-item label="Año" prop="year">
-                <el-input style="width: 220px;" v-model="currentSale.year"></el-input>
-              </el-form-item>
-            </div>
+            <el-form-item label="Garantía" prop="guaranty">
+              <el-input
+                style="width: 220px;"
+                type="textarea"
+                v-model="currentSale.guaranty"
+                maxlength="165"
+                :rows="2"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="Detalles" prop="details">
+              <el-input
+                style="width: 220px;"
+                type="textarea"
+                v-model="currentSale.details"
+                maxlength="300"
+                :rows="2"
+              ></el-input>
+            </el-form-item>
+            <!-- <el-form-item label="Marca" prop="maker">
+              <el-input style="width: 220px;" v-model="currentSale.maker"></el-input>
+            </el-form-item>
+            <el-form-item label="Modelo" prop="brand">
+              <el-input style="width: 220px;" v-model="currentSale.brand"></el-input>
+            </el-form-item>
+            <el-form-item label="Año" prop="year">
+              <el-input style="width: 220px;" v-model="currentSale.year"></el-input>
+            </el-form-item>
             <el-form-item label="Color" prop="color">
               <el-input style="width: 220px;" v-model="currentSale.color"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <!-- Cambido a proximo sevicio -->
-            <el-form-item label="Próximo servicio" prop="next_service">
+            <!-- <el-form-item label="Próximo servicio" prop="next_service">
               <el-date-picker
                 v-model="currentSale.next_service"
                 type="date"
                 format="dd-MM-yyyy"
                 placeholder="Seleccionar Día"
               ></el-date-picker>
-            </el-form-item>
+            </el-form-item> 
             <el-form-item label="KM. de Ingreso" prop="km">
               <el-input style="width: 220px;" v-model="currentSale.km"></el-input>
-            </el-form-item>
+            </el-form-item>-->
             <div v-if="order.receiptMode">
               <el-form-item label="Tipo:">
                 <el-radio-group v-model="service_type">
@@ -137,7 +136,7 @@
                 </el-row>
                 <el-row class="row-item">
                   <el-col :span="6" :offset="4">Cliente:</el-col>
-                  <el-col :span="4">{{currentSale.client.name}}</el-col>
+                  <el-col :span="4">{{getClientName()}}</el-col>
                 </el-row>
                 <el-row class="row-item">
                   <el-col :span="6" :offset="4">Teléfono:</el-col>
@@ -324,9 +323,17 @@ export default {
     });
   },
   methods: {
+    onChangeClient(value) {
+      let res = this.clients.filter((c) => c.id == value);
+      this.currentSale.phonenumber = res.length > 0 ? res[0].phonenumber : "";
+    },
+    getClientName() {
+      var id = this.currentSale.client;
+      let res = this.clients.filter((c) => c.id == id);
+      return res.length > 0 ? res[0].name : "";
+    },
     onChangePrice(item) {
-      if (isNaN(item.low_price) || !item.low_price)
-        item.low_price = 0;
+      if (isNaN(item.low_price) || !item.low_price) item.low_price = 0;
       this.computeTotal(item);
     },
     loadUser(url) {
@@ -492,10 +499,10 @@ export default {
 }
 
 .mycustom .el-input__inner {
-  border: 0;
+  // border: 1px;
   border-radius: 0;
-  background: #efcfff;
-  border-bottom: 1px solid #f0f0f0;
+  // background: #f0f0f0;
+  // border-bottom: 1px solid #f0f0f0;
   text-align: right;
 }
 </style>

@@ -62,6 +62,7 @@
             <el-form-item label="Cliente" prop="client">
               <el-select
                 filterable
+                @change="onChangeClient"
                 placeholder="Selecciona un Cliente"
                 v-model="form.client"
                 :disabled="currentSale != false"
@@ -391,6 +392,10 @@ export default {
     });
   },
   methods: {
+    onChangeClient(value) {
+      let res = this.clients.filter((c) => c.id == value);
+      this.currentSale.phonenumber = res.length > 0 ? res[0].phonenumber : "";
+    },
     loadUser(url) {
       const $this = this;
       $this.loading = true;
