@@ -175,7 +175,7 @@ export default {
       }
 
       let balance = $this.funds - $this.expense;
-      if ($this.selectedItem.amount > balance) {
+      if ($this.selectedItem.amount > balance || $this.selectedItem.total > balance) {
         this.$alert("Importe supera los fondos.", "Importe no válido", {
           confirmButtonText: "OK",
           type: "warning",
@@ -183,6 +183,13 @@ export default {
         return;
       }
 
+      this.confirmar(
+        `¿Esta seguro que desea agregar el gasto: ${this.selectedItem.concept}?`,
+        this.finish
+      );
+    },
+    finish() {
+      var $this = this;
       this.dialogVisible = false;
       this.loading = false;
       $this.$refs.currentForm.validate((valid) => {

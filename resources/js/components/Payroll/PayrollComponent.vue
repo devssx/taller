@@ -591,56 +591,61 @@ export default {
         return;
       }
 
-      // save totals
-      axios
-        .post("/api/payroll/save", {
-          // Periodo Info
-          number: weekNumb,
-          start: startFormat,
-          end: endFormat,
+      this.confirmar(
+        `Esta acción guadará la nómina del empleado: ${this.selectedEmployee} ¿Desea continuar?`,
+        () => {
+          // save totals
+          axios
+            .post("/api/payroll/save", {
+              // Periodo Info
+              number: weekNumb,
+              start: startFormat,
+              end: endFormat,
 
-          week: week,
-          workshop: $this.workshopId,
-          userID: userID,
-          comment: $this.comment,
-          // AC
-          totalWeekAc: weekAc.totalWeek,
-          commissionAc: weekAc.percentCommission,
-          discountsAc: weekAc.discounts,
-          salaryAc: weekAc.sueldo,
-          totalAc: weekAc.total,
-          // Mecanico
-          totalWeekMec: weekMec.totalWeek,
-          commissionMec: weekMec.percentCommission,
-          discountsMec: weekMec.discounts,
-          salaryMec: weekMec.sueldo,
-          totalMec: weekMec.total,
-          // Electrico
-          totalWeekEle: weekEle.totalWeek,
-          commissionEle: weekEle.percentCommission,
-          discountsEle: weekEle.discounts,
-          salaryEle: weekEle.sueldo,
-          totalEle: weekEle.total,
-        })
-        .then(function (response) {
-          $this.$message({
-            message: "El registro fué editado correctamente.",
-            type: "success",
-          });
+              week: week,
+              workshop: $this.workshopId,
+              userID: userID,
+              comment: $this.comment,
+              // AC
+              totalWeekAc: weekAc.totalWeek,
+              commissionAc: weekAc.percentCommission,
+              discountsAc: weekAc.discounts,
+              salaryAc: weekAc.sueldo,
+              totalAc: weekAc.total,
+              // Mecanico
+              totalWeekMec: weekMec.totalWeek,
+              commissionMec: weekMec.percentCommission,
+              discountsMec: weekMec.discounts,
+              salaryMec: weekMec.sueldo,
+              totalMec: weekMec.total,
+              // Electrico
+              totalWeekEle: weekEle.totalWeek,
+              commissionEle: weekEle.percentCommission,
+              discountsEle: weekEle.discounts,
+              salaryEle: weekEle.sueldo,
+              totalEle: weekEle.total,
+            })
+            .then(function (response) {
+              $this.$message({
+                message: "El registro fué editado correctamente.",
+                type: "success",
+              });
 
-          $this.loading = false;
-          $this.onSearch();
-        })
-        .catch((error) => {
-          if (error.response.data.errors) {
-            var errors = error.response.data.errors;
-            $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-              confirmButtonText: "OK",
-              type: "error",
+              $this.loading = false;
+              $this.onSearch();
+            })
+            .catch((error) => {
+              if (error.response.data.errors) {
+                var errors = error.response.data.errors;
+                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
+                  confirmButtonText: "OK",
+                  type: "error",
+                });
+              }
+              $this.loading = false;
             });
-          }
-          $this.loading = false;
-        });
+        }
+      );
     },
     handleSelect(key, keyPath) {
       this.activeIndex = key;

@@ -155,34 +155,39 @@ export default {
       $this.dialogVisible = false;
       $this.loading = false;
 
-      $this.$refs.currentForm.validate((valid) => {
-        if (valid) {
-          $this.loading = true;
-          axios
-            .post("/api/sales/editIncome", changes)
-            .then(function (response) {
-              $this.$message({
-                message: "El registro fué editado correctamente.",
-                type: "success",
-              });
+      this.confirmar(
+        `¿Esta seguro que desea modificar el ingreso?`,
+        () => {
+          $this.$refs.currentForm.validate((valid) => {
+            if (valid) {
+              $this.loading = true;
+              axios
+                .post("/api/sales/editIncome", changes)
+                .then(function (response) {
+                  $this.$message({
+                    message: "El registro fué editado correctamente.",
+                    type: "success",
+                  });
 
-              $this.$root.$emit("refreshIncome");
-              $this.cancel();
-            })
-            .catch((error) => {
-              if (error.response.data.errors) {
-                var errors = error.response.data.errors;
-                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-                  confirmButtonText: "OK",
-                  type: "error",
+                  $this.$root.$emit("refreshIncome");
+                  $this.cancel();
+                })
+                .catch((error) => {
+                  if (error.response.data.errors) {
+                    var errors = error.response.data.errors;
+                    $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
+                      confirmButtonText: "OK",
+                      type: "error",
+                    });
+                  }
+                  $this.loading = false;
                 });
-              }
-              $this.loading = false;
-            });
-        } else {
-          return false;
+            } else {
+              return false;
+            }
+          });
         }
-      });
+      );
     },
   },
 };

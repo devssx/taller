@@ -230,7 +230,7 @@ export default {
             }).catch(() => { });
         },
         confirmar(message, callback) {
-            this.$confirm(message, 'Warning', {
+            this.$confirm(message, 'Confirmar', {
                 confirmButtonText: 'Aceptar',
                 cancelButtonText: 'Cancelar',
                 type: 'warning'
