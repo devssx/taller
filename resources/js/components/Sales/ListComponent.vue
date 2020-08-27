@@ -38,8 +38,11 @@
           <template slot-scope="scope">${{ formatPrice(scope.row.total) }}</template>
         </el-table-column>
         <el-table-column prop="created_at" label="Fecha"></el-table-column>
-        <el-table-column width="150px">
+        <el-table-column width="220px">
           <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="Crear cotización con la misma información" placement="top">
+              <el-button icon="el-icon-document-copy" @click="goto('/sales/copy/' + scope.row.id)"></el-button>
+            </el-tooltip>
             <el-tooltip
               class="item"
               effect="dark"
