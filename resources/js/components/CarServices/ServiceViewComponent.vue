@@ -389,7 +389,7 @@ export default {
   watch: {
     filterText(val) {
       this.$refs.services.filter(val);
-    }
+    },
   },
   data() {
     return {
@@ -413,7 +413,7 @@ export default {
         high: 0,
         name: "",
         comment: "",
-        warranty: ""
+        warranty: "",
       },
 
       selectedCar: {
@@ -421,7 +421,7 @@ export default {
         brand: "",
         year: "",
         endYear: "",
-        image: ""
+        image: "",
       },
 
       maker: "",
@@ -446,11 +446,11 @@ export default {
       listItems: [],
       save: false,
       defaultProps: {
-        label: "label"
-      }
+        label: "label",
+      },
     };
   },
-  mounted: function() {
+  mounted: function () {
     const $this = this;
 
     const width = window.innerWidth > 0 ? window.innerWidth : screen.width;
@@ -471,25 +471,25 @@ export default {
       $this.years.push(year);
     }
 
-    axios.get("/api/cars?all").then(function(response) {
+    axios.get("/api/cars?all").then(function (response) {
       $this.cars = response.data;
     });
 
-    axios.get("/api/items?all=1").then(function(response) {
+    axios.get("/api/items?all=1").then(function (response) {
       $this.listItems = response.data;
     });
 
-    axios.get("/api/car/makers").then(function(response) {
+    axios.get("/api/car/makers").then(function (response) {
       $this.makers = response.data;
     });
 
     // GoBack
     if (localStorage.getItem("order") && $this.getParameter("back")) {
       var order = JSON.parse(localStorage.getItem("order"));
-      setTimeout(function() {
+      setTimeout(function () {
         if (order.car) {
           $this.selectedCar = order.car;
-          setTimeout(function() {
+          setTimeout(function () {
             $this.maker = $this.selectedCar.maker;
             $this.motor = $this.selectedCar.motor;
             $this.brand = order.brand;
@@ -530,16 +530,16 @@ export default {
       var $this = this;
       axios
         .post("/api/items", item)
-        .then(function(response) {
+        .then(function (response) {
           $this.adItemToService(response.data);
           $this.listItems.push(response.data);
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response.data.errors) {
             var errors = error.response.data.errors;
             $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
               confirmButtonText: "OK",
-              type: "error"
+              type: "error",
             });
           }
         });
@@ -570,7 +570,7 @@ export default {
       if (count > 0) {
         //var unSaved = this.services.filter(s => !s.id).length > 0;
         //var editing = this.services.filter(s => !s.isReadOnly).length > 0;
-        var services = this.services.filter(s => s.isSelected);
+        var services = this.services.filter((s) => s.isSelected);
         // if (unSaved || editing) {
         //   this.$message({
         //     message:
@@ -586,7 +586,7 @@ export default {
           brand: this.brand,
           year: this.year,
           receiptMode: mode == 1,
-          car: this.selectedCar
+          car: this.selectedCar,
         };
 
         const parsed = JSON.stringify(order);
@@ -595,14 +595,14 @@ export default {
       } else {
         this.$message({
           message: "Selecciona Al menos un servicio.",
-          type: "error"
+          type: "error",
         });
         return;
       }
     },
     getSelectedServices() {
       if (this.services.length == 0) return 0;
-      return this.services.filter(x => x.isSelected).length;
+      return this.services.filter((x) => x.isSelected).length;
     },
     deleteService(serviceItem) {
       var $this = this;
@@ -613,7 +613,7 @@ export default {
           {
             confirmButtonText: "Si",
             cancelButtonText: "No",
-            type: "warning"
+            type: "warning",
           }
         )
         .then(() => {
@@ -625,23 +625,23 @@ export default {
           //$this.loading = true;
           axios
             .delete("/api/carservices/" + serviceItem.id)
-            .then(function(response) {
+            .then(function (response) {
               $this.$message({
                 type: "success",
-                message: "Servicio elminado"
+                message: "Servicio elminado",
               });
               //$this.$root.$emit("refreshTable");
               //$this.dialogVisible = false;
               //$this.loading = false;
               $this.loadCarServices();
             })
-            .catch(error => {
+            .catch((error) => {
               //$this.loading = false;
               if (error.response.data.errors) {
                 var errors = error.response.data.errors;
                 $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
                   confirmButtonText: "OK",
-                  type: "error"
+                  type: "error",
                 });
               }
             });
@@ -653,7 +653,7 @@ export default {
       $this.isLoadingServices = true;
       axios
         .get("/api/carservices?id=" + $this.selectedCar.id)
-        .then(function(response) {
+        .then(function (response) {
           $this.services.splice(0, $this.services.length);
 
           for (var i = 0; i < response.data.length; i++) {
@@ -677,7 +677,7 @@ export default {
               service_id: response.data[i].service_id,
               name: response.data[i].name,
               label: response.data[i].name,
-              items: response.data[i].items
+              items: response.data[i].items,
             });
           }
 
@@ -691,23 +691,23 @@ export default {
           $this.isLoadingServices = false;
         });
     },
-    addService: function(service, total) {
+    addService: function (service, total) {
       if (this.selectedCar.id == undefined) {
         this.$notify({
           title: "Selecciona un carro válido",
           message: "El carro seleccionado no es válido",
-          type: "error"
+          type: "error",
         });
         return;
       }
 
       // don't duplicate services
-      var count = this.services.filter(x => x.name == service.name).length;
+      var count = this.services.filter((x) => x.name == service.name).length;
       if (count > 0) {
         this.$notify({
           title: "Ya existe.",
           message: "El servicio seleccionado ya existe.",
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -744,9 +744,9 @@ export default {
             mid: 0,
             mid_price: total,
             high: 0,
-            high_price: total
-          }
-        ]
+            high_price: total,
+          },
+        ],
       };
 
       // saves the new Service
@@ -758,7 +758,7 @@ export default {
       location.search
         .substr(1)
         .split("&")
-        .forEach(function(item) {
+        .forEach(function (item) {
           tmp = item.split("=");
           if (tmp[0] === name) result = decodeURIComponent(tmp[1]);
         });
@@ -776,7 +776,7 @@ export default {
         var maker = this.cars[i].maker;
         if (maker == selectedValue) {
           if (
-            this.brands.filter(m => m.brand == this.cars[i].brand).length == 0
+            this.brands.filter((m) => m.brand == this.cars[i].brand).length == 0
           ) {
             this.brands.push(this.cars[i]);
           }
@@ -791,7 +791,9 @@ export default {
       for (var i = 0; i < this.brands.length; i++) {
         var brand = this.brands[i].brand;
         if (brand == selectedValue) {
-          if (this.motors.filter(m => m == this.brands[i].motor).length == 0) {
+          if (
+            this.motors.filter((m) => m == this.brands[i].motor).length == 0
+          ) {
             this.motors.push(this.brands[i].motor);
           }
         }
@@ -803,12 +805,12 @@ export default {
     },
     onTDCChange(currentValue, oldValue) {
       var count = this.service.items.filter(
-        x => isNaN(x.usd_price) || x.usd_price <= 0
+        (x) => isNaN(x.usd_price) || x.usd_price <= 0
       ).length;
       if (count > 0) {
         this.$alert("Favor de asignar todos los precios en dólares.", "Error", {
           confirmButtonText: "OK",
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -847,10 +849,10 @@ export default {
             brand: $this.brand,
             motor: $this.motor,
             year: $this.year,
-            end_year: $this.year
-          }
+            end_year: $this.year,
+          },
         })
-        .then(function(response) {
+        .then(function (response) {
           if (response.data.length > 0) {
             $this.setSelectedCar(response.data[0]);
           } else {
@@ -865,19 +867,19 @@ export default {
                 {
                   confirmButtonText: "Si",
                   cancelButtonText: "No",
-                  type: "warning"
+                  type: "warning",
                 }
               )
-              .then(e => {
+              .then((e) => {
                 const car = {
                   maker: $this.maker.trim(),
                   brand: $this.brand.trim(),
                   motor: $this.motor.trim(),
-                  year: $this.year
+                  year: $this.year,
                 };
                 $this.$refs.carsForm.showDialog(car);
               })
-              .catch(e => {});
+              .catch((e) => {});
           }
 
           /* TODO TEMPORALMENTE COMENTADO
@@ -999,12 +1001,12 @@ export default {
         low: newService.low,
         mid: newService.mid,
         high: newService.high,
-        high: newService.high
+        high: newService.high,
       };
 
       axios
         .post("/api/carservices", saveParams)
-        .then(function(response) {
+        .then(function (response) {
           $this.service.isReadOnly = false;
           $this.isSaving = false;
 
@@ -1032,7 +1034,7 @@ export default {
                 service_id: dbService.service_id,
                 name: dbService.name,
                 label: dbService.name,
-                items: dbService.items
+                items: dbService.items,
               });
             }
 
@@ -1041,12 +1043,12 @@ export default {
             $this.serviceChanged($this.activeName);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response.data.errors) {
             var errors = error.response.data.errors;
             $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
               confirmButtonText: "OK",
-              type: "error"
+              type: "error",
             });
           }
 
@@ -1069,7 +1071,7 @@ export default {
         low: $this.service.low,
         mid: $this.service.mid,
         high: $this.service.high,
-        csid: $this.service.id
+        csid: $this.service.id,
       };
 
       var isNew = $this.service.isNew;
@@ -1086,40 +1088,43 @@ export default {
           low: $this.service.low,
           mid: $this.service.mid,
           high: $this.service.high,
-          high: $this.service.high
+          high: $this.service.high,
         };
       }
 
-      axios
-        .post("/api/carservices", saveParams)
-        .then(function(response) {
-          $this.$notify({
-            title: "¡Exito!",
-            message: isNew
-              ? "Servicio fue agregado correctamente"
-              : "Se ha editado el servicio correctamente",
-            type: "success"
-          });
-
-          $this.service.isReadOnly = false;
-          $this.isSaving = false;
-
-          // reload
-          $this.loadCarServices();
-        })
-        .catch(error => {
-          if (error.response.data.errors) {
-            var errors = error.response.data.errors;
-            $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-              confirmButtonText: "OK",
-              type: "error"
+      // confirmar
+      this.confirmar(`¿Esta seguro que desea modificar el servicio: ${this.service.name}?`, () => {
+        axios
+          .post("/api/carservices", saveParams)
+          .then(function (response) {
+            $this.$notify({
+              title: "¡Exito!",
+              message: isNew
+                ? "Servicio fue agregado correctamente"
+                : "Se ha editado el servicio correctamente",
+              type: "success",
             });
-          }
 
-          $this.isSaving = false;
-        });
-    }
-  }
+            $this.service.isReadOnly = false;
+            $this.isSaving = false;
+
+            // reload
+            $this.loadCarServices();
+          })
+          .catch((error) => {
+            if (error.response.data.errors) {
+              var errors = error.response.data.errors;
+              $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
+                confirmButtonText: "OK",
+                type: "error",
+              });
+            }
+
+            $this.isSaving = false;
+          });
+      });
+    },
+  },
 };
 </script>
 
