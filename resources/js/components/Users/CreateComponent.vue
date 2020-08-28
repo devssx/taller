@@ -24,14 +24,14 @@
             <el-form-item label="Nombre" prop="name">
               <el-input v-model="user.name"></el-input>
             </el-form-item>
-            <el-form-item label="Correo Electronico" prop="email">
+            <el-form-item v-show="!noEmail" label="Correo Electronico" prop="email">
               <el-input v-model="user.email"></el-input>
             </el-form-item>
-            <el-form-item label="Contraseña" prop="password">
+            <el-form-item v-show="!noEmail" label="Contraseña" prop="password">
               <el-input v-model="user.password"></el-input>
             </el-form-item>
             <el-form-item label="Rol" prop="role">
-              <el-select v-model="user.role" placeholder="Selecciona rol">
+              <el-select v-model="user.role" placeholder="Selecciona rol" @change="onChangeRol">
                 <el-option
                   v-for="role in roles"
                   :key="role.id"
@@ -63,75 +63,96 @@
 <script>
 export default {
   props: ["roles", "workshops"],
-  mounted: function() {
-  },
+  mounted: function () {},
   data() {
     return {
       dialogVisible: false,
       loading: false,
       labelPosition: "left",
+      noEmail: true,
+      auxMail: "",
       user: {
         name: "",
         email: "",
         password: "",
         role: "",
-        workshop_id: ""
+        workshop_id: "",
       },
       rules: {
         name: [
           {
             required: true,
             message: "Campo Nombre es obligatorio",
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         email: [
           {
             required: true,
             message: "Campo Correo Electronico es obligatorio",
-            trigger: "change"
+            trigger: "change",
           },
           {
             type: "email",
             message: "Correo Electronico invalido",
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         password: [
           {
             required: true,
             message: "Campo Contraseña es obligatorio",
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         role: [
           {
             required: true,
             message: "Campo Rol es obligatorio",
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         workshop_id: [
           {
             required: true,
             message: "Campo Taller es obligatorio",
-            trigger: "change"
-          }
-        ]
-      }
+            trigger: "change",
+          },
+        ],
+      },
     };
   },
   methods: {
+    onChangeRol(value) {
+      let rs = this.roles.filter((r) => r.id == value);
+      if (rs.length > 0) {
+        this.noEmail = rs[0].name == "Limpieza" || rs[0].name == "Empleado";
+        if (this.noEmail) {
+          if (!this.user.email.includes("@empty.com"))
+            this.auxMail = this.user.email;
+
+          var numb = Math.floor(Math.random() * 1000000);
+          var nb = this.pad(numb, 7);
+          this.user.email = `e${nb}@empty.com`;
+          this.user.password = Math.floor(Math.random() * 1000000);
+        } else {
+          if (!this.auxMail.includes("@empty.com"))
+            this.user.email = this.auxMail;
+          this.auxMail = "";
+          this.user.password = "";
+        }
+      }
+    },
     handleClose(done) {
       var $this = this;
       if ($this.user.name || $this.user.email || $this.user.password) {
         $this
           .$confirm("¿Estas seguro de no guardar el Usuario?")
-          .then(_ => {
+          .then((_) => {
             $this.cancel();
             done();
           })
-          .catch(_ => {});
+          .catch((_) => {});
       } else {
         $this.cancel();
         done();
@@ -144,26 +165,26 @@ export default {
     },
     saveUser() {
       var $this = this;
-      $this.$refs.userForm.validate(valid => {
+      $this.$refs.userForm.validate((valid) => {
         if (valid) {
           $this.loading = true;
           axios
             .post("/api/users", $this.user)
-            .then(function(response) {
+            .then(function (response) {
               $this.$notify({
                 title: "¡Exito!",
                 message: "El Usuario fue agregado correctamente",
-                type: "success"
+                type: "success",
               });
               $this.$root.$emit("refreshTable");
               $this.cancel();
             })
-            .catch(error => {
+            .catch((error) => {
               if (error.response.data.errors) {
                 var errors = error.response.data.errors;
                 $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
                   confirmButtonText: "OK",
-                  type: "error"
+                  type: "error",
                 });
               }
               $this.loading = false;
@@ -172,7 +193,7 @@ export default {
           return false;
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>

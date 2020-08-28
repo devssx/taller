@@ -13,7 +13,9 @@
           <template slot-scope="scope">{{ scope.row.id }}</template>
         </el-table-column>
         <el-table-column prop="name" label="Nombre"></el-table-column>
-        <el-table-column prop="email" label="Correo Electronico"></el-table-column>
+        <el-table-column prop="email" label="Correo Electronico">
+          <template slot-scope="scope">{{showEmail(scope.row.email)}}</template>
+        </el-table-column>
         <el-table-column prop="created_at" label="Fecha"></el-table-column>
         <el-table-column width="280px">
           <template slot="header" slot-scope="scope">
@@ -45,15 +47,18 @@
 <script>
 export default {
   props: ["roles", "workshops"],
-  mounted: function() {
+  mounted: function () {
     this.loadTable("/api/users");
     this.$root.$on("refreshTable", this.refreshTable);
   },
   methods: {
+    showEmail(email) {
+      return (email + "").includes("@empty.com") ? "" : email;
+    },
     loadTable(url) {
       var $this = this;
       $this.loading = true;
-      axios.get(url).then(function(response) {
+      axios.get(url).then(function (response) {
         $this.users = response.data;
         $this.loading = false;
       });
@@ -64,20 +69,20 @@ export default {
     handleCurrentChange(val) {
       this.page = val;
       this.refreshTable();
-    }
+    },
   },
   watch: {
-    search: function() {
+    search: function () {
       var $this = this;
       if ($this.timeout) {
         clearTimeout($this.timeout);
       }
-      $this.timeout = setTimeout(function() {
+      $this.timeout = setTimeout(function () {
         $this.loadTable(
           "/api/users?page=" + $this.page + "&search=" + $this.search
         );
       }, 1000);
-    }
+    },
   },
   data() {
     return {
@@ -85,8 +90,8 @@ export default {
       search: "",
       timeout: 0,
       page: 1,
-      loading: true
+      loading: true,
     };
-  }
+  },
 };
 </script>
