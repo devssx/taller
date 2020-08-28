@@ -127,10 +127,11 @@ export default {
       let rs = this.roles.filter((r) => r.id == value);
       if (rs.length > 0) {
         this.noEmail = rs[0].name == "Limpieza" || rs[0].name == "Empleado";
-        if (this.noEmail) {
-          if (!this.user.email.includes("@empty.com"))
-            this.auxMail = this.user.email;
 
+        if (!this.user.email.includes("@empty.com"))
+          this.auxMail = this.user.email;
+
+        if (this.noEmail) {
           var numb = Math.floor(Math.random() * 1000000);
           var nb = this.pad(numb, 7);
           this.user.email = `e${nb}@empty.com`;
@@ -138,7 +139,6 @@ export default {
         } else {
           if (!this.auxMail.includes("@empty.com"))
             this.user.email = this.auxMail;
-          this.auxMail = "";
           this.user.password = "";
         }
       }
