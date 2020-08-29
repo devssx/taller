@@ -4,6 +4,7 @@
       <el-table
         v-loading="loading"
         :data="sales.data"
+        size="small"
         class="table"
         stripe
         border
@@ -34,23 +35,37 @@
         <el-table-column label="Tipo">
           <template slot-scope="scope">{{status[scope.row.status]}}</template>
         </el-table-column>
-        <el-table-column label="Total">
+        <el-table-column label="Total" align="right">
           <template slot-scope="scope">${{ formatPrice(scope.row.total) }}</template>
         </el-table-column>
         <el-table-column prop="created_at" label="Fecha"></el-table-column>
-        <el-table-column width="220px">
+        <el-table-column width="180px" align="right">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="Crear cotización con la misma información" placement="top">
-              <el-button icon="el-icon-document-copy" @click="goto('/sales/copy/' + scope.row.id)"></el-button>
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="Crear cotización con la misma información"
+              placement="top"
+            >
+              <el-button
+                size="mini"
+                icon="el-icon-document-copy"
+                @click="goto('/sales/copy/' + scope.row.id)"
+              ></el-button>
             </el-tooltip>
             <el-tooltip
+              size="mini"
               class="item"
               effect="dark"
               content="Ver Cotización"
               placement="top"
               v-if="scope.row.status != 2"
             >
-              <el-button icon="el-icon-tickets" @click="goto('/sales/receipt/' + scope.row.id)"></el-button>
+              <el-button
+                size="mini"
+                icon="el-icon-tickets"
+                @click="goto('/sales/receipt/' + scope.row.id)"
+              ></el-button>
             </el-tooltip>
             <el-tooltip
               class="item"
@@ -59,10 +74,11 @@
               placement="top"
               v-if="scope.row.status == 2"
             >
-              <el-button icon="el-icon-tickets" @click="goto('/sales/receipt/' + scope.row.id)"></el-button>
+              <el-button size="mini" icon="el-icon-tickets" @click="goto('/sales/receipt/' + scope.row.id)"></el-button>
             </el-tooltip>
             <el-tooltip class="item" effect="dark" content="Cancelar" placement="top">
               <el-button
+                size="mini"
                 :disabled="scope.row.status > 2"
                 type="danger"
                 icon="el-icon-document-delete"
