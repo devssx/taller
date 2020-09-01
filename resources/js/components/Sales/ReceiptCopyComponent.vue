@@ -74,7 +74,7 @@
                 :rows="2"
               ></el-input>
             </el-form-item>
-            <!-- <el-form-item label="Marca" prop="maker">
+            <el-form-item label="Marca" prop="maker">
               <el-input style="width: 220px;" v-model="currentSale.maker"></el-input>
             </el-form-item>
             <el-form-item label="Modelo" prop="brand">
@@ -85,19 +85,19 @@
             </el-form-item>
             <el-form-item label="Color" prop="color">
               <el-input style="width: 220px;" v-model="currentSale.color"></el-input>
-            </el-form-item> -->
+            </el-form-item>
             <!-- Cambido a proximo sevicio -->
-            <!-- <el-form-item label="Próximo servicio" prop="next_service">
+            <el-form-item label="Próximo servicio" prop="next_service">
               <el-date-picker
                 v-model="currentSale.next_service"
                 type="date"
                 format="dd-MM-yyyy"
                 placeholder="Seleccionar Día"
               ></el-date-picker>
-            </el-form-item> 
+            </el-form-item>
             <el-form-item label="KM. de Ingreso" prop="km">
               <el-input style="width: 220px;" v-model="currentSale.km"></el-input>
-            </el-form-item>-->
+            </el-form-item>
             <div v-if="order.receiptMode">
               <el-form-item label="Tipo:">
                 <el-radio-group v-model="service_type">
@@ -439,6 +439,9 @@ export default {
           $this.order.workshop = $this.currentSale.workshop_id;
           $this.order.phonenumber = $this.currentSale.phonenumber;
           $this.order.concept = $this.currentSale.concept;
+          $this.order.maker = $this.currentSale.maker;
+          $this.order.brand = $this.currentSale.brand;
+          $this.order.year = $this.currentSale.year;
           $this.order.color = $this.currentSale.color;
           $this.order.next_service = $this.currentSale.next_service;
           $this.order.km = $this.currentSale.km;

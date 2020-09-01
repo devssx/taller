@@ -393,8 +393,8 @@ export default {
   },
   methods: {
     onChangeClient(value) {
-      let res = this.clients.filter((c) => c.id == value);
-      this.currentSale.phonenumber = res.length > 0 ? res[0].phonenumber : "";
+      // let res = this.clients.filter((c) => c.id == value);
+      // this.currentSale.phonenumber = res.length > 0 ? res[0].phonenumber : "";
     },
     loadUser(url) {
       const $this = this;

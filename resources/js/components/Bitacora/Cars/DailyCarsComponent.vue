@@ -29,10 +29,10 @@
             <template slot-scope="scope">{{ fixDate(scope.row.created_at) }}</template>
           </el-table-column>
           <el-table-column label="Marca">
-            <template slot-scope="scope">{{ scope.row.car[0].maker }}</template>
+            <template slot-scope="scope">{{ scope.row.maker }}</template>
           </el-table-column>
           <el-table-column label="Modelo">
-            <template slot-scope="scope">{{ scope.row.car[0].brand }}</template>
+            <template slot-scope="scope">{{ scope.row.brand }}</template>
           </el-table-column>
           <el-table-column label="Año" width="65" header-align="center" align="center">
             <template slot-scope="scope">{{ scope.row.year }}</template>
