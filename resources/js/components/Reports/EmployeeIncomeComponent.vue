@@ -31,7 +31,7 @@
         <el-table size="mini" :data="tableData" style="width: 100%" v-loading="loading">
           <el-table-column align="left" label="NOMBRE" width="200" prop="name"></el-table-column>
           <el-table-column align="center" label="ENERO" prop="jan"></el-table-column>
-          <el-table-column align="center" label="FEBRERO" prop="feb"></el-table-column>
+          <el-table-column align="center" label="FEB" prop="feb"></el-table-column>
           <el-table-column align="center" label="MARZO" prop="mar"></el-table-column>
           <el-table-column align="center" label="ABRIL" prop="apr"></el-table-column>
           <el-table-column align="center" label="MAYO" prop="may"></el-table-column>
@@ -41,7 +41,7 @@
           <el-table-column align="center" label="SEPT" prop="sep"></el-table-column>
           <el-table-column align="center" label="OCT" prop="oct"></el-table-column>
           <el-table-column align="center" label="NOV" prop="nov"></el-table-column>
-          <el-table-column align="center" label="DICIEMBRE" prop="dec"></el-table-column>
+          <el-table-column align="center" label="DIC" prop="dec"></el-table-column>
           <el-table-column align="center" label="TOTAL" prop="total">
             <template slot-scope="scope">${{formatPrice(scope.row.total)}}</template>
           </el-table-column>

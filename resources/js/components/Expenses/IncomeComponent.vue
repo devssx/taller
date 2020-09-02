@@ -84,7 +84,7 @@
         <el-row class="br bl">
           <el-col :span="24">
             <el-table size="mini" :data="dataEfectivo" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="No. Recibo" prop="folio"></el-table-column>
+              <el-table-column align="center" label="Recibo" prop="folio"></el-table-column>
               <el-table-column align="center" label="Total" prop="total">
                 <template slot-scope="scope">{{ formatPrice(scope.row.total) }}</template>
               </el-table-column>
@@ -103,10 +103,10 @@
         <el-row class="br bl">
           <el-col :span="24">
             <el-table size="mini" :data="dataIvaEfectivo" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="No. Recibo" width="100" prop="folio"></el-table-column>
-              <el-table-column align="center" label="No. Factura" width="100" prop="factura"></el-table-column>
+              <el-table-column align="center" label="Recibo" width="100" prop="folio"></el-table-column>
+              <el-table-column align="center" label="Factura" width="100" prop="factura"></el-table-column>
               <el-table-column align="center" label="Efectivo" prop="efectivo"></el-table-column>
-              <el-table-column align="right" label="Imp. sin Iva" prop="importe">
+              <el-table-column align="right" label="Imp. sin Iva" prop="importe" width="100">
                 <template slot-scope="scope">{{ formatPrice(scope.row.importe) }}</template>
               </el-table-column>
               <el-table-column align="right" label="Iva" prop="iva">
@@ -140,10 +140,10 @@
               style="width: 100%"
               v-loading="loading"
             >
-              <el-table-column align="center" label="No. Recibo" prop="folio"></el-table-column>
-              <el-table-column align="center" label="No. Factura" prop="factura"></el-table-column>
-              <el-table-column align="center" label="Fecha de Pago" prop="fecha" width="140"></el-table-column>
-              <el-table-column align="right" label="Imp. sin Iva" prop="importe">
+              <el-table-column align="center" label="Recibo" prop="folio"></el-table-column>
+              <el-table-column align="center" label="Factura" prop="factura"></el-table-column>
+              <el-table-column align="center" label="Fecha Pago" prop="fecha" width="140"></el-table-column>
+              <el-table-column align="right" label="Imp. sin Iva" prop="importe" width="100">
                 <template slot-scope="scope">{{ formatPrice(scope.row.importe) }}</template>
               </el-table-column>
               <el-table-column align="right" label="Iva" prop="iva">
@@ -170,10 +170,10 @@
         <el-row class="br bl">
           <el-col :span="24">
             <el-table size="mini" :data="dataIvaCredito" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="No. Recibo" prop="folio"></el-table-column>
-              <el-table-column align="center" label="No. Factura" prop="factura"></el-table-column>
-              <el-table-column align="center" label="Fecha de Pago" prop="fecha" width="140"></el-table-column>
-              <el-table-column align="right" label="Imp. sin Iva" prop="importe">
+              <el-table-column align="center" label="Recibo" prop="folio"></el-table-column>
+              <el-table-column align="center" label="Factura" prop="factura"></el-table-column>
+              <el-table-column align="center" label="Fecha Pago" prop="fecha" width="100"></el-table-column>
+              <el-table-column align="right" label="Imp. sin Iva" prop="importe" width="100">
                 <template slot-scope="scope">{{ formatPrice(scope.row.importe) }}</template>
               </el-table-column>
               <el-table-column align="right" label="Iva" prop="iva">
@@ -183,7 +183,7 @@
                 <template slot-scope="scope">{{ formatPrice(scope.row.total) }}</template>
               </el-table-column>
               <el-table-column align="center" label="Pagado" prop="pago"></el-table-column>
-              <el-table-column label="Opciones" header-align="center" align="center">
+              <el-table-column label="Opciones" header-align="center" align="center" width="100">
                 <template slot-scope="scope">
                   <income-edit :selectedItem="scope.row" :method="6" :isCredit="true"></income-edit>
                 </template>
