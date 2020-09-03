@@ -521,4 +521,44 @@ export default {
   background-color: white;
   padding: 4px;
 }
+
+/* Ipad Pro */
+@media only screen and (max-width: 1366px) {
+  .content.el-main {
+    padding: 5px;
+  }
+  .select-ipad {
+    width: 170px;
+  }
+
+  .el-form-item {
+    margin-bottom: 4px;
+  }
+
+  .query-form {
+    margin-top: 0;
+    padding-top: 4px;
+    background-color: #f2f2f2;
+  }
+}
+
+/* Ipad */
+@media only screen and (max-width: 1024px) {
+  .content.el-main {
+    padding: 5px;
+  }
+  .select-ipad {
+    width: 130px;
+  }
+
+  .el-form-item {
+    margin-bottom: 4px;
+  }
+
+  .query-form {
+    margin-top: 0;
+    padding-top: 4px;
+    background-color: #f2f2f2;
+  }
+}
 </style>
