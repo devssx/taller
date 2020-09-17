@@ -22,7 +22,7 @@ class CreatePayrollCommentsTable extends Migration
             $table->string('comment');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('workshop_id')->references('id')->on('workshops');
+            $table->foreign('workshop_id')->references('id')->on('work_shops');
         });
     }
 

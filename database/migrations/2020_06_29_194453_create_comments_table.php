@@ -20,7 +20,7 @@ class CreateCommentsTable extends Migration
             $table->unsignedInteger('week');
             $table->string('comment');
             $table->decimal('total'); 
-            $table->foreign('workshop_id')->references('id')->on('workshops');
+            $table->foreign('workshop_id')->references('id')->on('work_shops');
         });
     }
 

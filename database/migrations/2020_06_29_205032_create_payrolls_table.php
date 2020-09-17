@@ -16,7 +16,6 @@ class CreatePayrollsTable extends Migration
         Schema::create('payrolls', function (Blueprint $table) {
             $table->increments('id');
             
-            $table->unsignedInteger('week');
             $table->unsignedInteger('number');
             $table->datetime('start');
             $table->datetime('end');
@@ -32,7 +31,7 @@ class CreatePayrollsTable extends Migration
 
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('workshop_id')->references('id')->on('workshops');
+            $table->foreign('workshop_id')->references('id')->on('work_shops');
         });
     }
 
