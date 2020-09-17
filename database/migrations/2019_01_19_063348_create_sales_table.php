@@ -19,6 +19,10 @@ class CreateSalesTable extends Migration
             $table->decimal('total');
             $table->integer('service_type')->default(0);
             $table->date('next_service');
+
+            $table->string('bill');
+            $table->date('paid_date');
+            
             $table->unsignedInteger('workshop_id');
             $table->timestamps();
             
