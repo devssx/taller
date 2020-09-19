@@ -12,10 +12,15 @@
           format="Week WW"
           placeholder="Seleccionar Semana"
         ></el-date-picker>
-        <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
+        <el-select width="150" v-model="workshopId" placeholder="Taller" :v-if="multiWorkshop">
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
         </el-select>
-        <el-button type="primary" icon="el-icon-search" @click="onSearch" :disabled="!selectedDay"></el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          @click="onSearch"
+          :disabled="!selectedDay || !workshopId"
+        ></el-button>
       </el-col>
     </el-row>
 
@@ -80,13 +85,15 @@
 <script>
 export default {
   props: ["workshops", "myUser", "multiWorkshop"],
-  mounted: function() {
+  mounted: function () {
     this.$root.$on("refreshTable", this.refreshTable);
 
     // busca por default en el taller donde trabaja este empleado
     if (this.myUser && this.myUser.length > 0) {
-      this.workshopId = this.myUser[0].workshop_id;
-      this.onSearch();
+      if (!this.multiWorkshop) {
+        this.workshopId = this.myUser[0].workshop_id;
+        this.onSearch();
+      }
     }
   },
   methods: {
@@ -95,7 +102,7 @@ export default {
       this.showWeekOfEmployee(this.employees[key]);
     },
     showWeekOfEmployee(name) {
-      this.tableData = this.employeeData.filter(e => e.name == name);
+      this.tableData = this.employeeData.filter((e) => e.name == name);
     },
     formatDate(date) {
       var hours = date.getHours();
@@ -116,14 +123,14 @@ export default {
       $this.tableData = [];
       $this.employees = [];
 
-      axios.get(url).then(function(response) {
+      axios.get(url).then(function (response) {
         $this.employeeData = response.data;
         $this.loading = false;
 
         // Para el panel izquierdo (lista de empleados)
-        $this.employeeData.forEach(element => {
+        $this.employeeData.forEach((element) => {
           var name = element.name;
-          if ($this.employees.filter(e => e == name).length == 0)
+          if ($this.employees.filter((e) => e == name).length == 0)
             $this.employees.push(name);
         });
 
@@ -141,7 +148,7 @@ export default {
           "Taller no válido",
           {
             confirmButtonText: "OK",
-            type: "error"
+            type: "error",
           }
         );
         return;
@@ -177,7 +184,7 @@ export default {
           }
         }
       }
-    }
+    },
   },
   data() {
     return {
@@ -189,9 +196,9 @@ export default {
       loading: false,
       employeeData: [],
       tableData: [],
-      employees: []
+      employees: [],
     };
-  }
+  },
 };
 </script>
 <style>

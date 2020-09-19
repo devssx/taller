@@ -12,10 +12,15 @@
           format="dd-MM-yyyy"
           placeholder="Seleccionar Día"
         ></el-date-picker>
-        <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
+        <el-select width="150" v-model="workshopId" placeholder="Taller" :v-if="multiWorkshop">
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
         </el-select>
-        <el-button type="primary" icon="el-icon-search" @click="onSearch" :disabled="!selectedDay"></el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          @click="onSearch"
+          :disabled="!selectedDay || !workshopId"
+        ></el-button>
         <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
       </el-col>
       <el-col :span="4"></el-col>
@@ -62,13 +67,15 @@
 <script>
 export default {
   props: ["workshops", "myUser", "multiWorkshop"],
-  mounted: function() {
+  mounted: function () {
     this.$root.$on("refreshTable", this.refreshTable);
 
     // busca por default en el taller donde trabaja este empleado
     if (this.myUser && this.myUser.length > 0) {
-      this.workshopId = this.myUser[0].workshop_id;
-      this.onSearch();
+      if (!this.multiWorkshop) {
+        this.workshopId = this.myUser[0].workshop_id;
+        this.onSearch();
+      }
     }
   },
   methods: {
@@ -88,7 +95,7 @@ export default {
     loadTable(url) {
       var $this = this;
       $this.loading = true;
-      axios.get(url).then(function(response) {
+      axios.get(url).then(function (response) {
         $this.tableData = response.data;
         $this.loading = false;
       });
@@ -100,7 +107,7 @@ export default {
           "Taller no válido",
           {
             confirmButtonText: "OK",
-            type: "error"
+            type: "error",
           }
         );
         return;
@@ -109,7 +116,7 @@ export default {
       if (this.dayName(this.selectedDay) == `Domingo`) {
         this.$alert("El día domingo no es válido.", "Día no válido", {
           confirmButtonText: "OK",
-          type: "error"
+          type: "error",
         });
         return;
       }
@@ -130,7 +137,7 @@ export default {
       this.loadTable(
         `/api/cleaning/search?day=${day}&format=${df}&workshop=${this.workshopId}`
       );
-    }
+    },
   },
   data() {
     return {
@@ -150,10 +157,10 @@ export default {
         lunch_end: "",
         done: "No",
         comment: "",
-        name: ""
-      }
+        name: "",
+      },
     };
-  }
+  },
 };
 </script>
 <style>

@@ -7,10 +7,15 @@
       </el-col>
       <el-col :span="18">
         <el-date-picker v-model="selectedYear" type="year" placeholder="Seleccionar Año"></el-date-picker>
-        <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
+        <el-select width="150" v-model="workshopId" placeholder="Taller" :v-if="multiWorkshop">
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
         </el-select>
-        <el-button type="primary" icon="el-icon-search" @click="onSearch" :disabled="!selectedYear"></el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          @click="onSearch"
+          :disabled="!selectedYear || !workshopId"
+        ></el-button>
       </el-col>
       <el-col :span="4" align="end">
         <el-button type="primary" icon="el-icon-plus" @click="addNew">Nueva</el-button>
@@ -100,11 +105,15 @@ export default {
   mounted: function () {
     // busca por default en el taller donde trabaja este empleado
     if (this.myUser && this.myUser.length > 0) {
-      this.workshopId = this.myUser[0].workshop_id;
+      if (!this.multiWorkshop) {
+        this.workshopId = this.myUser[0].workshop_id;
+        let year = this.selectedYear.getFullYear();
+        this.loadTable(
+          `/api/guarantee?year=${year}&workshop=${this.workshopId}`
+        );
+      }
     }
 
-    let year = this.selectedYear.getFullYear();
-    this.loadTable(`/api/guarantee?year=${year}&workshop=${this.workshopId}`);
     this.$root.$on("refreshGuarantee", this.refreshTable);
   },
   methods: {
@@ -129,7 +138,7 @@ export default {
 
         $this.total = 0;
         $this.cantidad = $this.tableData.length;
-        
+
         $this.tableData.forEach((s) => ($this.total += parseFloat(s.total)));
       });
     },
@@ -162,11 +171,11 @@ export default {
     return {
       total: 0,
       cantidad: 0,
-      workshopId: 1,
+      workshopId: "",
       showDialog: false,
       selectedYear: new Date(),
       search: "",
-      loading: true,
+      loading: false,
       tableData: [],
       newItem: {
         workshop_id: "",

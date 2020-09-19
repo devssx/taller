@@ -7,7 +7,7 @@
       </el-col>
       <el-col :span="18">
         <el-date-picker v-model="selectedYear" type="year" placeholder="Seleccionar Año"></el-date-picker>
-        <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
+        <el-select width="150" v-model="workshopId" placeholder="Taller" :v-if="multiWorkshop">
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
         </el-select>
         <el-button type="primary" icon="el-icon-search" @click="onSearch" :disabled="!selectedYear"></el-button>
@@ -228,7 +228,7 @@ export default {
   props: ["workshops", "myUser", "multiWorkshop"],
   mounted: function () {
     if (this.myUser && this.myUser.length > 0) {
-      this.workshopId = this.myUser[0].workshop_id;
+      if (!this.multiWorkshop) this.workshopId = this.myUser[0].workshop_id;
     }
   },
   methods: {

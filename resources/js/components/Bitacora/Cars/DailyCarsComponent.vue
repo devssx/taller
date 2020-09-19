@@ -13,10 +13,10 @@
           format="dd-MM-yyyy"
           placeholder="Seleccionar Día"
         ></el-date-picker>
-        <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
-          <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
+        <el-select width="150" v-model="workshopId" placeholder="Taller" :v-if="multiWorkshop">
+          <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id"></el-option>
         </el-select>
-        <el-button type="primary" icon="el-icon-search" @click="onSearch" :disabled="!selectedDay"></el-button>
+        <el-button type="primary" icon="el-icon-search" @click="onSearch" :disabled="!selectedDay || !workshopId"></el-button>
       </el-col>
       <el-col :span="4"></el-col>
     </el-row>
@@ -127,13 +127,15 @@
 <script>
 export default {
   props: ["workshops", "myUser", "multiWorkshop"],
-  mounted: function() {
+  mounted: function () {
     this.$root.$on("refreshTable", this.refreshTable);
 
     // busca por default en el taller donde trabaja este empleado
     if (this.myUser && this.myUser.length > 0) {
-      this.workshopId = this.myUser[0].workshop_id;
-      this.searchSales(this.selectedDay);
+       if (!this.multiWorkshop) {
+         this.workshopId = this.myUser[0].workshop_id;
+         this.searchSales(this.selectedDay);
+       }
     }
   },
   methods: {
@@ -173,7 +175,7 @@ export default {
       if (!this.workshopId) {
         this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
           confirmButtonText: "OK",
-          type: "warning"
+          type: "warning",
         });
         return;
       }
@@ -188,16 +190,16 @@ export default {
     autorizados() {
       var total = 0.0;
       if (this.sales.data) {
-        var selection = this.sales.data.filter(i => i.status == 2);
-        selection.forEach(s => (total += parseFloat(s.total)));
+        var selection = this.sales.data.filter((i) => i.status == 2);
+        selection.forEach((s) => (total += parseFloat(s.total)));
       }
       return total;
     },
     noAutorizados() {
       var total = 0.0;
       if (this.sales.data) {
-        var selection = this.sales.data.filter(i => i.status != 2);
-        selection.forEach(s => (total += parseFloat(s.total)));
+        var selection = this.sales.data.filter((i) => i.status != 2);
+        selection.forEach((s) => (total += parseFloat(s.total)));
       }
       return total;
     },
@@ -207,7 +209,7 @@ export default {
     loadTable(url) {
       var $this = this;
       $this.loading = true;
-      axios.get(url).then(function(response) {
+      axios.get(url).then(function (response) {
         $this.sales = response.data;
         $this.oldSales = JSON.parse(JSON.stringify(response.data));
         $this.loading = false;
@@ -215,7 +217,7 @@ export default {
     },
     refreshTable() {
       this.searchSales(this.prevDay);
-    }
+    },
   },
   data() {
     return {
@@ -228,9 +230,9 @@ export default {
       page: 1,
       selectedDay: new Date(),
       prevDay: new Date(),
-      search: ""
+      search: "",
     };
-  }
+  },
 };
 </script>
 <style>

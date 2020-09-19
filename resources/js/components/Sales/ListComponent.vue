@@ -422,7 +422,7 @@ export default {
   },
   data() {
     return {
-      workshopId: 0,
+      workshopId: "",
       sales: [],
       oldSales: [],
       status: ["Cotización", "En Proceso", "Recibo", "Cancelado"],

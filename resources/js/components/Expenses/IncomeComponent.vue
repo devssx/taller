@@ -13,10 +13,15 @@
           format="Week WW"
           placeholder="Seleccionar Semana"
         ></el-date-picker>
-        <el-select width="150" v-model="workshopId" placeholder="Taller" :disabled="!multiWorkshop">
+        <el-select width="150" v-model="workshopId" placeholder="Taller" :v-if="multiWorkshop">
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
         </el-select>
-        <el-button type="primary" icon="el-icon-search" @click="onSearch" :disabled="!selectedDay"></el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          @click="onSearch"
+          :disabled="!selectedDay || !workshopId"
+        ></el-button>
       </el-col>
       <el-col :span="4" align="end"></el-col>
     </el-row>
@@ -204,7 +209,7 @@ export default {
 
     // busca por default en el taller donde trabaja este empleado
     if (this.myUser && this.myUser.length > 0) {
-      this.workshopId = this.myUser[0].workshop_id;
+      if (!this.multiWorkshop) this.workshopId = this.myUser[0].workshop_id;
     }
   },
   methods: {
@@ -399,7 +404,7 @@ export default {
       totalEfeIva: 0,
       totalCreIva: 0,
       totalIvaIngresos: 0,
-      workshopId: 1,
+      workshopId: "",
       prevDay: null,
       selectedDay: null,
       search: "",
