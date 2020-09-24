@@ -1,7 +1,7 @@
 <template>
   <span>
     <el-tooltip class="item" effect="dark" content="Editar" placement="top">
-      <el-button icon="el-icon-edit" @click="dialogVisible = true"></el-button>
+      <el-button icon="el-icon-edit" @click="onShow"></el-button>
     </el-tooltip>
     <el-dialog
       title="Editar Usuario"
@@ -37,14 +37,13 @@
                 >{{role.name}}</el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="Taller" prop="workshop_id">
-              <el-select v-model="user.workshop_id" placeholder="Selecciona un taller">
-                <el-option
-                  v-for="w in workshops"
-                  :key="w.id"
-                  :label="w.name"
-                  :value="w.id"
-                >{{w.name}}</el-option>
+            <el-form-item label="Taller" prop="taller">
+              <el-select
+                v-model="taller"
+                placeholder="Selecciona un taller"
+                @change="changeWorkshop"
+              >
+                <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.name"></el-option>
               </el-select>
             </el-form-item>
           </el-form>
@@ -75,6 +74,7 @@ export default {
   },
   data() {
     return {
+      taller: "",
       auxMail: "",
       noEmail: false,
       dialogVisible: false,
@@ -107,17 +107,21 @@ export default {
             trigger: "change",
           },
         ],
-        workshop_id: [
-          {
-            required: true,
-            message: "Campo Taller es obligatorio",
-            trigger: "change",
-          },
-        ],
       },
     };
   },
   methods: {
+    onShow() {
+      this.dialogVisible = true;
+      var ws = this.workshops.filter((w) => w.id == this.user.workshop_id);
+      if (ws.length > 0) this.taller = ws[0].name;
+    },
+    changeWorkshop(value) {
+      this.taller = value;
+      var ws = this.workshops.filter((w) => w.name == value);
+      if (ws.length > 0) this.user.workshop_id = ws[0].id;
+      console.log(this.user.workshop_id);
+    },
     onChangeRol(value) {
       let rs = this.roles.filter((r) => r.id == value);
       if (rs.length > 0) {
@@ -162,11 +166,24 @@ export default {
       this.dialogVisible = false;
       this.loading = false;
       let name = this.user.roles[0].name;
-      this.noEmail = name == "Limpieza" || name == "Empleado" || this.user.email.includes("@empty.com");
+      this.noEmail =
+        name == "Limpieza" ||
+        name == "Empleado" ||
+        this.user.email.includes("@empty.com");
       this.$refs.userForm.resetFields();
     },
     saveUser() {
       var $this = this;
+
+      if (!this.taller) {
+        $this.$notify({
+          title: "Error",
+          message: "El taller no es válido.",
+          type: "error",
+        });
+        return;
+      }
+
       $this.$refs.userForm.validate((valid) => {
         if (valid) {
           $this.loading = true;
