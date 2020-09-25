@@ -52,9 +52,9 @@ export default {
   props: ["workshops", "myUser"],
   mounted: function () {
     // busca por default en el taller donde trabaja este empleado
-    if (this.myUser && this.myUser.length > 0) {
-      this.myPass.workshop = this.myUser[0].workshop_id;
-    }
+    // if (this.myUser && this.myUser.length > 0) {
+    //   this.myPass.workshop = this.myUser[0].workshop_id;
+    // }
   },
   data() {
     return {

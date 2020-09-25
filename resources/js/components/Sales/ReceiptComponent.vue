@@ -43,11 +43,12 @@
             class="query-form"
             ref="form"
           >
-            <el-form-item label="Taller" prop="workshop">
+            <!-- Invisible taller debido al bug de hostgator (le pone el id en lugar del texto, visualmente esta mal) -->
+            <!-- <el-form-item label="Taller" prop="workshop">
               <el-select :disabled="true" v-model="form.workshop">
                 <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id"></el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item> -->
 
             <el-form-item label="Empleado" prop="user">
               <el-select
