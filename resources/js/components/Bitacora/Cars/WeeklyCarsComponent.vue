@@ -53,7 +53,7 @@
             <template slot-scope="scope">{{ scope.row.client.name }}</template>
           </el-table-column>
           <el-table-column label="Teléfono">
-            <template slot-scope="scope">{{ scope.row.client.phonenumber }}</template>
+            <template slot-scope="scope">{{ getPhoneNumber(scope.row) }}</template>
           </el-table-column>
           <el-table-column label="Técnico">
             <template slot-scope="scope">{{ scope.row.user.name }}</template>
@@ -145,6 +145,12 @@ export default {
     }
   },
   methods: {
+    getPhoneNumber(row){
+      if(row.phonenumber)
+         return row.phonenumber;
+      
+      return row.client.phonenumber;
+    },
     showReceipt(item) {
       // const COTIZACION = 0;
       // const PROCESO = 1;

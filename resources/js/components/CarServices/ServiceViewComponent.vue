@@ -9,7 +9,7 @@
             label-position="right"
             label-width="80px"
             class="query-form"
-            style="text-align: end;"
+            style="text-align: end"
           >
             <el-form-item label="Año">
               <el-select
@@ -20,7 +20,12 @@
                 class="select-year"
                 :disabled="years.length == 0"
               >
-                <el-option v-for="year in years" :key="year" :label="year" :value="year"></el-option>
+                <el-option
+                  v-for="year in years"
+                  :key="year"
+                  :label="year"
+                  :value="year"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Marca">
@@ -68,7 +73,12 @@
                 default-first-option
                 v-model="motor"
               >
-                <el-option v-for="m in motors" :key="m" :label="m" :value="m"></el-option>
+                <el-option
+                  v-for="m in motors"
+                  :key="m"
+                  :label="m"
+                  :value="m"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -79,7 +89,8 @@
                 icon="el-icon-search"
                 @click="search"
                 :disabled="year == ''"
-              >Buscar</el-button>
+                >Buscar</el-button
+              >
             </el-form-item>
           </el-form>
           <br />
@@ -93,18 +104,23 @@
           <el-row
             type="flex"
             align="middle"
-            style="background-color:#f2f2f2;padding:4px;height:44px"
+            style="background-color: #f2f2f2; padding: 4px; height: 44px"
           >
             <el-col :span="8">
               <h4>
                 Servicios
-                <span v-if="getSelectedServices() > 0">({{getSelectedServices()}})</span>
+                <span v-if="getSelectedServices() > 0"
+                  >({{ getSelectedServices() }})</span
+                >
               </h4>
             </el-col>
             <el-col :span="16">
-              <div style="float:right;">
+              <div style="float: right">
                 <!-- Boton Agregar Servicio -->
-                <create-pop-sales :disabled="!isValidCarId" :size="controlSize"></create-pop-sales>
+                <create-pop-sales
+                  :disabled="!isValidCarId"
+                  :size="controlSize"
+                ></create-pop-sales>
               </div>
             </el-col>
           </el-row>
@@ -118,35 +134,48 @@
             <el-collapse-item
               v-for="(s, index) in services"
               :key="index"
-              :title="s.isSelected ? s.name+' (Seleccionado)':s.name"
+              :title="s.isSelected ? s.name + ' (Seleccionado)' : s.name"
               :name="index"
             >
               <!-- {{s.selectedPrice}} -->
-              <table style="width:100%">
+              <table style="width: 100%">
                 <tr>
                   <th class="price-min">Precio Min</th>
                   <th class="price-med">Precio Med</th>
                   <th class="price-max">Precio Max</th>
                 </tr>
                 <tr>
-                  <td>${{formatPrice(s.low_total)}}</td>
-                  <td>${{formatPrice(s.mid_total)}}</td>
-                  <td>${{formatPrice(s.high_total)}}</td>
+                  <td>${{ formatPrice(s.low_total) }}</td>
+                  <td>${{ formatPrice(s.mid_total) }}</td>
+                  <td>${{ formatPrice(s.high_total) }}</td>
                 </tr>
                 <tr>
                   <td>
-                    <el-checkbox v-model="s.isLowSelected" @change="onServiceChecked(s, 'low')"></el-checkbox>
+                    <el-checkbox
+                      v-model="s.isLowSelected"
+                      @change="onServiceChecked(s, 'low')"
+                    ></el-checkbox>
                   </td>
                   <td>
-                    <el-checkbox v-model="s.isMidSelected" @change="onServiceChecked(s, 'mid')"></el-checkbox>
+                    <el-checkbox
+                      v-model="s.isMidSelected"
+                      @change="onServiceChecked(s, 'mid')"
+                    ></el-checkbox>
                   </td>
                   <td>
-                    <el-checkbox v-model="s.isMaxSelected" @change="onServiceChecked(s, 'high')"></el-checkbox>
+                    <el-checkbox
+                      v-model="s.isMaxSelected"
+                      @change="onServiceChecked(s, 'high')"
+                    ></el-checkbox>
                   </td>
                 </tr>
               </table>
               <div class="edit-buttons">
-                <el-tooltip effect="dark" content="Eliminar Servicio" placement="top">
+                <el-tooltip
+                  effect="dark"
+                  content="Eliminar Servicio"
+                  placement="top"
+                >
                   <el-button
                     @click="deleteService(s)"
                     type="danger"
@@ -157,39 +186,45 @@
               </div>
             </el-collapse-item>
           </el-collapse>
-          <el-row v-if="!isValidCarId || !isValidService" style="padding: 10px;">Sin Servicios</el-row>
+          <el-row v-if="!isValidCarId || !isValidService" style="padding: 10px"
+            >Sin Servicios</el-row
+          >
         </el-col>
 
-        <el-col :span="18" style="padding-left: 20px;">
+        <el-col :span="18" style="padding-left: 20px">
           <el-row
             type="flex"
             align="middle"
-            style="background-color:#f2f2f2;padding:4px; height:44px"
+            style="background-color: #f2f2f2; padding: 4px; height: 44px"
           >
             <el-col :span="8">
-              <h3>{{service.name}}</h3>
+              <h3>{{ service.name }}</h3>
             </el-col>
             <el-col :span="8">
-              <div style="float:right;">
+              <div style="float: right">
                 <el-button
-                  :disabled="getSelectedServices() == 0"
                   type="primary"
                   icon="el-icon-tickets"
                   :size="controlSize"
                   @click="next(0)"
-                >Cotización</el-button>
+                  >Cotización</el-button
+                >
                 <el-button
-                  :disabled="getSelectedServices() == 0"
                   :size="controlSize"
                   type="primary"
                   icon="el-icon-tickets"
                   @click="next(1)"
-                >Recibo</el-button>
+                  >Recibo</el-button
+                >
               </div>
             </el-col>
             <el-col :span="8">
-              <div style="float:right;">
-                <el-tooltip effect="dark" :content="getServiceName()" placement="top">
+              <div style="float: right">
+                <el-tooltip
+                  effect="dark"
+                  :content="getServiceName()"
+                  placement="top"
+                >
                   <el-button
                     :size="controlSize"
                     :disabled="services.length == 0"
@@ -197,7 +232,8 @@
                     icon="el-icon-edit"
                     type="primary"
                     @click="saveService()"
-                  >MODIFICAR</el-button>
+                    >MODIFICAR</el-button
+                  >
                 </el-tooltip>
               </div>
             </el-col>
@@ -209,14 +245,22 @@
             <div v-if="isValidCarId && !isValidService">Agrega un Servicio</div>
             <div v-if="isValidService">
               <!-- Creando -->
-              <el-row class="row-header" style="margin-bottom:5px;" type="flex" align="middle">
+              <el-row
+                class="row-header"
+                style="margin-bottom: 5px"
+                type="flex"
+                align="middle"
+              >
                 <el-col :span="12">SERVICIO</el-col>
                 <el-col :span="12">FOTO DEL CARRO</el-col>
               </el-row>
               <el-row class="center" type="flex" align="middle">
-                <el-col :span="12">{{service.name}}</el-col>
+                <el-col :span="12">{{ service.name }}</el-col>
                 <el-col :span="12" class="bl">
-                  <el-image style="width:230px;" :src="selectedCar.image"></el-image>
+                  <el-image
+                    style="width: 230px"
+                    :src="selectedCar.image"
+                  ></el-image>
                 </el-col>
               </el-row>
               <el-row class="row-header">
@@ -239,16 +283,18 @@
                     :step="0.1"
                     :min="0"
                     :disabled="service.isReadOnly"
-                    style="width:100%;border-radius:0"
+                    style="width: 100%; border-radius: 0"
                   ></el-input-number>
                 </el-col>
-                <el-col :span="4">{{selectedCar.maker}}</el-col>
-                <el-col :span="4">{{selectedCar.brand}}</el-col>
-                <el-col :span="4">{{selectedCar.year}}</el-col>
-                <el-col :span="4">{{selectedCar.endYear}}</el-col>
+                <el-col :span="4">{{ selectedCar.maker }}</el-col>
+                <el-col :span="4">{{ selectedCar.brand }}</el-col>
+                <el-col :span="4">{{ selectedCar.year }}</el-col>
+                <el-col :span="4">{{ selectedCar.endYear }}</el-col>
               </el-row>
               <el-row type="flex" align="middle" class="br">
-                <el-col :span="12" class="row-header">PORCENTAJE DE GANANCIA EN LAS PIEZAS:</el-col>
+                <el-col :span="12" class="row-header"
+                  >PORCENTAJE DE GANANCIA EN LAS PIEZAS:</el-col
+                >
                 <el-col :span="2" class="price-min">
                   <el-input
                     :readonly="service.isReadOnly"
@@ -281,7 +327,7 @@
                     class="global"
                   ></el-input>
                 </el-col>
-                <el-col :span="2" style="height:28px"></el-col>
+                <el-col :span="2" style="height: 28px"></el-col>
               </el-row>
               <el-row class="row-header">
                 <el-col :span="7">Refacción</el-col>
@@ -317,7 +363,12 @@
                     default-first-option
                     placeholder="Agregar un Artículo"
                     v-model="item"
-                    :disabled="listItems.length == 0 || !isValidCarId || service.service_id == undefined || service.service_id == ''"
+                    :disabled="
+                      listItems.length == 0 ||
+                      !isValidCarId ||
+                      service.service_id == undefined ||
+                      service.service_id == ''
+                    "
                   >
                     <el-option
                       v-for="(item, index) in listItems"
@@ -330,8 +381,13 @@
               </el-row>
 
               <!-- Totales -->
-              <el-row class="bt bl br" style="height:28px" type="flex" align="middle">
-                <el-col style="padding:10px" :span="7">TOTAL</el-col>
+              <el-row
+                class="bt bl br"
+                style="height: 28px"
+                type="flex"
+                align="middle"
+              >
+                <el-col style="padding: 10px" :span="7">TOTAL</el-col>
                 <el-col :span="5" class="price">
                   <b>${{ formatPrice(sumItemPrice("price")) }}</b>
                 </el-col>
@@ -347,11 +403,13 @@
               </el-row>
               <!-- descripcion del servicio -->
               <el-row class="bt bl br">
-                <el-col :span="4" style="padding:10px">Descripción del servicio</el-col>
+                <el-col :span="4" style="padding: 10px"
+                  >Descripción del servicio</el-col
+                >
                 <el-col :span="20">
                   <el-input
                     type="textarea"
-                    :autosize="{ minRows: 2, maxRows: 4}"
+                    :autosize="{ minRows: 2, maxRows: 4 }"
                     placeholder="Descripción"
                     v-model="service.comment"
                     :readonly="service.isReadOnly"
@@ -361,11 +419,11 @@
               </el-row>
               <!-- descripcion del servicio -->
               <el-row class="bt bl br">
-                <el-col :span="4" style="padding:10px">Garantía</el-col>
+                <el-col :span="4" style="padding: 10px">Garantía</el-col>
                 <el-col :span="20">
                   <el-input
                     type="textarea"
-                    :autosize="{ minRows: 2, maxRows: 4}"
+                    :autosize="{ minRows: 2, maxRows: 4 }"
                     placeholder="Garantía"
                     v-model="service.warranty"
                     :readonly="service.isReadOnly"
@@ -473,6 +531,13 @@ export default {
 
     axios.get("/api/cars?all").then(function (response) {
       $this.cars = response.data;
+      // remover indefindo (solo usado en caso especial)
+      for (var i = 0; i < $this.cars.length; i++) {
+        if ($this.cars[i].maker === "indefinido") {
+          $this.cars.splice(i, 1);
+          i--;
+        }
+      }
     });
 
     axios.get("/api/items?all=1").then(function (response) {
@@ -481,6 +546,13 @@ export default {
 
     axios.get("/api/car/makers").then(function (response) {
       $this.makers = response.data;
+      // remover indefindo (solo usado en caso especial)
+      for (var i = 0; i < $this.makers.length; i++) {
+        if ($this.makers[i].maker === "indefinido") {
+          $this.makers.splice(i, 1);
+          i--;
+        }
+      }
     });
 
     // GoBack
@@ -566,23 +638,13 @@ export default {
       this.loadCarServices();
     },
     next(mode) {
+      let $this = this;
       var count = this.getSelectedServices();
-      if (count > 0) {
-        //var unSaved = this.services.filter(s => !s.id).length > 0;
-        //var editing = this.services.filter(s => !s.isReadOnly).length > 0;
-        var services = this.services.filter((s) => s.isSelected);
-        // if (unSaved || editing) {
-        //   this.$message({
-        //     message:
-        //       "Hay servicios sin guardar, termina de editarlos para continuar.",
-        //     type: "warning"
-        //   });
-        //   return;
-        // }
 
+      if (count > 0) {
+        var services = this.services.filter((s) => s.isSelected);
         const order = {
           services: services,
-          //price: 'low',
           brand: this.brand,
           year: this.year,
           receiptMode: mode == 1,
@@ -593,12 +655,68 @@ export default {
         localStorage.setItem("order", parsed);
         window.location.href = "/sales/receipt";
       } else {
-        this.$message({
-          message: "Selecciona Al menos un servicio.",
-          type: "error",
-        });
-        return;
+        let warn = this.isValidCarId ? "ningún servicio" : "carro ni servicio";
+        $this
+          .$confirm(
+            `No se ha seleccionado ${warn}. ¿Desea continuar?`,
+            "Advertencia",
+            {
+              confirmButtonText: "Si",
+              cancelButtonText: "No",
+              type: "warning",
+            }
+          )
+          .then(() => {
+            $this.searchUndefCar((car) => {
+              $this.loadCarServiceByCarId(car.id, (serv) => {
+                if (!$this.isValidCarId) {
+                  $this.selectedCar.id = car.id;
+                  $this.selectedCar.maker = '';
+                  $this.selectedCar.brand = '';
+                  $this.selectedCar.motor = '';
+                  $this.selectedCar.year = car.start_year;
+                  $this.selectedCar.endYear = car.end_year;
+                  $this.selectedCar.image = car.image;
+                }
+
+                // default values
+                serv[0].label = "Detalles del Servicio";
+                serv[0].isLowSelected = true;
+                serv[0].selectedPrice = "low";
+                serv[0].items[0].low_price = 0;
+                serv[0].items[0].item.name = "Costo total del servicio";
+
+                const order = {
+                  services: serv,
+                  undefService: true,
+                  year: $this.year,
+                  brand: $this.selectedCar.brand,
+                  car: $this.selectedCar,
+                  receiptMode: mode == 1,
+                };
+
+                const parsed = JSON.stringify(order);
+                localStorage.setItem("order", parsed);
+                window.location.href = "/sales/receipt";
+              });
+            });
+          });
       }
+    },
+    searchUndefCar(onFound) {
+      axios
+        .get("/api/car/search", {
+          params: {
+            maker: "indefinido",
+            brand: "indefinido",
+            motor: "indefinido",
+            year: 2013,
+            end_year: 2013,
+          },
+        })
+        .then(function (response) {
+          if (onFound && response.data.length > 0) onFound(response.data[0]);
+        });
     },
     getSelectedServices() {
       if (this.services.length == 0) return 0;
@@ -690,6 +808,39 @@ export default {
           }
           $this.isLoadingServices = false;
         });
+    },
+    loadCarServiceByCarId(id, onLoaded) {
+      var $this = this;
+      axios.get(`/api/carservices?id=${id}`).then(function (response) {
+        var services = [];
+
+        for (var i = 0; i < response.data.length; i++) {
+          services.push({
+            id: response.data[i].id, // clave (csid)
+            isSelected: false,
+            isLowSelected: false,
+            isMidSelected: false,
+            isMaxSelected: false,
+            selectedPrice: "",
+            isReadOnly: false,
+            low_total: 0,
+            mid_total: 0,
+            high_total: 0,
+            low: response.data[i].low,
+            mid: response.data[i].mid,
+            high: response.data[i].high,
+            comment: response.data[i].comment,
+            warranty: response.data[i].warranty,
+            exchange_rate: response.data[i].exchange_rate,
+            service_id: response.data[i].service_id,
+            name: response.data[i].name,
+            label: response.data[i].name,
+            items: response.data[i].items,
+          });
+        }
+
+        if (onLoaded) onLoaded(services);
+      });
     },
     addService: function (service, total) {
       if (this.selectedCar.id == undefined) {
@@ -1093,36 +1244,39 @@ export default {
       }
 
       // confirmar
-      this.confirmar(`¿Esta seguro que desea modificar el servicio: ${this.service.name}?`, () => {
-        axios
-          .post("/api/carservices", saveParams)
-          .then(function (response) {
-            $this.$notify({
-              title: "¡Exito!",
-              message: isNew
-                ? "Servicio fue agregado correctamente"
-                : "Se ha editado el servicio correctamente",
-              type: "success",
-            });
-
-            $this.service.isReadOnly = false;
-            $this.isSaving = false;
-
-            // reload
-            $this.loadCarServices();
-          })
-          .catch((error) => {
-            if (error.response.data.errors) {
-              var errors = error.response.data.errors;
-              $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-                confirmButtonText: "OK",
-                type: "error",
+      this.confirmar(
+        `¿Esta seguro que desea modificar el servicio: ${this.service.name}?`,
+        () => {
+          axios
+            .post("/api/carservices", saveParams)
+            .then(function (response) {
+              $this.$notify({
+                title: "¡Exito!",
+                message: isNew
+                  ? "Servicio fue agregado correctamente"
+                  : "Se ha editado el servicio correctamente",
+                type: "success",
               });
-            }
 
-            $this.isSaving = false;
-          });
-      });
+              $this.service.isReadOnly = false;
+              $this.isSaving = false;
+
+              // reload
+              $this.loadCarServices();
+            })
+            .catch((error) => {
+              if (error.response.data.errors) {
+                var errors = error.response.data.errors;
+                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
+                  confirmButtonText: "OK",
+                  type: "error",
+                });
+              }
+
+              $this.isSaving = false;
+            });
+        }
+      );
     },
   },
 };

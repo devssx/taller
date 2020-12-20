@@ -25,7 +25,7 @@
               <li
                 v-for="(service, index) in scope.row.services"
                 v-bind:key="index"
-              >{{ service.name }}</li>
+              >{{ service.name == 'indefinido' ? 'Servicio' : service.name }}</li>
             </ul>
           </template>
         </el-table-column>

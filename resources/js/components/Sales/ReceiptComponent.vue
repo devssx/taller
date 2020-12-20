@@ -4,27 +4,36 @@
     <el-main class="content">
       <el-row v-if="currentSale">
         <el-col :span="24">
-          <el-form inline label-position="right" label-width="80px" class="query-form" ref="form">
-            <el-form-item style="float: right;">
+          <el-form
+            inline
+            label-position="right"
+            label-width="80px"
+            class="query-form"
+            ref="form"
+          >
+            <el-form-item style="float: right">
               <el-button
                 :disabled="!image1Loaded || !image2Loaded"
                 v-if="currentSale.status < 2"
                 icon="el-icon-edit"
                 @click="convertToReceipt()"
-              >Convertir a recibo</el-button>
+                >Convertir a recibo</el-button
+              >
               <el-button
                 :disabled="!image1Loaded || !image2Loaded"
                 v-if="currentSale.status == 2"
                 icon="el-icon-edit"
                 @click="openConfirm()"
-              >Editar</el-button>
+                >Editar</el-button
+              >
               <el-button
                 :disabled="!image1Loaded || !image2Loaded"
                 icon="el-icon-printer"
                 @click="buildReceipt()"
-              >Imprimir</el-button>
+                >Imprimir</el-button
+              >
             </el-form-item>
-            <br style="clear:both;" />
+            <br style="clear: both" />
           </el-form>
         </el-col>
       </el-row>
@@ -32,7 +41,9 @@
         <el-col :span="7" v-if="!currentSale">
           <el-row>
             <el-col>
-              <create-clients :onCreateClient="onCreateNewClient"></create-clients>
+              <create-clients
+                :onCreateClient="onCreateNewClient"
+              ></create-clients>
             </el-col>
           </el-row>
           <el-form
@@ -57,7 +68,12 @@
                 v-model="form.user"
                 :disabled="currentSale != false"
               >
-                <el-option v-for="user in users" :key="user.id" :label="user.name" :value="user.id"></el-option>
+                <el-option
+                  v-for="user in users"
+                  :key="user.id"
+                  :label="user.name"
+                  :value="user.id"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Cliente" prop="client">
@@ -77,11 +93,14 @@
               </el-select>
             </el-form-item>
             <el-form-item label="Telefono" prop="phoenumber">
-              <el-input style="width: 220px;" v-model="form.phonenumber"></el-input>
+              <el-input
+                style="width: 220px"
+                v-model="form.phonenumber"
+              ></el-input>
             </el-form-item>
             <el-form-item label="Concepto" prop="concept">
               <el-input
-                style="width: 220px;"
+                style="width: 220px"
                 type="textarea"
                 v-model="form.concept"
                 maxlength="300"
@@ -91,7 +110,7 @@
             <div>
               <el-form-item label="Garantía" prop="guaranty">
                 <el-input
-                  style="width: 220px;"
+                  style="width: 220px"
                   type="textarea"
                   v-model="form.guaranty"
                   maxlength="165"
@@ -100,7 +119,7 @@
               </el-form-item>
               <el-form-item label="Detalles" prop="details">
                 <el-input
-                  style="width: 220px;"
+                  style="width: 220px"
                   type="textarea"
                   v-model="form.details"
                   maxlength="300"
@@ -108,17 +127,17 @@
                 ></el-input>
               </el-form-item>
               <el-form-item label="Marca" prop="maker">
-                <el-input style="width: 220px;" v-model="form.maker"></el-input>
+                <el-input style="width: 220px" v-model="form.maker"></el-input>
               </el-form-item>
               <el-form-item label="Modelo" prop="brand">
-                <el-input style="width: 220px;" v-model="form.brand"></el-input>
+                <el-input style="width: 220px" v-model="form.brand"></el-input>
               </el-form-item>
               <el-form-item label="Año" prop="year">
-                <el-input style="width: 220px;" v-model="form.year"></el-input>
+                <el-input style="width: 220px" v-model="form.year"></el-input>
               </el-form-item>
             </div>
             <el-form-item label="Color" prop="color">
-              <el-input style="width: 220px;" v-model="form.color"></el-input>
+              <el-input style="width: 220px" v-model="form.color"></el-input>
             </el-form-item>
             <!-- Cambido a proximo sevicio -->
             <el-form-item label="Próximo servicio" prop="next_service">
@@ -130,7 +149,10 @@
               ></el-date-picker>
             </el-form-item>
             <el-form-item label="KM. de Ingreso" prop="km">
-              <el-input style="width: 220px;" v-model="form.km"></el-input>
+              <el-input style="width: 220px" v-model="form.km"></el-input>
+            </el-form-item>
+            <el-form-item v-if="order.undefService" label="Total" prop="low_price">
+              <el-input style="width: 220px" v-model="order.services[0].items[0].low_price" @change="onPriceChange"></el-input>
             </el-form-item>
             <div v-if="order.receiptMode">
               <el-form-item label="Tipo:">
@@ -142,12 +164,12 @@
               </el-form-item>
               <el-form-item label="MDP:">
                 <el-radio-group v-model="method">
-                  <el-radio :label="1" name="type" style="display:block">Efectivo</el-radio>
-                  <el-radio :label="2" name="type" style="display:block">Tarjeta de Crédito</el-radio>
-                  <el-radio :label="3" name="type" style="display:block">Tarjeta de Débito</el-radio>
-                  <el-radio :label="4" name="type" style="display:block">Cheque</el-radio>
-                  <el-radio :label="5" name="type" style="display:block">Transferencia</el-radio>
-                  <el-radio :label="6" name="type" style="display:block">Crédito</el-radio>
+                  <el-radio :label="1" name="type" style="display: block">Efectivo</el-radio>
+                  <el-radio :label="2" name="type" style="display: block">Tarjeta de Crédito</el-radio>
+                  <el-radio :label="3" name="type" style="display: block">Tarjeta de Débito</el-radio>
+                  <el-radio :label="4" name="type" style="display: block">Cheque</el-radio>
+                  <el-radio :label="5" name="type" style="display: block">Transferencia</el-radio>
+                  <el-radio :label="6" name="type" style="display: block">Crédito</el-radio>
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="IVA:">
@@ -158,7 +180,7 @@
           </el-form>
         </el-col>
 
-        <el-col :span="currentSale? 18:16" :offset="currentSale? 3:1">
+        <el-col :span="currentSale ? 18 : 16" :offset="currentSale ? 3 : 1">
           <br />
           <el-card class="box-card">
             <el-row v-if="currentSale">
@@ -170,27 +192,35 @@
                 </el-row>
                 <el-row class="row-item">
                   <el-col :span="6" :offset="4">Folio:</el-col>
-                  <el-col :span="4">{{getFolio(currentSale)}}</el-col>
+                  <el-col :span="4">{{ getFolio(currentSale) }}</el-col>
                 </el-row>
                 <el-row class="row-item">
                   <el-col :span="6" :offset="4">Cliente:</el-col>
-                  <el-col :span="4">{{currentSale.client.name}}</el-col>
+                  <el-col :span="4">{{ currentSale.client.name }}</el-col>
                 </el-row>
                 <el-row class="row-item">
                   <el-col :span="6" :offset="4">Teléfono:</el-col>
-                  <el-col :span="4">{{ currentSale.phonenumber || "No especificado" }}</el-col>
+                  <el-col :span="4">{{
+                    currentSale.phonenumber || "No especificado"
+                  }}</el-col>
                 </el-row>
                 <el-row class="row-item">
                   <el-col :span="6" :offset="4">Ultimo Servicio:</el-col>
-                  <el-col :span="4">{{currentSale.client.last_service || "No especificado" }}</el-col>
+                  <el-col :span="4">{{
+                    currentSale.client.last_service || "No especificado"
+                  }}</el-col>
                 </el-row>
                 <el-row class="row-item">
                   <el-col :span="6" :offset="4">Concepto:</el-col>
-                  <el-col :span="4">{{currentSale.client.concept || "No especificado" }}</el-col>
+                  <el-col :span="4">{{
+                    currentSale.client.concept || "No especificado"
+                  }}</el-col>
                 </el-row>
                 <el-row class="row-item">
                   <el-col :span="6" :offset="4">Garantía:</el-col>
-                  <el-col :span="4">{{currentSale.client.guaranty || "No especificado" }}</el-col>
+                  <el-col :span="4">{{
+                    currentSale.client.guaranty || "No especificado"
+                  }}</el-col>
                 </el-row>
               </el-col>
             </el-row>
@@ -199,13 +229,16 @@
               <el-col :span="24">
                 <el-row>
                   <el-col :span="6">
-                    <h3>{{ order.brand }}</h3>
+                    <h3>{{ form.brand }}</h3>
                   </el-col>
                   <el-col :span="4">
-                    <h3>{{ order.year }}</h3>
+                    <h3>{{ form.year }}</h3>
                   </el-col>
                 </el-row>
-                <el-row v-for="(service, index) in order.services" v-bind:key="index">
+                <el-row
+                  v-for="(service, index) in order.services"
+                  v-bind:key="index"
+                >
                   <el-col :span="22" :offset="2">
                     <h4>{{ service.label }}</h4>
                   </el-col>
@@ -215,12 +248,18 @@
                       v-bind:key="index"
                       class="row-item"
                     >
-                      <el-col :span="6" :offset="4">{{ itemName (item) }}</el-col>
-                      <el-col :span="4">{{ hiddenFormatPrice(itemPrice(item, service)) }}</el-col>
+                      <el-col :span="6" :offset="4">{{
+                        itemName(item)
+                      }}</el-col>
+                      <el-col :span="4">{{
+                        hiddenFormatPrice(itemPrice(item, service))
+                      }}</el-col>
                     </el-row>
                     <el-row class="row-item" v-if="total != sumServiceTotal()">
                       <el-col :span="6" :offset="4">Otro</el-col>
-                      <el-col :span="4">{{ hiddenFormatPrice(total - sumServiceTotal()) }}</el-col>
+                      <el-col :span="4">{{
+                        hiddenFormatPrice(total - sumServiceTotal())
+                      }}</el-col>
                     </el-row>
                     <br />
                   </el-col>
@@ -238,12 +277,13 @@
               </el-col>
               <el-col :span="3" :offset="8">${{ formatPrice(total) }}</el-col>
               <el-col>
-                <div style="float: right;">
+                <div style="float: right">
                   <el-button
-                    @click="showPrices=!showPrices"
+                    @click="showPrices = !showPrices"
                     size="mini"
                     type="text"
-                  >{{ textBtnInfo() }}</el-button>
+                    >{{ textBtnInfo() }}</el-button
+                  >
                 </div>
               </el-col>
             </el-row>
@@ -251,18 +291,32 @@
         </el-col>
       </el-row>
       <el-row type="flex" justify="end" v-if="!currentSale">
-        <el-col :span="5" style="text-align:right;">
+        <el-col :span="5" style="text-align: right">
           <br />
           <el-button type="secondary" @click="back()">Regresar</el-button>
           <el-button type="primary" @click="save()">Guardar</el-button>
         </el-col>
       </el-row>
-      <el-row type="flex" justify="end" style="opacity: 0;overflow: hidden;height: 50px;">
+      <el-row
+        type="flex"
+        justify="end"
+        style="opacity: 0; overflow: hidden; height: 50px"
+      >
         <el-col :span="8">
-          <img ref="quotation" @load="image1Loaded=true" src="/img/receipt.jpg" width="1200px" />
+          <img
+            ref="quotation"
+            @load="image1Loaded = true"
+            src="/img/receipt.jpg"
+            width="1200px"
+          />
         </el-col>
         <el-col :span="8">
-          <img ref="receipt" @load="image2Loaded=true" src="/img/receipt2.jpg" width="1200px" />
+          <img
+            ref="receipt"
+            @load="image2Loaded = true"
+            src="/img/receipt2.jpg"
+            width="1200px"
+          />
         </el-col>
         <el-col :span="8">
           <canvas ref="my-canvas"></canvas>
@@ -393,6 +447,10 @@ export default {
     });
   },
   methods: {
+    onPriceChange(value){
+      if(isNaN(value))
+        this.order.services[0].items[0].low_price = 0;
+    },
     onChangeClient(value) {
       // let res = this.clients.filter((c) => c.id == value);
       // this.currentSale.phonenumber = res.length > 0 ? res[0].phonenumber : "";
@@ -531,13 +589,25 @@ export default {
           $this.order.next_service = $this.form.next_service;
           $this.order.km = $this.form.km;
           $this.order.total = $this.total;
+          $this.order.maker = $this.form.maker;
+          $this.order.brand = $this.form.brand;
+          $this.order.year = $this.form.year;
+
+          if (isNaN($this.order.total)) {
+            $this.$alert(
+              "EL precio total no es válido",
+              "Total no válido",
+              {
+                confirmButtonText: "OK",
+                type: "warning",
+              }
+            );
+            return;
+          }
 
           // create a receipt
           if ($this.order.receiptMode) {
-            $this.order.status = 2;
-            $this.order.maker = $this.form.maker;
-            $this.order.brand = $this.form.brand;
-            $this.order.year = $this.form.year;
+            $this.order.status = 2;            
             $this.order.details = $this.form.details;
             $this.order.guaranty = $this.form.guaranty;
             $this.order.method = $this.method;
