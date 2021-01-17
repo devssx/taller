@@ -230,9 +230,9 @@ export default {
       showPrices: true,
       image1Loaded: false,
       image2Loaded: false,
-      method: 0,
+      method: 1,
       workshops: [],
-      service_type: 0,
+      service_type: 1,
       tax: 0,
       order: {},
       currentSale: {
