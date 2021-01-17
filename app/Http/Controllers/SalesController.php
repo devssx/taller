@@ -426,7 +426,7 @@ class SalesController extends Controller
             $newClient = Client::firstOrCreate(['name' => $clientName, 'phonenumber' => $phoneNumber]);
             $sale->client_id = $newClient->id;
         }
-
+        
         if ($request->has('concept')) {
             $sale->concept = $request->get('concept');
         }
@@ -438,6 +438,14 @@ class SalesController extends Controller
         }
         if ($request->has('next_service')) {
             $sale->next_service = $request->get('next_service');
+
+            // notificacion
+            if ($request->has('reminder')) {
+                $clientReminder = Client::firstOrCreate(['id' => $sale->client_id]);
+                $clientReminder->reminder = $request->get('reminder');
+                $clientReminder->reminder_date = $sale->next_service;
+                $clientReminder->save();
+            }
         }
         if ($request->has('km')) {
             $sale->km = $request->get('km');

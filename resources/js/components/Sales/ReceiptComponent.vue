@@ -148,6 +148,9 @@
                 placeholder="Seleccionar Día"
               ></el-date-picker>
             </el-form-item>
+            <el-form-item label="Recordatorio:" prop="reminder" v-show="form.next_service">
+              <el-input style="width: 220px" type="textarea" v-model="form.reminder" maxlength="120" :rows="2"></el-input>
+            </el-form-item>
             <el-form-item label="KM. de Ingreso" prop="km">
               <el-input style="width: 220px" v-model="form.km"></el-input>
             </el-form-item>
@@ -356,6 +359,7 @@ export default {
         year: "",
         color: "",
         next_service: "",
+        reminder: "",
         km: "",
       },
       clients: [],
@@ -587,6 +591,7 @@ export default {
           $this.order.concept = $this.form.concept;
           $this.order.color = $this.form.color;
           $this.order.next_service = $this.form.next_service;
+          $this.order.reminder = $this.form.reminder;
           $this.order.km = $this.form.km;
           $this.order.total = $this.total;
           $this.order.maker = $this.form.maker;
@@ -649,6 +654,11 @@ export default {
               );
               return;
             }
+          }
+
+          if($this.form.next_service && !$this.form.reminder){
+            $this.$alert(`Ingrese el mensaje del recordatorio para la fecha del próximo servicio.`, "Rocordatorio no válido", { confirmButtonText: "OK", type: "warning" });
+            return;
           }
 
           axios
