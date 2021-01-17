@@ -208,21 +208,25 @@
                   }}</el-col>
                 </el-row>
                 <el-row class="row-item">
+                  <el-col :span="6" :offset="4">Carro:</el-col>
+                  <el-col :span="4">{{ `${currentSale.maker} ${currentSale.brand} ${currentSale.year}` }}</el-col>
+                </el-row>
+                <!-- <el-row class="row-item">
                   <el-col :span="6" :offset="4">Ultimo Servicio:</el-col>
                   <el-col :span="4">{{
                     currentSale.client.last_service || "No especificado"
                   }}</el-col>
-                </el-row>
+                </el-row> -->
                 <el-row class="row-item">
                   <el-col :span="6" :offset="4">Concepto:</el-col>
                   <el-col :span="4">{{
-                    currentSale.client.concept || "No especificado"
+                    currentSale.concept || "No especificado"
                   }}</el-col>
                 </el-row>
                 <el-row class="row-item">
                   <el-col :span="6" :offset="4">Garantía:</el-col>
                   <el-col :span="4">{{
-                    currentSale.client.guaranty || "No especificado"
+                    currentSale.guaranty || "No especificado"
                   }}</el-col>
                 </el-row>
               </el-col>
@@ -407,6 +411,7 @@ export default {
 
     if ($this.sale) {
       $this.currentSale = $this.sale;
+      console.log($this.currentSale);
       var services = [];
       for (var i in $this.currentSale.services) {
         var items = [];
@@ -597,6 +602,8 @@ export default {
           $this.order.maker = $this.form.maker;
           $this.order.brand = $this.form.brand;
           $this.order.year = $this.form.year;
+          $this.order.details = $this.form.details;
+          $this.order.guaranty = $this.form.guaranty;
 
           if (isNaN($this.order.total)) {
             $this.$alert(
@@ -613,8 +620,6 @@ export default {
           // create a receipt
           if ($this.order.receiptMode) {
             $this.order.status = 2;            
-            $this.order.details = $this.form.details;
-            $this.order.guaranty = $this.form.guaranty;
             $this.order.method = $this.method;
             $this.order.service_type = $this.service_type;
             $this.order.tax = $this.tax;
