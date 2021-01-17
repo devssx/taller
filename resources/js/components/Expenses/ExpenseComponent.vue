@@ -24,7 +24,7 @@
         ></el-button>
       </el-col>
       <el-col :span="4" align="end">
-        <el-button type="primary" icon="el-icon-plus" @click="addNew" :disabled="!selectedDay">Nuevo</el-button>
+        <el-button type="primary" icon="el-icon-plus" @click="addNew" :disabled="!selectedDay || !workshopId">Nuevo</el-button>
         <expense-edit
           :workshop="workshopId"
           :selectedItem="newExpense"
@@ -232,15 +232,19 @@ export default {
       }
     },
     addNew() {
+      // BUG Sabado sigue siendo la semana anterior
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
       let selectedWeek = this.initDayOfWeekDate(this.selectedDay, 2);
-      let thisWeek = this.initDayOfWeekDate(new Date(), 2);
+      let thisWeek = this.initDayOfWeekDate(tomorrow, 2);
       let sWeek = this.toFixedFormat(selectedWeek, "yyyyMMdd");
       let cWeek = this.toFixedFormat(thisWeek, "yyyyMMdd");
 
       // no dejar poner gastos en el futuro o pasado
       if (sWeek != cWeek) {
         this.$alert(
-          "Favor de seleccionar la semana actual",
+          "Selecciona la semana actual",
           "Semana no válida",
           {
             confirmButtonText: "OK",
@@ -250,9 +254,8 @@ export default {
         return;
       }
 
-      let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
       this.newExpense.workshop = this.workshopId;
-      this.newExpense.week = week;
+      this.newExpense.week = sWeek;
       this.newExpense.type = 1;
       this.newExpense.concept = "";
       this.newExpense.amount = 0;
@@ -342,9 +345,13 @@ export default {
       var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
       this.prevDay = newDate;
 
+      if(newDate > new Date()) {
+        this.$alert("La semana seleccionada es mayor a la actual.", "Semana no válida", { confirmButtonText: "OK",  type: "warning" });
+        return;
+      }
+
       let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
       this.newExpense.week = week;
-
       this.loadTable(
         `/api/expenses?week=${week}&workshop=${this.workshopId}&start=${start}`,
         newDate

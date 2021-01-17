@@ -72,8 +72,12 @@ export default {
         return;
       }
 
+      // BUG Sabado sigue siendo la semana anterior
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
       let selectedWeek = this.initDayOfWeekDate(this.week, 2);
-      let thisWeek = this.initDayOfWeekDate(new Date(), 2);
+      let thisWeek = this.initDayOfWeekDate(tomorrow, 2);
       let sWeek = this.toFixedFormat(selectedWeek, "yyyyMMdd");
       let cWeek = this.toFixedFormat(thisWeek, "yyyyMMdd");
 

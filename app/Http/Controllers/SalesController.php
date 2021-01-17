@@ -255,7 +255,7 @@ class SalesController extends Controller
                 ->paginate(1000000);
 
             $week = new DateTime($request->get('start'));
-            $comment = Comment::firstOrCreate(['week' => $week->format("Ymd")]);
+            $comment = Comment::firstOrCreate(['week' => $week->format("Ymd"), 'workshop_id' => $request->get('workshop')]);
             return ['d' => $result, 'c' => $comment];
         }
 
