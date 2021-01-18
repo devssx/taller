@@ -17,6 +17,44 @@ class WorkShopController extends Controller
         return WorkShop::get();
     }
 
+    public function workshops()
+    {
+        return view('workshops.index');
+    }
+
+
+    public function save(Request $request)
+    {
+        if($request->has('id'))
+        {
+            $wks = WorkShop::findOrFail($request->get('id'));
+            $wks->name = $request->get('name');
+            $wks->address = $request->get('address');
+            $wks->code = $request->get('code');
+            $wks->save();
+        }
+        else
+        {
+            $wks = WorkShop::create();
+            $wks->name = $request->get('name');
+            $wks->address = $request->get('address');
+            $wks->code = $request->get('code');
+            $wks->save();
+        }
+        return $wks;
+    }
+
+    public function delete($id)
+    {
+        $wks = WorkShop::findOrFail($id);
+        $wks->deleted = 1;
+        $wks->save();
+
+        return response()->json([
+            'success' => $wks,
+        ]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

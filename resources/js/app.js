@@ -152,6 +152,11 @@ Vue.component('image-dialog', require('./components/Tools/ImageDialog').default)
 Vue.component('bar-chart', require('./components/Tools/ChartComponent').default);
 Vue.component('notify-component', require('./components/Tools/Notifications').default);
 
+Vue.component('create-workshops', require('./components/workshops/CreateComponent').default);
+Vue.component('edit-workshops', require('./components/workshops/EditComponent').default);
+Vue.component('delete-workshops', require('./components/workshops/DeleteComponent').default);
+Vue.component('list-workshops', require('./components/workshops/ListComponent').default);
+
 new Vue({
   el: '#app',
   store,

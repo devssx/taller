@@ -81,6 +81,8 @@ Route::get('/payroll/select', 'PayrollController@SelectPayrollByYear');
 Route::get('/payroll', 'PayrollController@getPayroll');
 Route::get('/payroll/userComments', 'PayrollCommentController@getUserComments');
 Route::get('/workshop', 'WorkShopController@index');
+Route::post('/workshop', 'WorkShopController@save');
+Route::delete('/workshop/{id}', 'WorkShopController@delete');
 
 Route::get('/report/expenses', 'ExpenseController@SelectExpensesByYear');
 Route::get('/expenses', 'ExpenseController@searchWeek');
