@@ -22,13 +22,13 @@
             ref="clientForm"
           >
             <el-form-item label="Nombre" prop="name">
-              <el-input v-model="client.name"></el-input>
+              <el-input v-model="client.name" maxlength="28"></el-input>
             </el-form-item>
             <el-form-item label="Telefono" prop="phonenumber">
-              <el-input v-model="client.phonenumber"></el-input>
+              <el-input v-model="client.phonenumber" maxlength="18"></el-input>
             </el-form-item>
             <el-form-item label="Telefono 2" prop="phonenumber2">
-              <el-input v-model="client.phonenumber2"></el-input>
+              <el-input v-model="client.phonenumber2" maxlength="18"></el-input>
             </el-form-item>
             <el-form-item label="Direccion" prop="address">
               <el-input type="textarea" v-model="client.address"></el-input>

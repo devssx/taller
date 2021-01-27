@@ -18,16 +18,16 @@
             </el-select>
           </el-form-item>
           <el-form-item label="Marca:">
-            <el-input v-model="maker"></el-input>
+            <el-input v-model="maker" maxlength="16"></el-input>
           </el-form-item>
           <el-form-item label="Modelo:">
-            <el-input v-model="brand"></el-input>
+            <el-input v-model="brand" maxlength="16"></el-input>
           </el-form-item>
           <el-form-item label="Año:">
-            <el-input v-model="year"></el-input>
+            <el-input v-model="year" maxlength="4"></el-input>
           </el-form-item>
           <el-form-item label="Color:">
-            <el-input v-model="color"></el-input>
+            <el-input v-model="color" maxlength="14"></el-input>
           </el-form-item>
           <el-form-item label="Próximo Servicio:">
             <el-date-picker
@@ -37,8 +37,8 @@
               placeholder="Seleccionar Día"
             ></el-date-picker>
           </el-form-item>
-          <el-form-item label="KM. de Ingreso:">
-            <el-input v-model="km"></el-input>
+          <el-form-item label="No. de Placa:">
+            <el-input v-model="km" maxlength="10"></el-input>
           </el-form-item>
           <el-form-item label="Concepto:">
             <el-input type="textarea" v-model="concept" maxlength="300" :rows="2"></el-input>
@@ -50,7 +50,7 @@
             <el-input type="textarea" v-model="guaranty" maxlength="165" :rows="2"></el-input>
           </el-form-item>
           <el-form-item label="Total:">
-            <el-input v-model="total"></el-input>
+            <el-input v-model="total" maxlength="18"></el-input>
           </el-form-item>
           <el-form-item label="Tipo de Servico:">
             <el-radio-group v-model="service_type">

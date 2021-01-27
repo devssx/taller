@@ -96,6 +96,7 @@
               <el-input
                 style="width: 220px"
                 v-model="form.phonenumber"
+                maxlength="18"
               ></el-input>
             </el-form-item>
             <el-form-item label="Concepto" prop="concept">
@@ -127,17 +128,17 @@
                 ></el-input>
               </el-form-item>
               <el-form-item label="Marca" prop="maker">
-                <el-input style="width: 220px" v-model="form.maker"></el-input>
+                <el-input style="width: 220px" v-model="form.maker" maxlength="16"></el-input>
               </el-form-item>
               <el-form-item label="Modelo" prop="brand">
-                <el-input style="width: 220px" v-model="form.brand"></el-input>
+                <el-input style="width: 220px" v-model="form.brand" maxlength="16"></el-input>
               </el-form-item>
               <el-form-item label="Año" prop="year">
-                <el-input style="width: 220px" v-model="form.year"></el-input>
+                <el-input style="width: 220px" v-model="form.year" maxlength="4"></el-input>
               </el-form-item>
             </div>
             <el-form-item label="Color" prop="color">
-              <el-input style="width: 220px" v-model="form.color"></el-input>
+              <el-input style="width: 220px" v-model="form.color" maxlength="14"></el-input>
             </el-form-item>
             <!-- Cambido a proximo sevicio -->
             <el-form-item label="Próximo servicio" prop="next_service">
@@ -151,8 +152,8 @@
             <el-form-item label="Recordatorio:" prop="reminder" v-show="form.next_service">
               <el-input style="width: 220px" type="textarea" v-model="form.reminder" maxlength="120" :rows="2"></el-input>
             </el-form-item>
-            <el-form-item label="KM. de Ingreso" prop="km">
-              <el-input style="width: 220px" v-model="form.km"></el-input>
+            <el-form-item label="No. de Placa" prop="km">
+              <el-input style="width: 220px" v-model="form.km" maxlength="10"></el-input>
             </el-form-item>
             <el-form-item v-if="order.undefService" label="Total" prop="low_price">
               <el-input style="width: 220px" v-model="order.services[0].items[0].low_price" @change="onPriceChange"></el-input>

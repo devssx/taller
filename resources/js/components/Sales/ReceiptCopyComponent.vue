@@ -45,7 +45,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="Telefono" prop="phoenumber">
-              <el-input style="width: 220px;" v-model="currentSale.phonenumber"></el-input>
+              <el-input style="width: 220px;" v-model="currentSale.phonenumber" maxlength="18"></el-input>
             </el-form-item>
             <el-form-item label="Concepto" prop="concept">
               <el-input
@@ -75,16 +75,16 @@
               ></el-input>
             </el-form-item>
             <el-form-item label="Marca" prop="maker">
-              <el-input style="width: 220px;" v-model="currentSale.maker"></el-input>
+              <el-input style="width: 220px;" v-model="currentSale.maker" maxlength="16"></el-input>
             </el-form-item>
             <el-form-item label="Modelo" prop="brand">
-              <el-input style="width: 220px;" v-model="currentSale.brand"></el-input>
+              <el-input style="width: 220px;" v-model="currentSale.brand" maxlength="16"></el-input>
             </el-form-item>
             <el-form-item label="Año" prop="year">
-              <el-input style="width: 220px;" v-model="currentSale.year"></el-input>
+              <el-input style="width: 220px;" v-model="currentSale.year" maxlength="4"></el-input>
             </el-form-item>
             <el-form-item label="Color" prop="color">
-              <el-input style="width: 220px;" v-model="currentSale.color"></el-input>
+              <el-input style="width: 220px;" v-model="currentSale.color" maxlength="14"></el-input>
             </el-form-item>
             <!-- Cambido a proximo sevicio -->
             <el-form-item label="Próximo servicio" prop="next_service">
@@ -95,8 +95,8 @@
                 placeholder="Seleccionar Día"
               ></el-date-picker>
             </el-form-item>
-            <el-form-item label="KM. de Ingreso" prop="km">
-              <el-input style="width: 220px;" v-model="currentSale.km"></el-input>
+            <el-form-item label="No. de Placa" prop="km">
+              <el-input style="width: 220px;" v-model="currentSale.km" maxlength="10"></el-input>
             </el-form-item>
             <div v-if="order.receiptMode">
               <el-form-item label="Tipo:">
