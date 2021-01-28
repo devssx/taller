@@ -400,71 +400,79 @@ export default {
             $this.context.fillText(nextService, 1010, 290);
             $this.context.fillText(nextService, 1010, 290 + 678);
 
+            // MODO Concepto
+            //var detailMode = currentSale.sale_services.length > 1;
+            var detailMode = 0; // Concepto;
+            if (currentSale.concept === '--')
+                detailMode = 1; // No Price
+            else if (currentSale.concept === '++')
+                detailMode = 2; // With Price
+            
+            // No cabe en el recibo solo hay 9 renglones
+            if (detailMode && currentSale.sale_services.length > 7){
+                currentSale.concept = 'La cantidad de artículos supera el espacio del recibo, favor de editar el concepto.';
+                detailMode = 0;
+            }
+
+            var y = 0;
             currentSale.total = parseFloat(currentSale.total);
 
+            // Cantidad
             $this.context.fillText("1", 100, 350);
             $this.context.fillText("1", 100, 350 + 678);
+
             // Concepto
-            if (currentSale.concept) {
-                var concept = currentSale.concept.match(/.{1,75}/g);
+            if (detailMode == 0 && currentSale.concept) {
+                var concept = currentSale.concept.match(/.{1,90}/g);
                 for (var x = 0; x < concept.length; x++) {
-                    $this.context.fillText(concept[x].toUpperCase(), 160, 350 + x * 32);
-                    $this.context.fillText(
-                        concept[x].toUpperCase(),
-                        160,
-                        350 + 678 + x * 32
-                    );
+                    $this.context.fillText(concept[x].toUpperCase(), 160, 350 + y * 30);
+                    $this.context.fillText(concept[x].toUpperCase(), 160, 350 + 678 + y * 30);
+                    y++;
                 }
             }
-            $this.context.fillText(
-                "$" + $this.formatPrice(currentSale.total),
-                950,
-                350
-            );
-            $this.context.fillText(
-                "$" + $this.formatPrice(currentSale.total),
-                950,
-                350 + 678
-            );
+
+            // Importe Total (Cuando no se detalla el listado de items)
+            if (detailMode == 0 || detailMode == 1) {
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 950, 350);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 950, 350 + 678);
+            }
+
+            // Descripcion de items
+            if (detailMode) {
+                for (var x = 0; x < currentSale.sale_services.length; x++) {
+                    var desc = currentSale.sale_services[x];
+                    // Cantidad
+                    $this.context.fillText("1", 100, 350 + y * 31);
+                    $this.context.fillText("1", 100, 350 + 678 + y * 31);
+
+                    // Item Name
+                    $this.context.fillText(desc.item.name.toUpperCase(), 160, 350 + y * 30);
+                    $this.context.fillText(desc.item.name.toUpperCase(), 160, 350 + 678 + y * 30);
+
+                    // Importe
+                    if (detailMode == 2) {
+                        $this.context.fillText("$" + $this.formatPrice(currentSale.total), 950, 350 + y * 30);
+                        $this.context.fillText("$" + $this.formatPrice(currentSale.total), 950, 350 + 678 + y * 30);
+                    }
+                    y++;
+                }
+            }
 
             // Detalles
             if (currentSale.details) {
-                var details = currentSale.details.match(/.{1,75}/g);
+                var details = currentSale.details.match(/.{1,90}/g);
                 for (var x = 0; x < details.length; x++) {
-                    $this.context.fillText(
-                        details[x].toUpperCase(),
-                        160,
-                        350 + 30 * concept.length + x * 32
-                    );
-                    $this.context.fillText(
-                        details[x].toUpperCase(),
-                        160,
-                        350 + 678 + 30 * concept.length + x * 32
-                    );
+                    y++;
+                    $this.context.fillText(details[x].toUpperCase(), 160, 350 + y * 30);
+                    $this.context.fillText(details[x].toUpperCase(), 160, 350 + 678 + y * 30);
                 }
             }
 
-            $this.context.fillText(
-                "$" + $this.formatPrice(currentSale.total),
-                950,
-                615
-            );
-            $this.context.fillText(
-                "$" + $this.formatPrice(currentSale.total),
-                950,
-                615 + 678
-            );
+            $this.context.fillText("$" + $this.formatPrice(currentSale.total), 950, 615);
+            $this.context.fillText("$" + $this.formatPrice(currentSale.total), 950, 615 + 678);
             if (currentSale.tax) {
-                $this.context.fillText(
-                    "$" + $this.formatPrice(currentSale.total * 0.08),
-                    950,
-                    640
-                );
-                $this.context.fillText(
-                    "$" + $this.formatPrice(currentSale.total * 0.08),
-                    950,
-                    640 + 678
-                );
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total * 0.08), 950, 640);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total * 0.08), 950, 640 + 678);
             } else {
                 $this.context.fillText("$0", 950, 640);
                 $this.context.fillText("$0", 950, 640 + 678);
@@ -632,35 +640,56 @@ export default {
             // $this.context.fillText("125,000", 960, 330);
             // $this.context.fillText("25/04/2021", 980, 355);
 
+            // MODO Concepto
+            //var detailMode = currentSale.sale_services.length > 1;
+            var detailMode = 0; // Concepto;
+            if (currentSale.concept === '--')
+                detailMode = 1; // No Price
+            else if (currentSale.concept === '++')
+                detailMode = 2; // With Price
+
+            var y = 0;
             currentSale.total = parseFloat(currentSale.total);
 
             // Cantidad
             $this.context.fillText("1", 90, 420);
 
             // Descripcion
-            if (currentSale.concept) {
+            if (detailMode == 0 && currentSale.concept) {
                 var concept = currentSale.concept.match(/.{1,75}/g);
                 for (var x = 0; x < concept.length; x++) {
-                    $this.context.fillText(concept[x].toUpperCase(), 160, 420 + x * 32);
+                    $this.context.fillText(concept[x].toUpperCase(), 160, 420 + y * 31);
+                    y++;
+                }
+
+                // Importe
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 960, 420);
+            }
+
+            // Descripcion
+            if (detailMode) {
+                if (detailMode == 1)
+                    $this.context.fillText("$" + $this.formatPrice(currentSale.total), 960, 420);
+
+                for (var x = 0; x < currentSale.sale_services.length; x++) {
+                    var desc = currentSale.sale_services[x];
+                    // Cantidad
+                    $this.context.fillText("1", 90, 420 + y * 31);
+                    // Item Name
+                    $this.context.fillText(desc.item.name.toUpperCase(), 160, 420 + y * 31);
+                    // Importe
+                    if (detailMode == 2)
+                        $this.context.fillText("$" + $this.formatPrice(desc.price), 960, 420 + y * 31);
+                    y++;
                 }
             }
 
-            // Importe
-            $this.context.fillText(
-                "$" + $this.formatPrice(currentSale.total),
-                960,
-                420
-            );
-
-            // Descripcion (repetida)
+            // Detalles
             if (currentSale.details) {
-                var details = currentSale.details.match(/.{1,50}/g);
+                var details = currentSale.details.match(/.{1,75}/g);
                 for (var x = 0; x < details.length; x++) {
-                    $this.context.fillText(
-                        details[x].toUpperCase(),
-                        160,
-                        420 + 32 * concept.length + x * 32
-                    );
+                    y++;
+                    $this.context.fillText(details[x].toUpperCase(), 160, 420 + y * 31);
                 }
             }
 
@@ -677,11 +706,7 @@ export default {
             var y = 1040;
             var h = 26;
             // Subtotal
-            $this.context.fillText(
-                "$" + $this.formatPrice(currentSale.total),
-                960,
-                y
-            );
+            $this.context.fillText("$" + $this.formatPrice(currentSale.total), 960, y);
             y += h;
 
             // IVA

@@ -150,7 +150,7 @@ export default {
       // const PROCESO = 1;
       // const TERMINADO = 2;
       // const CANCELADO = 3;
-
+      
       var canvas = this.$refs["my-canvas"];
       if (item.status == 2) {
         this.createReceipt(item, this.$refs["receipt"], canvas);

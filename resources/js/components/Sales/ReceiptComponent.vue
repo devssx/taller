@@ -412,7 +412,6 @@ export default {
 
     if ($this.sale) {
       $this.currentSale = $this.sale;
-      console.log($this.currentSale);
       var services = [];
       for (var i in $this.currentSale.services) {
         var items = [];
