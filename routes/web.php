@@ -78,5 +78,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('files/uploadCar', 'FileController@uploadCar')->name('upload.car');
     Route::apiResource('/app', 'AppController');
     
-    Route::get('/workshops', 'WorkshopController@workshops')->name('workshops.list');
+    Route::get('/wks', 'WorkshopController@workshops')->name('workshops.list');
+    Route::get('/wik', function () {
+        return view('workshops.index');
+    });
 });
