@@ -151,6 +151,7 @@ Vue.component('file-upload', require('./components/Tools/UploadFile').default);
 Vue.component('image-dialog', require('./components/Tools/ImageDialog').default);
 Vue.component('bar-chart', require('./components/Tools/ChartComponent').default);
 Vue.component('notify-component', require('./components/Tools/Notifications').default);
+Vue.component('select-format', require('./components/Tools/SelectFormat').default);
 
 Vue.component('create-workshops', require('./components/workshops/CreateComponent').default);
 Vue.component('edit-workshops', require('./components/workshops/EditComponent').default);

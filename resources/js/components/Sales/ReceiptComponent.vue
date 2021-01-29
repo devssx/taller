@@ -1,6 +1,7 @@
 <template>
   <el-container>
     <confirm-sales></confirm-sales>
+    <select-format ref="formatDialog"></select-format>
     <el-main class="content">
       <el-row v-if="currentSale">
         <el-col :span="24">
@@ -128,17 +129,33 @@
                 ></el-input>
               </el-form-item>
               <el-form-item label="Marca" prop="maker">
-                <el-input style="width: 220px" v-model="form.maker" maxlength="16"></el-input>
+                <el-input
+                  style="width: 220px"
+                  v-model="form.maker"
+                  maxlength="16"
+                ></el-input>
               </el-form-item>
               <el-form-item label="Modelo" prop="brand">
-                <el-input style="width: 220px" v-model="form.brand" maxlength="16"></el-input>
+                <el-input
+                  style="width: 220px"
+                  v-model="form.brand"
+                  maxlength="16"
+                ></el-input>
               </el-form-item>
               <el-form-item label="Año" prop="year">
-                <el-input style="width: 220px" v-model="form.year" maxlength="4"></el-input>
+                <el-input
+                  style="width: 220px"
+                  v-model="form.year"
+                  maxlength="4"
+                ></el-input>
               </el-form-item>
             </div>
             <el-form-item label="Color" prop="color">
-              <el-input style="width: 220px" v-model="form.color" maxlength="14"></el-input>
+              <el-input
+                style="width: 220px"
+                v-model="form.color"
+                maxlength="14"
+              ></el-input>
             </el-form-item>
             <!-- Cambido a proximo sevicio -->
             <el-form-item label="Próximo servicio" prop="next_service">
@@ -149,14 +166,36 @@
                 placeholder="Seleccionar Día"
               ></el-date-picker>
             </el-form-item>
-            <el-form-item label="Recordatorio:" prop="reminder" v-show="form.next_service">
-              <el-input style="width: 220px" type="textarea" v-model="form.reminder" maxlength="120" :rows="2"></el-input>
+            <el-form-item
+              label="Recordatorio:"
+              prop="reminder"
+              v-show="form.next_service"
+            >
+              <el-input
+                style="width: 220px"
+                type="textarea"
+                v-model="form.reminder"
+                maxlength="120"
+                :rows="2"
+              ></el-input>
             </el-form-item>
             <el-form-item label="No. de Placa" prop="km">
-              <el-input style="width: 220px" v-model="form.km" maxlength="10"></el-input>
+              <el-input
+                style="width: 220px"
+                v-model="form.km"
+                maxlength="10"
+              ></el-input>
             </el-form-item>
-            <el-form-item v-if="order.undefService" label="Total" prop="low_price">
-              <el-input style="width: 220px" v-model="order.services[0].items[0].low_price" @change="onPriceChange"></el-input>
+            <el-form-item
+              v-if="order.undefService"
+              label="Total"
+              prop="low_price"
+            >
+              <el-input
+                style="width: 220px"
+                v-model="order.services[0].items[0].low_price"
+                @change="onPriceChange"
+              ></el-input>
             </el-form-item>
             <div v-if="order.receiptMode">
               <el-form-item label="Tipo:">
@@ -168,12 +207,24 @@
               </el-form-item>
               <el-form-item label="MDP:">
                 <el-radio-group v-model="method">
-                  <el-radio :label="1" name="type" style="display: block">Efectivo</el-radio>
-                  <el-radio :label="2" name="type" style="display: block">Tarjeta de Crédito</el-radio>
-                  <el-radio :label="3" name="type" style="display: block">Tarjeta de Débito</el-radio>
-                  <el-radio :label="4" name="type" style="display: block">Cheque</el-radio>
-                  <el-radio :label="5" name="type" style="display: block">Transferencia</el-radio>
-                  <el-radio :label="6" name="type" style="display: block">Crédito</el-radio>
+                  <el-radio :label="1" name="type" style="display: block"
+                    >Efectivo</el-radio
+                  >
+                  <el-radio :label="2" name="type" style="display: block"
+                    >Tarjeta de Crédito</el-radio
+                  >
+                  <el-radio :label="3" name="type" style="display: block"
+                    >Tarjeta de Débito</el-radio
+                  >
+                  <el-radio :label="4" name="type" style="display: block"
+                    >Cheque</el-radio
+                  >
+                  <el-radio :label="5" name="type" style="display: block"
+                    >Transferencia</el-radio
+                  >
+                  <el-radio :label="6" name="type" style="display: block"
+                    >Crédito</el-radio
+                  >
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="IVA:">
@@ -210,7 +261,9 @@
                 </el-row>
                 <el-row class="row-item">
                   <el-col :span="6" :offset="4">Carro:</el-col>
-                  <el-col :span="4">{{ `${currentSale.maker} ${currentSale.brand} ${currentSale.year}` }}</el-col>
+                  <el-col :span="4">{{
+                    `${currentSale.maker} ${currentSale.brand} ${currentSale.year}`
+                  }}</el-col>
                 </el-row>
                 <!-- <el-row class="row-item">
                   <el-col :span="6" :offset="4">Ultimo Servicio:</el-col>
@@ -391,6 +444,7 @@ export default {
   mounted() {
     var $this = this;
     this.$root.$on("refreshReceipt", this.refreshReceipt);
+    this.$root.$on("selectedFormat", this.selectedFormat);
     this.loadUser("/app");
     this.loadWorkShops("/api/workshop");
     if (localStorage.getItem("order")) {
@@ -456,9 +510,21 @@ export default {
     });
   },
   methods: {
-    onPriceChange(value){
-      if(isNaN(value))
-        this.order.services[0].items[0].low_price = 0;
+    selectedFormat(format) {
+      // const COTIZACION = 0;
+      // const PROCESO = 1;
+      // const TERMINADO = 2;
+      // const CANCELADO = 3;
+
+      var canvas = this.$refs["my-canvas"];
+      if (this.currentSale.status == 2) {
+        this.createReceipt(this.currentSale, this.$refs["receipt"], canvas, format);
+      } else {
+        this.createQuotation(this.currentSale, this.$refs["quotation"], canvas, format);
+      }
+    },
+    onPriceChange(value) {
+      if (isNaN(value)) this.order.services[0].items[0].low_price = 0;
     },
     onChangeClient(value) {
       // let res = this.clients.filter((c) => c.id == value);
@@ -536,17 +602,7 @@ export default {
       window.location.href = "/sales/create?back=1";
     },
     buildReceipt() {
-      // const COTIZACION = 0;
-      // const PROCESO = 1;
-      // const TERMINADO = 2;
-      // const CANCELADO = 3;
-
-      var canvas = this.$refs["my-canvas"];
-      if (this.currentSale.status == 2) {
-        this.createReceipt(this.currentSale, this.$refs["receipt"], canvas);
-      } else {
-        this.createQuotation(this.currentSale, this.$refs["quotation"], canvas);
-      }
+      this.$refs.formatDialog.showDialog();
     },
     pad(number, size) {
       var s = String(number);
@@ -606,20 +662,16 @@ export default {
           $this.order.guaranty = $this.form.guaranty;
 
           if (isNaN($this.order.total)) {
-            $this.$alert(
-              "EL precio total no es válido",
-              "Total no válido",
-              {
-                confirmButtonText: "OK",
-                type: "warning",
-              }
-            );
+            $this.$alert("EL precio total no es válido", "Total no válido", {
+              confirmButtonText: "OK",
+              type: "warning",
+            });
             return;
           }
 
           // create a receipt
           if ($this.order.receiptMode) {
-            $this.order.status = 2;            
+            $this.order.status = 2;
             $this.order.method = $this.method;
             $this.order.service_type = $this.service_type;
             $this.order.tax = $this.tax;
@@ -661,8 +713,12 @@ export default {
             }
           }
 
-          if($this.form.next_service && !$this.form.reminder){
-            $this.$alert(`Ingrese el mensaje del recordatorio para la fecha del próximo servicio.`, "Rocordatorio no válido", { confirmButtonText: "OK", type: "warning" });
+          if ($this.form.next_service && !$this.form.reminder) {
+            $this.$alert(
+              `Ingrese el mensaje del recordatorio para la fecha del próximo servicio.`,
+              "Rocordatorio no válido",
+              { confirmButtonText: "OK", type: "warning" }
+            );
             return;
           }
 

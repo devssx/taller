@@ -1,6 +1,7 @@
 <template>
   <el-row>
     <confirm-sales ref="dailySaleEdit"></confirm-sales>
+    <select-format name="daily" ref="formatDialogDaily"></select-format>
     <br />
     <el-row class="br bl bt bb row-header">
       <el-col :span="2">
@@ -129,6 +130,7 @@ export default {
   props: ["workshops", "myUser", "multiWorkshop"],
   mounted: function () {
     this.$root.$on("refreshTable", this.refreshTable);
+    this.$root.$on("selectedFormat", this.selectedFormat);
 
     // busca por default en el taller donde trabaja este empleado
     if (this.myUser && this.myUser.length > 0) {
@@ -145,18 +147,24 @@ export default {
       
       return row.client.phonenumber;
     },
-    showReceipt(item) {
+    selectedFormat(format, name) {
+      if(name != 'daily')
+        return;
+      
       // const COTIZACION = 0;
       // const PROCESO = 1;
       // const TERMINADO = 2;
       // const CANCELADO = 3;
-      
       var canvas = this.$refs["my-canvas"];
-      if (item.status == 2) {
-        this.createReceipt(item, this.$refs["receipt"], canvas);
+      if (this.currentSale.status == 2) {
+        this.createReceipt(this.currentSale, this.$refs["receipt"], canvas, format);
       } else {
-        this.createQuotation(item, this.$refs["quotation"], canvas);
+        this.createQuotation(this.currentSale, this.$refs["quotation"], canvas, format);
       }
+    },
+    showReceipt(item) {
+      this.currentSale = item;
+      this.$refs.formatDialogDaily.showDialog();
     },
     editItem(item) {
       // this.$root.$emit("confirmSale", item, true);
@@ -237,6 +245,7 @@ export default {
       selectedDay: new Date(),
       prevDay: new Date(),
       search: "",
+      currentSale: null,
     };
   },
 };

@@ -165,7 +165,7 @@ class SalesController extends Controller
     public function searchByDay(Request $request)
     {
         if ($request->has('start') && $request->has('end')) {
-            return Sale::with('saleServices')->with('client')->with('user')->with(['car' => function ($query) {
+            return Sale::with('saleServices')->with('saleServices.item')->with('client')->with('user')->with(['car' => function ($query) {
                 $query->distinct('id');
             }])->with(['services' => function ($query) {
                 $query->distinct('id');
@@ -187,7 +187,7 @@ class SalesController extends Controller
             $interval = new DateInterval('P7D'); // + 6 days
             $end->add($interval);
 
-            return Sale::with('saleServices')->with('client')->with('user')->with(['car' => function ($query) {
+            return Sale::with('saleServices')->with('saleServices.item')->with('client')->with('user')->with(['car' => function ($query) {
                 $query->distinct('id');
             }])->with(['services' => function ($query) {
                 $query->distinct('id');

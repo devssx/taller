@@ -236,7 +236,7 @@ export default {
                 type: 'warning'
             }).then(() => callback()).catch(() => { });
         },
-        createReceipt(currentSale, receiptImg, myCanvas) {
+        createReceipt(currentSale, receiptImg, myCanvas, format) {
             var $this = this;
             myCanvas.width = receiptImg.width;
             myCanvas.height = receiptImg.height - 109;
@@ -400,18 +400,9 @@ export default {
             $this.context.fillText(nextService, 1010, 290);
             $this.context.fillText(nextService, 1010, 290 + 678);
 
-            // MODO Concepto
-            //var detailMode = currentSale.sale_services.length > 1;
-            var detailMode = 0; // Concepto;
-            if (currentSale.concept === '--')
-                detailMode = 1; // No Price
-            else if (currentSale.concept === '++')
-                detailMode = 2; // With Price
-            
             // No cabe en el recibo solo hay 9 renglones
-            if (detailMode && currentSale.sale_services.length > 7){
-                currentSale.concept = 'La cantidad de artículos supera el espacio del recibo, favor de editar el concepto.';
-                detailMode = 0;
+            if (format && currentSale.sale_services.length > 7){
+                format = 0;
             }
 
             var y = 0;
@@ -422,7 +413,7 @@ export default {
             $this.context.fillText("1", 100, 350 + 678);
 
             // Concepto
-            if (detailMode == 0 && currentSale.concept) {
+            if (format == 0 && currentSale.concept) {
                 var concept = currentSale.concept.match(/.{1,90}/g);
                 for (var x = 0; x < concept.length; x++) {
                     $this.context.fillText(concept[x].toUpperCase(), 160, 350 + y * 30);
@@ -432,13 +423,13 @@ export default {
             }
 
             // Importe Total (Cuando no se detalla el listado de items)
-            if (detailMode == 0 || detailMode == 1) {
+            if (format == 0 || format == 1) {
                 $this.context.fillText("$" + $this.formatPrice(currentSale.total), 950, 350);
                 $this.context.fillText("$" + $this.formatPrice(currentSale.total), 950, 350 + 678);
             }
 
             // Descripcion de items
-            if (detailMode) {
+            if (format) {
                 for (var x = 0; x < currentSale.sale_services.length; x++) {
                     var desc = currentSale.sale_services[x];
                     // Cantidad
@@ -450,7 +441,7 @@ export default {
                     $this.context.fillText(desc.item.name.toUpperCase(), 160, 350 + 678 + y * 30);
 
                     // Importe
-                    if (detailMode == 2) {
+                    if (format == 2) {
                         $this.context.fillText("$" + $this.formatPrice(currentSale.total), 950, 350 + y * 30);
                         $this.context.fillText("$" + $this.formatPrice(currentSale.total), 950, 350 + 678 + y * 30);
                     }
@@ -536,7 +527,7 @@ export default {
 
             new Printd().print(img);
         },
-        createQuotation(currentSale, quotationImg, myCanvas) {
+        createQuotation(currentSale, quotationImg, myCanvas, format) {
             var $this = this;
 
             myCanvas.width = quotationImg.width;
@@ -640,14 +631,6 @@ export default {
             // $this.context.fillText("125,000", 960, 330);
             // $this.context.fillText("25/04/2021", 980, 355);
 
-            // MODO Concepto
-            //var detailMode = currentSale.sale_services.length > 1;
-            var detailMode = 0; // Concepto;
-            if (currentSale.concept === '--')
-                detailMode = 1; // No Price
-            else if (currentSale.concept === '++')
-                detailMode = 2; // With Price
-
             var y = 0;
             currentSale.total = parseFloat(currentSale.total);
 
@@ -655,7 +638,7 @@ export default {
             $this.context.fillText("1", 90, 420);
 
             // Descripcion
-            if (detailMode == 0 && currentSale.concept) {
+            if (format == 0 && currentSale.concept) {
                 var concept = currentSale.concept.match(/.{1,75}/g);
                 for (var x = 0; x < concept.length; x++) {
                     $this.context.fillText(concept[x].toUpperCase(), 160, 420 + y * 31);
@@ -667,8 +650,8 @@ export default {
             }
 
             // Descripcion
-            if (detailMode) {
-                if (detailMode == 1)
+            if (format) {
+                if (format == 1)
                     $this.context.fillText("$" + $this.formatPrice(currentSale.total), 960, 420);
 
                 for (var x = 0; x < currentSale.sale_services.length; x++) {
@@ -678,7 +661,7 @@ export default {
                     // Item Name
                     $this.context.fillText(desc.item.name.toUpperCase(), 160, 420 + y * 31);
                     // Importe
-                    if (detailMode == 2)
+                    if (format == 2)
                         $this.context.fillText("$" + $this.formatPrice(desc.price), 960, 420 + y * 31);
                     y++;
                 }
