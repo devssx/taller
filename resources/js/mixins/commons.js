@@ -430,12 +430,8 @@ export default {
 
             // Detalles
             if (currentSale.details) {
-                var details = currentSale.details.match(/.{1,90}/g);
-                for (var x = 0; x < details.length; x++) {
-                    y++;
-                    $this.context.fillText(details[x].toUpperCase(), 160, 350 + y * 30);
-                    $this.context.fillText(details[x].toUpperCase(), 160, 350 + 678 + y * 30);
-                }
+                $this.wrapText($this.context, currentSale.details, 160, 350 + y * 30, 790, 30);
+                $this.wrapText($this.context, currentSale.details, 160, 350 + y * 30 + 678, 790, 30);
             }
 
             $this.context.textAlign = "end";
@@ -456,16 +452,13 @@ export default {
                 $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 668);
                 $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 668 + 678);
             }
-            $this.context.textAlign = "start";
 
             // Garantia (Max 165 chars)
             if (currentSale.guaranty) {
-                $this.context.font = "10px Calibri";
-                var guaranty = currentSale.guaranty.match(/.{1,55}/g);
-                for (var x = 0; x < guaranty.length; x++) {
-                    $this.context.fillText(guaranty[x].toUpperCase(), 165, 612 + x * 14);
-                    $this.context.fillText(guaranty[x].toUpperCase(), 165, 612 + 678 + x * 14);
-                }
+                $this.context.textAlign = "start";
+                $this.context.font = "12px Calibri";
+                $this.wrapText($this.context, currentSale.guaranty, 157, 612, 310, 12);
+                $this.wrapText($this.context, currentSale.guaranty, 157, 612 + 678, 310, 12);
             }
 
             var img = document.createElement("img");
@@ -581,11 +574,7 @@ export default {
 
             // Detalles
             if (currentSale.details) {
-                var details = currentSale.details.match(/.{1,75}/g);
-                for (var x = 0; x < details.length; x++) {
-                    y++;
-                    $this.context.fillText(details[x].toUpperCase(), 160, 420 + y * 31);
-                }
+                $this.wrapText($this.context, currentSale.details, 160, 420 + y * 30, 790, 31);
             }
 
             // Lineas
@@ -621,13 +610,8 @@ export default {
             }
             y += h;
 
-            // Garantia
-            $this.context.textAlign = "start";
-            if (currentSale.guaranty) {
-                $this.context.fillText(currentSale.guaranty, 160, 1040);
-            }
-
             // metodo de pago
+            $this.context.textAlign = "start";
             if (currentSale.method) {
                 $this.context.fillText(currentSale.method, 620, 1040);
             }
@@ -645,6 +629,12 @@ export default {
                 }
             }
 
+            // Garantia
+            if (currentSale.guaranty) {
+                $this.context.font = "12px Calibri";
+                $this.wrapText($this.context, currentSale.guaranty, 157, 1035, 285, 12);
+            }
+
             var img = document.createElement("img");
             img.src = myCanvas.toDataURL("image/jpeg");
             img.width = myCanvas.width;
@@ -652,5 +642,28 @@ export default {
 
             new Printd().print(img);
         },
+        wrapText(context, text, x, y, maxWidth, lineHeight) {
+            var lines = text.split("\n");
+            for (var i = 0; i < lines.length; i++) {
+                var words = lines[i].split(' ');
+                var line = '';
+
+                for (var n = 0; n < words.length; n++) {
+                    var testLine = line + words[n] + ' ';
+                    var metrics = context.measureText(testLine);
+                    var testWidth = metrics.width;
+                    if (testWidth > maxWidth && n > 0) {
+                        context.fillText(line, x, y);
+                        line = words[n] + ' ';
+                        y += lineHeight;
+                    } else {
+                        line = testLine;
+                    }
+                }
+
+                context.fillText(line, x, y);
+                y += lineHeight;
+            }
+        }
     }
 };
