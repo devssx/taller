@@ -118,7 +118,7 @@
                                 <i class="el-icon-box"></i>
                                 <span>Artículos</span>
                             </el-menu-item>
-                            @endcan                            
+                            @endcan                         
                             <el-menu-item index="items" v-on:click="goto('{{ route('workshops.list') }}')">
                                 <i class="el-icon-s-shop"></i>
                                 <span>Talleres</span>
