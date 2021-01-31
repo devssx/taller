@@ -618,7 +618,7 @@ export default {
 
             // metodo de pago
             $this.context.textAlign = "start";
-            if (currentSale.method) {
+            if (currentSale.method && currentSale.method != 0) {
                 $this.context.fillText(currentSale.method, 620, 1040);
             }
 
