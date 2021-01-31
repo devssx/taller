@@ -391,6 +391,12 @@ export default {
             if (format == 0 && currentSale.concept) {
                 var concept = currentSale.concept.match(/.{1,90}/g);
                 for (var x = 0; x < concept.length; x++) {
+                    // formato: 1. Nombre = 1500
+                    // var patt = new RegExp("^\\d+\\..+=\\D+\\d+");
+                    // if (patt.test(concept[x])) {
+                    // } else {                     
+                    // }
+
                     $this.context.fillText(concept[x].toUpperCase(), 160, 350 + y * 30);
                     $this.context.fillText(concept[x].toUpperCase(), 160, 350 + 678 + y * 30);
                     y++;
