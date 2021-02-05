@@ -376,7 +376,7 @@ export default {
             $this.context.fillText(nextService, 1010, 290 + 678);
 
             // No cabe en el recibo solo hay 9 renglones
-            if (format && currentSale.sale_services.length > 7) {
+            if (format > 0 && currentSale.sale_services.length > 7) {
                 format = 0;
             }
 
@@ -412,7 +412,7 @@ export default {
             }
 
             // Descripcion de items
-            if (format) {
+            if (format > 0) {
                 for (var x = 0; x < currentSale.sale_services.length; x++) {
                     var desc = currentSale.sale_services[x];
                     // Cantidad
@@ -439,11 +439,11 @@ export default {
                 $this.wrapText($this.context, currentSale.details, 160, 350 + y * 30, 790, 30);
                 $this.wrapText($this.context, currentSale.details, 160, 350 + y * 30 + 678, 790, 30);
             }
-
+            
             $this.context.textAlign = "end";
             $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 615);
             $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 615 + 678);
-            if (currentSale.tax) {
+            if (currentSale.tax == 1) {
                 $this.context.fillText("$" + $this.formatPrice(currentSale.total * 0.08), 1080, 640);
                 $this.context.fillText("$" + $this.formatPrice(currentSale.total * 0.08), 1080, 640 + 678);
             } else {
@@ -451,7 +451,7 @@ export default {
                 $this.context.fillText("$0.00", 1080, 640 + 678);
             }
 
-            if (currentSale.tax) {
+            if (currentSale.tax == 1) {
                 $this.context.fillText("$" + $this.formatPrice(currentSale.total + currentSale.total * 0.08), 1080, 668);
                 $this.context.fillText("$" + $this.formatPrice(currentSale.total + currentSale.total * 0.08), 1080, 668 + 678);
             } else {
@@ -561,7 +561,7 @@ export default {
             }
 
             // Descripcion
-            if (format) {
+            if (format > 0) {
                 for (var x = 0; x < currentSale.sale_services.length; x++) {
                     var desc = currentSale.sale_services[x];
                     // Cantidad
@@ -601,7 +601,7 @@ export default {
             y += h;
 
             // IVA
-            if (currentSale.tax) {
+            if (currentSale.tax == 1) {
                 $this.context.fillText("$" + $this.formatPrice(currentSale.total * 0.08), 1080, y);
             } else {
                 $this.context.fillText("$0.00", 1080, y);
@@ -609,7 +609,7 @@ export default {
             y += h;
 
             // Total
-            if (currentSale.tax) {
+            if (currentSale.tax == 1) {
                 $this.context.fillText("$" + $this.formatPrice(currentSale.total + currentSale.total * 0.08), 1080, y);
             } else {
                 $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, y);
