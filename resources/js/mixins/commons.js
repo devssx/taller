@@ -454,9 +454,10 @@ export default {
             }
 
             // Detalles
-            if (currentSale.details) {
-                $this.wrapText($this.context, currentSale.details, 160, 350 + y * 30, 790, 30);
-                $this.wrapText($this.context, currentSale.details, 160, 350 + y * 30 + 678, 790, 30);
+            if (currentSale.details && y <= 6) {
+                y = 6;
+                $this.wrapText($this.context, `Observación: ${currentSale.details}`, 160, 350 + y * 30, 780, 30);
+                $this.wrapText($this.context, `Observación: ${currentSale.details}`, 160, 350 + y * 30 + 678, 780, 30);
             }
 
             $this.context.textAlign = "end";
@@ -609,8 +610,9 @@ export default {
             }
 
             // Detalles
-            if (currentSale.details) {
-                $this.wrapText($this.context, currentSale.details, 160, 420 + y * 30, 790, 31);
+            if (currentSale.details && y <= 17) {
+                y = 17;
+                $this.wrapText($this.context, `Observación: ${currentSale.details}`, 160, 420 + y * 31, 780, 31);
             }
 
             // Lineas
