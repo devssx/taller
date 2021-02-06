@@ -236,6 +236,12 @@ export default {
                 type: 'warning'
             }).then(() => callback()).catch(() => { });
         },
+        getDirection(workshop) {
+            var dir = `SOFIA GALLEGOS RAMIREZ GARS970103QR3 Rio Culiacán Esq. Josefa Ortiz de Dguez. #898 Col. Prohogar C.P.21240 Mexicali B.C. México`;
+            var cta = `BANORTE CTA. 0278268809 CLAVE INT. 072020002782688099`;
+            var tel = `TEL. 333 0212  CEL: 686160 7472`;
+            return [dir, cta, tel];
+        },
         createReceipt(currentSale, receiptImg, myCanvas, format) {
             var $this = this;
             myCanvas.width = receiptImg.width;
@@ -248,7 +254,20 @@ export default {
             $this.context.fillRect(0, 0, myCanvas.width, myCanvas.height);
             $this.context.drawImage(receiptImg, -30, -30, receiptImg.width, receiptImg.height);
 
+            // Header Direccion del taller
+            $this.context.font = "20px Calibri";
+            $this.context.fillStyle = "black";
+            var direction = $this.getDirection(currentSale.workshop_id);
+            $this.wrapText($this.context, direction[0], 275, 80, 580, 22);
+            $this.wrapText($this.context, direction[0], 275, 80 + 678, 580, 22);
+            $this.context.textAlign = "center";
+            $this.context.fillText(direction[1], 555, 130);
+            $this.context.fillText(direction[2], 555, 154);
+            $this.context.fillText(direction[1], 555, 130 + 678);
+            $this.context.fillText(direction[2], 555, 154 + 678);
+
             // fecha de recibo
+            $this.context.textAlign = "left";
             let doneOn = new Date();
             if (currentSale.done_on) {
                 try {
@@ -439,7 +458,7 @@ export default {
                 $this.wrapText($this.context, currentSale.details, 160, 350 + y * 30, 790, 30);
                 $this.wrapText($this.context, currentSale.details, 160, 350 + y * 30 + 678, 790, 30);
             }
-            
+
             $this.context.textAlign = "end";
             $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 615);
             $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 615 + 678);
@@ -487,6 +506,16 @@ export default {
             $this.context.fillRect(0, 0, myCanvas.width, myCanvas.height);
             $this.context.drawImage(quotationImg, -30, -30, quotationImg.width, quotationImg.height);
 
+            // Header Direccion del taller
+            $this.context.font = "20px Calibri";
+            $this.context.fillStyle = "black";
+            var direction = $this.getDirection(currentSale.workshop_id);
+            $this.wrapText($this.context, direction[0], 225, 140, 660, 22);
+            $this.context.textAlign = "center";
+            $this.context.fillText(direction[1], 550, 190);
+            $this.context.fillText(direction[2], 550, 214);
+
+            $this.context.textAlign = "left";
             $this.context.font = "24px Calibri";
             $this.context.fillStyle = "red";
             $this.context.fillText("COT" + $this.pad(currentSale.id, 5), 935, 132); // FOLIO
@@ -505,6 +534,7 @@ export default {
                 190
             );
 
+            $this.context.fillStyle = "black";
             $this.context.font = "16px Calibri";
 
             // cliente
