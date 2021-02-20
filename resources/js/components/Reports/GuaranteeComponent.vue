@@ -7,7 +7,7 @@
       </el-col>
       <el-col :span="18">
         <el-date-picker v-model="selectedYear" type="year" placeholder="Seleccionar Año"></el-date-picker>
-        <el-select width="150" v-model="workshopId" placeholder="Taller" :v-if="multiWorkshop">
+        <el-select width="150" v-model="workshopId" placeholder="Taller" v-if="multiWorkshop">
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
         </el-select>
         <el-button

@@ -14,7 +14,7 @@
           format="dd-MM-yyyy"
           placeholder="Seleccionar Día"
         ></el-date-picker>
-        <el-select width="150" v-model="workshopId" placeholder="Taller" :v-if="multiWorkshop">
+        <el-select width="150" v-model="workshopId" placeholder="Taller" v-if="multiWorkshop">
           <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id"></el-option>
         </el-select>
         <el-button type="primary" icon="el-icon-search" @click="onSearch" :disabled="!selectedDay || !workshopId"></el-button>
