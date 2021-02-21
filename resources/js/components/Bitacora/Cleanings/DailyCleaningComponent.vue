@@ -23,7 +23,7 @@
         ></el-button>
         <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
       </el-col>
-      <el-col :span="4"></el-col>
+      <el-col :span="4">.</el-col>
     </el-row>
 
     <!-- TABLA -->
