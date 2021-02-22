@@ -8,7 +8,7 @@ class RolesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
+     * php artisan db:seed --class=RolesTableSeeder
      * @return void
      */
     public function run()
@@ -33,6 +33,7 @@ class RolesTableSeeder extends Seeder
             'contraseña' => ['crear'],
             'usuarios' => ['listar', 'agregar', 'editar', 'borrar'],
             'roles' => ['listar', 'agregar', 'editar', 'borrar'],
+            'talleres' => ['listar', 'agregar', 'editar', 'borrar'],
             'taller' => ['cambiar de'],
             'limitado' => ['acceso'],
         ];

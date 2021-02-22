@@ -23,7 +23,17 @@
         ></el-button>
         <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
       </el-col>
-      <el-col :span="4">.</el-col>
+      <el-col :span="4">
+              <div style="float: right">
+                <el-tooltip
+                  effect="dark"
+                  content="Agregar Nuevo Registro"
+                  placement="top"
+                >
+                  <el-button type="primary" icon="el-icon-plus" @click="addElement()" :loading="loading" :disabled="!selectedDay || !workshopId">Nuevo</el-button>
+                </el-tooltip>
+              </div>
+      </el-col>
     </el-row>
 
     <!-- TABLA -->
@@ -79,6 +89,9 @@ export default {
     }
   },
   methods: {
+    addElement(){
+      this.$refs.newItem.insertNewRow(this.selectedDay);
+    },
     formatDate(date) {
       var hours = date.getHours();
       var minutes = date.getMinutes();
