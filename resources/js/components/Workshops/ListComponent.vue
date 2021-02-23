@@ -14,7 +14,10 @@
         </el-table-column>
         <!-- <el-table-column prop="code" label="Código"></el-table-column> -->
         <el-table-column prop="name" label="Nombre"></el-table-column>
-        <el-table-column prop="address" label="Dirección"></el-table-column>
+        <el-table-column prop="address" label="Encabezado"></el-table-column>
+        <el-table-column prop="address" label="Cuenta / Teléfono"></el-table-column>
+        <el-table-column prop="address" label="Sucursal 1"></el-table-column>
+        <el-table-column prop="address" label="Sucursal 2"></el-table-column>
         <el-table-column prop="deleted" label="Activo">
           <template slot-scope="scope">{{ scope.row.deleted == 0 ? `Si` : `No` }}</template>
         </el-table-column>

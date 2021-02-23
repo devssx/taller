@@ -24,7 +24,7 @@
         <dc-edit :selectedItem="newUser" :hideButton="true" ref="newItem"></dc-edit>
       </el-col>
       <el-col :span="4">
-              <div style="float: right">
+              <!-- <div style="float: right">
                 <el-tooltip
                   effect="dark"
                   content="Agregar Nuevo Registro"
@@ -32,7 +32,7 @@
                 >
                   <el-button type="primary" icon="el-icon-plus" @click="addElement()" :loading="loading" :disabled="!selectedDay || !workshopId">Nuevo</el-button>
                 </el-tooltip>
-              </div>
+              </div> -->
       </el-col>
     </el-row>
 
@@ -63,7 +63,7 @@
           </el-table-column>
           <el-table-column align="center" prop="done" label="Cumplió" width="100"></el-table-column>
           <el-table-column prop="comment" label="Comentario"></el-table-column>
-          <el-table-column align="center" label="Modificar" width="120">
+          <el-table-column align="center" label="Opciones" width="120">
             <template slot-scope="scope">
               <dc-edit :selectedItem="tableData[scope.$index]"></dc-edit>
             </template>

@@ -25,7 +25,16 @@
             <el-form-item label="Nombre" prop="name">
               <el-input v-model="workshop.name"></el-input>
             </el-form-item>
-            <el-form-item label="Dirección" prop="address">
+            <el-form-item label="Encabezado" prop="address">
+              <el-input v-model="workshop.address"></el-input>
+            </el-form-item>
+            <el-form-item label="Cuenta / Teléfono" prop="address">
+              <el-input v-model="workshop.address"></el-input>
+            </el-form-item>
+            <el-form-item label="Sucursal 1" prop="address">
+              <el-input v-model="workshop.address"></el-input>
+            </el-form-item>
+            <el-form-item label="Sucursal 2" prop="address">
               <el-input v-model="workshop.address"></el-input>
             </el-form-item>
           </el-form>

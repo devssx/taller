@@ -71,7 +71,7 @@
           </el-table-column>
           <el-table-column align="center" prop="done" label="Cumplió" width="80"></el-table-column>
           <el-table-column prop="comment" label="Comentario"></el-table-column>
-          <el-table-column align="center" label="Modificar" width="100">
+          <el-table-column align="center" label="Opciones" width="100">
             <template slot-scope="scope">
               <dc-edit :selectedItem="tableData[scope.$index]"></dc-edit>
             </template>
