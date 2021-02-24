@@ -124,6 +124,7 @@ export default {
       this.openDialog(sale);
     },
     openDialog: function(sale, edit = false) {
+      console.log(sale);
       this.dialogVisible = true;
       this.edit = edit;
       this.sale = sale;
@@ -136,9 +137,9 @@ export default {
       this.km = sale.km;
       this.details = sale.details;
       this.guaranty = sale.guaranty;
-      this.tax = sale.tax;
-      this.method = sale.method ? sale.method : 1;
-      this.service_type = sale.service_type ? sale.service_type : 1;
+      this.tax = sale.tax == 1;
+      this.method = sale.method > 1 ? parseInt(sale.method) : 1;
+      this.service_type = sale.service_type > 1 ? parseInt(sale.service_type) : 1;
       this.user = sale.user_id;
       this.total = sale.total;
     },
