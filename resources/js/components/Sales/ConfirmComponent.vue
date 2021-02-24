@@ -124,7 +124,6 @@ export default {
       this.openDialog(sale);
     },
     openDialog: function(sale, edit = false) {
-      console.log(sale);
       this.dialogVisible = true;
       this.edit = edit;
       this.sale = sale;

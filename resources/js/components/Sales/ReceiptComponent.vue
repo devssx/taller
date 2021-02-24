@@ -527,8 +527,8 @@ export default {
       if (isNaN(value)) this.order.services[0].items[0].low_price = 0;
     },
     onChangeClient(value) {
-      // let res = this.clients.filter((c) => c.id == value);
-      // this.currentSale.phonenumber = res.length > 0 ? res[0].phonenumber : "";
+      let res = this.clients.filter((c) => c.id == value);
+      this.form.phonenumber = res.length > 0 ? res[0].phonenumber : ``;
     },
     loadUser(url) {
       const $this = this;
