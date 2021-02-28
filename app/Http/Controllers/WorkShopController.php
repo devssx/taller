@@ -29,8 +29,12 @@ class WorkShopController extends Controller
         {
             $wks = WorkShop::findOrFail($request->get('id'));
             $wks->name = $request->get('name');
-            $wks->address = $request->get('address');
             $wks->code = $request->get('code');
+            $wks->address = $request->get('address');
+            $wks->account = $request->get('account');
+            $wks->phone = $request->get('phone');
+            $wks->sucursal1 = $request->get('sucursal1');
+            $wks->sucursal2 = $request->get('sucursal2');
             $wks->save();
         }
         else
@@ -39,6 +43,10 @@ class WorkShopController extends Controller
             $wks->name = $request->get('name');
             $wks->address = $request->get('address');
             $wks->code = $request->get('code');
+            $wks->account = $request->get('account');
+            $wks->phone = $request->get('phone');
+            $wks->sucursal1 = $request->get('sucursal1');
+            $wks->sucursal2 = $request->get('sucursal2');
             $wks->save();
         }
         return $wks;
@@ -53,6 +61,14 @@ class WorkShopController extends Controller
         return response()->json([
             'success' => $wks,
         ]);
+    }
+
+    public function info(Request $request)
+    {
+        if ($request->has('id'))
+            return WorkShop::findOrFail($request->get('id'));
+        
+        return WorkShop::all();
     }
 
     /**

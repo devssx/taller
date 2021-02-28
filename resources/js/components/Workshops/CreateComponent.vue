@@ -5,8 +5,9 @@
       size="mini"
       icon="el-icon-circle-plus"
       @click="dialogVisible = true"
-      style="float:right;"
-    >Agregar un Taller</el-button>
+      style="float: right"
+      >Agregar un Taller</el-button
+    >
     <el-dialog
       title="Agregar un Taller"
       :visible.sync="dialogVisible"
@@ -26,23 +27,43 @@
               <el-input v-model="workshop.name"></el-input>
             </el-form-item>
             <el-form-item label="Encabezado" prop="address">
-              <el-input v-model="workshop.address"></el-input>
+              <el-input
+                v-model="workshop.address"
+                maxlength="130"
+              ></el-input>
             </el-form-item>
-            <el-form-item label="Cuenta / Teléfono" prop="address">
-              <el-input v-model="workshop.address"></el-input>
+            <el-form-item label="Cuentas" prop="account">
+              <el-input
+                v-model="workshop.account"
+                maxlength="57"
+              ></el-input>
             </el-form-item>
-            <el-form-item label="Sucursal 1" prop="address">
-              <el-input v-model="workshop.address"></el-input>
+            <el-form-item label="Teléfonos" prop="phone">
+              <el-input
+                v-model="workshop.phone"
+                maxlength="57"
+              ></el-input>
             </el-form-item>
-            <el-form-item label="Sucursal 2" prop="address">
-              <el-input v-model="workshop.address"></el-input>
+            <el-form-item label="Sucursal 1" prop="sucursal1">
+              <el-input
+                v-model="workshop.sucursal1"
+                maxlength="96"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="Sucursal 2" prop="sucursal2">
+              <el-input
+                v-model="workshop.sucursal2"
+                maxlength="110"
+              ></el-input>
             </el-form-item>
           </el-form>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel()">Cancelar</el-button>
-        <el-button type="primary" @click="save()" :loading="loading">Agregar</el-button>
+        <el-button type="primary" @click="save()" :loading="loading"
+          >Agregar</el-button
+        >
       </span>
     </el-dialog>
   </el-col>
@@ -58,6 +79,10 @@ export default {
       workshop: {
         name: "",
         address: "",
+        account: "",
+        phone: "",
+        sucursal1: "",
+        sucursal2: "",
         code: "",
         deleted: "",
       },
@@ -66,6 +91,27 @@ export default {
           {
             required: true,
             message: "Campo Nombre es obligatorio",
+            trigger: "change",
+          },
+        ],
+        address: [
+          {
+            required: true,
+            message: "Campo Encabezado es obligatorio",
+            trigger: "change",
+          },
+        ],
+        account: [
+          {
+            required: true,
+            message: "Campo Cuentas es obligatorio",
+            trigger: "change",
+          },
+        ],
+        phone: [
+          {
+            required: true,
+            message: "Campo Telefonos es obligatorio",
             trigger: "change",
           },
         ],

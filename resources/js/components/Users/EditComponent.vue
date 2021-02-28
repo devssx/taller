@@ -120,7 +120,6 @@ export default {
       this.taller = value;
       var ws = this.workshops.filter((w) => w.name == value);
       if (ws.length > 0) this.user.workshop_id = ws[0].id;
-      console.log(this.user.workshop_id);
     },
     onChangeRol(value) {
       let rs = this.roles.filter((r) => r.id == value);

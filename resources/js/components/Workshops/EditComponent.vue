@@ -22,16 +22,19 @@
               <el-input v-model="workshop.name"></el-input>
             </el-form-item>
             <el-form-item label="Encabezado" prop="address">
-              <el-input v-model="workshop.address"></el-input>
+              <el-input v-model="workshop.address" maxlength="130"></el-input>
             </el-form-item>
-            <el-form-item label="Cuenta / Teléfono" prop="address">
-              <el-input v-model="workshop.address"></el-input>
+            <el-form-item label="Cuenta" prop="account">
+              <el-input v-model="workshop.account" maxlength="57"></el-input>
             </el-form-item>
-            <el-form-item label="Sucursal 1" prop="address">
-              <el-input v-model="workshop.address"></el-input>
+            <el-form-item label="Teléfono" prop="phone">
+              <el-input v-model="workshop.phone" maxlength="57"></el-input>
             </el-form-item>
-            <el-form-item label="Sucursal 2" prop="address">
-              <el-input v-model="workshop.address"></el-input>
+            <el-form-item label="Sucursal 1" prop="sucursal1">
+              <el-input v-model="workshop.sucursal1" maxlength="96"></el-input>
+            </el-form-item>
+            <el-form-item label="Sucursal 2" prop="sucursal2">
+              <el-input v-model="workshop.sucursal2" maxlength="110"></el-input>
             </el-form-item>
           </el-form>
         </el-col>
@@ -59,6 +62,27 @@ export default {
           {
             required: true,
             message: "Campo Nombre es obligatorio",
+            trigger: "change",
+          },
+        ],
+        address: [
+          {
+            required: true,
+            message: "Campo Encabezado es obligatorio",
+            trigger: "change",
+          },
+        ],
+        account: [
+          {
+            required: true,
+            message: "Campo Cuentas es obligatorio",
+            trigger: "change",
+          },
+        ],
+        phone: [
+          {
+            required: true,
+            message: "Campo Telefonos es obligatorio",
             trigger: "change",
           },
         ],

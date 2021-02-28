@@ -236,27 +236,21 @@ export default {
                 type: 'warning'
             }).then(() => callback()).catch(() => { });
         },
-        getAddress(workshop) {
-            // var dir = `SOFIA GALLEGOS RAMIREZ GARS970103QR3 Rio Culiacán Esq. Josefa Ortiz de Dguez. #898 Col. Prohogar C.P.21240 Mexicali B.C. México`;
-            // var cta = `BANORTE CTA. 0278268809 CLAVE INT. 072020002782688099`;
-            // var tel = `TEL. 333 0212  CEL: 686160 7472`;
-
-            var dir = `SOFIA GALLEGOS RAMIREZ GARS970103QR3 Rio Culiacán Esq. Juan de la barrera #894 Col. Prohogar C.P.21240 Mexicali B.C. México`;
-            var cta = `BANORTE CTA. 0278268809 CLAVE INT. 072020002782688099`;
-            var tel = `TEL. 6865236721 / Cel. 686190 9481`;
-            return [dir, cta, tel];
+        getWorkShopInfo(id, callback) {
+            axios.get(`/api/workshop/info?id=${id}`).then((response) => callback(response.data)).catch((error) => {
+                // Error
+            });
         },
-        getSucAddress(workshop) {
-            var a = `Rio Culiacán Esq. Josefa Ortiz de Dominguez. #898 Prohogar Mexicali B.C.  TEL. 333 0212   CEL: 686160 7472`;
-            var b = `San Pedro Mezquital y calle séptima #2805 Nuevo Mexicali, B.C. Tel. 334 1750 / Tel. 334 1761`;
-            return [a, b];
+        createReceipt(currentSale, receiptImg, myCanvas, format){
+            const $this = this;
+            let id = currentSale.workshop_id;
+            $this.getWorkShopInfo(id, (data) => $this.createReceiptEx(currentSale, receiptImg, myCanvas, format, data));
         },
-        createReceipt(currentSale, receiptImg, myCanvas, format) {
+        createReceiptEx(currentSale, receiptImg, myCanvas, format, workshopInfo) {
             var $this = this;
             myCanvas.width = receiptImg.width;
             myCanvas.height = receiptImg.height - 109;
             $this.context = myCanvas.getContext("2d");
-
             $this.context.clearRect(0, 0, myCanvas.width, myCanvas.height);
 
             $this.context.fillStyle = "#FFFFFF";
@@ -266,25 +260,23 @@ export default {
             // Header Direccion del taller
             $this.context.font = "20px Calibri";
             $this.context.fillStyle = "black";
-            var address = $this.getAddress(currentSale.workshop_id);
-            $this.wrapText($this.context, address[0], 275, 80, 580, 22);
-            $this.wrapText($this.context, address[0], 275, 80 + 678, 580, 22);
+            $this.wrapText($this.context, workshopInfo.address, 275, 80, 580, 22);
+            $this.wrapText($this.context, workshopInfo.address, 275, 80 + 678, 580, 22);
             $this.context.textAlign = "center";
-            $this.context.fillText(address[1], 555, 130);
-            $this.context.fillText(address[2], 555, 154);
-            $this.context.fillText(address[1], 555, 130 + 678);
-            $this.context.fillText(address[2], 555, 154 + 678);
+            $this.context.fillText(workshopInfo.phone, 555, 130);
+            $this.context.fillText(workshopInfo.account, 555, 154);
+            $this.context.fillText(workshopInfo.phone, 555, 130 + 678);
+            $this.context.fillText(workshopInfo.account, 555, 154 + 678);
 
             $this.context.font = "12px Calibri";
-            var sucAddress = $this.getSucAddress(currentSale.workshop_id);
             $this.context.fillText(`Sucursal:`, 320, 172);
             $this.context.fillText(`Sucursal:`, 850, 172);
-            $this.context.fillText(sucAddress[0], 320, 185);
-            $this.context.fillText(sucAddress[1], 850, 185);
+            $this.context.fillText(workshopInfo.sucursal1, 320, 185);
+            $this.context.fillText(workshopInfo.sucursal2, 850, 185);
             $this.context.fillText(`Sucursal:`, 320, 172 + 678);
             $this.context.fillText(`Sucursal:`, 850, 172 + 678);
-            $this.context.fillText(sucAddress[0], 320, 185 + 678);
-            $this.context.fillText(sucAddress[1], 850, 185 + 678);
+            $this.context.fillText(workshopInfo.sucursal1, 320, 185 + 678);
+            $this.context.fillText(workshopInfo.sucursal2, 850, 185 + 678);
 
             // fecha de recibo
             $this.context.textAlign = "left";
@@ -515,7 +507,12 @@ export default {
 
             new Printd().print(img);
         },
-        createQuotation(currentSale, quotationImg, myCanvas, format) {
+        createQuotation(currentSale, quotationImg, myCanvas, format){
+            const $this = this;
+            let id = currentSale.workshop_id;
+            $this.getWorkShopInfo(id, (data) => $this.createQuotationEx(currentSale, quotationImg, myCanvas, format, data));
+        },
+        createQuotationEx(currentSale, quotationImg, myCanvas, format, workshopInfo) {
             var $this = this;
 
             myCanvas.width = quotationImg.width;
@@ -531,18 +528,16 @@ export default {
             // Header Direccion del taller
             $this.context.font = "20px Calibri";
             $this.context.fillStyle = "black";
-            var address = $this.getAddress(currentSale.workshop_id);
-            $this.wrapText($this.context, address[0], 225, 140, 650, 22);
+            $this.wrapText($this.context, workshopInfo.address, 225, 140, 650, 22);
             $this.context.textAlign = "center";
-            $this.context.fillText(address[1], 550, 190);
-            $this.context.fillText(address[2], 550, 214);
+            $this.context.fillText(workshopInfo.account, 550, 190);
+            $this.context.fillText(workshopInfo.phone, 550, 214);
 
             $this.context.font = "12px Calibri";
-            var sucAddress = $this.getSucAddress(currentSale.workshop_id);
             $this.context.fillText(`Sucursal:`, 320, 232);
             $this.context.fillText(`Sucursal:`, 850, 232);
-            $this.context.fillText(sucAddress[0], 320, 245);
-            $this.context.fillText(sucAddress[1], 850, 245);
+            $this.context.fillText(workshopInfo.sucursal1, 320, 245);
+            $this.context.fillText(workshopInfo.sucursal2, 850, 245);
 
             $this.context.textAlign = "left";
             $this.context.font = "24px Calibri";

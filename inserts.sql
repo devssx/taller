@@ -78,3 +78,9 @@ ALTER TABLE `sales` ADD CONSTRAINT `sales_workshop_id_foreign` FOREIGN KEY (`wor
 
 ALTER TABLE `sales` ADD `bill` varchar(255) DEFAULT NULL AFTER `method`;
 ALTER TABLE `sales` ADD `paid_date` date DEFAULT NULL AFTER `bill`;
+
+
+ALTER TABLE `work_shops` ADD `account` VARCHAR(255) NOT NULL AFTER `address`;
+ALTER TABLE `work_shops` ADD `phone` VARCHAR(255) NOT NULL AFTER `account`;
+ALTER TABLE `work_shops` ADD `sucursal1` VARCHAR(255) NOT NULL AFTER `phone`;
+ALTER TABLE `work_shops` ADD `sucursal2` VARCHAR(255) NOT NULL AFTER `sucursal1`;
