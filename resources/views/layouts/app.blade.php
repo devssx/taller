@@ -118,11 +118,17 @@
                                 <i class="el-icon-box"></i>
                                 <span>Artículos</span>
                             </el-menu-item>
-                            @endcan                         
+                            @endcan @can('editar talleres')                     
                             <el-menu-item index="items" v-on:click="goto('{{ route('workshops.list') }}')">
                                 <i class="el-icon-s-shop"></i>
                                 <span>Talleres</span>
                             </el-menu-item>
+                            @endcan @can('cambiar de taller')
+                            <el-menu-item index="carservices" v-on:click="goto('{{ route('carservices.list') }}')">
+                                <i class="el-icon-s-flag"></i>
+                                <span>Carros y Servicios</span>
+                            </el-menu-item>
+                            @endcan  
                         </el-submenu>
                         @endif
                     </el-menu>

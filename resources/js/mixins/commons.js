@@ -241,7 +241,7 @@ export default {
                 // Error
             });
         },
-        createReceipt(currentSale, receiptImg, myCanvas, format){
+        createReceipt(currentSale, receiptImg, myCanvas, format) {
             const $this = this;
             let id = currentSale.workshop_id;
             $this.getWorkShopInfo(id, (data) => $this.createReceiptEx(currentSale, receiptImg, myCanvas, format, data));
@@ -507,7 +507,7 @@ export default {
 
             new Printd().print(img);
         },
-        createQuotation(currentSale, quotationImg, myCanvas, format){
+        createQuotation(currentSale, quotationImg, myCanvas, format) {
             const $this = this;
             let id = currentSale.workshop_id;
             $this.getWorkShopInfo(id, (data) => $this.createQuotationEx(currentSale, quotationImg, myCanvas, format, data));
@@ -725,6 +725,432 @@ export default {
                 context.fillText(line, x, y);
                 y += lineHeight;
             }
+        },
+        getDefaultCarServices(car) {
+            let servicioAC = {
+                car: car,
+                service: 22,
+                items =[
+                    {
+                        name: "Servicio de A/C",
+                        id: 20,
+                        price: 750,
+                    },
+                    {
+                        name: "Valvulas de Servicio",
+                        id: 43,
+                        price: 250,
+                    },
+                    {
+                        name: "Filtro de Cabina",
+                        id: 13,
+                        price: 250,
+                    }
+                ]
+            };
+
+            let afinacion = {
+                car: car,
+                service: 29,
+                items =[
+                    {
+                        name: "Aceite",
+                        id: 2,
+                        // high: 0,
+                        // high_price: 0,
+                        // low: 0,
+                        // low_price: 0,
+                        // mid: 0,
+                        // mid_price: 0,
+                        // price: 0,
+                    },
+                    {
+                        name: "Filtro de Aceite",
+                        id: 36,
+                    },
+                    {
+                        name: "Filtro de Aire",
+                        id: 38,
+                    },
+                    {
+                        name: "Limpieza de Inyectores",
+                        id: 39,
+                    },
+                    {
+                        name: "Relleno de Niveles",
+                        id: 40,
+                    },
+                    {
+                        name: "Diagnostico por Computadora",
+                        id: 41,
+                    },
+                    {
+                        name: "Mano de Obra",
+                        id: 1,
+                    }
+                ]
+            };
+
+            let cambioBobina = {
+                car: car,
+                service: 30,
+                items =[
+                    {
+                        name: "Empacado de Compresor",
+                        id: 35,
+                    },
+                    {
+                        name: "Mano de Obra",
+                        id: 1,
+                    },
+                    {
+                        name: "Servicio de A/C",
+                        id: 20,
+                        price: 750,
+                    },
+                    {
+                        name: "Valvulas de Servicio",
+                        id: 43,
+                        price: 250,
+                    },
+                    {
+                        name: "Filtro de Cabina",
+                        id: 13,
+                        price: 250,
+                    }
+                ]
+            };
+
+            let reemplazoBlower = {
+                car: car,
+                service: 31,
+                items =[
+                    {
+                        name: "Resistencia",
+                        id: 27,
+                    },
+                    {
+                        name: "Blower",
+                        id: 37,
+                    },
+                    {
+                        name: "Mano de Obra",
+                        id: 1,
+                        price: 350,
+                    }
+                ]
+            };
+
+            let cambioAceite = {
+                car: car,
+                service: 1,
+                items =[
+                    {
+                        name: "Aceite",
+                        id: 2,
+                    },
+                    {
+                        name: "Filtro de Aceite",
+                        id: 36,
+                    },
+                    {
+                        name: "Mano de Obra",
+                        id: 1,
+                        price: 100,
+                    }
+                ]
+            };
+
+
+            let empacadoCompresor = {
+                car: car,
+                service: 32,
+                items =[
+                    {
+                        name: "Empacado de Compresor",
+                        id: 35,
+                    },
+                    {
+                        name: "Mano de Obra",
+                        id: 1,
+                    },
+                    {
+                        name: "Servicio de A/C",
+                        id: 20,
+                        price: 750,
+                    },
+                    {
+                        name: "Valvulas de Servicio",
+                        id: 43,
+                        price: 250,
+                    },
+                    {
+                        name: "Filtro de Cabina",
+                        id: 13,
+                        price: 250,
+                    }
+                ]
+            };
+
+            let reemplazoBaleroCompresor = {
+                car: car,
+                service: 33,
+                items =[
+                    {
+                        name: "Balero de Compresor",
+                        id: 34,
+                    },
+                    {
+                        name: "Empaques a Tomas de Compresor",
+                        id: 29,
+                    },
+                    {
+                        name: "Mano de Obra",
+                        id: 1,
+                    },
+                    {
+                        name: "Servicio de A/C",
+                        id: 20,
+                        price: 750,
+                    },
+                    {
+                        name: "Valvulas de Servicio",
+                        id: 43,
+                        price: 250,
+                    },
+                    {
+                        name: "Filtro de Cabina",
+                        id: 13,
+                        price: 250,
+                    }
+                ]
+            };
+
+            let reemplazoClutchCompresor = {
+                car: car,
+                service: 34,
+                items =[
+                    {
+                        name: "Clutch de Compresor",
+                        id: 33,
+                    },
+                    {
+                        name: "Empaques a Tomas de Compresor",
+                        id: 29,
+                    },
+                    {
+                        name: "Mano de Obra",
+                        id: 1,
+                    },
+                    {
+                        name: "Servicio de A/C",
+                        id: 20,
+                        price: 750,
+                    },
+                    {
+                        name: "Valvulas de Servicio",
+                        id: 43,
+                        price: 250,
+                    },
+                    {
+                        name: "Filtro de Cabina",
+                        id: 13,
+                        price: 250,
+                    }
+                ]
+            };
+
+            let reemplazoManguera = {
+                car: car,
+                service: 5,
+                items =[
+                    {
+                        name: "Manguera",
+                        id: 24,
+                    },
+                    {
+                        name: "Empaques a Tomas de Condensador",
+                        id: 32,
+                    },
+                    {
+                        name: "Mano de Obra",
+                        id: 1,
+                    },
+                    {
+                        name: "Servicio de A/C",
+                        id: 20,
+                        price: 750,
+                    },
+                    {
+                        name: "Valvulas de Servicio",
+                        id: 43,
+                        price: 250,
+                    },
+                    {
+                        name: "Filtro de Cabina",
+                        id: 13,
+                        price: 250,
+                    }
+                ]
+            };
+
+            let reemplazoCondensador = {
+                car: car,
+                service: 3,
+                items =[
+                    {
+                        name: "Condensador",
+                        id: 7,
+                    },
+                    {
+                        name: "Mano de Obra",
+                        id: 1,
+                    },
+                    {
+                        name: "Servicio de A/C",
+                        id: 20,
+                        price: 750,
+                    },
+                    {
+                        name: "Valvulas de Servicio",
+                        id: 43,
+                        price: 250,
+                    },
+                    {
+                        name: "Filtro de Cabina",
+                        id: 13,
+                        price: 250,
+                    }
+                ]
+            };
+
+            let reemplazoEvaporador = {
+                car: car,
+                service: 4,
+                items =[
+                    {
+                        name: "Evaporador",
+                        id: 11,
+                    },
+                    {
+                        name: "Empaques a Tomas de Evaporador",
+                        id: 31,
+                    },
+                    {
+                        name: "Mano de Obra",
+                        id: 1,
+                    },
+                    {
+                        name: "Servicio de A/C",
+                        id: 20,
+                        price: 750,
+                    },
+                    {
+                        name: "Valvulas de Servicio",
+                        id: 43,
+                        price: 250,
+                    },
+                    {
+                        name: "Filtro de Cabina",
+                        id: 13,
+                        price: 250,
+                    }
+                ]
+            };
+
+            let reemplazoCompresor = {
+                car: car,
+                service: 2,
+                items =[
+                    {
+                        name: "Compresor",
+                        id: 6,
+                    },
+                    {
+                        name: "Empaques a Tomas de Compresor",
+                        id: 29,
+                    },
+                    {
+                        name: "Mano de Obra",
+                        id: 1,
+                    },
+                    {
+                        name: "Servicio de A/C",
+                        id: 20,
+                        price: 750,
+                    },
+                    {
+                        name: "Valvulas de Servicio",
+                        id: 43,
+                        price: 250,
+                    },
+                    {
+                        name: "Filtro de Cabina",
+                        id: 13,
+                        price: 250,
+                    }
+                ]
+            };
+
+            let lavadoSistema = {
+                car: car,
+                service: 10,
+                items =[
+                    {
+                        name: "Mano de obra lavado de lineas y evaporador",
+                        id: 28,
+                        price: 3000,
+                    },
+                    {
+                        name: "Compresor",
+                        id: 6,
+                    },
+                    {
+                        name: "Condensador",
+                        id: 7,
+                    },
+                    {
+                        name: "Filtro Dryer",
+                        id: 44,
+                    },
+                    {
+                        name: "Valvula de Expansion",
+                        id: 17,
+                    },
+                    {
+                        name: "Empaques a Tomas",
+                        id: 45,
+                        price: 150,
+                    },
+                    {
+                        name: "Aceite",
+                        id: 2,
+                        price: 155,
+                    },
+                    {
+                        name: "Gas",
+                        id: 14,
+                        price: 185,
+                    },
+                    {
+                        name: "Flush Limpiador",
+                        id: 30,
+                        price: 360,
+                    },
+                    {
+                        name: "Valvulas de Servicio",
+                        id: 43,
+                        price: 250,
+                    },
+                    {
+                        name: "Filtro de Cabina",
+                        id: 13,
+                        price: 250,
+                    }
+                ]
+            };
+
+            return [servicioAC, afinacion, cambioBobina, reemplazoBlower, cambioAceite, empacadoCompresor, reemplazoBaleroCompresor, reemplazoClutchCompresor, reemplazoManguera, reemplazoCondensador, reemplazoEvaporador, reemplazoCompresor, lavadoSistema];
         }
     }
 };
