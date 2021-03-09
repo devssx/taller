@@ -98,6 +98,7 @@ export default {
         brand: "",
         motor: "",
         image: "",
+        services: "",
         year: [1999, new Date().getFullYear()]
       },
       rules: {
@@ -215,6 +216,7 @@ export default {
     },
     saveCar() {
       var $this = this;
+      $this.car.services = this.getDefaultCarServices(1);
       $this.$refs.carForm.validate(valid => {
         if (valid) {
           $this.loading = true;

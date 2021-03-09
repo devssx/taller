@@ -1250,7 +1250,7 @@ export default {
                 ]
             };
 
-            return [servicioAC, afinacion, cambioBobina, reemplazoBlower, cambioAceite, empacadoCompresor, reemplazoBaleroCompresor, reemplazoClutchCompresor, reemplazoManguera, reemplazoCondensador, reemplazoEvaporador, reemplazoCompresor, lavadoSistema];
+            return [servicioAC, lavadoSistema, reemplazoCompresor, reemplazoEvaporador, reemplazoCondensador, reemplazoManguera, reemplazoClutchCompresor, reemplazoBaleroCompresor, empacadoCompresor, cambioAceite, reemplazoBlower, cambioBobina, afinacion];
         }
     }
 };
