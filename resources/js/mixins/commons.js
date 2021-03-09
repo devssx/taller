@@ -730,21 +730,30 @@ export default {
             let servicioAC = {
                 car: car,
                 service: 22,
-                items =[
+                items: [
                     {
                         name: "Servicio de A/C",
                         id: 20,
                         price: 750,
+                        low_price: 750,
+                        mid_price: 750,
+                        high_price: 750,
                     },
                     {
                         name: "Valvulas de Servicio",
                         id: 43,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     },
                     {
                         name: "Filtro de Cabina",
                         id: 13,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     }
                 ]
             };
@@ -752,17 +761,10 @@ export default {
             let afinacion = {
                 car: car,
                 service: 29,
-                items =[
+                items: [
                     {
                         name: "Aceite",
                         id: 2,
-                        // high: 0,
-                        // high_price: 0,
-                        // low: 0,
-                        // low_price: 0,
-                        // mid: 0,
-                        // mid_price: 0,
-                        // price: 0,
                     },
                     {
                         name: "Filtro de Aceite",
@@ -794,7 +796,7 @@ export default {
             let cambioBobina = {
                 car: car,
                 service: 30,
-                items =[
+                items: [
                     {
                         name: "Empacado de Compresor",
                         id: 35,
@@ -807,16 +809,25 @@ export default {
                         name: "Servicio de A/C",
                         id: 20,
                         price: 750,
+                        low_price: 750,
+                        mid_price: 750,
+                        high_price: 750,
                     },
                     {
                         name: "Valvulas de Servicio",
                         id: 43,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     },
                     {
                         name: "Filtro de Cabina",
                         id: 13,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     }
                 ]
             };
@@ -824,7 +835,7 @@ export default {
             let reemplazoBlower = {
                 car: car,
                 service: 31,
-                items =[
+                items: [
                     {
                         name: "Resistencia",
                         id: 27,
@@ -837,6 +848,9 @@ export default {
                         name: "Mano de Obra",
                         id: 1,
                         price: 350,
+                        low_price: 350,
+                        mid_price: 350,
+                        high_price: 350,
                     }
                 ]
             };
@@ -844,7 +858,7 @@ export default {
             let cambioAceite = {
                 car: car,
                 service: 1,
-                items =[
+                items: [
                     {
                         name: "Aceite",
                         id: 2,
@@ -857,15 +871,17 @@ export default {
                         name: "Mano de Obra",
                         id: 1,
                         price: 100,
+                        low_price: 100,
+                        mid_price: 100,
+                        high_price: 100,
                     }
                 ]
             };
 
-
             let empacadoCompresor = {
                 car: car,
                 service: 32,
-                items =[
+                items: [
                     {
                         name: "Empacado de Compresor",
                         id: 35,
@@ -878,16 +894,25 @@ export default {
                         name: "Servicio de A/C",
                         id: 20,
                         price: 750,
+                        low_price: 750,
+                        mid_price: 750,
+                        high_price: 750,
                     },
                     {
                         name: "Valvulas de Servicio",
                         id: 43,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     },
                     {
                         name: "Filtro de Cabina",
                         id: 13,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     }
                 ]
             };
@@ -895,7 +920,7 @@ export default {
             let reemplazoBaleroCompresor = {
                 car: car,
                 service: 33,
-                items =[
+                items: [
                     {
                         name: "Balero de Compresor",
                         id: 34,
@@ -912,16 +937,25 @@ export default {
                         name: "Servicio de A/C",
                         id: 20,
                         price: 750,
+                        low_price: 750,
+                        mid_price: 750,
+                        high_price: 750,
                     },
                     {
                         name: "Valvulas de Servicio",
                         id: 43,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     },
                     {
                         name: "Filtro de Cabina",
                         id: 13,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     }
                 ]
             };
@@ -929,7 +963,7 @@ export default {
             let reemplazoClutchCompresor = {
                 car: car,
                 service: 34,
-                items =[
+                items: [
                     {
                         name: "Clutch de Compresor",
                         id: 33,
@@ -946,16 +980,25 @@ export default {
                         name: "Servicio de A/C",
                         id: 20,
                         price: 750,
+                        low_price: 750,
+                        mid_price: 750,
+                        high_price: 750,
                     },
                     {
                         name: "Valvulas de Servicio",
                         id: 43,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     },
                     {
                         name: "Filtro de Cabina",
                         id: 13,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     }
                 ]
             };
@@ -963,7 +1006,7 @@ export default {
             let reemplazoManguera = {
                 car: car,
                 service: 5,
-                items =[
+                items: [
                     {
                         name: "Manguera",
                         id: 24,
@@ -980,16 +1023,25 @@ export default {
                         name: "Servicio de A/C",
                         id: 20,
                         price: 750,
+                        low_price: 750,
+                        mid_price: 750,
+                        high_price: 750,
                     },
                     {
                         name: "Valvulas de Servicio",
                         id: 43,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     },
                     {
                         name: "Filtro de Cabina",
                         id: 13,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     }
                 ]
             };
@@ -997,7 +1049,7 @@ export default {
             let reemplazoCondensador = {
                 car: car,
                 service: 3,
-                items =[
+                items: [
                     {
                         name: "Condensador",
                         id: 7,
@@ -1010,16 +1062,25 @@ export default {
                         name: "Servicio de A/C",
                         id: 20,
                         price: 750,
+                        low_price: 750,
+                        mid_price: 750,
+                        high_price: 750,
                     },
                     {
                         name: "Valvulas de Servicio",
                         id: 43,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     },
                     {
                         name: "Filtro de Cabina",
                         id: 13,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     }
                 ]
             };
@@ -1027,7 +1088,7 @@ export default {
             let reemplazoEvaporador = {
                 car: car,
                 service: 4,
-                items =[
+                items: [
                     {
                         name: "Evaporador",
                         id: 11,
@@ -1044,16 +1105,25 @@ export default {
                         name: "Servicio de A/C",
                         id: 20,
                         price: 750,
+                        low_price: 750,
+                        mid_price: 750,
+                        high_price: 750,
                     },
                     {
                         name: "Valvulas de Servicio",
                         id: 43,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     },
                     {
                         name: "Filtro de Cabina",
                         id: 13,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     }
                 ]
             };
@@ -1061,7 +1131,7 @@ export default {
             let reemplazoCompresor = {
                 car: car,
                 service: 2,
-                items =[
+                items: [
                     {
                         name: "Compresor",
                         id: 6,
@@ -1078,16 +1148,25 @@ export default {
                         name: "Servicio de A/C",
                         id: 20,
                         price: 750,
+                        low_price: 750,
+                        mid_price: 750,
+                        high_price: 750,
                     },
                     {
                         name: "Valvulas de Servicio",
                         id: 43,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     },
                     {
                         name: "Filtro de Cabina",
                         id: 13,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     }
                 ]
             };
@@ -1095,11 +1174,14 @@ export default {
             let lavadoSistema = {
                 car: car,
                 service: 10,
-                items =[
+                items: [
                     {
                         name: "Mano de obra lavado de lineas y evaporador",
                         id: 28,
                         price: 3000,
+                        low_price: 3000,
+                        mid_price: 3000,
+                        high_price: 3000,
                     },
                     {
                         name: "Compresor",
@@ -1121,31 +1203,49 @@ export default {
                         name: "Empaques a Tomas",
                         id: 45,
                         price: 150,
+                        low_price: 150,
+                        mid_price: 150,
+                        high_price: 150,
                     },
                     {
                         name: "Aceite",
                         id: 2,
                         price: 155,
+                        low_price: 155,
+                        mid_price: 155,
+                        high_price: 155,
                     },
                     {
                         name: "Gas",
                         id: 14,
                         price: 185,
+                        low_price: 185,
+                        mid_price: 185,
+                        high_price: 185,
                     },
                     {
                         name: "Flush Limpiador",
                         id: 30,
                         price: 360,
+                        low_price: 360,
+                        mid_price: 360,
+                        high_price: 360,
                     },
                     {
                         name: "Valvulas de Servicio",
                         id: 43,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     },
                     {
                         name: "Filtro de Cabina",
                         id: 13,
                         price: 250,
+                        low_price: 250,
+                        mid_price: 250,
+                        high_price: 250,
                     }
                 ]
             };
