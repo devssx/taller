@@ -7,7 +7,7 @@
           <br />
           <el-row>
             <el-col>
-              <create-clients :onCreateClient="onCreateNewClient"></create-clients>
+              <create-clients :onCreateClient="onCreateNewClient" :workshops="workshops" :currentUser="me"></create-clients>
             </el-col>
           </el-row>
           <el-form
@@ -227,6 +227,7 @@ export default {
   props: ["sale"],
   data() {
     return {
+      me: '',
       showPrices: true,
       image1Loaded: false,
       image2Loaded: false,
@@ -305,24 +306,27 @@ export default {
         year: $this.currentSale.sale_services[0].year,
       };
     }
-
-    axios.get("/api/clients?all=1").then(function (response) {
-      $this.clients = response.data;
-      if ($this.currentSale) {
-        if ($this.currentSale.client) {
-          $this.currentSale.client = $this.currentSale.client.id;
-        }
-      }
-    });
-
-    axios.get("/api/users?all=1&role=Empleado").then(function (response) {
-      $this.users = response.data;
-      if ($this.currentSale) {
-        $this.currentSale.user = $this.currentSale.user.id;
-      }
-    });
   },
   methods: {
+    loadUserAndClients(wks) {
+      const $this = this;
+
+      axios.get(`/api/clients?all=1&workshop=${wks}`).then(function (response) {
+        $this.clients = response.data;
+        if ($this.currentSale) {
+          if ($this.currentSale.client) {
+            $this.currentSale.client = $this.currentSale.client.id;
+          }
+        }
+      });
+
+      axios.get(`/api/users?all=1&role=Empleado&workshop=${wks}`).then(function (response) {
+        $this.users = response.data;
+        if ($this.currentSale) {
+          $this.currentSale.user = $this.currentSale.user.id;
+        }
+      });
+    },
     onChangeClient(value) {
       let res = this.clients.filter((c) => c.id == value);
       this.currentSale.phonenumber = res.length > 0 ? res[0].phonenumber : "";
@@ -341,6 +345,7 @@ export default {
       $this.loading = true;
       axios.get(url).then(function (response) {
         $this.me = response.data[0];
+        $this.loadUserAndClients($this.me.workshop_id);
         $this.loading = false;
       });
     },

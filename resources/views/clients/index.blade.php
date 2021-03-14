@@ -5,7 +5,7 @@
         <el-col :span="19">
             <h2>Clientes</h2>
         </el-col>
-        <create-clients></create-clients>
+        <create-clients :workshops="{{ $workshops->toJson() }}"></create-clients>
     </el-row>
     <el-row type="flex">
         <el-col :span="24">

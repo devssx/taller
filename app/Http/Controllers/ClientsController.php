@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SaveClientRequest;
 use App\Models\Client;
+use App\WorkShop;
 use Illuminate\Http\Request;
 
 class ClientsController extends Controller
@@ -23,7 +24,10 @@ class ClientsController extends Controller
     public function get(Request $request)
     {
         if ($request->has('all')) {
-            return Client::all();
+            if ($request->has('workshop'))
+                return Client::where('workshop_id', $request->get('workshop'))->get();
+            else
+                return Client::all();
         }
 
         if ($request->has('reminders')) {
@@ -56,7 +60,10 @@ class ClientsController extends Controller
 
     public function index()
     {
-        return view('clients.index');
+        $workshops = WorkShop::get();
+        return view('clients.index', [
+            'workshops' => $workshops
+        ]);
     }
 
     public function save(SaveClientRequest $request)

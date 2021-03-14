@@ -44,6 +44,8 @@
             <el-col>
               <create-clients
                 :onCreateClient="onCreateNewClient"
+                :workshops="workshops"
+                :currentUser="me"
               ></create-clients>
             </el-col>
           </el-row>
@@ -395,6 +397,7 @@ export default {
   props: ["sale"],
   data() {
     return {
+      me: "",
       showPrices: false,
       image1Loaded: false,
       image2Loaded: false,
@@ -492,24 +495,26 @@ export default {
         year: $this.currentSale.sale_services[0].year,
       };
     }
-
-    axios.get("/api/clients?all=1").then(function (response) {
-      $this.clients = response.data;
-      if ($this.currentSale) {
-        if ($this.currentSale.client) {
-          $this.form.client = $this.currentSale.client.id;
-        }
-      }
-    });
-
-    axios.get("/api/users?all=1&role=Empleado").then(function (response) {
-      $this.users = response.data;
-      if ($this.currentSale) {
-        $this.form.user = $this.currentSale.user.id;
-      }
-    });
   },
   methods: {
+    loadUserAndClients(wks) {
+      const $this = this;
+      axios.get(`/api/clients?all=1&workshop=${wks}`).then(function (response) {
+        $this.clients = response.data;
+        if ($this.currentSale) {
+          if ($this.currentSale.client) {
+            $this.form.client = $this.currentSale.client.id;
+          }
+        }
+      });
+
+      axios.get(`/api/users?all=1&role=Empleado&workshop=${wks}`).then(function (response) {
+        $this.users = response.data;
+        if ($this.currentSale) {
+          $this.form.user = $this.currentSale.user.id;
+        }
+      });
+    },
     selectedFormat(format) {
       // const COTIZACION = 0;
       // const PROCESO = 1;
@@ -518,9 +523,19 @@ export default {
 
       var canvas = this.$refs["my-canvas"];
       if (this.currentSale.status == 2) {
-        this.createReceipt(this.currentSale, this.$refs["receipt"], canvas, format);
+        this.createReceipt(
+          this.currentSale,
+          this.$refs["receipt"],
+          canvas,
+          format
+        );
       } else {
-        this.createQuotation(this.currentSale, this.$refs["quotation"], canvas, format);
+        this.createQuotation(
+          this.currentSale,
+          this.$refs["quotation"],
+          canvas,
+          format
+        );
       }
     },
     onPriceChange(value) {
@@ -535,6 +550,7 @@ export default {
       $this.loading = true;
       axios.get(url).then(function (response) {
         $this.me = response.data[0];
+        $this.loadUserAndClients($this.me.workshop_id);
         $this.loading = false;
       });
     },

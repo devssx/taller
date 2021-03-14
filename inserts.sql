@@ -84,3 +84,9 @@ ALTER TABLE `work_shops` ADD `account` VARCHAR(255) NOT NULL AFTER `address`;
 ALTER TABLE `work_shops` ADD `phone` VARCHAR(255) NOT NULL AFTER `account`;
 ALTER TABLE `work_shops` ADD `sucursal1` VARCHAR(255) NOT NULL AFTER `phone`;
 ALTER TABLE `work_shops` ADD `sucursal2` VARCHAR(255) NOT NULL AFTER `sucursal1`;
+
+
+-- indicador taller para clientes
+ALTER TABLE `clients` ADD `workshop_id` int(10) UNSIGNED NOT NULL DEFAULT 1 AFTER `id`;
+ALTER TABLE `clients` ADD KEY `clients_workshop_id_foreign` (`workshop_id`);
+ALTER TABLE `clients` ADD CONSTRAINT `clients_workshop_id_foreign` FOREIGN KEY (`workshop_id`) REFERENCES `work_shops` (`id`);

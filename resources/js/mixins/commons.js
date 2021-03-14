@@ -1251,6 +1251,33 @@ export default {
             };
 
             return [servicioAC, lavadoSistema, reemplazoCompresor, reemplazoEvaporador, reemplazoCondensador, reemplazoManguera, reemplazoClutchCompresor, reemplazoBaleroCompresor, empacadoCompresor, cambioAceite, reemplazoBlower, cambioBobina, afinacion];
+        },
+        getCarServices(callback, lightMode) {
+            axios.get(`/api/carservices?all`).then(function (response) {
+                let services = [];
+                response.data.forEach((cs) => {
+                    if (cs.service.name != "indefinido") {
+                        let name = cs.service.name;
+                        let car = cs.car;
+                        let result = services.filter(s => s.name == name);
+                        if (result.length == 0) {
+                            if (lightMode)
+                                services.push({ name: name, cars: [car.id] });
+                            else
+                                services.push({ name: name, cars: [car] });
+                        } else {
+                            if (lightMode)
+                                result[0].cars.push(car.id);
+                            else
+                                result[0].cars.push(car);
+                        }
+                    }
+                });
+
+                callback(services);
+            }).catch((error) => {
+                callback([]);
+            });
         }
     }
 };

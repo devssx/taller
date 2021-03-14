@@ -32,7 +32,10 @@ class UsersController extends Controller
 
         if ($request->has('all')) {
             if ($request->has('role')) {
-                return User::role($request->get('role'))->get();
+                if($request->has('workshop'))
+                    return User::where('workshop_id', $request->has('workshop'))->role($request->get('role'))->get();
+                else
+                    return User::role($request->get('role'))->get();
             }
 
             return User::with('roles')->all();

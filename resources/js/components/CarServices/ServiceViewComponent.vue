@@ -11,6 +11,24 @@
             class="query-form"
             style="text-align: end"
           >
+            <el-form-item label="Servicio">
+              <el-select
+                placeholder="Filtrar carros por servicio"
+                :size="controlSize"
+                v-model="cService"
+                filterable
+                allow-create
+                default-first-option
+                @change="onCarServiceChange"
+              >
+                <el-option
+                  v-for="service in carServices"
+                  :key="service.name"
+                  :label="service.name"
+                  :value="service.name"
+                ></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="Año">
               <el-select
                 :size="controlSize"
@@ -48,7 +66,7 @@
             </el-form-item>
             <el-form-item label="Modelo">
               <el-select
-                class="select-ipad"
+                class="select-modelo"
                 :size="controlSize"
                 v-model="brand"
                 filterable
@@ -66,7 +84,7 @@
             </el-form-item>
             <el-form-item label="Motor">
               <el-select
-                class="select-ipad"
+                class="select-motor"
                 :size="controlSize"
                 filterable
                 allow-create
@@ -484,6 +502,8 @@ export default {
 
       maker: "",
       makers: [],
+      cService: "",
+      carServices: [],
       brand: "",
       brands: [],
       year: "",
@@ -499,6 +519,7 @@ export default {
       //selectedPrice: "low",
       car: "",
       cars: [],
+      carsAux: [],
       services: [],
       item: "",
       listItems: [],
@@ -529,8 +550,14 @@ export default {
       $this.years.push(year);
     }
 
+    // 2021
+    $this.getCarServices((services) => {
+      $this.carServices = services;
+    });
+
     axios.get("/api/cars?all").then(function (response) {
       $this.cars = response.data;
+      $this.carsAux = response.data;
       // remover indefindo (solo usado en caso especial)
       for (var i = 0; i < $this.cars.length; i++) {
         if ($this.cars[i].maker === "indefinido") {
@@ -671,9 +698,9 @@ export default {
               $this.loadCarServiceByCarId(car.id, (serv) => {
                 if (!$this.isValidCarId) {
                   $this.selectedCar.id = car.id;
-                  $this.selectedCar.maker = '';
-                  $this.selectedCar.brand = '';
-                  $this.selectedCar.motor = '';
+                  $this.selectedCar.maker = "";
+                  $this.selectedCar.brand = "";
+                  $this.selectedCar.motor = "";
                   $this.selectedCar.year = car.start_year;
                   $this.selectedCar.endYear = car.end_year;
                   $this.selectedCar.image = car.image;
@@ -914,6 +941,34 @@ export default {
           if (tmp[0] === name) result = decodeURIComponent(tmp[1]);
         });
       return result;
+    },
+    onCarServiceChange(selectedValue) {
+      var result = this.carServices.filter((s) => s.name == selectedValue);
+      if (result.length > 0) {
+        this.cars = result[0].cars;
+      } else {
+        // restore carlist
+        this.cars = this.carsAux;
+      }
+
+      this.filterMakers(this.cars);
+    },
+    filterMakers(cars) {
+      this.maker = '';
+      this.makers.splice(0, this.makers.length);
+
+      for (var i = 0; i < cars.length; i++) {
+        var maker = this.cars[i].maker;
+        if (maker === "indefinido") continue;
+
+        var mkrs = this.makers.filter((m) => m.maker === maker);
+        if (mkrs.length == 0) {
+          this.makers.push({ maker: maker });
+        }
+      }
+
+      //this.maker = this.makers[0].maker;
+      //this.onMakerChange(this.maker);
     },
     onMakerChange(selectedValue) {
       this.brand = "";
@@ -1400,6 +1455,13 @@ td {
   width: 80px;
 }
 
+.select-motor {
+  width: 130px;
+}
+.select-modelo {
+  width: 130px;
+}
+
 .el-form-item {
   margin-bottom: 8px;
 }
@@ -1415,7 +1477,7 @@ td {
     padding: 5px;
   }
   .select-ipad {
-    width: 170px;
+    width: 100px;
   }
 
   .el-form-item {

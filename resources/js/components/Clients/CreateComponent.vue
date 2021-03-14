@@ -3,9 +3,10 @@
     <el-button
       type="primary"
       icon="el-icon-circle-plus"
-      @click="dialogVisible = true"
-      :style="onCreateClient?'':'float:right;'"
-    >Agregar a un Cliente</el-button>
+      @click="onShow"
+      :style="onCreateClient ? '' : 'float:right;'"
+      >Agregar a un Cliente</el-button
+    >
     <el-dialog
       title="Agregar a un Cliente"
       :visible.sync="dialogVisible"
@@ -21,6 +22,20 @@
             label-width="150px"
             ref="clientForm"
           >
+            <el-form-item label="Taller" prop="workshop_id">
+              <el-select
+                v-model="client.workshop_id"
+                placeholder="Selecciona un taller"
+              >
+                <el-option
+                  v-for="w in workshops"
+                  :key="w.id"
+                  :label="w.name"
+                  :value="w.id"
+                  >{{ w.name }}</el-option
+                >
+              </el-select>
+            </el-form-item>
             <el-form-item label="Nombre" prop="name">
               <el-input v-model="client.name" maxlength="28"></el-input>
             </el-form-item>
@@ -61,14 +76,16 @@
       </el-row>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel()">Cancelar</el-button>
-        <el-button type="primary" @click="saveClient()" :loading="loading">Agregar</el-button>
+        <el-button type="primary" @click="saveClient()" :loading="loading"
+          >Agregar</el-button
+        >
       </span>
     </el-dialog>
   </el-col>
 </template>
 <script>
 export default {
-  props: ["onCreateClient"],
+  props: ["onCreateClient", "workshops", "currentUser"],
   data() {
     return {
       dialogVisible: false,
@@ -84,30 +101,43 @@ export default {
         information: "",
         details: "",
         reminder: "",
-        reminder_date: ""
+        reminder_date: "",
+        workshop_id: "",
       },
       rules: {
         name: [
           {
             required: true,
             message: "Campo Nombre es obligatorio",
-            trigger: "change"
-          }
-        ]
-      }
+            trigger: "change",
+          },
+        ],
+        workshop_id: [
+          {
+            required: true,
+            message: "Campo Taller es obligatorio",
+            trigger: "change",
+          },
+        ],
+      },
     };
   },
   methods: {
+    onShow(){
+      this.dialogVisible = true;
+      if(this.currentUser)
+        this.client.workshop_id = this.currentUser.workshop_id;
+    },
     handleClose(done) {
       var $this = this;
       if ($this.client.name) {
         $this
           .$confirm("¿Estas seguro de no guardar el Cliente?")
-          .then(_ => {
+          .then((_) => {
             $this.cancel();
             done();
           })
-          .catch(_ => {});
+          .catch((_) => {});
       } else {
         $this.cancel();
         done();
@@ -120,29 +150,29 @@ export default {
     },
     saveClient() {
       var $this = this;
-      $this.$refs.clientForm.validate(valid => {
+      $this.$refs.clientForm.validate((valid) => {
         if (valid) {
           $this.loading = true;
           axios
             .post("/api/clients", $this.client)
-            .then(function(response) {
+            .then(function (response) {
               // Event create client
               if ($this.onCreateClient) $this.onCreateClient(response.data);
 
               $this.$notify({
                 title: "¡Exito!",
                 message: "Cliente fue agregado correctamente",
-                type: "success"
+                type: "success",
               });
               $this.$root.$emit("refreshTable");
               $this.cancel();
             })
-            .catch(error => {
+            .catch((error) => {
               if (error.response.data.errors) {
                 var errors = error.response.data.errors;
                 $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
                   confirmButtonText: "OK",
-                  type: "error"
+                  type: "error",
                 });
               }
               $this.loading = false;
@@ -151,7 +181,7 @@ export default {
           return false;
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
