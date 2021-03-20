@@ -131,7 +131,7 @@ class SalesController extends Controller
         return view('sales.receipt');
     }
 
-    
+
     public function copy($id = 0)
     {
         if (!empty($id)) {
@@ -157,8 +157,10 @@ class SalesController extends Controller
         }])->with(['services' => function ($query) {
             $query->distinct('id');
         }])
-            ->where('done_on', NULL)->orWhere('done_on', '>', date('Y-m-d 00:00:00', strtotime('-7 days')))
-            ->where('workshop_id', '=', $request->get('workshop'))->paginate(10);
+            ->where('workshop_id', $request->get('workshop'))
+            ->orWhere(function ($query) {
+                $query->where('done_on', NULL)->where('done_on', '>', date('Y-m-d 00:00:00', strtotime('-7 days')));
+            })->paginate(10);
     }
 
     // Bitacora
@@ -426,7 +428,7 @@ class SalesController extends Controller
             $newClient = Client::firstOrCreate(['name' => $clientName, 'phonenumber' => $phoneNumber]);
             $sale->client_id = $newClient->id;
         }
-        
+
         if ($request->has('concept')) {
             $sale->concept = $request->get('concept');
         }
