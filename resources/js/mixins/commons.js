@@ -207,6 +207,11 @@ export default {
             }
             return s;
         },
+        loadMyWorkShop(callback) {
+            axios.get("/app").then(function (response) {
+              callback(response.data[0].workshop_id);
+            });
+        },
         checkPassword(workshopId, callback) {
             this.$prompt(
                 "Ingrese la contraseña continuar.",

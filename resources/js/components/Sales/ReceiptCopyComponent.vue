@@ -275,9 +275,6 @@ export default {
   mounted() {
     var $this = this;
     this.$root.$on("refreshReceipt", this.refreshReceipt);
-    this.loadUser("/app");
-    this.loadWorkShops("/api/workshop");
-
     if ($this.sale) {
       $this.currentSale = $this.sale;
       var services = [];
@@ -306,10 +303,14 @@ export default {
         year: $this.currentSale.sale_services[0].year,
       };
     }
+
+    this.loadUser("/app");
   },
   methods: {
     loadUserAndClients(wks) {
       const $this = this;
+      if ($this.currentSale) 
+        $this.currentSale.workshop_id = wks;
 
       axios.get(`/api/clients?all=1&workshop=${wks}`).then(function (response) {
         $this.clients = response.data;
@@ -347,17 +348,6 @@ export default {
         $this.me = response.data[0];
         $this.loadUserAndClients($this.me.workshop_id);
         $this.loading = false;
-      });
-    },
-    loadWorkShops(url) {
-      const $this = this;
-      $this.loading = true;
-      axios.get(url).then(function (response) {
-        $this.workshops = response.data;
-        $this.loading = false;
-
-        if ($this.me) $this.currentSale.workshop_id = $this.me.workshop_id;
-        else $this.currentSale.workshop_id = $this.workshops[0].id;
       });
     },
     getFolio(sale) {

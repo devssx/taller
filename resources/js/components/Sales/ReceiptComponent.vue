@@ -449,19 +449,17 @@ export default {
     this.$root.$on("refreshReceipt", this.refreshReceipt);
     this.$root.$on("selectedFormat", this.selectedFormat);
     this.loadUser("/app");
-    this.loadWorkShops("/api/workshop");
     if (localStorage.getItem("order")) {
       try {
-        $this.order = JSON.parse(localStorage.getItem("order"));
-
-        //if ($this.order.receiptMode) {
-        $this.form.maker = $this.order.car.maker;
-        $this.form.brand = $this.order.car.brand;
-        $this.form.year = $this.order.year;
-
-        var services = $this.order.services.filter((s) => s.warranty);
-        $this.form.guaranty = services.length > 0 ? services[0].warranty : "";
-        //}
+        this.loadMyWorkShop((wks) => {
+          $this.order = JSON.parse(localStorage.getItem("order"));
+          $this.form.maker = $this.order.car.maker;
+          $this.form.brand = $this.order.car.brand;
+          $this.form.year = $this.order.year;
+          $this.form.workshop = wks;
+          var services = $this.order.services.filter((s) => s.warranty);
+          $this.form.guaranty = services.length > 0 ? services[0].warranty : "";
+        });
       } catch (e) {
         localStorage.removeItem("order");
       }
@@ -508,12 +506,14 @@ export default {
         }
       });
 
-      axios.get(`/api/users?all=1&role=Empleado&workshop=${wks}`).then(function (response) {
-        $this.users = response.data;
-        if ($this.currentSale) {
-          $this.form.user = $this.currentSale.user.id;
-        }
-      });
+      axios
+        .get(`/api/users?all=1&role=Empleado&workshop=${wks}`)
+        .then(function (response) {
+          $this.users = response.data;
+          if ($this.currentSale) {
+            $this.form.user = $this.currentSale.user.id;
+          }
+        });
     },
     selectedFormat(format) {
       // const COTIZACION = 0;
@@ -552,17 +552,6 @@ export default {
         $this.me = response.data[0];
         $this.loadUserAndClients($this.me.workshop_id);
         $this.loading = false;
-      });
-    },
-    loadWorkShops(url) {
-      const $this = this;
-      $this.loading = true;
-      axios.get(url).then(function (response) {
-        $this.workshops = response.data;
-        $this.loading = false;
-
-        if ($this.me) $this.form.workshop = $this.me.workshop_id;
-        else $this.form.workshop = $this.workshops[0].id;
       });
     },
     getFolio(sale) {
