@@ -452,7 +452,6 @@ export default {
     if (localStorage.getItem("order")) {
       try {
         this.loadMyWorkShop((wks) => {
-          alert(wks);
           $this.order = JSON.parse(localStorage.getItem("order"));
           $this.form.maker = $this.order.car.maker;
           $this.form.brand = $this.order.car.brand;
