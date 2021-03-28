@@ -56,6 +56,7 @@ class CarsController extends Controller
         $car = Car::where('brand', '=', $request->get('brand'))
             ->where('start_year', '=', $request->get('year')[0])
             ->where('end_year', '=', $request->get('year')[1])
+            ->where('motor', '=', $request->get('motor')[1])
             ->first();
 
         if ($car) {
@@ -164,9 +165,9 @@ class CarsController extends Controller
             ->where('end_year', '>=', $request->get('year'))
             //->first();
 
-            //->whereBetween('start_year', '=', $request->get('year'))
-            //->where('start_year', '>=', $request->get('year'))
-            //->where('end_year', '<=', $request->get('year'))
+            // ->whereBetween('start_year', '=', $request->get('year'))
+            // ->where('start_year', '>=', $request->get('year'))
+            // ->where('end_year', '<=', $request->get('year'))
             ->get();
     }
 

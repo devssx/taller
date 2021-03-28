@@ -5,8 +5,9 @@
       type="primary"
       icon="el-icon-circle-plus"
       @click="dialogVisible = true"
-      style="float:right;"
-    >Agregar un Carro</el-button>
+      style="float: right"
+      >Agregar un Carro</el-button
+    >
     <el-dialog
       title="Agregar un Carro"
       :visible.sync="dialogVisible"
@@ -44,41 +45,57 @@
                 ></file-upload>
               </el-col>
             </el-form-item>
-            <el-form-item :label="'Año (' + car.year[0] + '-' + car.year[1] + ')'" prop="year">
-              <el-slider v-model="car.year" range show-stops :min="1999" :max="currentYear"></el-slider>
+            <el-form-item
+              :label="'Año (' + car.year[0] + '-' + car.year[1] + ')'"
+              prop="year"
+            >
+              <el-slider
+                v-model="car.year"
+                range
+                show-stops
+                :min="1999"
+                :max="currentYear"
+              ></el-slider>
             </el-form-item>
           </el-form>
         </el-col>
       </el-row>
       <el-row
-        v-if="!selectedFile && car.image!=''"
+        v-if="!selectedFile && car.image != ''"
         type="flex"
         align="middle"
-        style="text-align: center;"
+        style="text-align: center"
       >
         <el-col :span="24">
-          <el-image style="width:256px;" :src="car.image"></el-image>
-        </el-col>
-      </el-row>
-      <el-row v-if="selectedFile" type="flex" align="middle" style="text-align: center;">
-        <el-col :span="24">
-          <img id="preview" style="width:256px;" />
+          <el-image style="width: 256px" :src="car.image"></el-image>
         </el-col>
       </el-row>
       <el-row
-        v-if="!selectedFile && car.image!=''"
+        v-if="selectedFile"
         type="flex"
         align="middle"
-        style="text-align: center;"
+        style="text-align: center"
       >
         <el-col :span="24">
-          <el-image style="width:256px;" :src="car.image"></el-image>
+          <img id="preview" style="width: 256px" />
+        </el-col>
+      </el-row>
+      <el-row
+        v-if="!selectedFile && car.image != ''"
+        type="flex"
+        align="middle"
+        style="text-align: center"
+      >
+        <el-col :span="24">
+          <el-image style="width: 256px" :src="car.image"></el-image>
         </el-col>
       </el-row>
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel()">Cancelar</el-button>
-        <el-button type="primary" @click="save()" :loading="loading">Agregar</el-button>
+        <el-button type="primary" @click="save()" :loading="loading"
+          >Agregar</el-button
+        >
       </span>
     </el-dialog>
   </el-col>
@@ -99,31 +116,31 @@ export default {
         motor: "",
         image: "",
         services: "",
-        year: [1999, new Date().getFullYear()]
+        year: [1999, new Date().getFullYear()],
       },
       rules: {
         maker: [
           {
             required: true,
             message: "Campo Marca es obligatorio",
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         brand: [
           {
             required: true,
             message: "Campo Modelo es obligatorio",
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         motor: [
           {
             required: true,
             message: "Campo Motor es obligatorio",
-            trigger: "change"
-          }
-        ]
-      }
+            trigger: "change",
+          },
+        ],
+      },
     };
   },
   methods: {
@@ -146,7 +163,7 @@ export default {
           "Error",
           {
             confirmButtonText: "OK",
-            type: "error"
+            type: "error",
           }
         );
 
@@ -163,11 +180,11 @@ export default {
       if ($this.car.brand) {
         $this
           .$confirm("¿Estas seguro de no guardar el Carro?")
-          .then(_ => {
+          .then((_) => {
             $this.cancel();
             done();
           })
-          .catch(_ => {});
+          .catch((_) => {});
       } else {
         $this.cancel();
         done();
@@ -181,7 +198,7 @@ export default {
     },
     save() {
       var $this = this;
-      $this.$refs.carForm.validate(valid => {
+      $this.$refs.carForm.validate((valid) => {
         //console.log($this.selectedFile);
         if (valid) {
           $this.loading = true;
@@ -189,18 +206,18 @@ export default {
           if ($this.selectedFile) {
             // upload a file
             $this.$refs.uploader.submit(
-              imgServerPath => {
+              (imgServerPath) => {
                 // success
                 $this.car.image = imgServerPath;
                 $this.saveCar();
               },
-              error => {
+              (error) => {
                 console.log(error);
                 $this.$notify({
                   title: "Error!",
                   message:
                     "Ha ocurrido un error al intentar subir la imagen, intenta con otra",
-                  type: "error"
+                  type: "error",
                 });
 
                 $this.loading = false;
@@ -217,28 +234,37 @@ export default {
     saveCar() {
       var $this = this;
       $this.car.services = this.getDefaultCarServices(1);
-      $this.$refs.carForm.validate(valid => {
+      $this.$refs.carForm.validate((valid) => {
         if (valid) {
           $this.loading = true;
           axios
             .post("/api/cars", $this.car)
-            .then(function(response) {
+            .then(function (response) {
+              if (response.data.error) {
+                $this.$alert(response.data.error, "Error", {
+                  confirmButtonText: "OK",
+                  type: "error",
+                });
+                 $this.loading = false;
+                return;
+              }
+
               $this.$notify({
                 title: "¡Exito!",
                 message: "El Carro fue agregado correctamente",
-                type: "success"
+                type: "success",
               });
 
               $this.$root.$emit("onNewCarCreated", response.data);
               $this.$root.$emit("refreshTable");
               $this.cancel();
             })
-            .catch(error => {
+            .catch((error) => {
               if (error.response.data.errors) {
                 var errors = error.response.data.errors;
                 $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
                   confirmButtonText: "OK",
-                  type: "error"
+                  type: "error",
                 });
               }
               $this.loading = false;
@@ -247,7 +273,7 @@ export default {
           return false;
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>

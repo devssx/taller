@@ -136,7 +136,7 @@
               <div style="float: right">
                 <!-- Boton Agregar Servicio -->
                 <create-pop-sales
-                  :disabled="!isValidCarId"
+                  :disabled="!isValidCarId || isLoadingServices"
                   :size="controlSize"
                 ></create-pop-sales>
               </div>
@@ -954,7 +954,7 @@ export default {
       this.filterMakers(this.cars);
     },
     filterMakers(cars) {
-      this.maker = '';
+      this.maker = "";
       this.makers.splice(0, this.makers.length);
 
       for (var i = 0; i < cars.length; i++) {
@@ -1051,8 +1051,8 @@ export default {
       axios
         .get("/api/car/search", {
           params: {
-            maker: $this.maker,
-            brand: $this.brand,
+            maker: $this.maker.trim(),
+            brand: $this.brand.trim(),
             motor: $this.motor,
             year: $this.year,
             end_year: $this.year,
@@ -1077,6 +1077,9 @@ export default {
                 }
               )
               .then((e) => {
+                if (!$this.motor.trim()) 
+                  $this.motor = '1.8';
+                
                 const car = {
                   maker: $this.maker.trim(),
                   brand: $this.brand.trim(),
