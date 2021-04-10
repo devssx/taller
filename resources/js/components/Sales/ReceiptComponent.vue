@@ -555,8 +555,8 @@ export default {
       });
     },
     getFolio(sale) {
-      if (sale.status == 2) return "REC" + this.pad(sale.id, 5);
-      else return "COT" + this.pad(sale.id, 5);
+      if (sale.status == 2) return "REC" + this.pad(sale.folio, 5);
+      else return "COT" + this.pad(sale.folio, 5);
     },
     onCreateNewClient(newClient) {
       if (newClient.id) {

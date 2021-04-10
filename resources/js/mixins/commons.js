@@ -298,8 +298,8 @@ export default {
             // FOLIO
             $this.context.font = "24px Calibri";
             $this.context.fillStyle = "red";
-            $this.context.fillText("REC" + $this.pad(currentSale.id, 5), 920, 105);
-            $this.context.fillText("REC" + $this.pad(currentSale.id, 5), 920, 105 + 678);
+            $this.context.fillText("REC" + $this.pad(currentSale.folio, 5), 920, 105);
+            $this.context.fillText("REC" + $this.pad(currentSale.folio, 5), 920, 105 + 678);
 
             $this.context.fillStyle = "black";
             $this.context.fillText(
@@ -547,7 +547,7 @@ export default {
             $this.context.textAlign = "left";
             $this.context.font = "24px Calibri";
             $this.context.fillStyle = "red";
-            $this.context.fillText("COT" + $this.pad(currentSale.id, 5), 935, 132); // FOLIO
+            $this.context.fillText("COT" + $this.pad(currentSale.folio, 5), 935, 132); // FOLIO
 
             $this.context.fillStyle = "black";
             $this.context.fillText(

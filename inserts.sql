@@ -90,3 +90,8 @@ ALTER TABLE `work_shops` ADD `sucursal2` VARCHAR(255) NOT NULL AFTER `sucursal1`
 ALTER TABLE `clients` ADD `workshop_id` int(10) UNSIGNED NOT NULL DEFAULT 1 AFTER `id`;
 ALTER TABLE `clients` ADD KEY `clients_workshop_id_foreign` (`workshop_id`);
 ALTER TABLE `clients` ADD CONSTRAINT `clients_workshop_id_foreign` FOREIGN KEY (`workshop_id`) REFERENCES `work_shops` (`id`);
+
+
+-- Mejoras:
+ALTER TABLE `sales` ADD `folio` INT NOT NULL DEFAULT '0' AFTER `id`;
+ALTER TABLE `work_shops` ADD `consec` INT NOT NULL DEFAULT '1' AFTER `id`;

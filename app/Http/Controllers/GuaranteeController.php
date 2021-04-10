@@ -45,7 +45,7 @@ class GuaranteeController extends Controller
 
         return DB::table('guarantees')
             ->join('sales', 'sales.id', 'guarantees.sale_id')
-            ->select('guarantees.*', 'sales.total', 'sales.done_on')
+            ->select('guarantees.*', 'sales.total', 'sales.done_on', 'sales.folio')
             ->where(['guarantees.year' => $request->get('year'), 'guarantees.workshop_id' => $request->get('workshop')])
             ->orderBy('guarantees.new_date', 'asc')
             ->get();

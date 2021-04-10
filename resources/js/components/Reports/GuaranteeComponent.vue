@@ -47,8 +47,8 @@
               </el-table-column>
               <el-table-column align="center" label="Fecha trabajo" prop="done_on"></el-table-column>
               <el-table-column align="center" label="Fecha retrabajo" prop="new_date"></el-table-column>
-              <el-table-column align="center" label="No. Recibo" width="120" prop="sale_id">
-                <template slot-scope="scope">REC{{pad(scope.row.sale_id,5)}}</template>
+              <el-table-column align="center" label="No. Recibo" width="120" prop="folio">
+                <template slot-scope="scope">REC{{pad(scope.row.folio,5)}}</template>
               </el-table-column>
               <el-table-column align="center" label="Técnico" prop="employee"></el-table-column>
               <el-table-column align="center" label="Se Solucionó" prop="solution"></el-table-column>

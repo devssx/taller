@@ -98,7 +98,8 @@ class SalesController extends Controller
             ->where('done_on', '>', date('Y-m-d 00:00:00', strtotime('-10 months')))
             ->where('sales.status',  Sale::TERMINADO)
             ->where('sales.workshop_id',  $request->get('workshop'))
-            ->where('sales.id',  $request->get('id'))
+            // ->where('sales.id',  $request->get('id'))
+            ->where('sales.folio',  $request->get('id'))
             ->get();
     }
 
@@ -419,6 +420,11 @@ class SalesController extends Controller
         // taller
         if ($request->has('workshop')) {
             $sale->workshop_id = $request->get('workshop');
+
+            $wks = WorkShop::findOrFail($sale->workshop_id);
+            $sale->folio = $wks->consec;
+            $wks->consec = $wks->consec + 1;
+            $wks->save();
         }
 
         // Create a new client if id is not valid

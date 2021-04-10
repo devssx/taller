@@ -263,7 +263,7 @@ export default {
 
       // Con Iva
       if (sale.tax == 1) {
-        let folio = "REC" + this.pad(sale.id, 5);
+        let folio = "REC" + this.pad(sale.folio, 5);
         let importe = parseFloat(sale.total);
         let iva = importe * 0.08;
         let total = importe + iva;
@@ -321,7 +321,7 @@ export default {
         }
       } else {
         // Sin Iva
-        let folio = "REC" + this.pad(sale.id, 5);
+        let folio = "REC" + this.pad(sale.folio, 5);
 
         // Sin contar creditos
         if (sale.method != 6) {

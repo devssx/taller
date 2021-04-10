@@ -117,7 +117,7 @@ export default {
   },
   methods: {
     onShow() {
-      if (this.selectedItem.sale_id) this.remoteMethod(`REC${this.selectedItem.sale_id}`);
+      if (this.selectedItem.folio) this.remoteMethod(`REC${this.selectedItem.folio}`);
       this.dialogVisible = true;
     },
     remoteMethod(query) {
@@ -150,7 +150,7 @@ export default {
               doneOn = new Date();
             }
 
-            let folio = `REC${$this.pad(e.id, 5)}`;
+            let folio = `REC${$this.pad(e.folio, 5)}`;
             let fecha = `${$this.toFixedDateFormat(doneOn, "yyyy-MM-dd")}`;
             let label = `${fecha} - ${folio} - ${e.name}`;
             $this.sale_options.push({ label: label, id: e.id });
