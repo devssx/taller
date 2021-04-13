@@ -326,13 +326,14 @@ export default {
             );
 
             // Lineas
-            for (var x = 0; x < 8; x++) {
+            var lineHeight = 19;
+            for (var x = 0; x < 13; x++) {
                 $this.context.strokeStyle = "black";
                 $this.context.beginPath();
-                $this.context.moveTo(40, 360 + x * 30);
-                $this.context.lineTo(1100, 360 + x * 30);
-                $this.context.moveTo(40, 360 + x * 30 + 678);
-                $this.context.lineTo(1100, 360 + x * 30 + 678);
+                $this.context.moveTo(40, 352 + x * lineHeight);
+                $this.context.lineTo(1100, 352 + x * lineHeight);
+                $this.context.moveTo(40, 352 + x * lineHeight + 678);
+                $this.context.lineTo(1100, 352 + x * lineHeight + 678);
                 $this.context.lineWidth = 1;
                 $this.context.stroke();
             }
@@ -412,17 +413,20 @@ export default {
             $this.context.fillText(nextService, 1010, 290);
             $this.context.fillText(nextService, 1010, 290 + 678);
 
+            // Conceptos
+            $this.context.font = "12px Calibri";
+
             // No cabe en el recibo solo hay 9 renglones
-            if (format > 0 && currentSale.sale_services.length > 7) {
-                format = 0;
-            }
+            // if (format > 0 && currentSale.sale_services.length > 7) {
+            //     format = 0;
+            // }
 
             var y = 0;
             currentSale.total = parseFloat(currentSale.total);
 
             // Cantidad
-            $this.context.fillText("1", 100, 350);
-            $this.context.fillText("1", 100, 350 + 678);
+            $this.context.fillText("1", 100, 347);
+            $this.context.fillText("1", 100, 347 + 678);
 
             // Concepto
             if (format == 0 && currentSale.concept) {
@@ -434,8 +438,8 @@ export default {
                     // } else {                     
                     // }
 
-                    $this.context.fillText(concept[x].toUpperCase(), 160, 350 + y * 30);
-                    $this.context.fillText(concept[x].toUpperCase(), 160, 350 + 678 + y * 30);
+                    $this.context.fillText(concept[x].toUpperCase(), 160, 347 + y * 19);
+                    $this.context.fillText(concept[x].toUpperCase(), 160, 347 + 678 + y * 19);
                     y++;
                 }
             }
@@ -443,8 +447,8 @@ export default {
             // Importe Total (Cuando no se detalla el listado de items)
             if (format == 0 || format == 1) {
                 $this.context.textAlign = "end";
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 350);
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 350 + 678);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1090, 347);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1090, 347 + 678);
                 $this.context.textAlign = "start";
             }
 
@@ -453,18 +457,18 @@ export default {
                 for (var x = 0; x < currentSale.sale_services.length; x++) {
                     var desc = currentSale.sale_services[x];
                     // Cantidad
-                    $this.context.fillText("1", 100, 350 + y * 31);
-                    $this.context.fillText("1", 100, 350 + 678 + y * 31);
+                    $this.context.fillText("1", 100, 347 + y * 19);
+                    $this.context.fillText("1", 100, 347 + 678 + y * 19);
 
                     // Item Name
-                    $this.context.fillText(desc.item.name.toUpperCase(), 160, 350 + y * 30);
-                    $this.context.fillText(desc.item.name.toUpperCase(), 160, 350 + 678 + y * 30);
+                    $this.context.fillText(desc.item.name.toUpperCase(), 160, 347 + y * 19);
+                    $this.context.fillText(desc.item.name.toUpperCase(), 160, 347 + 678 + y * 19);
 
                     // Importe
                     if (format == 2) {
                         $this.context.textAlign = "end";
-                        $this.context.fillText("$" + $this.formatPrice(desc.price), 1080, 350 + y * 30);
-                        $this.context.fillText("$" + $this.formatPrice(desc.price), 1080, 350 + 678 + y * 30);
+                        $this.context.fillText("$" + $this.formatPrice(desc.price), 1090, 347 + y * 19);
+                        $this.context.fillText("$" + $this.formatPrice(desc.price), 1090, 347 + 678 + y * 19);
                         $this.context.textAlign = "start";
                     }
                     y++;
@@ -473,28 +477,28 @@ export default {
 
             // Detalles
             if (currentSale.details && y <= 6) {
-                y = 6;
-                $this.wrapText($this.context, `Observación: ${currentSale.details}`, 160, 350 + y * 30, 780, 30);
-                $this.wrapText($this.context, `Observación: ${currentSale.details}`, 160, 350 + y * 30 + 678, 780, 30);
+                y = 12;
+                $this.wrapText($this.context, `Observación: ${currentSale.details}`, 160, 347 + y * 19, 780, 19);
+                $this.wrapText($this.context, `Observación: ${currentSale.details}`, 160, 347 + y * 19 + 678, 780, 19);
             }
 
             $this.context.textAlign = "end";
-            $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 615);
-            $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 615 + 678);
+            $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1090, 615);
+            $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1090, 615 + 678);
             if (currentSale.tax == 1) {
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total * 0.08), 1080, 640);
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total * 0.08), 1080, 640 + 678);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total * 0.08), 1090, 640);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total * 0.08), 1090, 640 + 678);
             } else {
-                $this.context.fillText("$0.00", 1080, 640);
-                $this.context.fillText("$0.00", 1080, 640 + 678);
+                $this.context.fillText("$0.00", 1090, 640);
+                $this.context.fillText("$0.00", 1090, 640 + 678);
             }
 
             if (currentSale.tax == 1) {
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total + currentSale.total * 0.08), 1080, 668);
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total + currentSale.total * 0.08), 1080, 668 + 678);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total + currentSale.total * 0.08), 1090, 668);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total + currentSale.total * 0.08), 1090, 668 + 678);
             } else {
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 668);
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 668 + 678);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1090, 668);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1090, 668 + 678);
             }
 
             // Garantia (Max 165 chars)
