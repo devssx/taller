@@ -209,7 +209,7 @@ export default {
         },
         loadMyWorkShop(callback) {
             axios.get("/app").then(function (response) {
-              callback(response.data[0].workshop_id);
+                callback(response.data[0].workshop_id);
             });
         },
         checkPassword(workshopId, callback) {
@@ -416,10 +416,10 @@ export default {
             // Conceptos
             $this.context.font = "12px Calibri";
 
-            // No cabe en el recibo solo hay 9 renglones
-            // if (format > 0 && currentSale.sale_services.length > 7) {
-            //     format = 0;
-            // }
+            // No cabe en el recibo solo hay 13 renglones
+            if (format > 0 && currentSale.sale_services.length > 14) {
+                alert("La cantidad de artículos excede el número de renglones");
+            }
 
             var y = 0;
             currentSale.total = parseFloat(currentSale.total);
@@ -429,18 +429,22 @@ export default {
             $this.context.fillText("1", 100, 347 + 678);
 
             // Concepto
-            if (format == 0 && currentSale.concept) {
-                var concept = currentSale.concept.match(/.{1,90}/g);
-                for (var x = 0; x < concept.length; x++) {
-                    // formato: 1. Nombre = 1500
-                    // var patt = new RegExp("^\\d+\\..+=\\D+\\d+");
-                    // if (patt.test(concept[x])) {
-                    // } else {                     
-                    // }
+            if (format == 0) {
+                if (currentSale.concept) {
+                    var concept = currentSale.concept.match(/.{1,90}/g);
+                    for (var x = 0; x < concept.length; x++) {
+                        // formato: 1. Nombre = 1500
+                        // var patt = new RegExp("^\\d+\\..+=\\D+\\d+");
+                        // if (patt.test(concept[x])) {
+                        // } else {                     
+                        // }
 
-                    $this.context.fillText(concept[x].toUpperCase(), 160, 347 + y * 19);
-                    $this.context.fillText(concept[x].toUpperCase(), 160, 347 + 678 + y * 19);
-                    y++;
+                        $this.context.fillText(concept[x].toUpperCase(), 160, 347 + y * 19);
+                        $this.context.fillText(concept[x].toUpperCase(), 160, 347 + 678 + y * 19);
+                        y++;
+                    }
+                } else { 
+                    alert("No hay información en el campo concepto, favor de editarlo si se va a imprimir en este formato");
                 }
             }
 
