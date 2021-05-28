@@ -645,6 +645,10 @@ export default {
     },
     save() {
       var $this = this;
+      if($this.loading)
+        return;
+
+      $this.loading = true;
       $this.$refs.form.validate((valid) => {
         if (valid) {
           $this.order.user = $this.form.user;
@@ -671,6 +675,8 @@ export default {
               confirmButtonText: "OK",
               type: "warning",
             });
+
+            $this.loading = false;
             return;
           }
 
@@ -690,6 +696,8 @@ export default {
                   type: "warning",
                 }
               );
+
+              $this.loading = false;
               return;
             }
 
@@ -702,6 +710,8 @@ export default {
                   type: "warning",
                 }
               );
+
+              $this.loading = false;
               return;
             }
 
@@ -714,6 +724,8 @@ export default {
                   type: "warning",
                 }
               );
+
+              $this.loading = false;
               return;
             }
           }
@@ -724,6 +736,8 @@ export default {
               "Rocordatorio no válido",
               { confirmButtonText: "OK", type: "warning" }
             );
+
+            $this.loading = false;
             return;
           }
 
@@ -739,6 +753,8 @@ export default {
                 localStorage.removeItem("order");
                 window.location.href = "/sales";
               }, 1500);
+
+              $this.loading = false;
             })
             .catch((error) => {
               if (error.response.data.errors) {
