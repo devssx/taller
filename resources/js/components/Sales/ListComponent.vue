@@ -127,7 +127,7 @@ export default {
   methods: {
     refreshTable() {
       this.loadTable(
-        `/api/sales?workshop=${this.workshopId}&page=` + this.page
+        `/api/sales?workshop=${this.workshopId}&page=${this.page}`
       );
     },
     loadTable(url) {

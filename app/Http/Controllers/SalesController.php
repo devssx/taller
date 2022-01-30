@@ -161,7 +161,9 @@ class SalesController extends Controller
             ->where('workshop_id', $request->get('workshop'))
             ->orWhere(function ($query) {
                 $query->where('done_on', NULL)->where('done_on', '>', date('Y-m-d 00:00:00', strtotime('-7 days')));
-            })->paginate(10);
+            })
+            ->orderBy('created_at', 'DESC')
+            ->paginate(10);
     }
 
     // Bitacora
