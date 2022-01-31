@@ -284,6 +284,8 @@ export default {
       $this.calculaTotales();
     },
     loadTable(url, newDate) {
+      console.log(url);
+      
       var $this = this;
       $this.loading = true;
       axios.get(url).then(function (response) {
