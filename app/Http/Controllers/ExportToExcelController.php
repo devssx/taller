@@ -18,6 +18,9 @@ class ExportToExcelController extends Controller
 
         $sheet->setCellValue('A1', 'Hello World !');
 
+        if (!file_exists('files'))
+            mkdir('files', 0777, true);
+        
         $filename = 'files/GASTOS' . date('Y-m-d') . '.xlsx';
         $writer = new Xlsx($spreadsheet);
         $writer->save($filename);
