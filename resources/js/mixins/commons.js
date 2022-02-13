@@ -269,6 +269,7 @@ export default {
             $this.context.fillText(workshopInfo.address, 550, 55);
             $this.context.fillText(workshopInfo.address, 550, 55 + 785);
             $this.context.font = "20px Calibri";
+            $this.context.fillText(workshopInfo.phone, 550, 75);
             $this.context.fillText(workshopInfo.phone, 550, 75 + 785);
 
             $this.context.font = "16px Calibri";
