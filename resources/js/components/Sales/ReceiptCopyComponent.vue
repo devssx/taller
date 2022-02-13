@@ -7,7 +7,11 @@
           <br />
           <el-row>
             <el-col>
-              <create-clients :onCreateClient="onCreateNewClient" :workshops="workshops" :currentUser="me"></create-clients>
+              <create-clients
+                :onCreateClient="onCreateNewClient"
+                :workshops="workshops"
+                :currentUser="me"
+              ></create-clients>
             </el-col>
           </el-row>
           <el-form
@@ -20,13 +24,27 @@
           >
             <el-form-item label="Taller" prop="workshop">
               <el-select :disabled="true" v-model="currentSale.workshop_id">
-                <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id"></el-option>
+                <el-option
+                  v-for="w in workshops"
+                  :key="w.id"
+                  :label="w.name"
+                  :value="w.id"
+                ></el-option>
               </el-select>
             </el-form-item>
 
             <el-form-item label="Empleado" prop="user">
-              <el-select filterable placeholder="Selecciona un Empleado" v-model="currentSale.user">
-                <el-option v-for="user in users" :key="user.id" :label="user.name" :value="user.id"></el-option>
+              <el-select
+                filterable
+                placeholder="Selecciona un Empleado"
+                v-model="currentSale.user"
+              >
+                <el-option
+                  v-for="user in users"
+                  :key="user.id"
+                  :label="user.name"
+                  :value="user.id"
+                ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="Cliente" prop="client">
@@ -45,11 +63,15 @@
               </el-select>
             </el-form-item>
             <el-form-item label="Telefono" prop="phoenumber">
-              <el-input style="width: 220px;" v-model="currentSale.phonenumber" maxlength="18"></el-input>
+              <el-input
+                style="width: 220px"
+                v-model="currentSale.phonenumber"
+                maxlength="18"
+              ></el-input>
             </el-form-item>
             <el-form-item label="Concepto" prop="concept">
               <el-input
-                style="width: 220px;"
+                style="width: 220px"
                 type="textarea"
                 v-model="currentSale.concept"
                 maxlength="300"
@@ -58,7 +80,7 @@
             </el-form-item>
             <el-form-item label="Garantía" prop="guaranty">
               <el-input
-                style="width: 220px;"
+                style="width: 220px"
                 type="textarea"
                 v-model="currentSale.guaranty"
                 maxlength="165"
@@ -67,7 +89,7 @@
             </el-form-item>
             <el-form-item label="Detalles" prop="details">
               <el-input
-                style="width: 220px;"
+                style="width: 220px"
                 type="textarea"
                 v-model="currentSale.details"
                 maxlength="300"
@@ -75,16 +97,32 @@
               ></el-input>
             </el-form-item>
             <el-form-item label="Marca" prop="maker">
-              <el-input style="width: 220px;" v-model="currentSale.maker" maxlength="16"></el-input>
+              <el-input
+                style="width: 220px"
+                v-model="currentSale.maker"
+                maxlength="16"
+              ></el-input>
             </el-form-item>
             <el-form-item label="Modelo" prop="brand">
-              <el-input style="width: 220px;" v-model="currentSale.brand" maxlength="16"></el-input>
+              <el-input
+                style="width: 220px"
+                v-model="currentSale.brand"
+                maxlength="16"
+              ></el-input>
             </el-form-item>
             <el-form-item label="Año" prop="year">
-              <el-input style="width: 220px;" v-model="currentSale.year" maxlength="4"></el-input>
+              <el-input
+                style="width: 220px"
+                v-model="currentSale.year"
+                maxlength="4"
+              ></el-input>
             </el-form-item>
             <el-form-item label="Color" prop="color">
-              <el-input style="width: 220px;" v-model="currentSale.color" maxlength="14"></el-input>
+              <el-input
+                style="width: 220px"
+                v-model="currentSale.color"
+                maxlength="14"
+              ></el-input>
             </el-form-item>
             <!-- Cambido a proximo sevicio -->
             <el-form-item label="Próximo servicio" prop="next_service">
@@ -96,24 +134,40 @@
               ></el-date-picker>
             </el-form-item>
             <el-form-item label="No. de Placa" prop="km">
-              <el-input style="width: 220px;" v-model="currentSale.km" maxlength="10"></el-input>
+              <el-input
+                style="width: 220px"
+                v-model="currentSale.km"
+                maxlength="10"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="Tipo:">
+              <el-radio-group v-model="currentSale.service_type">
+                <el-radio :label="1" name="type">A/C</el-radio>
+                <el-radio :label="2" name="type">Mecánico</el-radio>
+                <el-radio :label="3" name="type">Eléctrico</el-radio>
+              </el-radio-group>
             </el-form-item>
             <div v-if="order.receiptMode">
-              <el-form-item label="Tipo:">
-                <el-radio-group v-model="service_type">
-                  <el-radio :label="1" name="type">A/C</el-radio>
-                  <el-radio :label="2" name="type">Mecánico</el-radio>
-                  <el-radio :label="3" name="type">Eléctrico</el-radio>
-                </el-radio-group>
-              </el-form-item>
               <el-form-item label="MDP:">
                 <el-radio-group v-model="method">
-                  <el-radio :label="1" name="type" style="display:block">Efectivo</el-radio>
-                  <el-radio :label="2" name="type" style="display:block">Tarjeta de Crédito</el-radio>
-                  <el-radio :label="3" name="type" style="display:block">Tarjeta de Débito</el-radio>
-                  <el-radio :label="4" name="type" style="display:block">Cheque</el-radio>
-                  <el-radio :label="5" name="type" style="display:block">Transferencia</el-radio>
-                  <el-radio :label="6" name="type" style="display:block">Crédito</el-radio>
+                  <el-radio :label="1" name="type" style="display: block"
+                    >Efectivo</el-radio
+                  >
+                  <el-radio :label="2" name="type" style="display: block"
+                    >Tarjeta de Crédito</el-radio
+                  >
+                  <el-radio :label="3" name="type" style="display: block"
+                    >Tarjeta de Débito</el-radio
+                  >
+                  <el-radio :label="4" name="type" style="display: block"
+                    >Cheque</el-radio
+                  >
+                  <el-radio :label="5" name="type" style="display: block"
+                    >Transferencia</el-radio
+                  >
+                  <el-radio :label="6" name="type" style="display: block"
+                    >Crédito</el-radio
+                  >
                 </el-radio-group>
               </el-form-item>
               <el-form-item label="IVA:">
@@ -136,11 +190,13 @@
                 </el-row>
                 <el-row class="row-item">
                   <el-col :span="6" :offset="4">Cliente:</el-col>
-                  <el-col :span="4">{{getClientName()}}</el-col>
+                  <el-col :span="4">{{ getClientName() }}</el-col>
                 </el-row>
                 <el-row class="row-item">
                   <el-col :span="6" :offset="4">Teléfono:</el-col>
-                  <el-col :span="4">{{ currentSale.phonenumber || "No especificado" }}</el-col>
+                  <el-col :span="4">{{
+                    currentSale.phonenumber || "No especificado"
+                  }}</el-col>
                 </el-row>
               </el-col>
             </el-row>
@@ -155,7 +211,10 @@
                     <h3>{{ order.year }}</h3>
                   </el-col>
                 </el-row>
-                <el-row v-for="(service, index) in order.services" v-bind:key="index">
+                <el-row
+                  v-for="(service, index) in order.services"
+                  v-bind:key="index"
+                >
                   <el-col :span="22" :offset="2">
                     <h4>{{ service.label }}</h4>
                   </el-col>
@@ -166,7 +225,9 @@
                       class="row-item"
                     >
                       <el-col :span="6" :offset="4">{{ item.name }}</el-col>
-                      <el-col v-if="false" :span="4">{{ hiddenFormatPrice(item.low_price) }}</el-col>
+                      <el-col v-if="false" :span="4">{{
+                        hiddenFormatPrice(item.low_price)
+                      }}</el-col>
                       <el-col :span="4">
                         <el-input
                           v-if="showPrices"
@@ -179,7 +240,9 @@
                     </el-row>
                     <el-row class="row-item" v-if="total != sumServiceTotal()">
                       <el-col :span="6" :offset="4">Otro</el-col>
-                      <el-col :span="4">{{ hiddenFormatPrice(total - sumServiceTotal()) }}</el-col>
+                      <el-col :span="4">{{
+                        hiddenFormatPrice(total - sumServiceTotal())
+                      }}</el-col>
                     </el-row>
                     <br />
                   </el-col>
@@ -197,12 +260,13 @@
               </el-col>
               <el-col :span="4" align="end">${{ formatPrice(total) }}</el-col>
               <el-col>
-                <div style="float: right;">
+                <div style="float: right">
                   <el-button
-                    @click="showPrices=!showPrices"
+                    @click="showPrices = !showPrices"
                     size="mini"
                     type="text"
-                  >{{ textBtnInfo() }}</el-button>
+                    >{{ textBtnInfo() }}</el-button
+                  >
                 </div>
               </el-col>
             </el-row>
@@ -210,7 +274,7 @@
         </el-col>
       </el-row>
       <el-row type="flex" justify="end">
-        <el-col :span="5" style="text-align:right;">
+        <el-col :span="5" style="text-align: right">
           <br />
           <!-- <el-button type="secondary" @click="back()">Regresar</el-button> -->
           <el-button type="primary" @click="save()">Guardar</el-button>
@@ -227,13 +291,12 @@ export default {
   props: ["sale"],
   data() {
     return {
-      me: '',
+      me: "",
       showPrices: true,
       image1Loaded: false,
       image2Loaded: false,
       method: 1,
       workshops: [],
-      service_type: 1,
       tax: 0,
       order: {},
       currentSale: {
@@ -250,6 +313,7 @@ export default {
         color: "",
         next_service: "",
         km: "",
+        currentSale: 1,
       },
       clients: [],
       users: [],
@@ -309,8 +373,7 @@ export default {
   methods: {
     loadUserAndClients(wks) {
       const $this = this;
-      if ($this.currentSale) 
-        $this.currentSale.workshop_id = wks;
+      if ($this.currentSale) $this.currentSale.workshop_id = wks;
 
       axios.get(`/api/clients?all=1&workshop=${wks}`).then(function (response) {
         $this.clients = response.data;
@@ -321,12 +384,14 @@ export default {
         }
       });
 
-      axios.get(`/api/users?all=1&role=Empleado&workshop=${wks}`).then(function (response) {
-        $this.users = response.data;
-        if ($this.currentSale) {
-          $this.currentSale.user = $this.currentSale.user.id;
-        }
-      });
+      axios
+        .get(`/api/users?all=1&role=Empleado&workshop=${wks}`)
+        .then(function (response) {
+          $this.users = response.data;
+          if ($this.currentSale) {
+            $this.currentSale.user = $this.currentSale.user.id;
+          }
+        });
     },
     onChangeClient(value) {
       let res = this.clients.filter((c) => c.id == value);
@@ -351,8 +416,8 @@ export default {
       });
     },
     getFolio(sale) {
-      if (sale.status == 2) return "REC" + this.pad(sale.id, 5);
-      else return "COT" + this.pad(sale.id, 5);
+      if (sale.status == 2) return this.pad(sale.id, 5);
+      else return this.pad(sale.id, 5);
     },
     onCreateNewClient(newClient) {
       if (newClient.id) {
@@ -424,7 +489,6 @@ export default {
     save() {
       var $this = this;
       $this.$refs.myForm.validate((valid) => {
-        console.log(valid);
         if (valid) {
           $this.order.user = $this.currentSale.user;
           if ($this.currentSale.client) {
@@ -441,6 +505,7 @@ export default {
           $this.order.next_service = $this.currentSale.next_service;
           $this.order.km = $this.currentSale.km;
           $this.order.total = $this.total;
+          $this.order.service_type = $this.currentSale.service_type;
 
           axios
             .post("/api/sales", $this.order)

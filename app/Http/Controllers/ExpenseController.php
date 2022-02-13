@@ -66,6 +66,7 @@ class ExpenseController extends Controller
             $c->concept = $request->get('concept');
             $c->amount = $request->get('amount');
             $c->iva = $request->get('iva');
+            $c->bill = $request->get('bill');
             $c->total = $request->get('total');
             $c->save();
         } else {
@@ -76,6 +77,7 @@ class ExpenseController extends Controller
             $c->concept = $request->get('concept');
             $c->amount = $request->get('amount');
             $c->iva = $request->get('iva');
+            $c->bill = $request->get('bill');
             $c->total = $request->get('total');
             $c->save();
         }

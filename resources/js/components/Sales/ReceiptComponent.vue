@@ -199,14 +199,14 @@
                 @change="onPriceChange"
               ></el-input>
             </el-form-item>
+            <el-form-item label="Tipo:">
+              <el-radio-group v-model="service_type">
+                <el-radio :label="1" name="type">A/C</el-radio>
+                <el-radio :label="2" name="type">Mecánico</el-radio>
+                <el-radio :label="3" name="type">Eléctrico</el-radio>
+              </el-radio-group>
+            </el-form-item>
             <div v-if="order.receiptMode">
-              <el-form-item label="Tipo:">
-                <el-radio-group v-model="service_type">
-                  <el-radio :label="1" name="type">A/C</el-radio>
-                  <el-radio :label="2" name="type">Mecánico</el-radio>
-                  <el-radio :label="3" name="type">Eléctrico</el-radio>
-                </el-radio-group>
-              </el-form-item>
               <el-form-item label="MDP:">
                 <el-radio-group v-model="method">
                   <el-radio :label="1" name="type" style="display: block"
@@ -370,7 +370,7 @@
             ref="quotation"
             @load="image1Loaded = true"
             src="/img/receipt.jpg"
-            width="1200px"
+            width="1150px"
           />
         </el-col>
         <el-col :span="8">
@@ -378,7 +378,7 @@
             ref="receipt"
             @load="image2Loaded = true"
             src="/img/receipt2.jpg"
-            width="1200px"
+            width="1150px"
           />
         </el-col>
         <el-col :span="8">
@@ -515,7 +515,25 @@ export default {
           }
         });
     },
-    selectedFormat(format) {
+    selectedFormat(format, name, parts) {
+      let $this = this;
+      if (this.currentSale.parts != parts) {
+        this.currentSale.parts = parts;
+
+        axios
+          .post("/api/sales/updateParts", {
+            id: $this.currentSale.id,
+            parts: parts,
+          })
+          .then(function (response) {
+            $this.print(format);
+          })
+          .catch((error) => {});
+      } else {
+        $this.print(format);
+      }
+    },
+    print(format) {
       // const COTIZACION = 0;
       // const PROCESO = 1;
       // const TERMINADO = 2;
@@ -607,7 +625,7 @@ export default {
       window.location.href = "/sales/create?back=1";
     },
     buildReceipt() {
-      this.$refs.formatDialog.showDialog();
+      this.$refs.formatDialog.showDialog(this.currentSale.parts);
     },
     pad(number, size) {
       var s = String(number);
@@ -645,8 +663,7 @@ export default {
     },
     save() {
       var $this = this;
-      if($this.loading)
-        return;
+      if ($this.loading) return;
 
       $this.loading = true;
       $this.$refs.form.validate((valid) => {

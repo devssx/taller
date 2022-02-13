@@ -260,32 +260,30 @@ export default {
 
             $this.context.fillStyle = "#FFFFFF";
             $this.context.fillRect(0, 0, myCanvas.width, myCanvas.height);
-            $this.context.drawImage(receiptImg, -30, -30, receiptImg.width, receiptImg.height);
+            $this.context.drawImage(receiptImg, -25, -25, receiptImg.width, receiptImg.height);
 
             // Header Direccion del taller
-            $this.context.font = "20px Calibri";
-            $this.context.fillStyle = "black";
-            $this.wrapText($this.context, workshopInfo.address, 275, 80, 580, 22);
-            $this.wrapText($this.context, workshopInfo.address, 275, 80 + 678, 580, 22);
             $this.context.textAlign = "center";
-            $this.context.fillText(workshopInfo.phone, 555, 130);
-            $this.context.fillText(workshopInfo.account, 555, 154);
-            $this.context.fillText(workshopInfo.phone, 555, 130 + 678);
-            $this.context.fillText(workshopInfo.account, 555, 154 + 678);
+            $this.context.font = "bold 20px Calibri";
+            $this.context.fillStyle = "black";
+            $this.context.fillText(workshopInfo.address, 550, 55);
+            $this.context.fillText(workshopInfo.address, 550, 55 + 785);
+            $this.context.font = "20px Calibri";
+            $this.context.fillText(workshopInfo.phone, 550, 75 + 785);
 
-            $this.context.font = "12px Calibri";
-            $this.context.fillText(`Sucursal:`, 320, 172);
-            $this.context.fillText(`Sucursal:`, 850, 172);
-            $this.context.fillText(workshopInfo.sucursal1, 320, 185);
-            $this.context.fillText(workshopInfo.sucursal2, 850, 185);
-            $this.context.fillText(`Sucursal:`, 320, 172 + 678);
-            $this.context.fillText(`Sucursal:`, 850, 172 + 678);
-            $this.context.fillText(workshopInfo.sucursal1, 320, 185 + 678);
-            $this.context.fillText(workshopInfo.sucursal2, 850, 185 + 678);
+            $this.context.font = "16px Calibri";
+            $this.wrapText($this.context, workshopInfo.sucursal1, 250, 132, 500, 16);
+            $this.wrapText($this.context, workshopInfo.sucursal2, 800, 132, 400, 16);
+
+
+            $this.context.textAlign = "left";
+            $this.context.font = "18px Calibri";
+            $this.context.fillStyle = "red";
+            $this.context.fillText($this.pad(currentSale.folio, 5), 1015, 50); // FOLIO
+            $this.context.fillText($this.pad(currentSale.folio, 5), 1000, 50 + 787); // FOLIO
 
             // fecha de recibo
-            $this.context.textAlign = "left";
-            $this.context.font = "24px Calibri";
+            $this.context.fillStyle = "black";
             let doneOn = new Date();
             if (currentSale.done_on) {
                 try {
@@ -295,12 +293,6 @@ export default {
                 }
             }
 
-            // FOLIO
-            $this.context.font = "24px Calibri";
-            $this.context.fillStyle = "red";
-            $this.context.fillText("REC" + $this.pad(currentSale.folio, 5), 920, 105);
-            $this.context.fillText("REC" + $this.pad(currentSale.folio, 5), 920, 105 + 678);
-
             $this.context.fillStyle = "black";
             $this.context.fillText(
                 doneOn.toLocaleDateString("es-ES", {
@@ -310,9 +302,10 @@ export default {
                 })
                     .replace("/", "-")
                     .replace("/", "-"),
-                920,
-                155
+                995,
+                70
             );
+
             $this.context.fillText(
                 doneOn.toLocaleDateString("es-ES", {
                     year: "numeric",
@@ -321,22 +314,10 @@ export default {
                 })
                     .replace("/", "-")
                     .replace("/", "-"),
-                920,
-                155 + 678
+                980,
+                70 + 787
             );
 
-            // Lineas
-            var lineHeight = 19;
-            for (var x = 0; x < 13; x++) {
-                $this.context.strokeStyle = "black";
-                $this.context.beginPath();
-                $this.context.moveTo(40, 352 + x * lineHeight);
-                $this.context.lineTo(1100, 352 + x * lineHeight);
-                $this.context.moveTo(40, 352 + x * lineHeight + 678);
-                $this.context.lineTo(1100, 352 + x * lineHeight + 678);
-                $this.context.lineWidth = 1;
-                $this.context.stroke();
-            }
 
             $this.context.font = "16px Calibri";
             // MDP
@@ -349,50 +330,52 @@ export default {
                     case 5: mdp = `Transferencia`; break;
                     case 6: mdp = `Crédito`; break;
                 }
-
-                $this.context.fillText(mdp, 630, 615);
-                $this.context.fillText(mdp, 630, 615 + 678);
+                $this.context.textAlign = "center";
+                $this.context.fillText(mdp, 720, 570);
+                $this.context.fillText(mdp.replace('Transferencia', 'Transf').replace('Tarjeta de', 'T.'), 800, 570 + 680);
+                $this.context.textAlign = "left";
             }
 
+
+            // cliente
             if (currentSale.client) {
-                $this.context.fillText(currentSale.client.name, 160, 240);
-                $this.context.fillText(currentSale.client.name, 160, 240 + 678);
-                $this.context.fillText(
-                    currentSale.phonenumber
-                        ? currentSale.phonenumber
-                        : currentSale.client.phonenumber,
-                    160,
-                    265
-                );
-                $this.context.fillText(
-                    currentSale.phonenumber
-                        ? currentSale.phonenumber
-                        : currentSale.client.phonenumber,
-                    160,
-                    265 + 678
-                );
+                $this.context.fillText(currentSale.client.name, 100, 197); // Cliente
+                $this.context.fillText(currentSale.client.name, 100, 197 + 698); // Cliente
+                $this.context.fillText(currentSale.phonenumber ? currentSale.phonenumber : currentSale.client.phonenumber, 100, 218);
+                $this.context.fillText(currentSale.phonenumber ? currentSale.phonenumber : currentSale.client.phonenumber, 100, 218 + 695);
+                $this.context.fillText(currentSale.client.id, 440, 219);
+                $this.context.fillText(currentSale.client.id, 500, 219 + 693);
             } else if (currentSale.phonenumber) {
-                $this.context.fillText(currentSale.phonenumber, 160, 265);
-                $this.context.fillText(currentSale.phonenumber, 160, 265 + 678);
+                $this.context.fillText(currentSale.phonenumber, 100, 219 + 695); // tel
             }
 
-            $this.context.fillText(currentSale.user.name, 160, 290);
-            $this.context.fillText(currentSale.user.name, 160, 290 + 678);
+            $this.context.fillText(currentSale.user.name, 100, 240); // tecnico
+            $this.context.fillText(currentSale.user.name, 100, 240 + 690); // tecnico
+            $this.context.fillText(currentSale.maker ? currentSale.maker : currentSale.car[0].maker, 600, 197);
+            $this.context.fillText(currentSale.maker ? currentSale.maker : currentSale.car[0].maker, 680, 197 + 697);
+            $this.context.fillText(currentSale.brand ? currentSale.brand : currentSale.car[0].brand, 600, 219);
+            $this.context.fillText(currentSale.brand ? currentSale.brand : currentSale.car[0].brand, 680, 219 + 693);
+            $this.context.fillText(currentSale.year ? currentSale.year : currentSale.sale_services[0].year, 600, 240);
+            $this.context.fillText(currentSale.year ? currentSale.year : currentSale.sale_services[0].year, 680, 240 + 690);
+            $this.context.fillText(currentSale.color, 925, 197);
+            $this.context.fillText(currentSale.color, 960, 197 + 695);
+            $this.context.fillText(currentSale.km, 925, 219);
+            $this.context.fillText(currentSale.km, 960, 219 + 693);
 
             // Tipo: A/C, Ele. Mec.
-            $this.context.fillText(currentSale.service_type, 470, 290);
-            $this.context.fillText(currentSale.service_type, 470, 290 + 678);
-
-            $this.context.fillText(currentSale.maker, 662, 240);
-            $this.context.fillText(currentSale.maker, 662, 240 + 678);
-            $this.context.fillText(currentSale.brand, 662, 265);
-            $this.context.fillText(currentSale.brand, 662, 265 + 678);
-            $this.context.fillText(currentSale.year, 662, 290);
-            $this.context.fillText(currentSale.year, 662, 290 + 678);
-            $this.context.fillText(currentSale.color, 960, 240);
-            $this.context.fillText(currentSale.color, 960, 240 + 678);
-            $this.context.fillText(currentSale.km, 960, 265);
-            $this.context.fillText(currentSale.km, 960, 265 + 678);
+            // tipo de servicio
+            if (currentSale.service_type == 1) {
+                $this.context.fillText('A/C', 440, 240);
+                $this.context.fillText('A/C', 500, 240 + 690);
+            }
+            else if (currentSale.service_type == 2) {
+                $this.context.fillText('Mecánico', 440, 240);
+                $this.context.fillText('Mecánico', 500, 240 + 690);
+            }
+            else if (currentSale.service_type == 3) {
+                $this.context.fillText('Eléctrico', 440, 240);
+                $this.context.fillText('Eléctrico', 500, 240 + 690);
+            }
 
             var nextService = ``;
             if (currentSale.next_service && currentSale.next_service != `0000-00-00`) {
@@ -410,8 +393,8 @@ export default {
                 }
             }
 
-            $this.context.fillText(nextService, 1010, 290);
-            $this.context.fillText(nextService, 1010, 290 + 678);
+            $this.context.fillText(nextService, 925, 240);
+            $this.context.fillText(nextService, 960, 240 + 690);
 
             // Conceptos
             $this.context.font = "12px Calibri";
@@ -421,58 +404,47 @@ export default {
                 alert("La cantidad de artículos excede el número de renglones");
             }
 
-            var y = 0;
+            var y = 0.0;
             currentSale.total = parseFloat(currentSale.total);
 
-            // Cantidad
-            $this.context.fillText("1", 100, 347);
-            $this.context.fillText("1", 100, 347 + 678);
 
-            // Concepto
+            // Cantidad
+            $this.context.fillText("1", 85, 285);
+            $this.context.fillText("1", 85, 285 + 684);
+
+            // Descripcion
             if (format == 0) {
                 if (currentSale.concept) {
-                    var concept = currentSale.concept.match(/.{1,90}/g);
-                    for (var x = 0; x < concept.length; x++) {
-                        // formato: 1. Nombre = 1500
-                        // var patt = new RegExp("^\\d+\\..+=\\D+\\d+");
-                        // if (patt.test(concept[x])) {
-                        // } else {                     
-                        // }
-
-                        $this.context.fillText(concept[x].toUpperCase(), 160, 347 + y * 19);
-                        $this.context.fillText(concept[x].toUpperCase(), 160, 347 + 678 + y * 19);
-                        y++;
-                    }
-                } else { 
+                    $this.wrapText($this.context, currentSale.concept.toUpperCase(), 170, 285, 750, 19.2);
+                    $this.wrapText($this.context, currentSale.concept.toUpperCase(), 170, 285 + 684, 750, 19.2);
+                } else {
                     alert("No hay información en el campo concepto, favor de editarlo si se va a imprimir en este formato");
                 }
             }
 
-            // Importe Total (Cuando no se detalla el listado de items)
             if (format == 0 || format == 1) {
+                // Importe
                 $this.context.textAlign = "end";
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1090, 347);
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1090, 347 + 678);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 285);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1060, 285 + 684);
                 $this.context.textAlign = "start";
             }
 
-            // Descripcion de items
+            // Descripcion
             if (format > 0) {
                 for (var x = 0; x < currentSale.sale_services.length; x++) {
                     var desc = currentSale.sale_services[x];
                     // Cantidad
-                    $this.context.fillText("1", 100, 347 + y * 19);
-                    $this.context.fillText("1", 100, 347 + 678 + y * 19);
-
+                    $this.context.fillText("1", 85, 285 + y * 19.2);
+                    $this.context.fillText("1", 85, 285 + 684 + y * 19.2);
                     // Item Name
-                    $this.context.fillText(desc.item.name.toUpperCase(), 160, 347 + y * 19);
-                    $this.context.fillText(desc.item.name.toUpperCase(), 160, 347 + 678 + y * 19);
-
+                    $this.context.fillText(desc.item.name.toUpperCase(), 170, 285 + y * 19.2);
+                    $this.context.fillText(desc.item.name.toUpperCase(), 170, 285 + 684 + y * 19.2);
                     // Importe
                     if (format == 2) {
                         $this.context.textAlign = "end";
-                        $this.context.fillText("$" + $this.formatPrice(desc.price), 1090, 347 + y * 19);
-                        $this.context.fillText("$" + $this.formatPrice(desc.price), 1090, 347 + 678 + y * 19);
+                        $this.context.fillText("$" + $this.formatPrice(desc.price), 1080, 285 + y * 19.2);
+                        $this.context.fillText("$" + $this.formatPrice(desc.price), 1060, 285 + 684 + y * 19.2);
                         $this.context.textAlign = "start";
                     }
                     y++;
@@ -480,38 +452,69 @@ export default {
             }
 
             // Detalles
-            if (currentSale.details && y <= 6) {
-                y = 12;
-                $this.wrapText($this.context, `Observación: ${currentSale.details}`, 160, 347 + y * 19, 780, 19);
-                $this.wrapText($this.context, `Observación: ${currentSale.details}`, 160, 347 + y * 19 + 678, 780, 19);
+            if (currentSale.details && y <= 11) {
+                y = 11;
+                $this.wrapText($this.context, `Observación: ${currentSale.details}`.toUpperCase(), 170, 285 + y * 19.2, 750, 19.2);
+                $this.wrapText($this.context, `Observación: ${currentSale.details}`.toUpperCase(), 170, 285 + 684 + y * 19.2, 750, 19.2);
             }
 
+            // Subtotal
             $this.context.textAlign = "end";
-            $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1090, 615);
-            $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1090, 615 + 678);
+            $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 557);
+            $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1060, 557 + 682);
+
+            // IVA
             if (currentSale.tax == 1) {
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total * 0.08), 1090, 640);
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total * 0.08), 1090, 640 + 678);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total * 0.08), 1080, 580);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total * 0.08), 1060, 580 + 678);
             } else {
-                $this.context.fillText("$0.00", 1090, 640);
-                $this.context.fillText("$0.00", 1090, 640 + 678);
+                $this.context.fillText("$0.00", 1080, 580);
+                $this.context.fillText("$0.00", 1060, 580 + 678);
             }
 
+            // Total
             if (currentSale.tax == 1) {
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total + currentSale.total * 0.08), 1090, 668);
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total + currentSale.total * 0.08), 1090, 668 + 678);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total + currentSale.total * 0.08), 1080, 605);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total + currentSale.total * 0.08), 1060, 600 + 682);
             } else {
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1090, 668);
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1090, 668 + 678);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 605);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1060, 600 + 682);
             }
 
             // Garantia (Max 165 chars)
             if (currentSale.guaranty) {
                 $this.context.textAlign = "start";
                 $this.context.font = "12px Calibri";
-                $this.wrapText($this.context, currentSale.guaranty, 157, 612, 310, 12);
-                $this.wrapText($this.context, currentSale.guaranty, 157, 612 + 678, 310, 12);
+                $this.wrapText($this.context, currentSale.guaranty, 170, 555, 330, 12);
+                $this.wrapText($this.context, currentSale.guaranty, 170, 555 + 684, 330, 12);
             }
+
+            // observaciones
+            if (currentSale.comments) {
+                $this.context.font = "12px Calibri";
+                $this.wrapText($this.context, currentSale.comments, 170, 630, 330, 12);
+                $this.wrapText($this.context, currentSale.comments, 170, 630 + 673, 330, 12);
+            }
+
+            //PIEZAS
+            let parts = currentSale.parts;
+            //$this.context.fillStyle = "red";
+            $this.context.font = "30px Calibri";
+            $this.drawCheck($this.context, 40, 687, parts.includes('A'));
+            $this.drawCheck($this.context, 98, 687, parts.includes('B'));
+            $this.drawCheck($this.context, 160, 687, parts.includes('C'));
+            $this.drawCheck($this.context, 225, 687, parts.includes('D'));
+            $this.drawCheck($this.context, 300, 687, parts.includes('E'));
+            $this.drawCheck($this.context, 360, 687, parts.includes('F'));
+            $this.drawCheck($this.context, 418, 687, parts.includes('G'));
+            $this.drawCheck($this.context, 490, 687, parts.includes('H'));
+            $this.drawCheck($this.context, 565, 687, parts.includes('I'));
+            $this.drawCheck($this.context, 625, 687, parts.includes('J'));
+            $this.drawCheck($this.context, 730, 687, parts.includes('K'));
+            $this.drawCheck($this.context, 820, 687, parts.includes('L'));
+            $this.drawCheck($this.context, 902, 687, parts.includes('M'));
+            $this.drawCheck($this.context, 980, 687, parts.includes('N'));
+            $this.drawCheck($this.context, 1050, 687, parts.includes('O'));
 
             var img = document.createElement("img");
             img.src = myCanvas.toDataURL("image/jpeg");
@@ -536,26 +539,24 @@ export default {
 
             $this.context.fillStyle = "#FFFFFF";
             $this.context.fillRect(0, 0, myCanvas.width, myCanvas.height);
-            $this.context.drawImage(quotationImg, -30, -30, quotationImg.width, quotationImg.height);
+            $this.context.drawImage(quotationImg, -25, -25, quotationImg.width, quotationImg.height);
 
             // Header Direccion del taller
-            $this.context.font = "20px Calibri";
-            $this.context.fillStyle = "black";
-            $this.wrapText($this.context, workshopInfo.address, 225, 140, 650, 22);
             $this.context.textAlign = "center";
-            $this.context.fillText(workshopInfo.account, 550, 190);
-            $this.context.fillText(workshopInfo.phone, 550, 214);
+            $this.context.font = "bold 20px Calibri";
+            $this.context.fillStyle = "black";
+            $this.context.fillText(workshopInfo.address, 550, 55);
+            $this.context.font = "20px Calibri";
+            $this.context.fillText(workshopInfo.phone, 550, 75);
 
-            $this.context.font = "12px Calibri";
-            $this.context.fillText(`Sucursal:`, 320, 232);
-            $this.context.fillText(`Sucursal:`, 850, 232);
-            $this.context.fillText(workshopInfo.sucursal1, 320, 245);
-            $this.context.fillText(workshopInfo.sucursal2, 850, 245);
+            $this.context.font = "16px Calibri";
+            $this.wrapText($this.context, workshopInfo.sucursal1, 250, 132, 500, 16);
+            $this.wrapText($this.context, workshopInfo.sucursal2, 800, 132, 400, 16);
 
             $this.context.textAlign = "left";
-            $this.context.font = "24px Calibri";
+            $this.context.font = "18px Calibri";
             $this.context.fillStyle = "red";
-            $this.context.fillText("COT" + $this.pad(currentSale.folio, 5), 935, 132); // FOLIO
+            $this.context.fillText($this.pad(currentSale.folio, 5), 1020, 50); // FOLIO
 
             $this.context.fillStyle = "black";
             $this.context.fillText(
@@ -567,30 +568,38 @@ export default {
                     })
                     .replace("/", "-")
                     .replace("/", "-"),
-                930,
-                190
+                1000,
+                70
             );
 
-            $this.context.fillStyle = "black";
             $this.context.font = "16px Calibri";
 
             // cliente
             if (currentSale.client) {
-                $this.context.fillText(currentSale.client.name, 160, 305); // Cliente
-                $this.context.fillText(currentSale.phonenumber ? currentSale.phonenumber : currentSale.client.phonenumber, 160, 330);
+                $this.context.fillText(currentSale.client.name, 100, 197); // Cliente
+                $this.context.fillText(currentSale.phonenumber ? currentSale.phonenumber : currentSale.client.phonenumber, 100, 218);
+                $this.context.fillText(currentSale.client.id, 380, 219);
             } else if (currentSale.phonenumber) {
-                $this.context.fillText(currentSale.phonenumber, 160, 330); // tel
+                $this.context.fillText(currentSale.phonenumber, 100, 219); // tel
             }
 
-            $this.context.fillText(currentSale.user.name, 160, 355); // tecnico
-            $this.context.fillText(currentSale.maker ? currentSale.maker : currentSale.car[0].maker, 640, 305);
-            $this.context.fillText(currentSale.brand ? currentSale.brand : currentSale.car[0].brand, 640, 330);
-            $this.context.fillText(currentSale.year ? currentSale.year : currentSale.sale_services[0].year, 640, 355);
-            $this.context.fillText(currentSale.color, 960, 305);
-            $this.context.fillText(currentSale.km, 960, 330);
+            // tipo de servicio
+            if (currentSale.service_type == 1)
+                $this.context.fillText('A/C', 380, 240);
+            else if (currentSale.service_type == 2)
+                $this.context.fillText('Mecánico', 380, 240);
+            else if (currentSale.service_type == 3)
+                $this.context.fillText('Eléctrico', 380, 240);
+
+            $this.context.fillText(currentSale.user.name, 100, 240); // tecnico
+            $this.context.fillText(currentSale.maker ? currentSale.maker : currentSale.car[0].maker, 600, 197);
+            $this.context.fillText(currentSale.brand ? currentSale.brand : currentSale.car[0].brand, 600, 219);
+            $this.context.fillText(currentSale.year ? currentSale.year : currentSale.sale_services[0].year, 600, 240);
+            $this.context.fillText(currentSale.color, 925, 197);
+            $this.context.fillText(currentSale.km, 925, 219);
 
             var nextService = ``;
-            if (currentSale.next_service) {
+            if (currentSale.next_service && currentSale.next_service != `0000-00-00`) {
                 try {
                     nextService = new Date(currentSale.next_service)
                         .toLocaleDateString("es-ES", {
@@ -604,26 +613,22 @@ export default {
                     console.error(`No se puedo convertir la fecha de proximo servicio ${currentSale.next_service}`);
                 }
             }
-            $this.context.fillText(nextService, 980, 355);
-            var y = 0;
+            $this.context.fillText(nextService, 925, 242);
+            var y = 0.0;
             currentSale.total = parseFloat(currentSale.total);
 
             // Cantidad
-            $this.context.fillText("1", 90, 420);
+            $this.context.fillText("1", 95, 295);
 
             // Descripcion
             if (format == 0 && currentSale.concept) {
-                var concept = currentSale.concept.match(/.{1,75}/g);
-                for (var x = 0; x < concept.length; x++) {
-                    $this.context.fillText(concept[x].toUpperCase(), 160, 420 + y * 31);
-                    y++;
-                }
+                $this.wrapText($this.context, currentSale.concept.toUpperCase(), 200, 295, 730, 28.4);
             }
 
             if (format == 0 || format == 1) {
                 // Importe
                 $this.context.textAlign = "end";
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, 420);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1090, 295);
                 $this.context.textAlign = "start";
             }
 
@@ -632,13 +637,13 @@ export default {
                 for (var x = 0; x < currentSale.sale_services.length; x++) {
                     var desc = currentSale.sale_services[x];
                     // Cantidad
-                    $this.context.fillText("1", 90, 420 + y * 31);
+                    $this.context.fillText("1", 95, 295 + y * 28.4);
                     // Item Name
-                    $this.context.fillText(desc.item.name.toUpperCase(), 160, 420 + y * 31);
+                    $this.context.fillText(desc.item.name.toUpperCase(), 200, 295 + y * 28.4);
                     // Importe
                     if (format == 2) {
                         $this.context.textAlign = "end";
-                        $this.context.fillText("$" + $this.formatPrice(desc.price), 1080, 420 + y * 31);
+                        $this.context.fillText("$" + $this.formatPrice(desc.price), 1090, 295 + y * 28.4);
                         $this.context.textAlign = "start";
                     }
                     y++;
@@ -646,68 +651,70 @@ export default {
             }
 
             // Detalles
-            if (currentSale.details && y <= 17) {
-                y = 17;
-                $this.wrapText($this.context, `Observación: ${currentSale.details}`, 160, 420 + y * 31, 780, 31);
+            if (currentSale.details && y <= 11) {
+                y = 11;
+                $this.wrapText($this.context, `Observación: ${currentSale.details}`.toUpperCase(), 200, 295 + y * 28.4, 730, 28.4);
             }
 
-            // Lineas
-            for (var x = 0; x < 19; x++) {
-                $this.context.strokeStyle = "black";
-                $this.context.beginPath();
-                $this.context.moveTo(40, 430 + x * 31);
-                $this.context.lineTo(1100, 430 + x * 31);
-                $this.context.lineWidth = 1;
-                $this.context.stroke();
-            }
-
-            var y = 1040;
-            var h = 26;
             // Subtotal
             $this.context.textAlign = "end";
-            $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, y);
-            y += h;
+            $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1090, 693);
 
             // IVA
             if (currentSale.tax == 1) {
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total * 0.08), 1080, y);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total * 0.08), 1090, 722);
             } else {
-                $this.context.fillText("$0.00", 1080, y);
+                $this.context.fillText("$0.00", 1090, 722);
             }
-            y += h;
 
             // Total
             if (currentSale.tax == 1) {
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total + currentSale.total * 0.08), 1080, y);
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total + currentSale.total * 0.08), 1090, 757);
             } else {
-                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1080, y);
-            }
-            y += h;
-
-            // metodo de pago
-            $this.context.textAlign = "start";
-            if (currentSale.method && currentSale.method != 0) {
-                $this.context.fillText(currentSale.method, 620, 1040);
-            }
-
-            // validado por...
-            if (currentSale.validator) {
-                $this.context.fillText(currentSale.validator, 255, 1115);
-            }
-
-            // observaciones (56 char por linea)
-            if (currentSale.comments) {
-                var comment = currentSale.comments.match(/.{1,56}/g);
-                for (var i = 0; i < comment.length; i++) {
-                    $this.context.fillText(comment[i].toUpperCase().trim(), 645, 1115 + i * 18);
-                }
+                $this.context.fillText("$" + $this.formatPrice(currentSale.total), 1090, 757);
             }
 
             // Garantia
+            $this.context.textAlign = "start";
             if (currentSale.guaranty) {
                 $this.context.font = "12px Calibri";
-                $this.wrapText($this.context, currentSale.guaranty, 157, 1035, 285, 12);
+                $this.wrapText($this.context, currentSale.guaranty, 280, 685, 520, 12);
             }
+
+            // observaciones
+            if (currentSale.comments) {
+                $this.context.font = "12px Calibri";
+                $this.wrapText($this.context, currentSale.comments, 280, 743, 520, 12);
+            }
+
+            // cuenta transferencia
+            $this.context.font = "16px Calibri";
+            $this.context.fillText(workshopInfo.account, 285, 790);
+
+            // validado por...
+            if (currentSale.validator) {
+                $this.context.fillText(currentSale.validator, 285, 850);
+            }
+
+            //PIEZAS
+            //$this.context.fillStyle = "red";
+            $this.context.font = "30px Calibri";
+            $this.drawCheck($this.context, 40, 882, currentSale.parts.includes('A'));
+            $this.drawCheck($this.context, 98, 882, currentSale.parts.includes('B'));
+            $this.drawCheck($this.context, 160, 882, currentSale.parts.includes('C'));
+            $this.drawCheck($this.context, 225, 882, currentSale.parts.includes('D'));
+            $this.drawCheck($this.context, 300, 882, currentSale.parts.includes('E'));
+            $this.drawCheck($this.context, 360, 882, currentSale.parts.includes('F'));
+            $this.drawCheck($this.context, 418, 882, currentSale.parts.includes('G'));
+            $this.drawCheck($this.context, 490, 882, currentSale.parts.includes('H'));
+            $this.drawCheck($this.context, 565, 882, currentSale.parts.includes('I'));
+            $this.drawCheck($this.context, 625, 882, currentSale.parts.includes('J'));
+            $this.drawCheck($this.context, 730, 882, currentSale.parts.includes('K'));
+            $this.drawCheck($this.context, 820, 882, currentSale.parts.includes('L'));
+            $this.drawCheck($this.context, 902, 882, currentSale.parts.includes('M'));
+            $this.drawCheck($this.context, 980, 882, currentSale.parts.includes('N'));
+            $this.drawCheck($this.context, 1050, 882, currentSale.parts.includes('O'));
+
 
             var img = document.createElement("img");
             img.src = myCanvas.toDataURL("image/jpeg");
@@ -715,6 +722,14 @@ export default {
             img.height = myCanvas.height;
 
             new Printd().print(img);
+        },
+        drawCheck(context, x, y, checked) {
+            if (checked)
+                context.fillText('x', x, y);
+
+            context.beginPath();
+            context.rect(x - 1, y - 15, 16, 16);
+            context.stroke();
         },
         wrapText(context, text, x, y, maxWidth, lineHeight) {
             var lines = text.split("\n");

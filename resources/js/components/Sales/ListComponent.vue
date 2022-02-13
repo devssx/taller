@@ -100,7 +100,7 @@
       <confirm-sales></confirm-sales>
       <el-row type="flex" justify="end" style="opacity: 0;overflow: hidden;height: 50px;">
         <el-col :span="12">
-          <img ref="receipt" src="/img/receipt.jpg" width="1200px" />
+          <img ref="receipt" src="/img/receipt.jpg" width="1150px" />
         </el-col>
         <el-col :span="12">
           <canvas ref="my-canvas"></canvas>

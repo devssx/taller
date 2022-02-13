@@ -17,7 +17,8 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
 
-Route::get('/export/testx', 'ExportToExcelController@index');
+// excels
+Route::get('/export/expenses', 'ExportToExcelController@expenses');
 
 Route::get('/car/search', 'CarsController@searchCar');
 Route::get('/car/brands', 'CarsController@listBrands');
@@ -39,6 +40,7 @@ Route::get('/sales/search', 'SalesController@searchReceiptByClient');
 Route::get('/sales/searchById', 'SalesController@searchReceiptById');
 Route::post('/sales', 'SalesController@save');
 Route::post('/sales/status', 'SalesController@changeStatus');
+Route::post('/sales/updateParts', 'SalesController@updateParts');
 Route::post('/sales/editIncome', 'SalesController@editIncome');
 
 

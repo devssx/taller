@@ -296,6 +296,18 @@ class SalesController extends Controller
         ]);
     }
 
+    public function updateParts(Request $request)
+    {
+        if ($request->has('id') && $request->has('parts')) {
+            $sale = Sale::find($request->get('id'));
+            $sale->parts = $request->get('parts');
+            $sale->save();
+
+            return response()->json(["success" => true]);
+        }
+
+        return response()->json(["success" => false]);
+    }
 
     public function changeStatus(Request $request)
     {

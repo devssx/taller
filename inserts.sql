@@ -95,3 +95,6 @@ ALTER TABLE `clients` ADD CONSTRAINT `clients_workshop_id_foreign` FOREIGN KEY (
 -- Mejoras:
 ALTER TABLE `sales` ADD `folio` INT NOT NULL DEFAULT '0' AFTER `id`;
 ALTER TABLE `work_shops` ADD `consec` INT NOT NULL DEFAULT '1' AFTER `id`;
+
+ALTER TABLE `expenses` ADD `bill` VARCHAR(255) NULL AFTER `total`;
+ALTER TABLE `sales` ADD `parts` VARCHAR(32) NOT NULL AFTER `tax`;

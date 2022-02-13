@@ -5,7 +5,7 @@
     <br />
     <el-row class="br bl bt bb row-header">
       <el-col :span="2">
-        <h1 style="margin-top: 8px; padding-left:4px;">Semana</h1>
+        <h1 style="margin-top: 8px; padding-left: 4px">Semana</h1>
       </el-col>
       <el-col :span="18">
         <el-date-picker
@@ -15,8 +15,18 @@
           format="Week WW"
           placeholder="Seleccionar Semana"
         ></el-date-picker>
-        <el-select width="150" v-model="workshopId" placeholder="Taller" v-if="multiWorkshop">
-          <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id"></el-option>
+        <el-select
+          width="150"
+          v-model="workshopId"
+          placeholder="Taller"
+          v-if="multiWorkshop"
+        >
+          <el-option
+            v-for="w in workshops"
+            :key="w.id"
+            :label="w.name"
+            :value="w.id"
+          ></el-option>
         </el-select>
         <el-button
           type="primary"
@@ -31,12 +41,21 @@
     <!-- TABLA -->
     <el-row class="br bl">
       <el-col :span="24">
-        <el-table v-loading="loading" size="mini" :data="sales.data" style="width: 100%">
+        <el-table
+          v-loading="loading"
+          size="mini"
+          :data="sales.data"
+          style="width: 100%"
+        >
           <el-table-column label="Día" header-align="center" align="center">
-            <template slot-scope="scope">{{ dayOfWeek(new Date(scope.row.created_at)) }}</template>
+            <template slot-scope="scope">{{
+              dayOfWeek(new Date(scope.row.created_at))
+            }}</template>
           </el-table-column>
           <el-table-column label="Entrada" header-align="center" align="center">
-            <template slot-scope="scope">{{ fixDate(scope.row.created_at) }}</template>
+            <template slot-scope="scope">{{
+              fixDate(scope.row.created_at)
+            }}</template>
           </el-table-column>
           <el-table-column label="Marca">
             <template slot-scope="scope">{{ scope.row.maker }}</template>
@@ -44,7 +63,12 @@
           <el-table-column label="Modelo">
             <template slot-scope="scope">{{ scope.row.brand }}</template>
           </el-table-column>
-          <el-table-column label="Año" width="50" header-align="center" align="center">
+          <el-table-column
+            label="Año"
+            width="50"
+            header-align="center"
+            align="center"
+          >
             <template slot-scope="scope">{{ scope.row.year }}</template>
           </el-table-column>
           <el-table-column label="Color" header-align="center" align="center">
@@ -54,19 +78,27 @@
             <template slot-scope="scope">{{ scope.row.client.name }}</template>
           </el-table-column>
           <el-table-column label="Teléfono">
-            <template slot-scope="scope">{{ getPhoneNumber(scope.row) }}</template>
+            <template slot-scope="scope">{{
+              getPhoneNumber(scope.row)
+            }}</template>
           </el-table-column>
           <el-table-column label="Técnico">
             <template slot-scope="scope">{{ scope.row.user.name }}</template>
           </el-table-column>
           <el-table-column label="Diagnóstico" width="150">
-            <template slot-scope="scope">{{ fixText(scope.row.concept, 16) }}</template>
+            <template slot-scope="scope">{{
+              fixText(scope.row.concept, 16)
+            }}</template>
           </el-table-column>
           <el-table-column label="Precio" header-align="right" align="right">
             <template slot-scope="scope">{{ scope.row.total }}</template>
           </el-table-column>
-          <el-table-column label="Autorizó" header-align="center" align="center">
-            <template slot-scope="scope">{{autorizo(scope.row)}}</template>
+          <el-table-column
+            label="Autorizó"
+            header-align="center"
+            align="center"
+          >
+            <template slot-scope="scope">{{ autorizo(scope.row) }}</template>
           </el-table-column>
           <el-table-column label="Recibo" header-align="center" align="center">
             <template slot-scope="scope">
@@ -76,10 +108,17 @@
                 type="text"
                 :disabled="!image1Loaded || !image2Loaded"
                 @click="showReceipt(scope.row)"
-              >{{scope.row.status==2?`Recibo`: `Cotización`}}</el-button>
+                >{{
+                  scope.row.status == 2 ? `Recibo` : `Cotización`
+                }}</el-button
+              >
             </template>
           </el-table-column>
-          <el-table-column label="Opciones" header-align="center" align="center">
+          <el-table-column
+            label="Opciones"
+            header-align="center"
+            align="center"
+          >
             <template slot-scope="scope">
               <el-button
                 size="small"
@@ -87,14 +126,16 @@
                 type="text"
                 v-if="scope.row.status == 2"
                 @click="editItem(scope.row)"
-              >Editar</el-button>
+                >Editar</el-button
+              >
               <el-button
                 size="small"
                 icon="el-icon-check"
                 type="text"
                 v-if="scope.row.status == 0"
                 @click="convertToReceipt(scope.row)"
-              >Autorizar</el-button>
+                >Autorizar</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -103,29 +144,43 @@
 
     <!-- TOTALES -->
     <el-row class="br bl bb row-header">
-      <el-col :span="4" style="margin-top: 7px;">
+      <el-col :span="4" style="margin-top: 7px">
         <h4>Total Autorizados</h4>
       </el-col>
       <el-col :span="20" class="row-headerb" align="end">
-        <h4>${{formatPrice(autorizados())}}</h4>
+        <h4>${{ formatPrice(autorizados()) }}</h4>
       </el-col>
     </el-row>
     <el-row class="br bl bb row-header">
-      <el-col :span="4" style="margin-top: 7px;">
+      <el-col :span="4" style="margin-top: 7px">
         <h4>Total No Autorizados</h4>
       </el-col>
       <el-col :span="20" class="row-headerb" align="end">
-        <h4>${{formatPrice(noAutorizados())}}</h4>
+        <h4>${{ formatPrice(noAutorizados()) }}</h4>
       </el-col>
     </el-row>
 
     <!-- Imagenes Recibos -->
-    <el-row type="flex" justify="end" style="opacity: 0;overflow: hidden;height: 50px;">
+    <el-row
+      type="flex"
+      justify="end"
+      style="opacity: 0; overflow: hidden; height: 50px"
+    >
       <el-col :span="8">
-        <img ref="quotation" @load="image1Loaded=true" src="/img/receipt.jpg" width="1200px" />
+        <img
+          ref="quotation"
+          @load="image1Loaded = true"
+          src="/img/receipt.jpg"
+          width="1150px"
+        />
       </el-col>
       <el-col :span="8">
-        <img ref="receipt" @load="image2Loaded=true" src="/img/receipt2.jpg" width="1200px" />
+        <img
+          ref="receipt"
+          @load="image2Loaded = true"
+          src="/img/receipt2.jpg"
+          width="1150px"
+        />
       </el-col>
       <el-col :span="8">
         <canvas ref="my-canvas"></canvas>
@@ -147,29 +202,56 @@ export default {
     }
   },
   methods: {
-    getPhoneNumber(row){
-      if(row.phonenumber)
-         return row.phonenumber;
-      
+    getPhoneNumber(row) {
+      if (row.phonenumber) return row.phonenumber;
+
       return row.client.phonenumber;
     },
-    selectedFormat(format, name) {
-      if(name != 'weekly')
-        return;
+    selectedFormat(format, name, parts) {
+      let $this = this;
+      if (name != "weekly") return;
+
+      if (this.currentSale.parts != parts) {
+        this.currentSale.parts = parts;
+
+        axios
+          .post("/api/sales/updateParts", {
+            id: $this.currentSale.id,
+            parts: parts,
+          })
+          .then(function (response) {
+            $this.print(format);
+          })
+          .catch((error) => {});
+      } else {
+        $this.print(format);
+      }
+    },
+    print(format) {
       // const COTIZACION = 0;
       // const PROCESO = 1;
       // const TERMINADO = 2;
-      // const CANCELADO = 3;  
+      // const CANCELADO = 3;
       var canvas = this.$refs["my-canvas"];
       if (this.currentSale.status == 2) {
-        this.createReceipt(this.currentSale, this.$refs["receipt"], canvas, format);
+        this.createReceipt(
+          this.currentSale,
+          this.$refs["receipt"],
+          canvas,
+          format
+        );
       } else {
-        this.createQuotation(this.currentSale, this.$refs["quotation"], canvas, format);
+        this.createQuotation(
+          this.currentSale,
+          this.$refs["quotation"],
+          canvas,
+          format
+        );
       }
     },
     showReceipt(item) {
       this.currentSale = item;
-      this.$refs.formatDialogWeekly.showDialog();
+      this.$refs.formatDialogWeekly.showDialog(this.currentSale.parts);
     },
     convertToReceipt(item) {
       // convierte cotizacion a recibo

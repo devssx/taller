@@ -150,6 +150,7 @@
           <el-col :span="24">
             <el-table size="mini" border :data="tableData2" style="width: 100%" v-loading="loading">
               <el-table-column label="Concepto" prop="concept"></el-table-column>
+              <el-table-column label="Factura" prop="bill"></el-table-column>
               <el-table-column align="right" label="Importe" prop="amount"></el-table-column>
               <el-table-column align="right" label="Iva" prop="iva"></el-table-column>
               <el-table-column align="right" label="Total" width="200" prop="total"></el-table-column>
@@ -171,6 +172,7 @@
           <el-col :span="24">
             <el-table size="mini" border :data="tableData3" style="width: 100%" v-loading="loading">
               <el-table-column label="Concepto" prop="concept"></el-table-column>
+              <el-table-column label="Factura" prop="bill"></el-table-column>
               <el-table-column align="right" label="Importe" prop="amount"></el-table-column>
               <el-table-column align="right" label="Iva" prop="iva"></el-table-column>
               <el-table-column align="right" label="Total" width="200" prop="total"></el-table-column>

@@ -6,9 +6,10 @@
       @click="dialogVisible = true"
       size="small"
       type="text"
-    >Editar</el-button>
+      >Editar</el-button
+    >
     <el-dialog
-      style="text-align:left"
+      style="text-align: left"
       title="Editar Información"
       :visible.sync="dialogVisible"
       width="30%"
@@ -24,7 +25,11 @@
             ref="currentForm"
           >
             <el-form-item label="Tipo" prop="type">
-              <el-select v-model="selectedItem.type" filterable style="width:100%">
+              <el-select
+                v-model="selectedItem.type"
+                filterable
+                style="width: 100%"
+              >
                 <el-option
                   v-for="opt in options"
                   :key="opt.value"
@@ -37,16 +42,23 @@
               <el-input v-model="selectedItem.concept"></el-input>
             </el-form-item>
             <el-form-item
+              label="Factura"
+              prop="bill"
+              v-show="selectedItem.type == 2 || selectedItem.type == 3"
+            >
+              <el-input v-model="selectedItem.bill"></el-input>
+            </el-form-item>
+            <el-form-item
               label="Importe"
               prop="amount"
-              v-show="selectedItem.type==2||selectedItem.type==3"
+              v-show="selectedItem.type == 2 || selectedItem.type == 3"
             >
               <el-input v-model="selectedItem.amount"></el-input>
             </el-form-item>
             <el-form-item
               label="Iva"
               prop="iva"
-              v-show="selectedItem.type==2||selectedItem.type==3"
+              v-show="selectedItem.type == 2 || selectedItem.type == 3"
             >
               <el-input v-model="selectedItem.iva"></el-input>
             </el-form-item>
@@ -58,7 +70,9 @@
       </el-row>
       <span slot="footer" class="dialog-footer">
         <el-button @click="cancel()">Cancelar</el-button>
-        <el-button type="primary" @click="save()" :loading="loading">Guardar</el-button>
+        <el-button type="primary" @click="save()" :loading="loading"
+          >Guardar</el-button
+        >
       </span>
     </el-dialog>
   </span>
@@ -175,7 +189,10 @@ export default {
       }
 
       let balance = $this.funds - $this.expense;
-      if ($this.selectedItem.amount > balance || $this.selectedItem.total > balance) {
+      if (
+        $this.selectedItem.amount > balance ||
+        $this.selectedItem.total > balance
+      ) {
         this.$alert("Importe supera los fondos.", "Importe no válido", {
           confirmButtonText: "OK",
           type: "warning",
