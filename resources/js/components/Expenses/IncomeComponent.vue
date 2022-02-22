@@ -3,7 +3,7 @@
     <br />
     <el-row class="br bl bt bb row-header">
       <el-col :span="2">
-        <h1 style="margin-top: 8px;">Semana</h1>
+        <h1 style="margin-top: 8px">Semana</h1>
       </el-col>
       <el-col :span="18">
         <el-date-picker
@@ -13,8 +13,20 @@
           format="Week WW"
           placeholder="Seleccionar Semana"
         ></el-date-picker>
-        <el-select width="150" v-model="workshopId" placeholder="Taller" v-if="multiWorkshop">
-          <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
+        <el-select
+          width="150"
+          v-model="workshopId"
+          placeholder="Taller"
+          v-if="multiWorkshop"
+        >
+          <el-option
+            v-for="w in workshops"
+            :key="w.id"
+            :label="w.name"
+            :value="w.id"
+          >
+            {{ w.name }}
+          </el-option>
         </el-select>
         <el-button
           type="primary"
@@ -33,65 +45,84 @@
       <el-col :span="3">
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
-            <h1 style="color:#909399">Ingresos sin Iva</h1>
+            <h1 style="color: #909399">Ingresos sin Iva</h1>
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col
-            :span="24"
-            align="end"
-            style="padding-right: 5px;"
-          >${{ formatPrice(ingresosSinIva) }}</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px">
+            ${{ formatPrice(ingresosSinIva) }}
+          </el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
-            <h1 style="color:#909399">Ingresos con Iva</h1>
+            <h1 style="color: #909399">Ingresos con Iva</h1>
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col
-            :span="24"
-            align="end"
-            style="padding-right: 5px;"
-          >${{ formatPrice(ingresosConIva) }}</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px">
+            ${{ formatPrice(ingresosConIva) }}
+          </el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
-            <h1 style="color:#909399">Iva de Ingresos</h1>
+            <h1 style="color: #909399">Iva de Ingresos</h1>
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col
-            :span="24"
-            align="end"
-            style="padding-right: 5px;"
-          >${{ formatPrice(totalIvaIngresos) }}</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px">
+            ${{ formatPrice(totalIvaIngresos) }}
+          </el-col>
         </el-row>
         <br />
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
-            <h1 style="color:#909399">Créditos</h1>
+            <h1 style="color: #909399">Créditos</h1>
           </el-col>
         </el-row>
         <el-row class="br bb bl">
-          <el-col :span="24" align="end" style="padding-right: 5px;">${{ formatPrice(totalCreIva) }}</el-col>
+          <el-col :span="24" align="end" style="padding-right: 5px">
+            ${{ formatPrice(totalCreIva) }}
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24" align="end" style="padding-right: 5px">
+            <el-button
+              type="text"
+              icon="el-icon-download"
+              @click="exportExcel"
+              :disabled="!taller"
+            >
+              Descargar Excel
+            </el-button>
+          </el-col>
         </el-row>
       </el-col>
       <!-- EFECTIVO -->
       <el-col :span="6" :offset="1">
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
-            <h1 style="color:#909399">Ingresos Efectivo</h1>
+            <h1 style="color: #909399">Ingresos Efectivo</h1>
           </el-col>
         </el-row>
         <el-row class="br bl">
           <el-col :span="24">
-            <el-table size="mini" :data="dataEfectivo" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="Recibo" prop="folio"></el-table-column>
+            <el-table
+              size="mini"
+              :data="dataEfectivo"
+              style="width: 100%"
+              v-loading="loading"
+            >
+              <el-table-column
+                align="center"
+                label="Recibo"
+                prop="folio"
+              ></el-table-column>
               <el-table-column align="center" label="Total" prop="total">
-                <template slot-scope="scope">{{ formatPrice(scope.row.total) }}</template>
+                <template slot-scope="scope">
+                  {{ formatPrice(scope.row.total) }}
+                </template>
               </el-table-column>
             </el-table>
           </el-col>
@@ -102,25 +133,59 @@
         <!-- EFECTIVO + IVA -->
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
-            <h1 style="color:#909399">Ingresos facturados Efectivo</h1>
+            <h1 style="color: #909399">Ingresos facturados Efectivo</h1>
           </el-col>
         </el-row>
         <el-row class="br bl">
           <el-col :span="24">
-            <el-table size="mini" :data="dataIvaEfectivo" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="Recibo" width="100" prop="folio"></el-table-column>
-              <el-table-column align="center" label="Factura" width="100" prop="factura"></el-table-column>
-              <el-table-column align="center" label="Efectivo" prop="efectivo"></el-table-column>
-              <el-table-column align="right" label="Imp. sin Iva" prop="importe" width="100">
-                <template slot-scope="scope">{{ formatPrice(scope.row.importe) }}</template>
+            <el-table
+              size="mini"
+              :data="dataIvaEfectivo"
+              style="width: 100%"
+              v-loading="loading"
+            >
+              <el-table-column
+                align="center"
+                label="Recibo"
+                width="100"
+                prop="folio"
+              ></el-table-column>
+              <el-table-column
+                align="center"
+                label="Factura"
+                width="100"
+                prop="factura"
+              ></el-table-column>
+              <el-table-column
+                align="center"
+                label="Efectivo"
+                prop="efectivo"
+              ></el-table-column>
+              <el-table-column
+                align="right"
+                label="Imp. sin Iva"
+                prop="importe"
+                width="100"
+              >
+                <template slot-scope="scope">
+                  {{ formatPrice(scope.row.importe) }}
+                </template>
               </el-table-column>
               <el-table-column align="right" label="Iva" prop="iva">
-                <template slot-scope="scope">{{ formatPrice(scope.row.iva) }}</template>
+                <template slot-scope="scope">
+                  {{ formatPrice(scope.row.iva) }}
+                </template>
               </el-table-column>
               <el-table-column align="center" label="Total" prop="total">
-                <template slot-scope="scope">{{ formatPrice(scope.row.total) }}</template>
+                <template slot-scope="scope">
+                  {{ formatPrice(scope.row.total) }}
+                </template>
               </el-table-column>
-              <el-table-column label="Opciones" header-align="center" align="center">
+              <el-table-column
+                label="Opciones"
+                header-align="center"
+                align="center"
+              >
                 <template slot-scope="scope">
                   <income-edit :selectedItem="scope.row"></income-edit>
                 </template>
@@ -132,9 +197,10 @@
         <!-- Tabla 2 -->
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
-            <h1
-              style="color:#909399"
-            >Ingresos facturados T. Débito / T. Crédito / Transferencia / Cheque</h1>
+            <h1 style="color: #909399">
+              Ingresos facturados T. Débito / T. Crédito / Transferencia /
+              Cheque
+            </h1>
           </el-col>
         </el-row>
         <el-row class="br bl">
@@ -145,19 +211,47 @@
               style="width: 100%"
               v-loading="loading"
             >
-              <el-table-column align="center" label="Recibo" prop="folio"></el-table-column>
-              <el-table-column align="center" label="Factura" prop="factura"></el-table-column>
-              <el-table-column align="center" label="Fecha Pago" prop="fecha" width="140"></el-table-column>
-              <el-table-column align="right" label="Imp. sin Iva" prop="importe" width="100">
-                <template slot-scope="scope">{{ formatPrice(scope.row.importe) }}</template>
+              <el-table-column
+                align="center"
+                label="Recibo"
+                prop="folio"
+              ></el-table-column>
+              <el-table-column
+                align="center"
+                label="Factura"
+                prop="factura"
+              ></el-table-column>
+              <el-table-column
+                align="center"
+                label="Fecha Pago"
+                prop="fecha"
+                width="140"
+              ></el-table-column>
+              <el-table-column
+                align="right"
+                label="Imp. sin Iva"
+                prop="importe"
+                width="100"
+              >
+                <template slot-scope="scope">
+                  {{ formatPrice(scope.row.importe) }}
+                </template>
               </el-table-column>
               <el-table-column align="right" label="Iva" prop="iva">
-                <template slot-scope="scope">{{ formatPrice(scope.row.iva) }}</template>
+                <template slot-scope="scope">
+                  {{ formatPrice(scope.row.iva) }}
+                </template>
               </el-table-column>
               <el-table-column align="center" label="Total" prop="total">
-                <template slot-scope="scope">{{ formatPrice(scope.row.total) }}</template>
+                <template slot-scope="scope">
+                  {{ formatPrice(scope.row.total) }}
+                </template>
               </el-table-column>
-              <el-table-column label="Opciones" header-align="center" align="center">
+              <el-table-column
+                label="Opciones"
+                header-align="center"
+                align="center"
+              >
                 <template slot-scope="scope">
                   <income-edit :selectedItem="scope.row"></income-edit>
                 </template>
@@ -169,28 +263,70 @@
         <!-- Tabla 3 -->
         <el-row class="br bt bl row-header">
           <el-col :span="24" align="center">
-            <h1 style="color:#909399">Ingresos facturados A Crédito</h1>
+            <h1 style="color: #909399">Ingresos facturados A Crédito</h1>
           </el-col>
         </el-row>
         <el-row class="br bl">
           <el-col :span="24">
-            <el-table size="mini" :data="dataIvaCredito" style="width: 100%" v-loading="loading">
-              <el-table-column align="center" label="Recibo" prop="folio"></el-table-column>
-              <el-table-column align="center" label="Factura" prop="factura"></el-table-column>
-              <el-table-column align="center" label="Fecha Pago" prop="fecha" width="100"></el-table-column>
-              <el-table-column align="right" label="Imp. sin Iva" prop="importe" width="100">
-                <template slot-scope="scope">{{ formatPrice(scope.row.importe) }}</template>
+            <el-table
+              size="mini"
+              :data="dataIvaCredito"
+              style="width: 100%"
+              v-loading="loading"
+            >
+              <el-table-column
+                align="center"
+                label="Recibo"
+                prop="folio"
+              ></el-table-column>
+              <el-table-column
+                align="center"
+                label="Factura"
+                prop="factura"
+              ></el-table-column>
+              <el-table-column
+                align="center"
+                label="Fecha Pago"
+                prop="fecha"
+                width="100"
+              ></el-table-column>
+              <el-table-column
+                align="right"
+                label="Imp. sin Iva"
+                prop="importe"
+                width="100"
+              >
+                <template slot-scope="scope">
+                  {{ formatPrice(scope.row.importe) }}
+                </template>
               </el-table-column>
               <el-table-column align="right" label="Iva" prop="iva">
-                <template slot-scope="scope">{{ formatPrice(scope.row.iva) }}</template>
+                <template slot-scope="scope">
+                  {{ formatPrice(scope.row.iva) }}
+                </template>
               </el-table-column>
               <el-table-column align="center" label="Total" prop="total">
-                <template slot-scope="scope">{{ formatPrice(scope.row.total) }}</template>
-              </el-table-column>
-              <el-table-column align="center" label="Pagado" prop="pago"></el-table-column>
-              <el-table-column label="Opciones" header-align="center" align="center" width="100">
                 <template slot-scope="scope">
-                  <income-edit :selectedItem="scope.row" :method="6" :isCredit="true"></income-edit>
+                  {{ formatPrice(scope.row.total) }}
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="Pagado"
+                prop="pago"
+              ></el-table-column>
+              <el-table-column
+                label="Opciones"
+                header-align="center"
+                align="center"
+                width="100"
+              >
+                <template slot-scope="scope">
+                  <income-edit
+                    :selectedItem="scope.row"
+                    :method="6"
+                    :isCredit="true"
+                  ></income-edit>
                 </template>
               </el-table-column>
             </el-table>
@@ -213,6 +349,33 @@ export default {
     }
   },
   methods: {
+    exportExcel() {
+      axios
+        .post("/api/export/income", this.getExcelData())
+        .then(function (response) {
+          window.location.href = `/api/download?file=${response.data.file}`;
+        });
+    },
+    getExcelData() {
+      let excel = {
+        taller: this.taller,
+        start: this.start,
+
+        totalCreIva: this.totalCreIva,
+        totalSinIva: this.totalSinIva,
+        ingresosConIva: this.ingresosConIva,
+        ingresosSinIva: this.ingresosSinIva,
+        totalEfeIva: this.totalEfeIva,
+        totalIvaIngresos: this.totalIvaIngresos,
+
+        dataEfectivo: this.dataEfectivo,
+        dataIvaEfectivo: this.dataIvaEfectivo,
+        dataIvaDebitoCreditoCheque: this.dataIvaDebitoCreditoCheque,
+        dataIvaCredito: this.dataIvaCredito,
+      };
+
+      return excel;
+    },
     loadTable(url) {
       const $this = this;
       $this.loading = true;
@@ -391,6 +554,11 @@ export default {
         return;
       }
 
+      this.taller = this.workshops.filter(
+        (w) => w.id == this.workshopId
+      )[0].name;
+      this.start = start;
+
       this.loadTable(
         `/api/sales/searchReceiptByWeekAndCredits?start=${start}&workshop=${this.workshopId}`
       );
@@ -416,6 +584,8 @@ export default {
       pickerOptions: {
         firstDayOfWeek: 6,
       },
+      taller: "",
+      start: "",
     };
   },
 };

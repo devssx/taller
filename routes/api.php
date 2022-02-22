@@ -18,7 +18,9 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:api');
 
 // excels
-Route::get('/export/expenses', 'ExportToExcelController@expenses');
+Route::post('/export/expenses', 'ExportToExcelController@expenses');
+Route::post('/export/income', 'ExportToExcelController@income');
+Route::get('/download', 'ExportToExcelController@download');
 
 Route::get('/car/search', 'CarsController@searchCar');
 Route::get('/car/brands', 'CarsController@listBrands');
