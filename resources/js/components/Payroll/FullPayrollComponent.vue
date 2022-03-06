@@ -217,16 +217,17 @@ export default {
       // Carga totales de recibos tipo AC del empleado
       this.weekData.data.forEach((sale) => {
         if (sale.user.name == user) {
+
           switch (sale.service_type) {
             case 3: // Servicio Electrico
               emp.totalC += parseFloat(sale.total);
               break;
             case 2: // Servicio Mecanico
-              emp.totalB += parseFloat(sale.total);
+              emp.totalB += this.getTotalWorkforece(sale); // total mano de obra
               break;
             default:
               // Servicio AC
-              emp.totalA += parseFloat(sale.total);
+              emp.totalA += this.getTotalWorkforece(sale); // total mano de obra
               break;
           }
         }
@@ -243,6 +244,16 @@ export default {
       // Total
       emp.total = emp.subtotal - emp.discounts;
       return emp;
+    },
+    getTotalWorkforece(sale) {
+      let total = 0
+      sale.sale_services.forEach((service) => {
+        if (service.item_id == 1) {
+          total += parseFloat(service.price)
+        }
+      })
+
+      return total
     },
     onSearch() {
       var newDate = this.initDayOfWeekDate(this.selectedDay, 2);

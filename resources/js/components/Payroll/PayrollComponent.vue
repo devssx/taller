@@ -13,8 +13,20 @@
           format="Week WW"
           placeholder="Seleccionar Semana"
         ></el-date-picker>
-        <el-select width="150" v-model="workshopId" placeholder="Taller" v-if="multiWorkshop">
-          <el-option v-for="w in workshops" :key="w.id" :label="w.name" :value="w.id">{{w.name}}</el-option>
+        <el-select
+          width="150"
+          v-model="workshopId"
+          placeholder="Taller"
+          v-if="multiWorkshop"
+        >
+          <el-option
+            v-for="w in workshops"
+            :key="w.id"
+            :label="w.name"
+            :value="w.id"
+          >
+            {{ w.name }}
+          </el-option>
         </el-select>
         <el-button
           type="primary"
@@ -27,16 +39,20 @@
         <el-button
           v-show="isReadOnly"
           @click="setEditMode(false)"
-          :disabled="employees.length==0"
+          :disabled="employees.length == 0"
           type="primary"
           icon="el-icon-edit"
-        >Editar</el-button>
+        >
+          Editar
+        </el-button>
         <el-button
           v-show="!isReadOnly"
           @click="setEditMode(true)"
           type="primary"
           icon="el-icon-check"
-        >Guardar</el-button>
+        >
+          Guardar
+        </el-button>
       </el-col>
     </el-row>
 
@@ -46,7 +62,9 @@
         <el-row>
           <el-col>
             <el-card class="box-card" shadow="never">
-              <span v-if="employees.length == 0" style="padding:8px;">No hay información</span>
+              <span v-if="employees.length == 0" style="padding: 8px;">
+                No hay información
+              </span>
 
               <el-menu
                 :default-active="activeIndex"
@@ -55,9 +73,9 @@
                 v-for="(employee, i) in employees"
                 v-bind:key="i"
               >
-                <el-menu-item :index="i+''">
+                <el-menu-item :index="i + ''">
                   <i class="el-icon-user"></i>
-                  <span>{{employee.name}}</span>
+                  <span>{{ employee.name }}</span>
                 </el-menu-item>
               </el-menu>
             </el-card>
@@ -69,14 +87,14 @@
       <el-col :span="18">
         <el-row class="br bl row-header">
           <el-col :span="24" align="center">
-            <h1 style="color:#909399">Resumen Nómina Técnico</h1>
+            <h1 style="color: #909399;">Resumen Nómina Técnico</h1>
           </el-col>
         </el-row>
         <el-row class="br bt bl row-header">
           <el-col :span="4" style="margin-top: 7px;">
             <h4>Nombre del Técnico:</h4>
           </el-col>
-          <el-col :span="20" class="row-headerb">{{selectedEmployee}}</el-col>
+          <el-col :span="20" class="row-headerb">{{ selectedEmployee }}</el-col>
         </el-row>
         <el-row class="br bb bl row-header">
           <el-col :span="4" style="margin-top: 7px;">
@@ -85,7 +103,7 @@
           <el-col :span="20" class="row-headerb">
             <el-input
               type="textarea"
-              :autosize="{ minRows: 2, maxRows: 4}"
+              :autosize="{ minRows: 2, maxRows: 4 }"
               placeholder="Comentarios"
               :readonly="isReadOnly"
               v-model="comment"
@@ -98,7 +116,7 @@
     <br />
     <el-row class="br bt bl row-header">
       <el-col :span="24" align="center">
-        <h1 style="color:#909399">A/C Automotríz</h1>
+        <h1 style="color: #909399;">A/C Automotríz</h1>
       </el-col>
     </el-row>
     <el-row>
@@ -232,7 +250,7 @@
     <br />
     <el-row class="br bt bl row-header">
       <el-col :span="24" align="center">
-        <h1 style="color:#909399">Mecánica Automotríz</h1>
+        <h1 style="color: #909399;">Mecánica Automotríz</h1>
       </el-col>
     </el-row>
     <el-row>
@@ -367,7 +385,7 @@
     <br />
     <el-row class="br bt bl row-header">
       <el-col :span="24" align="center">
-        <h1 style="color:#909399">Auto Eléctrico Automotríz</h1>
+        <h1 style="color: #909399;">Auto Eléctrico Automotríz</h1>
       </el-col>
     </el-row>
     <el-row>
@@ -505,7 +523,7 @@
         <h4>Sueldo:</h4>
       </el-col>
       <el-col :span="20" class="row-headerb" align="end">
-        <h4>${{formatPrice(salary)}}</h4>
+        <h4>${{ formatPrice(salary) }}</h4>
       </el-col>
     </el-row>
     <el-row class="br bl bb row-header">
@@ -513,7 +531,7 @@
         <h4>Comisiones:</h4>
       </el-col>
       <el-col :span="20" class="row-headerb" align="end">
-        <h4>${{formatPrice(comissions)}}</h4>
+        <h4>${{ formatPrice(comissions) }}</h4>
       </el-col>
     </el-row>
     <el-row class="br bl bb row-header">
@@ -521,7 +539,7 @@
         <h4>Descuentos:</h4>
       </el-col>
       <el-col :span="20" class="row-headerb" align="end">
-        <h4>${{formatPrice(discounts)}}</h4>
+        <h4>${{ formatPrice(discounts) }}</h4>
       </el-col>
     </el-row>
     <el-row class="br bl bb row-header">
@@ -529,7 +547,7 @@
         <h4>Total:</h4>
       </el-col>
       <el-col :span="20" class="row-headerb" align="end">
-        <h4>${{formatPrice(total)}}</h4>
+        <h4>${{ formatPrice(total) }}</h4>
       </el-col>
     </el-row>
   </el-row>
@@ -537,63 +555,63 @@
 
 <script>
 export default {
-  props: ["workshops", "myUser", "multiWorkshop"],
+  props: ['workshops', 'myUser', 'multiWorkshop'],
   mounted: function () {
-    this.$root.$on("refreshTotal", this.refreshTotal);
+    this.$root.$on('refreshTotal', this.refreshTotal)
 
     // busca por default en el taller donde trabaja este empleado
     if (this.myUser && this.myUser.length > 0) {
-      if (!this.multiWorkshop) this.workshopId = this.myUser[0].workshop_id;
+      if (!this.multiWorkshop) this.workshopId = this.myUser[0].workshop_id
     }
   },
   methods: {
     setEditMode(readOnly, dontSave) {
-      this.isReadOnly = readOnly;
-      this.tableACData[0].isReadOnly = readOnly;
-      this.tableMecData[0].isReadOnly = readOnly;
-      this.tableElecData[0].isReadOnly = readOnly;
+      this.isReadOnly = readOnly
+      this.tableACData[0].isReadOnly = readOnly
+      this.tableMecData[0].isReadOnly = readOnly
+      this.tableElecData[0].isReadOnly = readOnly
       if (!dontSave && readOnly) {
         this.saveWeek(
           this.userID,
           this.tableACData[0],
           this.tableMecData[0],
-          this.tableElecData[0]
-        );
+          this.tableElecData[0],
+        )
 
         if (!this.workshopId) {
-          this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
-            confirmButtonText: "OK",
-            type: "warning",
-          });
-          return;
+          this.$alert('Favor de seleccionar un taller.', 'Taller no válido', {
+            confirmButtonText: 'OK',
+            type: 'warning',
+          })
+          return
         }
 
-        let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
+        let week = this.toFixedFormat(this.prevDay, 'yyyyMMdd')
         this.loadPayroll(
           `/api/payroll?week=${week}&workshop=${this.workshopId}`,
-          false
-        );
+          false,
+        )
       }
     },
     saveWeek(userID, weekAc, weekMec, weekEle) {
-      const $this = this;
-      $this.loading = true;
+      const $this = this
+      $this.loading = true
 
       // weekID
-      let week = this.toFixedFormat($this.prevDay, "yyyyMMdd");
+      let week = this.toFixedFormat($this.prevDay, 'yyyyMMdd')
 
       // Necesario para reportes
-      let end = this.endPeriodo($this.prevDay);
-      let weekNumb = this.getWeekOfDate(end);
-      let startFormat = this.toFixedFormat($this.prevDay, "yyyy-MM-dd");
-      let endFormat = this.toFixedFormat(end, "yyyy-MM-dd");
+      let end = this.endPeriodo($this.prevDay)
+      let weekNumb = this.getWeekOfDate(end)
+      let startFormat = this.toFixedFormat($this.prevDay, 'yyyy-MM-dd')
+      let endFormat = this.toFixedFormat(end, 'yyyy-MM-dd')
 
       if (!this.workshopId) {
-        this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
-          confirmButtonText: "OK",
-          type: "warning",
-        });
-        return;
+        this.$alert('Favor de seleccionar un taller.', 'Taller no válido', {
+          confirmButtonText: 'OK',
+          type: 'warning',
+        })
+        return
       }
 
       this.confirmar(
@@ -601,7 +619,7 @@ export default {
         () => {
           // save totals
           axios
-            .post("/api/payroll/save", {
+            .post('/api/payroll/save', {
               // Periodo Info
               number: weekNumb,
               start: startFormat,
@@ -632,147 +650,141 @@ export default {
             })
             .then(function (response) {
               $this.$message({
-                message: "El registro fué editado correctamente.",
-                type: "success",
-              });
+                message: 'El registro fué editado correctamente.',
+                type: 'success',
+              })
 
-              $this.loading = false;
-              $this.onSearch();
+              $this.loading = false
+              $this.onSearch()
             })
             .catch((error) => {
               if (error.response.data.errors) {
-                var errors = error.response.data.errors;
-                $this.$alert(errors[Object.keys(errors)[0]][0], "Error", {
-                  confirmButtonText: "OK",
-                  type: "error",
-                });
+                var errors = error.response.data.errors
+                $this.$alert(errors[Object.keys(errors)[0]][0], 'Error', {
+                  confirmButtonText: 'OK',
+                  type: 'error',
+                })
               }
-              $this.loading = false;
-            });
-        }
-      );
+              $this.loading = false
+            })
+        },
+      )
     },
     handleSelect(key, keyPath) {
-      this.activeIndex = key;
-      this.selectedEmployee = this.employees[key].name;
-      this.userID = this.employees[key].id;
-      let name = this.employees[key].name;
+      this.activeIndex = key
+      this.selectedEmployee = this.employees[key].name
+      this.userID = this.employees[key].id
+      let name = this.employees[key].name
 
-      this.comment = "";
+      this.comment = ''
       if (this.weekComments.length > 0) {
         if (
           this.weekComments.filter((e) => e.user_id == this.userID).length > 0
         )
           this.comment = this.weekComments.filter(
-            (e) => e.user_id == this.userID
-          )[0].comment;
+            (e) => e.user_id == this.userID,
+          )[0].comment
       }
 
       // commission percentages
-      let com1 = 0.07;
-      let com2 = 0.07;
-      let com3 = 0.07;
-      let salary1 = 0.0;
-      let salary2 = 0.0;
-      let salary3 = 0.0;
-      let discount1 = 0.0;
-      let discount2 = 0.0;
-      let discount3 = 0.0;
+      let com1 = 0.07
+      let com2 = 0.07
+      let com3 = 0.07
+      let salary1 = 0.0
+      let salary2 = 0.0
+      let salary3 = 0.0
+      let discount1 = 0.0
+      let discount2 = 0.0
+      let discount3 = 0.0
 
       // buscar week y user id
-      const myWeek = this.weekPayroll.filter((p) => p.user_id == this.userID);
+      const myWeek = this.weekPayroll.filter((p) => p.user_id == this.userID)
       myWeek.forEach((dato) => {
-        if (dato.type == "1") {
-          com1 = parseFloat(dato.comission);
-          salary1 = parseFloat(dato.salary);
-          discount1 = parseFloat(dato.discount);
+        if (dato.type == '1') {
+          com1 = parseFloat(dato.comission)
+          salary1 = parseFloat(dato.salary)
+          discount1 = parseFloat(dato.discount)
         }
-        if (dato.type == "2") {
-          com2 = parseFloat(dato.comission);
-          salary2 = parseFloat(dato.salary);
-          discount2 = parseFloat(dato.discount);
+        if (dato.type == '2') {
+          com2 = parseFloat(dato.comission)
+          salary2 = parseFloat(dato.salary)
+          discount2 = parseFloat(dato.discount)
         }
-        if (dato.type == "3") {
-          com3 = parseFloat(dato.comission);
-          salary3 = parseFloat(dato.salary);
-          discount3 = parseFloat(dato.discount);
+        if (dato.type == '3') {
+          com3 = parseFloat(dato.comission)
+          salary3 = parseFloat(dato.salary)
+          discount3 = parseFloat(dato.discount)
         }
-      });
+      })
 
-      this.tableACData = this.getEmployeeData(
-        name,
-        1,
-        com1,
-        salary1,
-        discount1
-      );
+      this.tableACData = this.getEmployeeData(name, 1, com1, salary1, discount1)
       this.tableMecData = this.getEmployeeData(
         name,
         2,
         com2,
         salary2,
-        discount2
-      );
+        discount2,
+      )
       this.tableElecData = this.getEmployeeData(
         name,
         3,
         com3,
         salary3,
-        discount3
-      );
-      this.isReadOnly = true;
-      this.setEditMode(true, true);
-      this.refreshTotal();
+        discount3,
+      )
+      this.isReadOnly = true
+      this.setEditMode(true, true)
+      this.refreshTotal()
     },
     refreshTotal() {
       this.computeTotal(
         this.tableACData[0],
         this.tableMecData[0],
-        this.tableElecData[0]
-      );
+        this.tableElecData[0],
+      )
     },
     eliminarRegistro(id) {},
     fixNumber(n) {
-      return n < 10 ? "0" + n : n;
+      return n < 10 ? '0' + n : n
     },
     setSales(data) {
-      const $this = this;
-      $this.weekData = data.d;
+      const $this = this
+      $this.weekData = data.d
 
       // reset
-      $this.salary = 0;
-      $this.comissions = 0;
-      $this.discounts = 0;
-      $this.total = 0;
+      $this.salary = 0
+      $this.comissions = 0
+      $this.discounts = 0
+      $this.total = 0
 
       // (lista de empleados)
-      $this.employees = [];
-      $this.tableACData = [];
-      $this.tableMecData = [];
-      $this.tableElecData = [];
+      $this.employees = []
+      $this.tableACData = []
+      $this.tableMecData = []
+      $this.tableElecData = []
       $this.weekData.data.forEach((sale) => {
-        var name = sale.user.name;
+        var name = sale.user.name
         if ($this.employees.filter((e) => e.name == name).length == 0)
-          $this.employees.push(sale.user);
-      });
+          $this.employees.push(sale.user)
+      })
 
       // select first
-      if ($this.employees.length > 0) $this.handleSelect("0");
+      if ($this.employees.length > 0) $this.handleSelect('0')
     },
     loadPayroll(url, loadSales) {
-      const $this = this;
-      $this.weekPayroll = [];
-      $this.weekComments = [];
+      const $this = this
+      $this.weekPayroll = []
+      $this.weekComments = []
 
       axios.get(url).then(function (response) {
-        $this.weekPayroll = response.data.payroll;
-        $this.weekComments = response.data.comments;
+        $this.weekPayroll = response.data.payroll
+        $this.weekComments = response.data.comments
 
         if (loadSales) {
-          let sales = response.data.sales;
-          $this.setSales(sales);
+          let sales = response.data.sales
+          $this.setSales(sales)
         }
-      });
+      })
     },
     // Carga recibos tipo: 1: A/C, 2: Mecanica, 3: Electrico
     getEmployeeData(user, serviceType, comision, sueldo, discount) {
@@ -797,42 +809,49 @@ export default {
         discounts: discount,
         total: 0,
         isReadOnly: true,
-      };
+      }
+
+      // para sacar el poncentaje de mano de obra
+      let workforce = serviceType == 2 || serviceType == 3
 
       // Carga totales de recibos tipo serviceType del empleado
-      let userSales = [];
+      let userSales = []
       this.weekData.data.forEach((sale) => {
         if (sale.service_type == serviceType && sale.user.name == user) {
-          userSales.push(sale);
+          userSales.push(sale)
+
+          // saca el total mano de obra solo para tipos Electrico y Mecanica
+          let total = workforce ? this.getTotalWorkforece(sale) : parseFloat(sale.total);
+
           switch (this.dayOfWeek(sale.done_on)) {
-            case "Sábado": // sabado es menor a la fecha del dia lunes
-              week.saturday += parseFloat(sale.total);
-              week.salesA.push(sale);
-              break;
-            case "Domingo": //  no deberia haber nada en domingo...
-            case "Lunes":
-              week.monday += parseFloat(sale.total);
-              week.salesB.push(sale);
-              break;
-            case "Martes":
-              week.tuesday += parseFloat(sale.total);
-              week.salesC.push(sale);
-              break;
-            case "Miércoles":
-              week.wednesday += parseFloat(sale.total);
-              week.salesD.push(sale);
-              break;
-            case "Jueves":
-              week.thursday += parseFloat(sale.total);
-              week.salesE.push(sale);
-              break;
-            case "Viernes":
-              week.friday += parseFloat(sale.total);
-              week.salesF.push(sale);
-              break;
+            case 'Sábado': // sabado es menor a la fecha del dia lunes
+              week.saturday += total;
+              week.salesA.push(sale)
+              break
+            case 'Domingo': //  no deberia haber nada en domingo...
+            case 'Lunes':
+              week.monday += total
+              week.salesB.push(sale)
+              break
+            case 'Martes':
+              week.tuesday += total
+              week.salesC.push(sale)
+              break
+            case 'Miércoles':
+              week.wednesday += total
+              week.salesD.push(sale)
+              break
+            case 'Jueves':
+              week.thursday += total
+              week.salesE.push(sale)
+              break
+            case 'Viernes':
+              week.friday += total
+              week.salesF.push(sale)
+              break
           }
         }
-      });
+      })
 
       week.totalWeek =
         week.saturday +
@@ -840,56 +859,66 @@ export default {
         week.tuesday +
         week.wednesday +
         week.thursday +
-        week.friday;
+        week.friday
 
       // comision
-      week.commission = week.totalWeek * week.percentCommission;
-      week.subtotal = week.commission + week.sueldo;
-      week.total = week.subtotal - week.discounts;
+      week.commission = week.totalWeek * week.percentCommission
+      week.subtotal = week.commission + week.sueldo
+      week.total = week.subtotal - week.discounts
 
-      return [week];
+      return [week]
+    },
+    getTotalWorkforece(sale) {
+      let total = 0
+      sale.sale_services.forEach((service) => {
+        if (service.item_id == 1) {
+          total += parseFloat(service.price)
+        }
+      })
+
+      return total
     },
     onSearch() {
-      this.selectedEmployee = "N/A";
-      this.comment = "";
-      var newDate = this.initDayOfWeekDate(this.selectedDay, 2);
-      this.prevDay = newDate;
-      var start = `${this.toFixedFormat(newDate, "yyyy-MM-dd")} 00:00:00`;
+      this.selectedEmployee = 'N/A'
+      this.comment = ''
+      var newDate = this.initDayOfWeekDate(this.selectedDay, 2)
+      this.prevDay = newDate
+      var start = `${this.toFixedFormat(newDate, 'yyyy-MM-dd')} 00:00:00`
 
       if (!this.workshopId) {
-        this.$alert("Favor de seleccionar un taller.", "Taller no válido", {
-          confirmButtonText: "OK",
-          type: "warning",
-        });
-        return;
+        this.$alert('Favor de seleccionar un taller.', 'Taller no válido', {
+          confirmButtonText: 'OK',
+          type: 'warning',
+        })
+        return
       }
 
       // weekID
-      let week = this.toFixedFormat(this.prevDay, "yyyyMMdd");
+      let week = this.toFixedFormat(this.prevDay, 'yyyyMMdd')
       this.loadPayroll(
         `/api/payroll?week=${week}&workshop=${this.workshopId}&start=${start}`,
-        true
-      );
+        true,
+      )
     },
     computeTotal(tableAc, tableMec, tableElec) {
       this.salary =
         parseFloat(tableAc.sueldo) +
         parseFloat(tableMec.sueldo) +
-        parseFloat(tableElec.sueldo);
+        parseFloat(tableElec.sueldo)
       this.comissions =
         parseFloat(tableAc.commission) +
         parseFloat(tableMec.commission) +
-        parseFloat(tableElec.commission);
+        parseFloat(tableElec.commission)
       this.discounts =
         parseFloat(tableAc.discounts) +
         parseFloat(tableMec.discounts) +
-        parseFloat(tableElec.discounts);
+        parseFloat(tableElec.discounts)
       this.total =
         parseFloat(tableAc.total) +
         parseFloat(tableMec.total) +
-        parseFloat(tableElec.total);
+        parseFloat(tableElec.total)
 
-      this.total = this.total.toFixed(2);
+      this.total = this.total.toFixed(2)
     },
   },
   data() {
@@ -901,16 +930,16 @@ export default {
         firstDayOfWeek: 6,
       },
 
-      workshopId: "",
+      workshopId: '',
       isReadOnly: true,
       total: 0,
       discounts: 0,
       comissions: 0,
       salary: 0,
-      selectedEmployee: "N/A",
-      comment: "",
+      selectedEmployee: 'N/A',
+      comment: '',
       userID: -1,
-      activeIndex: "0",
+      activeIndex: '0',
       employees: [],
       showDialog: false,
       weekData: [],
@@ -918,14 +947,14 @@ export default {
       weekComments: [],
       selectedDay: null,
       prevDay: null,
-      search: "",
+      search: '',
       loading: false,
       tableACData: [], // Servicio A/C
       tableMecData: [], // Servicio Mecanico
       tableElecData: [], // servicio Electrico
-    };
+    }
   },
-};
+}
 </script>
 <style>
 .box-card {
