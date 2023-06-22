@@ -2,6 +2,15 @@
 
 Laravel 5.7 Project with Vue2 and [Element](https://github.com/ElemeFE/element)
 
+# Node
+
+Node node-v13.14.0-x64.msi
+
+# php 7.4.33
+extension=fileinfo
+extension=gd2
+extension=pdo_mysql
+
 ## Usage
 
 ```
@@ -12,9 +21,11 @@ git clone https://github.com/l30n/taller.git <project-name>
 cd <project-name>
 ```
 
-```
+## Commands
+npm install
 composer install
-```
+npm run dev  / watch
+php artisan serve 
 
 ## If don't have .env file
 

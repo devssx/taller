@@ -398,7 +398,7 @@ export default {
             $this.context.fillText(nextService, 960, 240 + 690);
 
             // Conceptos
-            $this.context.font = "12px Calibri";
+            $this.context.font = "18px Calibri";
 
             // No cabe en el recibo solo hay 13 renglones
             if (format > 0 && currentSale.sale_services.length > 14) {
